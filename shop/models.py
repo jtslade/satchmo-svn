@@ -37,7 +37,8 @@ class Customer(models.Model):
     class Admin:
         list_display = ('last_name','first_name')
         list_filter = ['create_date']
-
+        ordering = ['last_name']
+        
 class AddressBook(models.Model):
     customer=models.ForeignKey(Customer,edit_inline=models.STACKED, num_in_admin=1)
     description=models.CharField("Description", maxlength=20,core=True,help_text='Description of address - Home,Relative, Office, Warehouse ,etc.',)
@@ -51,7 +52,7 @@ class AddressBook(models.Model):
     is_default_billing=models.BooleanField("Default Billing Address ?", default=False)
 
     def __str__(self):
-       return self.description
+       return ("%s - %s" % (self.customer.full_name, self.description))
        
     def save(self):
         """
@@ -94,7 +95,7 @@ class Supplier(models.Model):
         return self.name
         
     class Admin:
-        pass
+        ordering = ['name']
         
 
 class RawItem(models.Model):
@@ -255,7 +256,7 @@ class Item(models.Model):
         combinedlist = self._cross_list(masterlist)
         #Create new sub_items for each combo
         for options in combinedlist:
-            sub = Sub_Item(item=self, items_in_stock=0, price_change=0)
+            sub = Sub_Item(item=self, items_in_stock='0', price_change='0')
             sub.save()
             for option in options:
                 sub.options.add(option)
@@ -326,7 +327,7 @@ class Sub_Item(models.Model):
     full_name = property(_get_optionName)
     
     def _get_fullPrice(self):
-        if self.price_change:
+        if self.price_change > 0:
             return(self.item.price + self.price_change)
         else:
             return(self.item.price)
@@ -421,7 +422,7 @@ class Order(models.Model):
     date = models.DateTimeField()
     
     def __str__(self):
-        return self.customer.first_name
+        return self.customer.full_name
     
     def copyAddresses(self):
         """
@@ -468,7 +469,7 @@ class OrderItem(models.Model):
     lineItemPrice = models.FloatField(max_digits=6,decimal_places=2)
     
     def __str__(self):
-        return self.description
+        return self.item.full_name
 
 class OrderStatus(models.Model):
     order = models.ForeignKey(Order, edit_inline=models.STACKED, num_in_admin=1)
@@ -479,3 +480,22 @@ class OrderStatus(models.Model):
     def __str__(self):
         return self.status
  
+class ShippingOption(models.Model):
+    description = models.CharField(maxlength=20)
+    active = models.BooleanField(help_text="Should this be displayed as an option for the user?")
+    optionName = models.CharField(maxlength=20, help_text="The class name as defined in shipping.py")
+    sortOrder = models.IntegerField()
+    # Will need to use eval(optionName()) to instantiate each object
+    class Admin:
+        list_display = ['description','active']
+        ordering = ['sortOrder']
+
+class PaymentOption(models.Model):
+    description = models.CharField(maxlength=20)
+    active = models.BooleanField(help_text="Should this be displayed as an option for the user?")
+    optionName = models.CharField(maxlength=20, help_text="The class name as defined in payment.py")
+    sortOrder = models.IntegerField()
+    
+    class Admin:
+        list_display = ['description','active']
+        ordering = ['sortOrder']
