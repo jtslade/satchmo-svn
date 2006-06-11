@@ -1,4 +1,5 @@
 from django.db import models
+from satchmo.customer.models import Order
 
 # Create your models here.
 PAYMENTCHOICES = (
@@ -16,4 +17,9 @@ class PaymentOption(models.Model):
         list_display = ['optionName','description','active']
         ordering = ['sortOrder']
         
-    # Need to validate that each optionName
+class CreditCardDetail(models.Model):
+    order = models.ForeignKey(Order, edit_inline=True, num_in_admin=1, max_num_in_admin=1)
+    ccnum = models.IntegerField(core=True)
+    expireMonth = models.IntegerField()
+    expireYear = models.IntegerField()
+    

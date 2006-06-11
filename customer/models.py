@@ -6,8 +6,8 @@ class Customer(models.Model):
     first_name = models.CharField(maxlength=30, core=True)
     last_name = models.CharField(maxlength=30, core=True)
     dob = models.DateField(blank=True, null=True)
-    phone = models.CharField(maxlength=96,blank=True)
-    fax=models.PhoneNumberField( blank=True)
+    phone = models.CharField(blank=True, maxlength=30)
+    fax=models.PhoneNumberField(blank=True)
     email=models.EmailField(blank=True)
     notes=models.TextField("Notes",maxlength=500, blank=True)
     create_date = models.DateField(auto_now_add=True)
@@ -92,6 +92,13 @@ ORDER_STATUS = (
     ('Pending', 'Pending'),
     ('Shipped', 'Shipped'),
 )
+
+PAYMENT_CHOICES = (
+    ('Cash','Cash'),
+    ('Credit Card','Credit Card'),
+    ('Check','Check'),
+)
+
 class Order(models.Model):
     """
     Orders need to contain a copy of all the information at the time the order is placed.
@@ -111,6 +118,7 @@ class Order(models.Model):
     billZip_code=models.CharField("Zip Code", maxlength=50, blank=True)
     billCountry=models.CharField("Country", maxlength=50, blank=True)
     total = models.FloatField(max_digits=6,decimal_places=2)
+    payment= models.CharField(choices=PAYMENT_CHOICES, maxlength=25)
     method = models.CharField(choices=ORDER_CHOICES, maxlength=50)
     shippingCost = models.FloatField(max_digits=6, decimal_places=2)
     tax = models.FloatField(max_digits=6, decimal_places=2)
@@ -151,7 +159,7 @@ class Order(models.Model):
         (None, {'fields': ('customer','method',)}),
         ('Shipping Information', {'fields': ('shipStreet1','shipStreet2', 'shipCity','shipState', 'shipZip_code','shipCountry',), 'classes': 'collapse'}),
         ('Billing Information', {'fields': ('billStreet1','billStreet2', 'billCity','billState', 'billZip_code','billCountry',), 'classes': 'collapse'}),
-        ('Totals', {'fields': ( 'shippingCost', 'tax','total','date',),}),       
+        ('Totals', {'fields': ( 'shippingCost', 'tax','total','date','payment',),}),       
         )
         list_display = ('customer', 'date', 'total','status')
         list_filter = ['date','customer']
