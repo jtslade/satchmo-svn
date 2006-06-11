@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}The Web Shop{% endblock %}
+
+{% block content %}
+{% for item in Items %}
+    <h2>{{ item.description }}</h2>
+{% endfor %}
+{% endblock %}
