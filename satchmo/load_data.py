@@ -2,7 +2,6 @@ import os, sys
 import django.core.management, django.core
 from os.path import isdir, isfile, join, dirname
 
-sys.path.append("/home/chris/django-projects/")
 os.environ["DJANGO_SETTINGS_MODULE"]="satchmo.settings"
 
 from satchmo.customer.models import *
@@ -46,14 +45,14 @@ def init_and_install():
     
 def load_data():
     # Import some customers
-    c1 = Customer(first_name="Chris", last_name="Moffitt", phone="651-275-0164",
+    c1 = Customer(first_name="Chris", last_name="Smith", phone="655-555-0164",
                   fax="900-100-9010", email="chris@aol.com", notes="Really cool stuff")
     c1.save()
-    c2 = Customer(first_name="John", last_name="Smith", phone="901-754-9242",
+    c2 = Customer(first_name="John", last_name="Smith", phone="901-555-9242",
                     fax="800-199-1000", email="abc@comcast.com", notes="Second user")
     c2.save()
     # Import some addresses for these customers
-    a1 = AddressBook(description="Home", street1="8235 Ole Pike Cove", city="Germantown", state="TN",
+    a1 = AddressBook(description="Home", street1="8235 Pike Street", city="Anywhere Town", state="TN",
                  zip_code="38138", country="US", is_default_shipping=True, customer=c1)
     a1.save()
     a2 = AddressBook(description="Work", street1="1245 Main Street", city="Stillwater", state="MN",
