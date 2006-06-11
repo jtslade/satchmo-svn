@@ -1,0 +1,60 @@
+The Satchmo project requires a recent (post-magic-removal) version of Django.
+Until a baseline is made, we encourage you to use the latest svn version.
+
+To get the latest version of Django:
+svn co http://code.djangoproject.com/svn/django/trunk/
+
+You must now configure Django & get it working on your system.  Follow the
+instructions here -
+http://www.djangoproject.com/documentation/install/
+
+After Django is working, you can check out the latest version of Satchmo, using
+this command -
+svn co http://svn.satchmo.python-hosting.com/trunk/
+
+Since we're still putting this project together, you willl more than likely
+be running this in the development server.  In order to ease the check-in and
+check-out process, we've modified the settings.py file so that some of the key
+information is read from environment variables.  In order for everything to
+work right on your machine, you should set the following variables in your
+shell (e.g. .bashrc)
+
+export PYTHONPATH="/home/user/django-mr/trunk:/home/user/working-dir/satchmo/trunk"
+export DJANGO_PROJECT='satchmo'
+export DJANGO_DB_NAME='YOURDBNAME'
+export DJANGO_DB_PASS='YOURPASSWORD'
+export DJANGO_DB_USER='YOURUSER'
+export DJANGO_SECRET_KEY='YOURSECRETKEY'
+export DJANGO_SETTINGS_MODULE='satchmo.settings'
+
+After making these changes, make sure you source your environment again so they
+are visible.
+
+Next, install your databases:
+cd /path/to/satchmo
+python manage.py syncdb
+
+Once the database is installed, try the development server
+python manage.py runserver
+
+Point your browser to localhost:8000 and you should see the admin interface
+
+Helpful Hints
+=============
+Here are two shell aliases I use to make it a little easier to develop
+alias delpyc='find ./ -type f -name "*.pyc" -exec rm -f {} \;'
+alias startserver='python manage.py runserver 192.168.1.9:8000'
+
+The delpyc is helpful if you want to clear out all your .pyc files and make 
+sure there isn't any weirdness with old files.
+
+The startserver just makes it easier to start up the development server
+with a given IP.
+
+Thanks
+======
+
+The majority of this info was taken from the Django wiki.  In particular, this
+cookbook entry was very helpful - http://code.djangoproject.com/wiki/SimpleBashScriptToSetupDevelopmentEnvironment
+
+
