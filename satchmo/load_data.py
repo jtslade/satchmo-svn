@@ -75,9 +75,9 @@ def load_data():
     cat2.save()
     
     #Create an item
-    i1 = Item(verbose_name="Django Rocks shirt", short_name="DJ-Rocks", description="Really cool shirt", active=True, category=cat1)
+    i1 = Item(verbose_name="Django Rocks shirt", short_name="DJ-Rocks", description="Really cool shirt", price="20.00", active=True, category=cat1)
     i1.save()
-    i2 = Item(verbose_name="Python Rocks shirt", short_name="PY-Rocks", description="Really cool python shirt", active=True, category=cat2)
+    i2 = Item(verbose_name="Python Rocks shirt", short_name="PY-Rocks", description="Really cool python shirt", price="19.50", active=True, category=cat2)
     i2.save()
 
 

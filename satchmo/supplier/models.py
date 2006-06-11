@@ -7,9 +7,9 @@ class Supplier(models.Model):
     city = models.CharField("City", maxlength=100)
     state = models.USStateField("State")
     zip = models.IntegerField("Zip Code")
-    phone1 = models.PhoneNumberField("Phone Number 1", blank=True, null=True)
-    phone2 = models.PhoneNumberField("Phone Number 2", blank=True, null=True)
-    fax = models.PhoneNumberField("Fax Number")
+    phone1 = models.PhoneNumberField("Phone Num 1", blank=True, null=True)
+    phone2 = models.PhoneNumberField("Phone Num 2", blank=True, null=True)
+    fax = models.PhoneNumberField("Fax Number", blank=True, null=True)
     email = models.EmailField("Email")
     notes = models.TextField("Notes",maxlength=500, blank=True)
     
@@ -46,8 +46,12 @@ class SupplierOrder(models.Model):
     def __str__(self):
         return str(self.date_created)
     
+    def _status(self):
+        return(self.supplierorderstatus_set.latest('date').status)
+    status = property(_status)  
+    
     class Admin:
-        list_display = ('supplier','date_created', 'order_total')
+        list_display = ('supplier','date_created', 'order_total','status')
         list_filter = ('date_created','supplier',)
         date_hierarchy = 'date_created'
     
@@ -72,10 +76,10 @@ class SupplierOrderStatus(models.Model):
     order = models.ForeignKey(SupplierOrder, edit_inline=models.STACKED, num_in_admin=1)
     status = models.CharField(maxlength=20, choices=SUPPLIERORDER_STATUS, core=True, blank=True)
     notes = models.CharField(maxlength=100, blank=True)
-    date = models.DateField(blank=True)
+    date = models.DateTimeField(blank=True)
     
     def __str__(self):
-        return str(self.date)
+        return str(self.status)
 
 
     

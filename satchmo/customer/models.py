@@ -147,7 +147,7 @@ class Order(models.Model):
         self.billCountry = billaddress.country
         
     def _status(self):
-        return(self.orderstatus_set.latest('date').status)
+        return(self.supplierorderstatus_set.latest('date').status)
     status = property(_status)        
     
     def save(self):

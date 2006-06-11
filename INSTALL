@@ -51,6 +51,9 @@ sure there isn't any weirdness with old files.
 The startserver just makes it easier to start up the development server
 with a given IP.
 
+The load_data.py script is used to dump your current database and install some sample data.
+Please make sure you know what you're doing before you dump your database - the data will be lost!
+
 Thanks
 ======
 

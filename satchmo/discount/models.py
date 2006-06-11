@@ -7,6 +7,7 @@ class Discount(models.Model):
     amount = models.FloatField("Discount Amount", decimal_places=2, max_digits=4, blank=True, help_text="Enter absolute amount OR percentage")
     percentage = models.FloatField("Discount Percentage", decimal_places=2, max_digits=4, blank=True, null=True, help_text="Enter absolute amount OR percentage")
     allowedUses = models.IntegerField("Number of allowed uses", blank=True, null=True)
+    numUses = models.IntegerField("Number of times already used", blank=True, null=False)
     minOrder = models.FloatField("Minimum order value", decimal_places=2, max_digits=6, blank=True, null=True)
     startDate = models.DateField()
     endDate = models.DateField()
@@ -18,4 +19,4 @@ class Discount(models.Model):
         return(self.description)
     
     class Admin:
-        pass
+        list_display=('description','active')
