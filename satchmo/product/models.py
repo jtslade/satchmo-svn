@@ -76,6 +76,8 @@ class Item(models.Model):
     width = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
     height = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
     create_subs = models.BooleanField("Create Sub Items", default=False, help_text ="This will erase any existing sub-items!")
+    relatedItems = models.ManyToManyField('self', blank=True, null=True, related_name='related')
+    alsoPurchased = models.ManyToManyField('self', blank=True, null=True, related_name='previouslyPurchased')
     
     def __str__(self):
         return self.short_name 
@@ -135,7 +137,8 @@ class Item(models.Model):
         fields = (
         (None, {'fields': ('category','verbose_name','short_name','description','active','price',)}),
         ('Item Dimensions', {'fields': (('length', 'width','height',),'weight'), 'classes': 'collapse'}),
-        ('Options', {'fields': ('optionGroups','create_subs',),}),       
+        ('Options', {'fields': ('optionGroups','create_subs',),}), 
+        ('Related Products', {'fields':('relatedItems','alsoPurchased'),'classes':'collapse'}),            
         )
         list_filter = ('category',)
         
