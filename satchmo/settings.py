@@ -1,5 +1,6 @@
 # Django settings for satchmo project.
 import os
+DIRNAME = os.path.dirname(__file__)
 
 DATABASE_NAME = os.environ['DJANGO_DB_NAME']
 DATABASE_USER = os.environ['DJANGO_DB_USER']
@@ -35,7 +36,7 @@ SITE_ID = 1
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = os.path.join(DIRNAME, 'static')
 
 # URL that handles the media served from MEDIA_ROOT.
 # Example: "http://media.lawrence.com"
@@ -47,7 +48,7 @@ MEDIA_URL = ''
 ADMIN_MEDIA_PREFIX = '/media/'
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = ''
+# SECRET_KEY = ''
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -68,7 +69,7 @@ ROOT_URLCONF = 'satchmo.urls'
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates".
     # Always use forward slashes, even on Windows.
-    "/home/chris/django-projects/satchmo/shop/templates/",
+    os.path.join(DIRNAME, "templates"),
 )
 
 INSTALLED_APPS = (

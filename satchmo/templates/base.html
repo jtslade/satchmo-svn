@@ -2,21 +2,33 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="/site_media/css/style.css" />
     <title>{% block title %}My amazing site{% endblock %}</title>
 </head>
-
 <body>
-    <div id="sidebar">
-        {% block sidebar %}
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/blog/">Blog</a></li>
-        </ul>
-        {% endblock %}
+    <div id="container">
+    
+    <div id="top">
+        <h1>Shop Name Here</h1>
     </div>
-
-    <div id="content">
-        {% block content %}{% endblock %}
+    
+        <div id="leftnav">
+            {% block sidebar %}
+            Navigation here
+            {% endblock %}
+        </div>
+        
+        <div id="rightnav">
+            Account info here
+        </div>
+        
+        <div id="content">
+            {% block content %}{% endblock %}
+        </div>
+    
+        <div id="footer">
+            Powered by Satchmo
+        </div>
+        
     </div>
 </body>

@@ -3,7 +3,14 @@
 {% block title %}The Web Shop{% endblock %}
 
 {% block content %}
-{% for item in Items %}
-    <h2>{{ item.description }}</h2>
-{% endfor %}
+Welcome to the shop. 
+{% if all_items %}
+    <h4>Featured Items</h4>
+    <ul>
+    {% for item in all_items %}
+        <li>{{ item.verbose_name }}</li>
+    {% endfor %}
+    </ul>
+{% endif %}
+
 {% endblock %}

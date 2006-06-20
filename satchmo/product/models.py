@@ -69,6 +69,7 @@ class Item(models.Model):
     short_name = models.SlugField("Slug Name", prepopulate_from=("verbose_name",), help_text="This is a short, descriptive name of the shirt that will be used in the URL link to this item")
     description = models.TextField("Description of product", help_text="This field can contain HTML and should be a few paragraphs explaining the background of the product, and anything that would help the potential customer make their purchase.")
     active = models.BooleanField("Is product active?", default=True, help_text="This will determine whether or not this product will appear on the site")
+    featured = models.BooleanField("Featured Item", default=False, help_text="Featured items will show on the front page")
     optionGroups = models.ManyToManyField(OptionGroup, filter_interface=True, blank=True)
     price = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True, help_text="Base price for this item")
     weight = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True, )
@@ -135,7 +136,7 @@ class Item(models.Model):
     class Admin: 
         list_display = ('verbose_name', 'active')
         fields = (
-        (None, {'fields': ('category','verbose_name','short_name','description','active','price',)}),
+        (None, {'fields': ('category','verbose_name','short_name','description','active','featured','price',)}),
         ('Item Dimensions', {'fields': (('length', 'width','height',),'weight'), 'classes': 'collapse'}),
         ('Options', {'fields': ('optionGroups','create_subs',),}), 
         ('Related Products', {'fields':('relatedItems','alsoPurchased'),'classes':'collapse'}),            
