@@ -1,5 +1,8 @@
 from django.db import models
 from sets import Set
+from satchmo.thumbnail.field import ImageWithThumbnailField
+from django.conf import settings
+import os
 
 # Create your models here.
 
@@ -79,6 +82,7 @@ class Item(models.Model):
     create_subs = models.BooleanField("Create Sub Items", default=False, help_text ="This will erase any existing sub-items!")
     relatedItems = models.ManyToManyField('self', blank=True, null=True, related_name='related')
     alsoPurchased = models.ManyToManyField('self', blank=True, null=True, related_name='previouslyPurchased')
+    picture = ImageWithThumbnailField(upload_to=os.path.join(settings.DIRNAME,"static/images"))
     
     def __str__(self):
         return self.short_name 
@@ -136,7 +140,7 @@ class Item(models.Model):
     class Admin: 
         list_display = ('verbose_name', 'active')
         fields = (
-        (None, {'fields': ('category','verbose_name','short_name','description','active','featured','price',)}),
+        (None, {'fields': ('category','verbose_name','short_name','description','active','featured','price','picture',)}),
         ('Item Dimensions', {'fields': (('length', 'width','height',),'weight'), 'classes': 'collapse'}),
         ('Options', {'fields': ('optionGroups','create_subs',),}), 
         ('Related Products', {'fields':('relatedItems','alsoPurchased'),'classes':'collapse'}),            

@@ -40,7 +40,7 @@ MEDIA_ROOT = os.path.join(DIRNAME, 'static')
 
 # URL that handles the media served from MEDIA_ROOT.
 # Example: "http://media.lawrence.com"
-MEDIA_URL = ''
+MEDIA_URL = 'site_media'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -85,5 +85,6 @@ INSTALLED_APPS = (
     'satchmo.payment',
     'satchmo.discount',
     'satchmo.supplier',
+    'satchmo.thumbnail',
     
 )

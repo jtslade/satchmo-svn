@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load satchmo.thumbnail %}
 {% block title %}The Web Shop{% endblock %}
 
 {% block content %}
@@ -8,7 +8,10 @@ Welcome to the shop.
     <h4>Featured Items</h4>
     <ul>
     {% for item in all_items %}
-        <li>{{ item.verbose_name }}</li>
+        <li>
+           {{ item.verbose_name }} 
+           <img src="{{ item.get_picture_url|thumbnail:"width=75" }}" width="75" />
+        </li>
     {% endfor %}
     </ul>
 {% endif %}
