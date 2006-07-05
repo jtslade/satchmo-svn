@@ -80,6 +80,7 @@ INSTALLED_APPS = (
 #    'django.contrib.sites',
     'satchmo.shop',
     'satchmo.customer',
+    'satchmo.localization',
     'satchmo.product',
     'satchmo.shipping',
     'satchmo.payment',
