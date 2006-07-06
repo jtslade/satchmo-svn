@@ -82,10 +82,16 @@ class Item(models.Model):
     create_subs = models.BooleanField("Create Sub Items", default=False, help_text ="This will erase any existing sub-items!")
     relatedItems = models.ManyToManyField('self', blank=True, null=True, related_name='related')
     alsoPurchased = models.ManyToManyField('self', blank=True, null=True, related_name='previouslyPurchased')
-    picture = ImageWithThumbnailField(upload_to=os.path.join(settings.DIRNAME,"static/images"))
-    
+        
     def __str__(self):
         return self.short_name 
+    
+    def _get_mainImage(self):
+        if self.picture_set.count() > 0:
+            return(self.picture_set.order_by('sort')[0])
+        else:
+            return(False)
+    main_image = property(_get_mainImage)
     
     def _cross_list(self, sequences):
         """
@@ -140,7 +146,7 @@ class Item(models.Model):
     class Admin: 
         list_display = ('verbose_name', 'active')
         fields = (
-        (None, {'fields': ('category','verbose_name','short_name','description','active','featured','price','picture',)}),
+        (None, {'fields': ('category','verbose_name','short_name','description','active','featured','price',)}),
         ('Item Dimensions', {'fields': (('length', 'width','height',),'weight'), 'classes': 'collapse'}),
         ('Options', {'fields': ('optionGroups','create_subs',),}), 
         ('Related Products', {'fields':('relatedItems','alsoPurchased'),'classes':'collapse'}),            
@@ -150,6 +156,13 @@ class Item(models.Model):
     class Meta:
         verbose_name = "Master Product"
         
+class Picture(models.Model):
+    item = models.ForeignKey(Item, edit_inline=models.TABULAR, num_in_admin=3)
+    picture = ImageWithThumbnailField(upload_to=os.path.join(settings.DIRNAME,"static/images"))
+    caption = models.CharField("Optional caption",maxlength=100,null=True, blank=True)
+    sort = models.IntegerField("Sort Order",core=True)
+    
+
 class OptionItem(models.Model):
     optionGroup = models.ForeignKey(OptionGroup, edit_inline=models.TABULAR, num_in_admin=5)
     name = models.CharField("Display value", maxlength = 50, core=True)
