@@ -87,8 +87,8 @@ class Item(models.Model):
         return self.short_name 
     
     def _get_mainImage(self):
-        if self.picture_set.count() > 0:
-            return(self.picture_set.order_by('sort')[0])
+        if self.itemimage_set.count() > 0:
+            return(self.itemimage_set.order_by('sort')[0])
         else:
             return(False)
     main_image = property(_get_mainImage)
@@ -156,7 +156,7 @@ class Item(models.Model):
     class Meta:
         verbose_name = "Master Product"
         
-class Picture(models.Model):
+class ItemImage(models.Model):
     item = models.ForeignKey(Item, edit_inline=models.TABULAR, num_in_admin=3)
     picture = ImageWithThumbnailField(upload_to=os.path.join(settings.DIRNAME,"static/images"))
     caption = models.CharField("Optional caption",maxlength=100,null=True, blank=True)

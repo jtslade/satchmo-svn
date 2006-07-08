@@ -23,7 +23,7 @@ def _get_thumbnail_path(path, width=None, height=None):
 
     basedir = os.path.dirname(path) + '/'
     base, ext = os.path.splitext(os.path.basename(path))
-
+    
     # make thumbnail filename
     th_name = base + '_t'
     if (width is not None) and (height is not None):
@@ -69,7 +69,7 @@ def make_thumbnail(photo_url, width=None, height=None, root=settings.MEDIA_ROOT,
     assert (width is not None) or (height is not None)
     
     if not photo_url: return None
-    import sys    
+
     th_url = _get_thumbnail_path(photo_url, width, height)
     th_path = _get_path_from_url(th_url, root, url_root)
     photo_path = _get_path_from_url(photo_url, root, url_root)
@@ -78,11 +78,6 @@ def make_thumbnail(photo_url, width=None, height=None, root=settings.MEDIA_ROOT,
         # thumbnail already exists
         if not (os.path.getmtime(photo_path) > os.path.getmtime(th_path)):
             # if photo mtime is newer than thumbnail recreate thumbnail
-            if th_url.startswith(settings.MEDIA_ROOT):
-                #Need to strip out full path so that we are serving static files from the right place
-                th_url = th_url[len(settings.MEDIA_ROOT):] # strip media root
-                th_url = settings.MEDIA_URL + th_url
-
             return th_url
     
     # make thumbnail
@@ -119,14 +114,8 @@ def make_thumbnail(photo_url, width=None, height=None, root=settings.MEDIA_ROOT,
         import sys
         print >>sys.stderr, '[MAKE THUMBNAIL] error %s for file %r' % (err, photo_url)
         return photo_url
-        
-    if th_url.startswith(settings.MEDIA_ROOT):
-        #Need to strip out full path so that we are serving static files from the right place
-        th_url = th_url[len(settings.MEDIA_ROOT):] # strip media root
-        th_url = settings.MEDIA_URL + th_url
-        
-    return th_url
 
+    return th_url
 #
 
 def _remove_thumbnails(photo_url, root=settings.MEDIA_ROOT, url_root=settings.MEDIA_URL):

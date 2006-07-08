@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import *
 import os
-DIRNAME = os.path.dirname(__file__)
+from django.conf import settings
+
 
 urlpatterns = patterns('',
     # Example:
@@ -8,5 +9,13 @@ urlpatterns = patterns('',
     # Uncomment this for admin:
      (r'^admin/', include('django.contrib.admin.urls')),
      (r'^shop/$', 'satchmo.shop.views.index'),
-     (r'^shop/site_media/(.*)$', 'django.views.static.serve', {'document_root': os.path.join(DIRNAME,'static')}),
+     (r'^shop/site_media/(.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )
+if settings.LOCAL_DEV:
+   baseurlregex = '^' + settings.MEDIA_ROOT[1:] + '/(?P<path>.*)$' 
+   urlpatterns += patterns('',
+       (baseurlregex, 'django.views.static.serve',
+       {'document_root':  settings.MEDIA_ROOT}),
+ )
+ 
+ # r'^home/chris/working-dir/satchmo/trunk/satchmo/static/(?P<path>.*)$'

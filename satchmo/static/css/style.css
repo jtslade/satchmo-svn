@@ -40,9 +40,7 @@ padding: 1em;
 #content
 {
 margin-left: 200px;
-border-left: 1px solid gray;
 margin-right: 200px;
-border-right: 1px solid gray;
 padding: 1em;
 }
 
@@ -59,3 +57,17 @@ border-top: 1px solid gray;
 #leftnav p, #rightnav p { margin: 0 0 1em 0; }
 #content h2 { margin: 0 0 .5em 0; }
 
+div.productImage {
+border:solid 1px silver;
+padding:5px;
+float: left;
+margin-top: 10px;
+margin-left: 10px;
+margin-right: 10px;
+margin-bottom:2px;
+}
+
+div.productImage p {
+   text-align: center;
+   font-size: 10pt;
+   }
