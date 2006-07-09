@@ -160,9 +160,8 @@ class ItemImage(models.Model):
     item = models.ForeignKey(Item, edit_inline=models.TABULAR, num_in_admin=3)
     picture = ImageWithThumbnailField(upload_to=os.path.join(settings.DIRNAME,"static/images"))
     caption = models.CharField("Optional caption",maxlength=100,null=True, blank=True)
-    sort = models.IntegerField("Sort Order",core=True)
+    sort = models.IntegerField("Sort Order", help_text="Leave blank to delete", core=True)
     
-
 class OptionItem(models.Model):
     optionGroup = models.ForeignKey(OptionGroup, edit_inline=models.TABULAR, num_in_admin=5)
     name = models.CharField("Display value", maxlength = 50, core=True)
