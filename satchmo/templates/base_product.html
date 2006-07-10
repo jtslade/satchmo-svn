@@ -1,4 +1,11 @@
 {% extends "base.html" %}
+{% load satchmo.thumbnail %}
 
 {% block content %}
+<h4>{{ item.verbose_name }}</h4>
+<p>{{ item.description }}</p>
+<h3>${{ item.price }}</h3>
+{% for pic in item.itemimage_set.all %}
+    <img src="{{ pic.get_picture_url|thumbnail:"width=280" }}" width="280" />
+{%endfor %}
 {% endblock %}

@@ -10,10 +10,10 @@ Welcome to the shop.
             <div class = "productImage">    
            {% if item.main_image %}
               <center>
-              <img src="{{ item.main_image.get_picture_url|thumbnail:"width=85" }}" width="85" />
+              <a href="{{ item.get_absolute_url }}"><img src="{{ item.main_image.get_picture_url|thumbnail:"width=85" }}" width="85" /> </a>
               </center>
            {% endif %}     
-            <p>{{ item.verbose_name }}</p>
+            <p><a href="{{ item.get_absolute_url }}">{{ item.verbose_name }}</a></p>
         </div>
     {% endfor %}
 {% endif %}
