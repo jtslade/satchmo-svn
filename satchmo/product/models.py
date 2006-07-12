@@ -1,4 +1,5 @@
 from django.db import models
+from django.core import validators
 from sets import Set
 from satchmo.thumbnail.field import ImageWithThumbnailField
 from django.conf import settings
@@ -16,22 +17,34 @@ class Category(models.Model):
                 list_display = ('name', '_parents_repr')
         
         def __str__(self):
-                p_list = self._recurse_for_parents(self)
+                p_list = self._recurse_for_parents_name(self)
                 p_list.append(self.name)
                 return self.get_separator().join(p_list)
-        
+
+        def _recurse_for_parents_slug(self, cat_obj):
+            #This is used for the urls
+                p_list = []
+                if cat_obj.parent_id:
+                        p = cat_obj.parent
+                        p_list.append(p.slug)
+                        more = self._recurse_for_parents_slug(p)
+                        p_list.extend(more)
+                if cat_obj == self and p_list:
+                        p_list.reverse()
+                return p_list
+
         def get_absolute_url(self):
-                if self.parent_id:
-                        return "/category/%s/%s/" % (self.parent.slug, self.slug)
-                else:
-                        return "/category/%s/" % (self.slug)
-        
-        def _recurse_for_parents(self, cat_obj):
+            p_list = self._recurse_for_parents_slug(self)
+            p_list.append(self.slug)
+            return "/category/" + "/".join(p_list)        
+                
+        def _recurse_for_parents_name(self, cat_obj):
+            #This is used for the visual display & save validation
                 p_list = []
                 if cat_obj.parent_id:
                         p = cat_obj.parent
                         p_list.append(p.name)
-                        more = self._recurse_for_parents(p)
+                        more = self._recurse_for_parents_name(p)
                         p_list.extend(more)
                 if cat_obj == self and p_list:
                         p_list.reverse()
@@ -41,12 +54,12 @@ class Category(models.Model):
                 return ' :: '
         
         def _parents_repr(self):
-                p_list = self._recurse_for_parents(self)
+                p_list = self._recurse_for_parents_name(self)
                 return self.get_separator().join(p_list)
         _parents_repr.short_description = "Category parents"
         
         def save(self):
-                p_list = self._recurse_for_parents(self)
+                p_list = self._recurse_for_parents_name(self)
                 if self.name in p_list:
                         raise validators.ValidationError("You must not save a category in itself!")
                 super(Category, self).save()
