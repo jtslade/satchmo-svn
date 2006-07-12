@@ -1,11 +1,28 @@
 from django.db import models
 
 SUBDIVISION_CHOICES = (
-    ('CO', _('County')),
-    ('PR', _('Province')),
-    ('ST', _('State')),
+    ('ar', _('autonomous region')),
+    ('co', _('County')),
+    ('dt', _('District')),
+    ('fd', _('federal district')),
+    ('mn', _('Municipality')),
+    ('pr', _('Province')),
+    ('rg', _('Region')),
+    ('sm', _('special municipality')),
+    ('st', _('State')),
+    ('ty', _('Territory')),
 )
 
+ZONE_CHOICES = (
+    (1, _('North America')),
+    (2, _('Africa')),
+    (34, _('Europe')),
+    (5, _('Mexico, Central and South America, West Indies')),
+    (6, _('South Pacific and Oceania')),
+    (7, _('Russia and its vicinity')),
+    (8, _('East Asia')),
+    (9, _('West, South and Central Asia, Middle East')),
+)
 
 class AddressFormat(models.Model):
     """
@@ -77,41 +94,45 @@ class Country(models.Model):
     as state is in U.S.
     
     """
-    alpha3_code = models.CharField(_('3 letter ISO code'), maxlength=3,
-        primary_key=True)
+    #alpha3_code = models.CharField(_('3 letter ISO code'), maxlength=3,
+    #    primary_key=True)
     alpha2_code = models.CharField(_('2 letter ISO code'), maxlength=2,
-        unique=True)
+        primary_key=True)
     name = models.CharField(_('official country name in english'),
         maxlength=52, unique=True, core=True)
+    zone = models.PositiveSmallIntegerField(_('geographic zone'), maxlength=1,
+        choices=ZONE_CHOICES)
     is_subdivision = models.BooleanField(_('subdivision'), default=False,
         help_text=_('Designates whether the country needs the primary \
-subdivision (i.e. state, province or county.'))
-    main_subdiv = models.CharField(_('type of primay subdivision'),
+        subdivision (i.e. state, province or county.'))
+    main_subdiv = models.CharField(_('primay subdivision'),
         maxlength=2, choices=SUBDIVISION_CHOICES)
-    address_format = models.ForeignKey(AddressFormat)
+    display = models.BooleanField (_('display'), default=True,
+        help_text=_('Designates whether the country is shown.'))
+# address_format = models.ForeignKey(AddressFormat)
 #, related_name='format')
 #default=1)
 
     int_dialcode = models.PositiveSmallIntegerField(
-        _('international dialing code'), maxlength=3)
+        _('international dialing code'), maxlength=4, null=True)
 
     class Meta:
         verbose_name = _('country')
         verbose_name_plural = _('countries')
-        ordering = ['alpha3_code']
+        ordering = ['alpha2_code']
     class Admin:
         #fields = (
         #    (_('Sorry! Not allowed to add or modify items in this model.'), {
         #        'fields': ('alpha2_code',)
         #    }),
         #)
-        list_display = ('name', 'alpha3_code', 'alpha2_code', 'int_dialcode',
-                        'is_subdivision')
-        list_filter = ('is_subdivision',)
-        search_fields = ('name', 'alpha3_code')
+        list_display = ('name', 'alpha2_code', 'zone','int_dialcode',
+                        'main_subdiv','display')
+        list_filter = ('zone','display',)
+        search_fields = ('name', 'alpha2_code')
 
     def __str__(self):
-        return "%s - %s" % (self.alpha3_code, self.name)
+        return "%s - %s" % (self.alpha2_code, self.name)
 
 
 class PrimarySubdivision(models.Model):
