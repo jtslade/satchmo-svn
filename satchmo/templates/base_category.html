@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load satchmo.thumbnail %}
+{% block title %}The Web Shop{% endblock %}
+
+{% block navbar %}
+<a href="/shop">Home</a>:: {{category}}
+{% endblock %}
+
+{% block sidebar %}
+
+{% endblock %}
+
+{% block content %}
+<h3>{{ category.name }}</h3>
+    <ul>
+    {% for item in category.item_set.all %} 
+            <li><a href="{{ item.get_absolute_url }}">
+            <img src="{{ item.main_image.get_picture_url|thumbnail:"width=85" }}" width="85" /> </a>
+            {{ item.verbose_name }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

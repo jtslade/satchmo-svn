@@ -12,9 +12,15 @@
         <h1>Shop Name Here</h1>
     </div>
     
+    <div id="navbar">
+    {% block navbar %}
+    Breadcrumbs here
+    {% endblock %}
+    </div>
+    
         <div id="leftnav">
             {% block sidebar %}
-            Navigation here
+            Category navigation
             {% endblock %}
         </div>
         

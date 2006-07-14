@@ -8,6 +8,15 @@ border: 1px solid gray;
 line-height: 130%;
 }
 
+#navbar
+{
+width: 100%;
+background-color: #fff;
+color: #333;
+border: 1px solid silver;
+line-height: 90%;	
+}
+
 #top
 {
 padding: .5em;

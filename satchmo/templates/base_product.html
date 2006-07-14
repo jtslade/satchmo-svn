@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load satchmo.thumbnail %}
 
+{% block navbar %}
+<a href="/shop">Home</a> :: {{item.category}}
+{% endblock %}
+
 {% block content %}
 <h4>{{ item.verbose_name }}</h4>
 <p>{{ item.description }}</p>
