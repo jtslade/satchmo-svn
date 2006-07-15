@@ -104,11 +104,11 @@ def load_data():
     optItem2c.save()
 
     #Add the option group to our items
-    i1.optionGroups.add(optSet1)
+    i1.option_group.add(optSet1)
     i1.save()
-    i1.optionGroups.add(optSet2)
+    i1.option_group.add(optSet2)
     i1.save()
-    i2.optionGroups.add(optSet1)
+    i2.option_group.add(optSet1)
     i2.save()
 
 

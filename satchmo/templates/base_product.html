@@ -11,5 +11,20 @@
 <h3>${{ item.price }}</h3>
 {% for pic in item.itemimage_set.all %}
     <img src="{{ pic.get_picture_url|thumbnail:"width=280" }}" width="280" />
-{%endfor %}
+{% endfor %}
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<form action="/cart/{{ item.id }}/add/" method="post">
+<p>Please choose your options:</p>
+{% for option in item.option_group.all %}
+ {{ option }}
+    <select name="{{ option }}" id="{{option}}{{ forloop.counter }}">
+    {% for choice in option.optionitem_set.all %}
+     <option value="{{ choice }}">{{ choice }}</option>
+    {% endfor %}
+    </select>
+{% endfor %}
+
+<input type="submit" value="Add to cart" />
+</form>
 {% endblock %}

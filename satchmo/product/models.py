@@ -8,65 +8,65 @@ import os
 # Create your models here.
 
 class Category(models.Model):
-        name = models.CharField(core=True, maxlength=200)
-        slug = models.SlugField(prepopulate_from=('name',),help_text="Used for URLs",)
-        parent = models.ForeignKey('self', blank=True, null=True, related_name='child')
-        description = models.TextField(blank=True,help_text="Optional")
+    name = models.CharField(core=True, maxlength=200)
+    slug = models.SlugField(prepopulate_from=('name',),help_text="Used for URLs",)
+    parent = models.ForeignKey('self', blank=True, null=True, related_name='child')
+    description = models.TextField(blank=True,help_text="Optional")
         
-        class Admin:
-                list_display = ('name', '_parents_repr')
-        
-        def __str__(self):
-                p_list = self._recurse_for_parents_name(self)
-                p_list.append(self.name)
-                return self.get_separator().join(p_list)
+    def _recurse_for_parents_slug(self, cat_obj):
+        #This is used for the urls
+        p_list = []
+        if cat_obj.parent_id:
+            p = cat_obj.parent
+            p_list.append(p.slug)
+            more = self._recurse_for_parents_slug(p)
+            p_list.extend(more)
+        if cat_obj == self and p_list:
+            p_list.reverse()
+        return p_list
 
-        def _recurse_for_parents_slug(self, cat_obj):
-            #This is used for the urls
-                p_list = []
-                if cat_obj.parent_id:
-                        p = cat_obj.parent
-                        p_list.append(p.slug)
-                        more = self._recurse_for_parents_slug(p)
-                        p_list.extend(more)
-                if cat_obj == self and p_list:
-                        p_list.reverse()
-                return p_list
-
-        def get_absolute_url(self):
-            p_list = self._recurse_for_parents_slug(self)
-            p_list.append(self.slug)
-            return "/category/" + "/".join(p_list)        
+    def get_absolute_url(self):
+        p_list = self._recurse_for_parents_slug(self)
+        p_list.append(self.slug)
+        return "/shop/category/" + "/".join(p_list)        
                 
-        def _recurse_for_parents_name(self, cat_obj):
-            #This is used for the visual display & save validation
-                p_list = []
-                if cat_obj.parent_id:
-                        p = cat_obj.parent
-                        p_list.append(p.name)
-                        more = self._recurse_for_parents_name(p)
-                        p_list.extend(more)
-                if cat_obj == self and p_list:
-                        p_list.reverse()
-                return p_list
+    def _recurse_for_parents_name(self, cat_obj):
+        #This is used for the visual display & save validation
+        p_list = []
+        if cat_obj.parent_id:
+            p = cat_obj.parent
+            p_list.append(p.name)
+            more = self._recurse_for_parents_name(p)
+            p_list.extend(more)
+        if cat_obj == self and p_list:
+            p_list.reverse()
+        return p_list
                 
-        def get_separator(self):
-                return ' :: '
+    def get_separator(self):
+        return ' :: '
         
-        def _parents_repr(self):
-                p_list = self._recurse_for_parents_name(self)
-                return self.get_separator().join(p_list)
-        _parents_repr.short_description = "Category parents"
+    def _parents_repr(self):
+        p_list = self._recurse_for_parents_name(self)
+        return self.get_separator().join(p_list)
+    _parents_repr.short_description = "Category parents"
         
-        def save(self):
-                p_list = self._recurse_for_parents_name(self)
-                if self.name in p_list:
-                        raise validators.ValidationError("You must not save a category in itself!")
-                super(Category, self).save()
+    def __str__(self):
+        p_list = self._recurse_for_parents_name(self)
+        p_list.append(self.name)
+        return self.get_separator().join(p_list)
         
-        class Meta:
-            verbose_name = "Category"
-            verbose_name_plural = "Categories"
+    def save(self):
+        p_list = self._recurse_for_parents_name(self)
+        if self.name in p_list:
+            raise validators.ValidationError("You must not save a category in itself!")
+        super(Category, self).save()
+        
+    class Admin:
+        list_display = ('name', '_parents_repr')
+        
+    class Meta:
+        verbose_name = "Category"
+        verbose_name_plural = "Categories"
 
 class OptionGroup(models.Model):
     name = models.CharField("Name of Option Group",maxlength = 50, core=True, help_text='This will be the text displayed on the product page',)
@@ -79,6 +79,9 @@ class OptionGroup(models.Model):
     class Admin:
         list_display = ('name', 'description')
         
+    class Meta:
+        ordering = ['sort_order']
+        
 class Item(models.Model):
     category = models.ForeignKey(Category)
     verbose_name = models.CharField("Full Name", maxlength=255)
@@ -87,7 +90,7 @@ class Item(models.Model):
     date_added = models.DateField(null=True, blank=True, auto_now_add=True)
     active = models.BooleanField("Is product active?", default=True, help_text="This will determine whether or not this product will appear on the site")
     featured = models.BooleanField("Featured Item", default=False, help_text="Featured items will show on the front page")
-    optionGroups = models.ManyToManyField(OptionGroup, filter_interface=True, blank=True)
+    option_group = models.ManyToManyField(OptionGroup, filter_interface=True, blank=True)
     price = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True, help_text="Base price for this item")
     weight = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True, )
     length = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
@@ -125,7 +128,7 @@ class Item(models.Model):
         sublist = []
         masterlist = []
         #Create a list of all the options & create all combos of the options
-        for opt in self.optionGroups.all():
+        for opt in self.option_group.all():
             for value in opt.optionitem_set.all():
                 sublist.append(value)
             masterlist.append(sublist)
@@ -166,7 +169,7 @@ class Item(models.Model):
         fields = (
         (None, {'fields': ('category','verbose_name','short_name','description','date_added','active','featured','price',)}),
         ('Item Dimensions', {'fields': (('length', 'width','height',),'weight'), 'classes': 'collapse'}),
-        ('Options', {'fields': ('optionGroups','create_subs',),}), 
+        ('Options', {'fields': ('option_group','create_subs',),}), 
         ('Related Products', {'fields':('relatedItems','alsoPurchased'),'classes':'collapse'}),            
         )
         list_filter = ('category',)
@@ -183,6 +186,9 @@ class ItemImage(models.Model):
     def __str__(self):
         return "Picture of %s" % self.item.short_name
         
+    class Meta:
+        ordering = ['sort']
+        
 class OptionItem(models.Model):
     optionGroup = models.ForeignKey(OptionGroup, edit_inline=models.TABULAR, num_in_admin=5)
     name = models.CharField("Display value", maxlength = 50, core=True)
@@ -192,7 +198,9 @@ class OptionItem(models.Model):
     def __str__(self):
         return self.name
         
-
+    class Meta:
+        ordering = ['displayOrder']
+        
 class Sub_Item(models.Model):
     item = models.ForeignKey(Item)
     items_in_stock = models.IntegerField("Number in stock", core=True)
