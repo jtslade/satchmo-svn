@@ -68,27 +68,42 @@ def load_data():
                   city="Happyville", state="MD", zip="190111", phone1="888-888-1111", fax="999-110-1909", email="sally@shirts.com",
                   notes="Shirt Supplier")
     s2.save()
-    #Create 2 categories
+    #Create some categories
     cat1 = Category(name="Shirt",slug="shirt",description="Women's Shirts")
     cat1.save()
     cat2 = Category(name="Short Sleeve",slug="shortsleeve",description="Short sleeve shirts", parent=cat1)
     cat2.save()
+    cat3 = Category(name="Books",slug="book",description="Books")
+    cat3.save()
+    cat4 = Category(name="Fiction",slug="fiction",description="Fiction Books", parent=cat3)
+    cat4.save()
+    cat5 = Category(name="Science Fiction",slug="scifi",description="Science Fiction",parent=cat4)
+    cat5.save()
     
-    #Create an item
+    
+    #Create some items
     i1 = Item(verbose_name="Django Rocks shirt", short_name="DJ-Rocks", description="Really cool shirt", price="20.00", 
              active=True, featured=True, category=cat1)
     i1.save()
     i2 = Item(verbose_name="Python Rocks shirt", short_name="PY-Rocks", description="Really cool python shirt", price="19.50", 
              active=True, featured=True, category=cat2)
     i2.save()
-
+    i3 = Item(verbose_name="A really neat book", short_name="neat-book", description="A neat book.  You should buy it.", price="5.00", 
+             active=True, featured=True, category=cat4)
+    i3.save()
+    i4 = Item(verbose_name="Robots Attack!", short_name="robot-attack", description="Robots try to take over the world.", price="7.99", 
+             active=True, featured=True, category=cat5)
+    i4.save()
 
     #Create an attribute set 
     optSet1 = OptionGroup(name="sizes", sort_order=1)
     optSet2 = OptionGroup(name="colors", sort_order=2)
     optSet1.save()
     optSet2.save()
-
+    
+    optSet3 = OptionGroup(name="Book type", sort_order=1)
+    optSet3.save()
+    
     optItem1a = OptionItem(name="Small", value="S", displayOrder=1, optionGroup=optSet1)
     optItem1a.save()
     optItem1b = OptionItem(name="Medium", value="M", displayOrder=2, optionGroup=optSet1)
@@ -103,6 +118,14 @@ def load_data():
     optItem2c = OptionItem(name="Blue", value="BL", displayOrder=3, optionGroup=optSet2)
     optItem2c.save()
 
+    optItem3a = OptionItem(name="Hard cover", value="hard", displayOrder=1, optionGroup=optSet3)
+    optItem3a.save()
+    optItem3b = OptionItem(name="Soft cover", value="soft", displayOrder=2, optionGroup=optSet3)
+    optItem3b.save()
+    optItem3c = OptionItem(name="On tape", value="tape", displayOrder=3, optionGroup=optSet3)
+    optItem3c.save()
+
+
     #Add the option group to our items
     i1.option_group.add(optSet1)
     i1.save()
@@ -111,6 +134,11 @@ def load_data():
     i2.option_group.add(optSet1)
     i2.save()
 
+    i3.option_group.add(optSet3)
+    i3.save()
+    
+    i4.option_group.add(optSet3)
+    i4.save()
 
 def main(): 
     """Flush it all, baby!"""
