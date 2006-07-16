@@ -14,11 +14,11 @@
 {% endfor %}
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-<form action="/cart/{{ item.id }}/add/" method="post">
+<form action="/shop/cart/{{ item.id }}/add/" method="post">
 <p>Please choose your options:</p>
 {% for option in item.option_group.all %}
  {{ option }}
-    <select name="{{ option }}" id="{{option}}{{ forloop.counter }}">
+    <select name="{{ option }}" id="{{option}}">
     {% for choice in option.optionitem_set.all %}
      <option value="{{ choice }}">{{ choice }}</option>
     {% endfor %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load satchmo.thumbnail %}
+
+{% block navbar %}
+<a href="/shop">Home</a>
+{% endblock %}
+
+{% block content %}
+
+<h4>Contents of your cart</h4>
+<ul>
+{% for item in all_items %}
+    <li>{{ item }}</li>
+{% endfor %}
+</ul>
+
+{% endblock %}
