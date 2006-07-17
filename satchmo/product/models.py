@@ -154,7 +154,6 @@ class Item(models.Model):
         '''
         Right now this only works if you save the suboptions, then go back and choose to create the sub_items
         '''
-        super(Item, self).save()
         if self.create_subs:
             self.create_subitems()
             self.create_subs = False
@@ -209,7 +208,7 @@ class Sub_Item(models.Model):
     length = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
     width = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
     height = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
-    options = models.ManyToManyField(OptionItem, filter_interface=True)
+    options = models.ManyToManyField(OptionItem, filter_interface=True, null=True, blank=True)
     
     def _get_optionName(self):
         "Returns the options in a human readable form"
@@ -238,7 +237,8 @@ class Sub_Item(models.Model):
         """
         output = Set()
         for option in self.options.all():
-            output.add(option.value)
+            outvalue = "%s-%s" % (option.optionGroup.name,option.value)
+            output.add(outvalue)
         return(output)
     option_values = property(_get_optionValues)
     

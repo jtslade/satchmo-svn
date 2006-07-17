@@ -4,6 +4,8 @@ from django.shortcuts import render_to_response
 from django import http
 from django.template import RequestContext, loader
 from satchmo.product.models import Item, Category
+from satchmo.shop.models import Cart, CartItem
+from sets import Set
 
 def bad_or_missing(request, msg):
     """
@@ -55,29 +57,32 @@ def category_children(request, slug_parent, slug):
 def display_cart(request):
     #Show the items in the cart
     cart_list = []
-    if request.session.get('cart_items',False):
-        for cart_item in request.session['cart_items']:
-            item = Item.objects.get(id=cart_item)
-            cart_list.append(item)
-        return render_to_response('base_cart.html', {'all_items': cart_list})
+    if request.session.get('cart',False):
+        tempCart = Cart.objects.get(id=request.session['cart'])
+        return render_to_response('base_cart.html', {'all_items': tempCart.cartitem_set.all()})
     else:
         return render_to_response('base_cart.html', {'all_items' : []})
 
 def add_to_cart(request, id):
     #Add an item to the session/cart
-    chosenOptions = []
+    chosenOptions = Set()
     try:
         product = Item.objects.get(pk=id)
     except Item.DoesNotExist:
         return bad_or_missing(request, 'The product you have requested does '
                 'not exist.')
     for option in product.option_group.all():
-        chosenOptions.append('%s:%s' % (option.name,request.POST[option.name]))
-    #Need to figure out best way to add to the session
-    if request.session.get('cart_items',False):
-        currentItems = request.session['cart_items']
-        newItems = currentItems + [id]
-        request.session['cart_items'] = newItems
+        chosenOptions.add('%s-%s' % (option.name,request.POST[option.name]))
+    #Now get the appropriate sub_item
+    chosenItem = product.get_sub_item(chosenOptions)
+    if request.session.get('cart',False):
+        tempCart = Cart.objects.get(id=request.session['cart'])
     else:
-        request.session['cart_items'] = [id]
+        tempCart = Cart()
+    tempCart.save() #need to make sure there's an id
+    newItem = CartItem(cart=tempCart, subItem=chosenItem, quantity=1)
+    newItem.save()
+    tempCart.save()
+    request.session['cart'] = tempCart.id
+
     return http.HttpResponseRedirect('/shop/cart')

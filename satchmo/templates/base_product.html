@@ -20,7 +20,7 @@
  {{ option }}
     <select name="{{ option }}" id="{{option}}">
     {% for choice in option.optionitem_set.all %}
-     <option value="{{ choice }}">{{ choice }}</option>
+     <option value="{{ choice.value }}">{{ choice }}</option>
     {% endfor %}
     </select>
 {% endfor %}
