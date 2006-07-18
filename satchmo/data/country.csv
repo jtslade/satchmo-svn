@@ -1,4 +1,60 @@
-Country: name, alpha2_code, zone, main_subdiv
+# * coding: UTF-8 *
+# List of countries, geographic zone and subdivisions.
+#
+# Country names and code
+# ----------------------
+# Information from ISO 3166-1 got from:
+#  http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+#  http://www.statoids.com
+#
+# It is used iso.org to check both changes and the correct name of countries.
+#  http://www.iso.org/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/index.html
+#  http://www.iso.org/iso/en/prods-services/iso3166ma/01whats-new/index.html
+#
+# There are localities in the Atlantic and Pacific oceans and United Kingdom
+# that are listed in the USPS International Mail Manual as primary destinations
+# but they are not listed in ISO 3166:
+#  http://www.columbia.edu/kermit/postal.html#oceans
+#  http://www.columbia.edu/kermit/postal.html#uk
+#
+# So it has been added the USPS primary destinations created by
+# the country code, a dot, and a code invented fot that localization. Example:
+#  ES.CA -> country: Spain , localization: Canary Islands
+#
+# Subdivisions
+# ------------
+# It only has been added data related to countries where it is necessary 
+# for the mail delivery.
+#  http://www.statoids.com
+#
+# Codes:
+#  ar = Autonomous region
+#  co = County
+#  fd = Federal district
+#  mu = Municipality
+#  pr = Province
+#  sm = Special municipality
+#  st = State
+#  ty = Territory
+#
+# Geographic zone
+# ---------------
+# It has been used the zones of country calling codes:
+#  http://en.wikipedia.org/wiki/List_of_country_calling_codes
+#
+# Codes:
+#  1 = North America
+#  2 = Africa
+#  34 = Europe
+#  5 = Mexico, Central and South America, West Indies
+#  6 = South Pacific and Oceania
+#  7 = Russia and its vicinity
+#  8 = East Asia
+#  9 = West, South and Central Asia, Middle East
+#
+# * code: Country, name, alpha2_code, zone, main_subdiv *
+# official name : 2 letter ISO code : geographic zone : primary subdivision
+
 AFGHANISTAN:AF:9:
 ÅLAND ISLANDS:AX:34:
 ALBANIA:AL:34:
