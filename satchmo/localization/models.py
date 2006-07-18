@@ -55,7 +55,7 @@ as state in U.S.
     class Meta:
         verbose_name = _('country')
         verbose_name_plural = _('countries')
-        ordering = ['alpha2_code']
+        ordering = ['name']
     class Admin:
         """
         fields = (
@@ -70,7 +70,7 @@ as state in U.S.
         search_fields = ('name', 'alpha2_code')
 
     def __str__(self):
-        return "%s - %s" % (self.alpha2_code, self.name)
+        return "%s (%s)" % (self.name, self.alpha2_code)
 
 
 class PrimarySubdivision(models.Model):
@@ -82,7 +82,7 @@ In others it is omitted, and in others it is either optional,
 or needed in some cases but omitted in others.
     """
     country = models.ForeignKey(Country)
-    id_name = models.CharField(_('name identifier'), maxlength=2,
+    id_name = models.CharField(_('name identifier'), maxlength=8,
         primary_key=True)
     name = models.CharField(_('name'), maxlength=50)
     iso_code = models.CharField(_('ISO 3166-2 code'), maxlength=3)
@@ -93,7 +93,7 @@ or needed in some cases but omitted in others.
         verbose_name = _('primary subdivision')
         verbose_name_plural = _('primary subdivisions')
         ordering = ['country', 'name']
-        unique_together = (('country', 'id_name'),)
+        unique_together = (('country', 'name'),)
     class Admin:
         """
         fields = (
@@ -102,9 +102,8 @@ or needed in some cases but omitted in others.
             }),
         )
         """
-        list_display = ('country', 'id_name', 'name', 'iso_code')
+        list_display = ('country', 'name', 'iso_code')
         search_fields = ('name', 'iso_code')
-
 
     def __str__(self):
         return "%s (%s)" % (self.iso_code, self.name)
