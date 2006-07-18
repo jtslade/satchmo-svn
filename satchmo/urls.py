@@ -2,10 +2,11 @@ from django.conf.urls.defaults import *
 import os
 from django.conf import settings
 
+shopregex = '^' + settings.SHOP_BASE[1:] + "/"
 
 urlpatterns = patterns('',
      (r'^admin/', include('django.contrib.admin.urls')),
-     (r'^shop/', include('satchmo.shop.urls')),
+     (shopregex, include('satchmo.shop.urls')),
 )
 #The following is used to serve up local media files like images
 if settings.LOCAL_DEV:

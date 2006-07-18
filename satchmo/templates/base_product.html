@@ -2,7 +2,7 @@
 {% load satchmo.thumbnail %}
 
 {% block navbar %}
-<a href="/shop">Home</a> :: {{item.category}}
+<a href="{{shop_base}}">Home</a> :: {{item.category}}
 {% endblock %}
 
 {% block content %}
@@ -14,7 +14,7 @@
 {% endfor %}
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-<form action="/shop/cart/{{ item.id }}/add/" method="post">
+<form action="{{shop_base}}/cart/{{ item.id }}/add/" method="post">
 <p>Please choose your options:</p>
 {% for option in item.option_group.all %}
  {{ option }}

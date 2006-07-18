@@ -12,7 +12,7 @@ urlpatterns = patterns('satchmo.shop.views',
      (r'^cart/(?P<id>\d+)/add/$','add_to_cart'),
      (r'^cart/$','display_cart'),
 )
-#Note with the last url - this allows category depth to be as deep as we want but the downside
+#Note with the last category url - this allows category depth to be as deep as we want but the downside
 #is that we ignore all but the child and parent category.  In practice this should be ok
 if settings.LOCAL_DEV:
     urlpatterns += patterns('',

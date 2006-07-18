@@ -2,10 +2,12 @@
 
 from django.shortcuts import render_to_response
 from django import http
-from django.template import RequestContext, loader
+from django.template import RequestContext
+from django.template import loader
 from satchmo.product.models import Item, Category
 from satchmo.shop.models import Cart, CartItem
 from sets import Set
+from django.conf import settings
 
 def bad_or_missing(request, msg):
     """
@@ -19,7 +21,8 @@ def bad_or_missing(request, msg):
 
 def index(request):
     featured_items = Item.objects.filter(active="1").filter(featured="1")
-    return render_to_response('base_index.html', {'all_items': featured_items})
+    return render_to_response('base_index.html', {'all_items': featured_items},
+                              RequestContext(request))
 
 def product(request, slug):
     #Display the basic product detail page
@@ -28,7 +31,7 @@ def product(request, slug):
     except Item.DoesNotExist:
         return bad_or_missing(request, 'The product you have requested does '
                 'not exist.')
-    return render_to_response('base_product.html',{'item':item})
+    return render_to_response('base_product.html',{'item':item},RequestContext(request))
         
 def category_root(request, slug):
     #Display the category page if we're not dealing with a child category
@@ -37,7 +40,8 @@ def category_root(request, slug):
     except IndexError:
         return bad_or_missing(request, 'The category you have requested does '
             'not exist.')
-    return render_to_response('base_category.html',{'category':category})
+    return render_to_response('base_category.html',{'category':category},
+                                RequestContext(request))
 
 def category_children(request, slug_parent, slug):
     #Display the category if it is a child
@@ -52,18 +56,22 @@ def category_children(request, slug_parent, slug):
         return bad_or_missing(request, 'The category you have requested does '
             'not exist.')
             
-    return render_to_response('base_category.html',{'category':category})
+    return render_to_response('base_category.html',{'category':category}, 
+                                RequestContext(request))
 
 def display_cart(request):
     #Show the items in the cart
     cart_list = []
     if request.session.get('cart',False):
         tempCart = Cart.objects.get(id=request.session['cart'])
-        return render_to_response('base_cart.html', {'all_items': tempCart.cartitem_set.all()})
+        return render_to_response('base_cart.html', {'all_items': tempCart.cartitem_set.all()},
+                                                        RequestContext(request))
     else:
-        return render_to_response('base_cart.html', {'all_items' : []})
+        return render_to_response('base_cart.html', {'all_items' : []},
+                                                        RequestContext(request))
 
 def add_to_cart(request, id):
+    #Todo: Error checking for invalid combos
     #Add an item to the session/cart
     chosenOptions = Set()
     try:
@@ -85,4 +93,4 @@ def add_to_cart(request, id):
     tempCart.save()
     request.session['cart'] = tempCart.id
 
-    return http.HttpResponseRedirect('/shop/cart')
+    return http.HttpResponseRedirect('%s/cart' % (settings.SHOP_BASE))

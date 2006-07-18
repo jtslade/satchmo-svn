@@ -33,11 +33,15 @@ class Cart(models.Model):
     date_time_created = models.DateTimeField(auto_now_add=True)
     #need user info here too
     
+    def _get_count(self):
+        return (self.cartitem_set.count())
+    numItems = property(_get_count)
+    
     def __str__(self):
         return ("Shopping Cart (%s)" % self.date_time_created)
         
     class Admin:
-        list_display = ('date_time_created',)
+        list_display = ('date_time_created','numItems')
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, edit_inline=models.TABULAR, num_in_admin=3)

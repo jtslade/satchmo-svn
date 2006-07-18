@@ -28,7 +28,8 @@ class Category(models.Model):
     def get_absolute_url(self):
         p_list = self._recurse_for_parents_slug(self)
         p_list.append(self.slug)
-        return "/shop/category/" + "/".join(p_list)        
+        baseurl = settings.SHOP_BASE + "/category/"
+        return baseurl + "/".join(p_list)        
                 
     def _recurse_for_parents_name(self, cat_obj):
         #This is used for the visual display & save validation
@@ -160,7 +161,7 @@ class Item(models.Model):
         super(Item, self).save()
     
     def get_absolute_url(self):
-        return "/shop/product/%s" % (self.short_name)
+        return "%s/product/%s" % (settings.SHOP_BASE,self.short_name)
 
     
     class Admin: 

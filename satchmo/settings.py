@@ -64,6 +64,10 @@ MIDDLEWARE_CLASSES = (
     "django.middleware.doc.XViewMiddleware",
 )
 
+#this is used to add additional config variables to each request
+TEMPLATE_CONTEXT_PROCESSORS = ('satchmo.shop.context_processors.settings',
+                               'django.core.context_processors.auth',)
+
 ROOT_URLCONF = 'satchmo.urls'
 
 TEMPLATE_DIRS = (
@@ -89,3 +93,7 @@ INSTALLED_APPS = (
     'satchmo.thumbnail',
     
 )
+
+#This is the base url for the shop.  Only include a leading slash
+#examples: '/shop' or '/mystore'
+SHOP_BASE = '/shop'
