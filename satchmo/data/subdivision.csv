@@ -1,6 +1,22 @@
 # * coding: UTF-8 *
-# * code: PrimarySubdivision, country, id_name, name, iso_code, subdiv_type *
-# country : name identifier : name : 
+# List of primary subdivisions of countries.
+#
+# Information got from:
+#  http://www.statoids.com
+#
+# Country
+# -------
+# It has been added only those countries where is necessary for
+# the mail address:
+#  AU, BR, CA, CN, CU, ES, IE, IT, MX, US
+#
+# Subdivision
+# -----------
+# The codes are in 'country.csv'. But it is only added here if
+# is different from general subdivision of the country.
+#
+# * code: PrimarySubdivision, country, id_name, name, iso_code, main_subdiv *
+# country : name identifier : name : 3166-2 ISO code : primary subdivision
 
 AU:AU-AC:Australian Capital Territory:ACT:ty
 AU:AU-NS:New South Wales:NSW:

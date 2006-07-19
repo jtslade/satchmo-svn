@@ -36,8 +36,8 @@ as state in U.S.
         unique=True)
     zone = models.PositiveSmallIntegerField(_('geographic zone'), maxlength=1,
         choices=ZONE_CHOICES)
-    main_subdiv = models.CharField(_('primary subdivision'),
-        maxlength=2, choices=SUBDIVISION_CHOICES)
+    main_subdiv = models.CharField(_('primary subdivision'), maxlength=2,
+        choices=SUBDIVISION_CHOICES)
     display = models.BooleanField (_('display'), default=True,
         help_text=_('Designates whether the country is shown.'))
 
@@ -86,7 +86,7 @@ or needed in some cases but omitted in others.
         primary_key=True)
     name = models.CharField(_('name'), maxlength=50)
     iso_code = models.CharField(_('ISO 3166-2 code'), maxlength=3)
-    subdiv_type = models.CharField(_('subdivision type'), maxlength=2,
+    main_subdiv = models.CharField(_('primary subdivision'), maxlength=2,
         choices=SUBDIVISION_CHOICES)
 
     class Meta:
