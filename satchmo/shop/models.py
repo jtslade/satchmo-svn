@@ -1,20 +1,22 @@
 from django.db import models
 from satchmo.product.models import Item, Sub_Item
+from django.contrib.sites.models import Site
 
 class Config(models.Model):
     """
     Used to store specific information about a store.  Also used to 
     configure various store behaviors
     """
+    site = models.ForeignKey(Site)
     storeName = models.CharField("Store Name",maxlength=100, unique=True)
     storeDescription = models.TextField(blank=True)
-    street1=models.CharField("Street",maxlength=50)
-    street2=models.CharField("Street", maxlength=50, blank=True)
-    city=models.CharField("City", maxlength=50)
-    state=models.USStateField("State")
-    zip_code=models.CharField("Zip Code", maxlength=9)
-    country=models.CharField("Country", maxlength=50, blank=True)
-    phone = models.PhoneNumberField(blank=True)
+    street1=models.CharField("Street",maxlength=50, blank=True, null=True)
+    street2=models.CharField("Street", maxlength=50, blank=True, null=True)
+    city=models.CharField("City", maxlength=50, blank=True, null=True)
+    state=models.USStateField("State", blank=True, null=True)
+    zip_code=models.CharField("Zip Code", blank=True, null=True,maxlength=9)
+    country=models.CharField("Country", maxlength=50, blank=True, null=True)
+    phone = models.PhoneNumberField(blank=True, null=True)
     noStockCheckout = models.BooleanField("Purchase item not in stock?")
     
     def __str__(self):

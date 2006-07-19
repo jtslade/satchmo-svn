@@ -213,6 +213,8 @@ class Sub_Item(models.Model):
     
     def _get_optionName(self):
         "Returns the options in a human readable form"
+        if self.options.count() == 0:
+            return self.item.verbose_name
         output = self.item.verbose_name + " ( "
         numProcessed = 0
         for option in self.options.all():

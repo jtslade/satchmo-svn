@@ -83,6 +83,13 @@ def add_to_cart(request, id):
         chosenOptions.add('%s-%s' % (option.name,request.POST[option.name]))
     #Now get the appropriate sub_item
     chosenItem = product.get_sub_item(chosenOptions)
+    #If we get a None, then there is not a valid subitem so tell the user
+    if not chosenItem:
+        return render_to_response('base_product.html', {
+            'item': product,
+            'error_message': "Sorry, this choice is not available."},
+             RequestContext(request))
+                
     if request.session.get('cart',False):
         tempCart = Cart.objects.get(id=request.session['cart'])
     else:
