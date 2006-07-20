@@ -1,6 +1,7 @@
 from django.db import models
 from satchmo.product.models import Item, Sub_Item
 from django.contrib.sites.models import Site
+from satchmo.customer.models import Customer
 
 class Config(models.Model):
     """
@@ -33,15 +34,26 @@ class Cart(models.Model):
     """
     desc = models.CharField(blank=True, null=True, maxlength=10)
     date_time_created = models.DateTimeField(auto_now_add=True)
-    #need user info here too
+    customer = models.ForeignKey(Customer, blank=True, null=True)
     
     def _get_count(self):
-        return (self.cartitem_set.count())
+        itemCount = 0
+        for item in self.cartitem_set.all():
+            itemCount += item.quantity
+        return (itemCount)
     numItems = property(_get_count)
     
     def __str__(self):
         return ("Shopping Cart (%s)" % self.date_time_created)
-        
+    
+    def add_item(self, chosen_item, number_added):
+        try:
+            itemToModify =  self.cartitem_set.filter(subItem__id = chosen_item.id)[0]
+        except IndexError:
+            itemToModify = CartItem(cart=self, subItem=chosen_item, quantity=0)
+        itemToModify.quantity += number_added
+        itemToModify.save()
+
     class Admin:
         list_display = ('date_time_created','numItems')
 

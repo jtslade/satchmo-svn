@@ -95,9 +95,10 @@ def add_to_cart(request, id):
     else:
         tempCart = Cart()
     tempCart.save() #need to make sure there's an id
-    newItem = CartItem(cart=tempCart, subItem=chosenItem, quantity=1)
-    newItem.save()
-    tempCart.save()
+    tempCart.add_item(chosenItem, number_added=1)
+    #newItem = CartItem(cart=tempCart, subItem=chosenItem, quantity=1)
+    #newItem.save()
+    #tempCart.save()
     request.session['cart'] = tempCart.id
 
     return http.HttpResponseRedirect('%s/cart' % (settings.SHOP_BASE))

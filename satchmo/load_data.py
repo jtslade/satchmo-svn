@@ -7,6 +7,9 @@ os.environ["DJANGO_SETTINGS_MODULE"]="satchmo.settings"
 from satchmo.customer.models import *
 from satchmo.product.models import * 
 from satchmo.supplier.models import *
+from django.conf import settings
+from satchmo.shop.models import Config
+from django.contrib.sites.models import Site
 
 def find_site(): 
     """Find the site by looking at the environment."""
@@ -44,6 +47,14 @@ def init_and_install():
     django.core.management.syncdb()
     
 def load_data():
+    #Load basic configuration information
+    site = Site.objects.get(id=settings.SITE_ID)
+    site.domain = "192.168.1.9:8000"  #Change this to match your server
+    site.name = "Home server"
+    site.save()
+    config = Config(site=site, storeName = "My Nifty Store")
+    config.save()
+    
     # Import some customers
     c1 = Customer(first_name="Chris", last_name="Smith", phone="655-555-0164",
                   fax="900-100-9010", email="chris@aol.com", notes="Really cool stuff")
@@ -138,6 +149,16 @@ def load_data():
     i3.save()
     
     i4.option_group.add(optSet3)
+    i4.save()
+    
+    #Create the required sub_items
+    i1.create_subs = True
+    i1.save()
+    i2.create_subs = True
+    i2.save()
+    i3.create_subs = True
+    i3.save()
+    i4.create_subs = True
     i4.save()
 
 def main(): 

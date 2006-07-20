@@ -17,5 +17,11 @@ def settings(request):
             shop_name = "Test Store (No Site id)"
     else:
         shop_name = "Test Store"
+    if request.session.get('cart',False):
+        tempCart = Cart.objects.get(id=request.session['cart'])
+        cart_count = tempCart.numItems
+    else:
+        cart_count = 0
     return {'shop_base': settings.SHOP_BASE,
-             'shop_name': shop_name}
+             'shop_name': shop_name,
+             'cart_count': cart_count}
