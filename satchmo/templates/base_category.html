@@ -3,7 +3,12 @@
 {% block title %}The Web Shop{% endblock %}
 
 {% block navbar %}
-<a href="{{shop_base}}">Home</a>:: {{category}}
+
+<a href="{{shop_base}}">Home</a> 
+{% for urls in category.get_url_name %}
+    ::<a href="{{urls.1}}">{{ urls.0 }}</a>
+{% endfor %}
+
 {% endblock %}
 
 {% block sidebar %}

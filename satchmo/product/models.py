@@ -50,7 +50,30 @@ class Category(models.Model):
         p_list = self._recurse_for_parents_name(self)
         return self.get_separator().join(p_list)
     _parents_repr.short_description = "Category parents"
-        
+    
+    def _recurse_for_parents_name_url(self, cat_obj):
+        #Get all the absolute urls and names (for use in site navigation)
+        p_list = []
+        url_list = []
+        if cat_obj.parent_id:
+            p = cat_obj.parent
+            p_list.append(p.name)
+            url_list.append(p.get_absolute_url())
+            more, url = self._recurse_for_parents_name_url(p)
+            p_list.extend(more)
+            url_list.extend(url)
+        if cat_obj == self and p_list:
+            p_list.reverse()
+            url_list.reverse()
+        return p_list, url_list
+
+    def get_url_name(self):
+        #Get a list of the urls and the actual urls
+        p_list, url_list = self._recurse_for_parents_name_url(self)
+        p_list.append(self.name)
+        url_list.append(self.get_absolute_url())
+        return zip(p_list, url_list)
+    
     def __str__(self):
         p_list = self._recurse_for_parents_name(self)
         p_list.append(self.name)

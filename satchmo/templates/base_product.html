@@ -2,7 +2,12 @@
 {% load satchmo.thumbnail %}
 
 {% block navbar %}
-<a href="{{shop_base}}">Home</a> :: {{item.category}}
+
+<a href="{{shop_base}}">Home</a> 
+{% for urls in item.category.get_url_name %}
+    ::<a href="{{urls.1}}">{{ urls.0 }}</a>
+{% endfor %}
+
 {% endblock %}
 
 {% block content %}
