@@ -62,12 +62,16 @@ def category_children(request, slug_parent, slug):
 def display_cart(request):
     #Show the items in the cart
     cart_list = []
+    total = 0
     if request.session.get('cart',False):
         tempCart = Cart.objects.get(id=request.session['cart'])
-        return render_to_response('base_cart.html', {'all_items': tempCart.cartitem_set.all()},
+        total = tempCart.total
+        return render_to_response('base_cart.html', {'all_items': tempCart.cartitem_set.all(),
+                                                       'total': total},
                                                         RequestContext(request))
     else:
-        return render_to_response('base_cart.html', {'all_items' : []},
+        return render_to_response('base_cart.html', {'all_items' : [],
+                                                        'total':total},
                                                         RequestContext(request))
 
 def add_to_cart(request, id):

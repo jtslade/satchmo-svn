@@ -43,6 +43,13 @@ class Cart(models.Model):
         return (itemCount)
     numItems = property(_get_count)
     
+    def _get_total(self):
+        total = 0
+        for item in self.cartitem_set.all():
+            total += item.subItem.unit_price * item.quantity
+        return(total)
+    total = property(_get_total)
+    
     def __str__(self):
         return ("Shopping Cart (%s)" % self.date_time_created)
     
@@ -55,7 +62,7 @@ class Cart(models.Model):
         itemToModify.save()
 
     class Admin:
-        list_display = ('date_time_created','numItems')
+        list_display = ('date_time_created','numItems','total')
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, edit_inline=models.TABULAR, num_in_admin=3)

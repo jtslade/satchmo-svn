@@ -87,6 +87,7 @@ class Category(models.Model):
         
     class Admin:
         list_display = ('name', '_parents_repr')
+        ordering = ['name']
         
     class Meta:
         verbose_name = "Category"

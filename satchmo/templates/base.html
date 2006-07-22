@@ -20,7 +20,12 @@
     
         <div id="leftnav">
             {% block sidebar %}
-            Category navigation
+            Shop Categories<br/>
+            {% for category in categories %}
+                {% if not category.parent %}
+                <a href="{{category.get_absolute_url}}">{{category}}</a><br/>
+                {% endif %}
+            {% endfor %}
             {% endblock %}
         </div>
         
