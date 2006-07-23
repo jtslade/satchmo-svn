@@ -30,7 +30,7 @@ REGION = (
 
 
 class Country(models.Model):
-    """Country model.
+    """Country or territory.
 
 'main_subdiv' is the name used for primary subdivision in the country,
 as state in U.S.
@@ -78,9 +78,16 @@ as state in U.S.
 
     def __str__(self):
         if self.alpha3_code:
+            return self.alpha3_code
+        else:
+            return self.alpha2_code
+
+    def _get_name(self):
+        if self.alpha3_code:
             return "%s (%s)" % (self.name, self.alpha3_code)
         else:
             return "%s (%s)" % (self.name, self.alpha2_code)
+    country_id = property(_get_name)
 
 
 class PrimarySubdivision(models.Model):
@@ -92,7 +99,7 @@ In others it is omitted, and in others it is either optional,
 or needed in some cases but omitted in others.
     """
     country = models.ForeignKey(Country)
-    id_name = models.CharField(_('name identifier'), maxlength=8,
+    id_name = models.CharField(_('name identifier'), maxlength=5,
         primary_key=True)
     name = models.CharField(_('name'), maxlength=50)
     iso_code = models.CharField(_('ISO 3166-2 code'), maxlength=3)
@@ -102,7 +109,7 @@ or needed in some cases but omitted in others.
     class Meta:
         verbose_name = _('primary subdivision')
         verbose_name_plural = _('primary subdivisions')
-        ordering = ['country', 'name']
+        ordering = ['country']
         unique_together = (('country', 'name'),)
     class Admin:
         """
@@ -113,7 +120,26 @@ or needed in some cases but omitted in others.
         )
         """
         list_display = ('country', 'name', 'iso_code')
-        search_fields = ('name', 'iso_code')
+        search_fields = ('name')
 
     def __str__(self):
         return "%s (%s)" % (self.iso_code, self.name)
+
+
+class TimeZone(models.Model):
+    """The time zones for each country or territory.
+    """
+    country = models.ForeignKey(Country)
+    zone = models.CharField(_('time zone'), maxlength=32, unique=True)
+
+    class Meta:
+        verbose_name = _('time zone')
+        verbose_name_plural = _('time zones')
+        ordering = ['country']
+    class Admin:
+        list_display = ('country', 'zone')
+        search_fields = ('country')
+
+    def __str__(self):
+        return "%s" % (self.zone)
+

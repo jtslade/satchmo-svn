@@ -110,7 +110,8 @@ Format: * code: [Model name], [field name 1], ... [field name n]*
 
     # Get line with info. about model.
     for line in open(csv_file):
-        if line.startswith('#'):
+#        if line[:1] == '#':  #  For use in list of strings
+        if line[0] == '#':
             if not line_found and '* code:' in line:
                 code_line = line.split(':')[-1]
                 line_found = True
@@ -219,7 +220,7 @@ def load_data(model):
         for position in range(0, fields_number):
             # If the field is not empty
             if csv_line[position]:
-                if not object_line[-1].endswith('('):
+                if object_line[-1][-1] != '(':  # Check the last character
                     object_line.append(', ')
                 # If is a key
                 if dic_keys and dic_keys.has_key(position):
