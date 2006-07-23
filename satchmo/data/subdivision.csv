@@ -129,7 +129,6 @@ ES:ES-CC:Cáceres:CC:
 ES:ES-CD:Cádiz:CA:
 ES:ES-CN:Cantabria:S:
 ES:ES-CS:Castellón:CS:
-ES:ES-CE:Ceuta::
 ES:ES-CR:Ciudad Real:CR:
 ES:ES-CO:Córdoba:CO:
 ES:ES-CU:Cuenca:CU:
@@ -146,7 +145,6 @@ ES:ES-LD:Lleida:L:
 ES:ES-LG:Lugo:LU:
 ES:ES-MD:Madrid:M:
 ES:ES-MG:Málaga:MA:
-ES:ES-ME:Melilla::
 ES:ES-MR:Murcia:MU:
 ES:ES-NV:Navarra:NA:
 ES:ES-OR:Ourense:OR:
@@ -164,8 +162,10 @@ ES:ES-VD:Valladolid:VA:
 ES:ES-VZ:Vizcaya:BI:
 ES:ES-ZM:Zamora:ZA:
 ES:ES-ZG:Zaragoza:Z:
-ES.CA:ES.CA-LP:Las Palmas:GC:
-ES.CA:ES.CA-TF:Santa Cruz de Tenerife:TF:
+IC:IC-LP:Las Palmas:GC:
+IC:IC-TF:Santa Cruz de Tenerife:TF:
+EA:EA-CE:Ceuta::
+EA:EA-ME:Melilla::
 IE:IE-CW:Carlow::
 IE:IE-CN:Cavan::
 IE:IE-CE:Clare::

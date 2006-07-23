@@ -4,7 +4,8 @@ import os
 import re
 import sys
 
-from satchmo.localization.models import *
+#from satchmo.localization.models import *
+from yuiyu.localization.models import *
 
 
 def get_data_models(models_file):
@@ -177,8 +178,9 @@ def load_data(model):
     dic_keys = {}
     csv_separator = ':'
     re_num = re.compile('\d+$')
-    # Countries unhabitted or with a very few habitants. Setting off 'display'
-    unhabitted = ['AQ', 'BV', 'HM', 'PN', 'GS', 'UM']
+    # United Kingdom and countries unhabitted or with a very few habitants.
+    # To set off 'display'.
+    display_off = ['AQ', 'BV', 'CP', 'GB', 'HM', 'GS', 'UM']
 
     # Get only the fields name
     fields = [ x for x in model[2:] if not (':' in x or '#' in x) ]
@@ -255,7 +257,7 @@ def load_data(model):
     if model_name == 'Country':
         for num in range(1, line_number+1):
             obj = eval('c%d' % num)
-            if obj.alpha2_code in unhabitted or '.' in obj.alpha2_code:
+            if obj.alpha2_code in display_off:
                 obj.display = False
             obj.save()
     else:
