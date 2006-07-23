@@ -23,7 +23,23 @@
             Shop Categories<br/>
             {% for category in categories %}
                 {% if not category.parent %}
-                <a href="{{category.get_absolute_url}}">{{category}}</a><br/>
+                    <a href="{{category.get_absolute_url}}">{{category}}</a><br/>
+                    <ul>
+                    {% for child in category.get_tree %}
+
+                        {% ifnotequal child.0 "end" %}
+                          <ul><li><a href="{{child.1}}">{{child.0}}</a></li>
+                        {% endifnotequal %}
+                        
+                        {% ifequal child.0 "end" %}
+
+                           </ul>
+                        </ul>
+                        {% endifequal %}
+                        
+                    {% endfor %}
+
+
                 {% endif %}
             {% endfor %}
             {% endblock %}
