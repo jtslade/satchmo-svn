@@ -1,8 +1,8 @@
 # * coding: UTF-8 *
-# List of countries, geographical region and subdivisions.
+# List of countries, ISO codes, geographical region and subdivisions.
 #
-# Country name and code
-# ---------------------
+# Country name and ISO 3166 code
+# ------------------------------
 # Information from ISO 3166-1 got from:
 #  http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 #  http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
@@ -59,24 +59,25 @@
 # -------------------
 #
 # Codes:
-#  a  = Africa
-#  an = America, Nort
-#  as = America, Central and South
-#  ac = America, Caribbean
+#  a   = Africa
+#  an  = America, North
+#  as  = America, Central and South
+#  ac  = America, Caribbean
 #  asc = Asia, Central
 #  ase = Asia, Eastern and Southeastern
 #  asw = Asia, Southern and Western
-#  ee = Europe, Eastern
-#  ew = Europe, Western
-#  o  = Oceania
-#  oa = Ocean, Atlantic
-#  oi = Ocean, Indian
-#  os = Oceans, Pacific, Southern and Artic
+#  ee  = Europe, Eastern
+#  ew  = Europe, Western
+#  o   = Oceania
+#  oa  = Ocean, Atlantic
+#  oi  = Ocean, Indian
+#  os  = Oceans, Pacific, Southern and Artic
 #
 # * code: Country, name, alpha2_code, alpha3_code, region, from_country,
 #   main_subdiv *
-# short official name : 2 letter ISO code : 3 letter ISO code :
-#   geographical region : main country : primary subdivision
+#
+# Country official name (english) : Alpha-2 code : Alpha-3 code :
+#   Geographical region : Main country : Primary subdivision
 
 AFGHANISTAN:AF:AFG:asw::
 ÅLAND ISLANDS:AX:ALA:ew::

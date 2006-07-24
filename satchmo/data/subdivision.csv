@@ -16,7 +16,9 @@
 # is different from general subdivision of the country.
 #
 # * code: PrimarySubdivision, country, id_name, name, iso_code, main_subdiv *
-# country : name identifier : name : 3166-2 ISO code : primary subdivision
+#
+# Country : Name identifier : Subdivision name : 3166-2 ISO code :
+#   Primary subdivision
 
 AU:AU-AC:Australian Capital Territory:ACT:ty
 AU:AU-NS:New South Wales:NSW:
