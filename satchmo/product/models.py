@@ -68,37 +68,21 @@ class Category(models.Model):
         return p_list, url_list
     
     def _recurse_for_children(self, cat_obj, depth):
-        #Get all the absolute urls and names (for use in site navigation)
+        #Get all the categories and their tree depth (for use in site navigation)
         child_list = []
-        url_list = []
+        depth_list = []
         if cat_obj.child.count > 0:
             children = cat_obj.child.all()
             depth += 1
             for child in children:
-                child_list.append(child.name)
-                url_list.append(child.get_absolute_url())
-                more, url = self._recurse_for_children(child, depth)
+                child_list.append(child)
+                depth_list.append(depth)
+                more, depth_data = self._recurse_for_children(child, depth)
                 if len(more) > 0:
                     child_list.extend(more)
-                    url_list.extend(url)
-                else:
-                    for i in range(1,depth):
-                        child_list.extend(["end"])  #We use the end so we know to backup
-                        url_list.extend(["end"])
-        return child_list, url_list
-    
-    def get_tree(self):
-        child, url = self._recurse_for_children(self, 0)
-        return zip(child, url)
-        #child_list, url_list = self.recurse_for_children(self)
-        #indent = "---"
-        #for line in child_list:
-        #    if line == "end":
-        #        indent = indent[:-6]
-        #    else:
-        #        print indent, line
-        #        indent += "---"
+                    depth_list.extend(depth_data)
 
+        return child_list, depth_list
 
     def get_url_name(self):
         #Get a list of the url to display and the actual urls

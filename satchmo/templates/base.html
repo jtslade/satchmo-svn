@@ -1,3 +1,4 @@
+{% load category_display %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -21,27 +22,14 @@
         <div id="leftnav">
             {% block sidebar %}
             Shop Categories<br/>
+
             {% for category in categories %}
                 {% if not category.parent %}
-                    <a href="{{category.get_absolute_url}}">{{category}}</a><br/>
-                    <ul>
-                    {% for child in category.get_tree %}
-
-                        {% ifnotequal child.0 "end" %}
-                          <ul><li><a href="{{child.1}}">{{child.0}}</a></li>
-                        {% endifnotequal %}
-                        
-                        {% ifequal child.0 "end" %}
-
-                           </ul>
-                        </ul>
-                        {% endifequal %}
-                        
-                    {% endfor %}
-
-
-                {% endif %}
+                    {% category_tree category.id %}
+                {%endif%}
+                
             {% endfor %}
+                
             {% endblock %}
         </div>
         
