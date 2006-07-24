@@ -80,3 +80,9 @@ div.productImage p {
    text-align: center;
    font-size: 10pt;
    }
+
+#menu_list {
+	margin: 0;
+	padding: 0px;
+	padding-left: 0;
+	}
