@@ -14,7 +14,7 @@ SUBDIVISION = (
 
 REGION = (
     ('a',   _('Africa')),
-    ('an',  _('America, Nort')),
+    ('an',  _('America, North')),
     ('as',  _('America, Central and South')),
     ('ac',  _('America, Caribbean')),
     ('asc', _('Asia, Central')),
@@ -29,15 +29,46 @@ REGION = (
 )
 
 
+class Language(models.Model):
+    """Languages more common.
+
+'synonym' field is used for some languages that are called with
+another name too.
+    """
+    alpha3_code = models.CharField(_('alpha-3 code'), maxlength=3,
+        primary_key=True)
+    alpha2_code = models.CharField(_('alpha-2 code'), maxlength=2,
+        unique=True)
+    name = models.CharField(_('name'), maxlength=24, unique=True)
+    synonym = models.CharField(_('synonym'), maxlength=24)
+    display = models.BooleanField (_('display'), default=False,
+        help_text=_('Designates whether the language is shown.'))
+
+    class Meta:
+        verbose_name = _('language')
+        verbose_name_plural = _('languages')
+        ordering = ['name']
+    class Admin:
+        list_display = ('name', 'alpha3_code', 'alpha2_code', 'synonym',
+                        'display')
+        list_filter = ('display',)
+        search_fields = ('name', 'synonym', 'alpha2_code', 'alpha3_code')
+
+    def __str__(self):
+        return self.alpha3_code
+
+
 class Country(models.Model):
     """Country or territory.
 
+alpha2_code and alpha3_code are ISO 3166-1 codes.
 'main_subdiv' is the name used for primary subdivision in the country,
 as state in U.S.
     """
-    alpha2_code = models.CharField(_('2 letter ISO code'), maxlength=2,
+    alpha2_code = models.CharField(_('alpha-2 code'), maxlength=2,
         primary_key=True)
-    alpha3_code = models.CharField(_('3 letter ISO code'), maxlength=3)
+    alpha3_code = models.CharField(_('alpha-3 code'), maxlength=3)
+#        unique=True)
     name = models.CharField(_('official english name'), maxlength=52,
         unique=True)
     region = models.CharField(_('geographical region'), maxlength=3,
