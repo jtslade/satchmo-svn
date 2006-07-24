@@ -261,6 +261,13 @@ def load_data(model):
             if obj.alpha2_code in display_off:
                 obj.display = False
             obj.save()
+    elif model_name == 'Language':
+        # Display the english language.
+        for num in range(1, line_number+1):
+            obj = eval('c%d' % num)
+            if obj.alpha3_code == 'eng':
+                obj.display = True
+            obj.save()
     else:
         for num in range(1, line_number+1):
             obj = eval('c%d' % num)
