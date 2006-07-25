@@ -101,9 +101,12 @@ def add_to_cart(request, id):
         tempCart = Cart()
     tempCart.save() #need to make sure there's an id
     tempCart.add_item(chosenItem, number_added=1)
-    #newItem = CartItem(cart=tempCart, subItem=chosenItem, quantity=1)
-    #newItem.save()
-    #tempCart.save()
     request.session['cart'] = tempCart.id
 
     return http.HttpResponseRedirect('%s/cart' % (settings.SHOP_BASE))
+    
+    
+def account_info(request):
+    test_data = "Test Data"
+    return render_to_response('account.html', {'test_data': test_data},
+                              RequestContext(request))

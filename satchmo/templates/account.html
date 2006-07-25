@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+<a href="{{shop_base}}">Home</a> 
+{% endblock %}
+
+{% block content %}
+ <h4>Your Account info</h4>
+<p>Welcome, {{ user.username }}. Thanks for logging in.</p> 
+{% endblock %}

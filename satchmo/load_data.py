@@ -10,6 +10,7 @@ from satchmo.supplier.models import *
 from django.conf import settings
 from satchmo.shop.models import Config
 from django.contrib.sites.models import Site
+from django.contrib.auth.models import User
 
 def find_site(): 
     """Find the site by looking at the environment."""
@@ -163,7 +164,10 @@ def load_data():
     i3.save()
     i4.create_subs = True
     i4.save()
-
+    print "Create a test user..."
+    user = User.objects.create_user('test', 'tester@testsite.com', 'test')
+    user.save()
+    
 def main(): 
     """Flush it all, baby!"""
     try: 

@@ -11,7 +11,10 @@ urlpatterns = patterns('satchmo.shop.views',
      (r'^category/([-\w]+/)+(?P<slug_parent>[-\w]+)/(?P<slug>[-\w]+)/$','category_children'),
      (r'^cart/(?P<id>\d+)/add/$','add_to_cart'),
      (r'^cart/$','display_cart'),
+     (r'^account/info/$','account_info'),
 )
+urlpatterns += patterns('',(r'^account/login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}))
+    
 #Note with the last category url - this allows category depth to be as deep as we want but the downside
 #is that we ignore all but the child and parent category.  In practice this should be ok
 if settings.LOCAL_DEV:
