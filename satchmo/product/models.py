@@ -178,7 +178,8 @@ class Item(models.Model):
         combinedlist = self._cross_list(masterlist)
         #Create new sub_items for each combo
         for options in combinedlist:
-            sub = Sub_Item(item=self, items_in_stock='0', price_change='0')
+            price_delta = 0
+            sub = Sub_Item(item=self, items_in_stock=0)
             sub.save()
             for option in options:
                 sub.options.add(option)
@@ -234,6 +235,8 @@ class OptionItem(models.Model):
     optionGroup = models.ForeignKey(OptionGroup, edit_inline=models.TABULAR, num_in_admin=5)
     name = models.CharField("Display value", maxlength = 50, core=True)
     value = models.CharField("Stored value", prepopulate_from=("name",), maxlength = 50)
+    price_change = models.FloatField("Price Change", null=True, blank=True, 
+                                    help_text="This is the price differential for this option", max_digits=4, decimal_places=2)
     displayOrder = models.IntegerField("Display Order")
   
     def __str__(self):
@@ -245,7 +248,6 @@ class OptionItem(models.Model):
 class Sub_Item(models.Model):
     item = models.ForeignKey(Item)
     items_in_stock = models.IntegerField("Number in stock", core=True)
-    price_change = models.FloatField("Price Change", null=True, blank=True, help_text="This is the price differential for this product", max_digits=4, decimal_places=2)
     weight = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
     length = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
     width = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
@@ -269,10 +271,11 @@ class Sub_Item(models.Model):
     full_name = property(_get_optionName)
     
     def _get_fullPrice(self):
-        if self.price_change > 0:
-            return(self.item.price + self.price_change)
-        else:
-            return(self.item.price)
+        price_delta = 0
+        for option in self.options.all():
+            if option.price_change:
+                price_delta += option.price_change
+        return(self.item.price + price_delta)
     unit_price = property(_get_fullPrice)
     
     def _get_optionValues(self):
@@ -320,7 +323,7 @@ class Sub_Item(models.Model):
         list_display = ('full_name', 'unit_price', 'items_in_stock')
         list_filter = ('item',)
         fields = (
-        (None, {'fields': ('item','items_in_stock','price_change',)}),
+        (None, {'fields': ('item','items_in_stock',)}),
         ('Item Dimensions', {'fields': (('length', 'width','height',),'weight'), 'classes': 'collapse'}),
         ('Options', {'fields': ('options',),}),       
         )

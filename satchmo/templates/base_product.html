@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load satchmo.thumbnail %}
+{% load satchmo.price_display %}
 
 {% block navbar %}
 
@@ -25,7 +26,11 @@
  {{ option }}
     <select name="{{ option }}" id="{{option}}">
     {% for choice in option.optionitem_set.all %}
-     <option value="{{ choice.value }}">{{ choice }}</option>
+     <option value="{{ choice.value }}">{{ choice }}
+        {% if choice.price_change %}
+            {% option_price choice %}
+        {% endif %}
+     </option>
     {% endfor %}
     </select>
 {% endfor %}

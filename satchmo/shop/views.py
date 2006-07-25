@@ -4,7 +4,7 @@ from django.shortcuts import render_to_response
 from django import http
 from django.template import RequestContext
 from django.template import loader
-from satchmo.product.models import Item, Category
+from satchmo.product.models import Item, Category, OptionItem
 from satchmo.shop.models import Cart, CartItem
 from sets import Set
 from django.conf import settings
@@ -78,6 +78,7 @@ def add_to_cart(request, id):
     #Todo: Error checking for invalid combos
     #Add an item to the session/cart
     chosenOptions = Set()
+    price_delta = 0
     try:
         product = Item.objects.get(pk=id)
     except Item.DoesNotExist:

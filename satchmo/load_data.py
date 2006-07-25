@@ -48,13 +48,14 @@ def init_and_install():
     
 def load_data():
     #Load basic configuration information
+    print "Creating site..."
     site = Site.objects.get(id=settings.SITE_ID)
     site.domain = "192.168.1.9:8000"  #Change this to match your server
     site.name = "Home server"
     site.save()
     config = Config(site=site, storeName = "My Nifty Store")
     config.save()
-    
+    print "Creating Customers..."
     # Import some customers
     c1 = Customer(first_name="Chris", last_name="Smith", phone="655-555-0164",
                   fax="900-100-9010", email="chris@aol.com", notes="Really cool stuff")
@@ -69,6 +70,7 @@ def load_data():
     a2 = AddressBook(description="Work", street1="1245 Main Street", city="Stillwater", state="MN",
                  zip_code="55082", country="US", is_default_shipping=True, customer=c2)
     a2.save()
+    print "Creating Suppliers..."
     #Import some suppliers
     s1 = Supplier(name="Rhinestone Ronny", address1="918 Funky Town St", address2="Suite 200",
                   city="Fishkill", state="NJ", zip="19010", phone1="800-188-7611", fax="900-110-1909", email="ron@rhinestone.com",
@@ -79,6 +81,7 @@ def load_data():
                   city="Happyville", state="MD", zip="190111", phone1="888-888-1111", fax="999-110-1909", email="sally@shirts.com",
                   notes="Shirt Supplier")
     s2.save()
+    print "Creating Categories..."
     #Create some categories
     cat1 = Category(name="Shirt",slug="shirt",description="Women's Shirts")
     cat1.save()
@@ -91,7 +94,7 @@ def load_data():
     cat5 = Category(name="Science Fiction",slug="scifi",description="Science Fiction",parent=cat4)
     cat5.save()
     
-    
+    print "Creating items..."   
     #Create some items
     i1 = Item(verbose_name="Django Rocks shirt", short_name="DJ-Rocks", description="Really cool shirt", price="20.00", 
              active=True, featured=True, category=cat1)
@@ -119,19 +122,19 @@ def load_data():
     optItem1a.save()
     optItem1b = OptionItem(name="Medium", value="M", displayOrder=2, optionGroup=optSet1)
     optItem1b.save()
-    optItem1c = OptionItem(name="Large", value="L", displayOrder=3, optionGroup=optSet1)
+    optItem1c = OptionItem(name="Large", value="L", displayOrder=3, price_change = 1.00, optionGroup=optSet1)
     optItem1c.save()
 
     optItem2a = OptionItem(name="Black", value="B", displayOrder=1, optionGroup=optSet2)
     optItem2a.save()
     optItem2b = OptionItem(name="White", value="W", displayOrder=2, optionGroup=optSet2)
     optItem2b.save()
-    optItem2c = OptionItem(name="Blue", value="BL", displayOrder=3, optionGroup=optSet2)
+    optItem2c = OptionItem(name="Blue", value="BL", displayOrder=3, price_change=2.00, optionGroup=optSet2)
     optItem2c.save()
 
     optItem3a = OptionItem(name="Hard cover", value="hard", displayOrder=1, optionGroup=optSet3)
     optItem3a.save()
-    optItem3b = OptionItem(name="Soft cover", value="soft", displayOrder=2, optionGroup=optSet3)
+    optItem3b = OptionItem(name="Soft cover", value="soft", displayOrder=2, price_change=1.00, optionGroup=optSet3)
     optItem3b.save()
     optItem3c = OptionItem(name="On tape", value="tape", displayOrder=3, optionGroup=optSet3)
     optItem3c.save()
@@ -150,7 +153,7 @@ def load_data():
     
     i4.option_group.add(optSet3)
     i4.save()
-    
+    print "Creating sub items..."
     #Create the required sub_items
     i1.create_subs = True
     i1.save()

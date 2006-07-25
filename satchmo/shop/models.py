@@ -69,8 +69,12 @@ class CartItem(models.Model):
     subItem = models.ForeignKey(Sub_Item, blank=True, null=True)
     quantity = models.IntegerField(core=True)
     
+    def _get_line_total(self):
+        return self.subItem.unit_price * self.quantity
+    line_total = property(_get_line_total)
+    
     def __str__(self):
-        return("%s - %s" % (self.quantity, self.subItem.full_name))
+        return("%s - %s $%s" % (self.quantity, self.subItem.full_name, self.line_total))
 
     class Admin:
         pass
