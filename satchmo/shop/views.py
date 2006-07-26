@@ -1,6 +1,7 @@
 # Create your views here.
 
 from django.shortcuts import render_to_response
+from django.contrib.auth.decorators import user_passes_test
 from django import http
 from django.template import RequestContext
 from django.template import loader
@@ -105,7 +106,8 @@ def add_to_cart(request, id):
 
     return http.HttpResponseRedirect('%s/cart' % (settings.SHOP_BASE))
     
-    
+
+@user_passes_test(lambda u: not u.is_anonymous() , login_url='%s/account/login/' % (settings.SHOP_BASE))
 def account_info(request):
     test_data = "Test Data"
     return render_to_response('account.html', {'test_data': test_data},

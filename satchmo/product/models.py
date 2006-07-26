@@ -197,10 +197,11 @@ class Item(models.Model):
         '''
         Right now this only works if you save the suboptions, then go back and choose to create the sub_items
         '''
+        super(Item,self).save()
         if self.create_subs:
             self.create_subitems()
             self.create_subs = False
-        super(Item, self).save()
+        #super(Item, self).save()
     
     def get_absolute_url(self):
         return "%s/product/%s" % (settings.SHOP_BASE,self.short_name)
