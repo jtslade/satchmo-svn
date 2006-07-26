@@ -4,8 +4,7 @@ import os
 import re
 import sys
 
-#from satchmo.localization.models import *
-from yuiyu.localization.models import *
+from satchmo.localization.models import *
 
 
 def get_data_models(models_file):
