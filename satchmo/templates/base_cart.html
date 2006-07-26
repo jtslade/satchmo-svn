@@ -8,11 +8,16 @@
 {% block content %}
 
 <h4>Contents of your cart</h4>
-<ul>
-{% for item in all_items %}
-    <li>{{ item }}</li>
-{% endfor %}
-</ul>
-Cart Total: ${{total}}
+<table>
+<tr><th>Quantity</th><th>Item</th><th align="center">Total</th></tr>
 
+{% for item in all_items %}
+    <tr><td>{{item.quantity}} </td>
+        <td>{{ item.description }}</td>
+        <td align="center">{{ item.line_total }}</td>
+    </tr>
+{% endfor %}
+    <tr><td colspan="2" align="right">Cart Total: </td>
+        <td>${{total}}</td></tr>
+</table>
 {% endblock %}

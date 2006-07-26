@@ -73,6 +73,10 @@ class CartItem(models.Model):
         return self.subItem.unit_price * self.quantity
     line_total = property(_get_line_total)
     
+    def _get_description(self):
+        return(self.subItem.full_name)
+    description = property(_get_description)
+    
     def __str__(self):
         return("%s - %s $%s" % (self.quantity, self.subItem.full_name, self.line_total))
 

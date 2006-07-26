@@ -87,6 +87,18 @@ def add_to_cart(request, id):
                 'not exist.')
     for option in product.option_group.all():
         chosenOptions.add('%s-%s' % (option.name,request.POST[option.name]))
+    try:
+        quantity = int(request.POST['quantity'])
+    except ValueError:
+        return render_to_response('base_product.html', {
+            'item': product,
+            'error_message': "Please enter a whole number"},
+             RequestContext(request))
+    if quantity < 0:
+        return render_to_response('base_product.html', {
+            'item': product,
+            'error_message': "Negative numbers can not be entered"},
+             RequestContext(request))
     #Now get the appropriate sub_item
     chosenItem = product.get_sub_item(chosenOptions)
     #If we get a None, then there is not a valid subitem so tell the user
@@ -101,7 +113,7 @@ def add_to_cart(request, id):
     else:
         tempCart = Cart()
     tempCart.save() #need to make sure there's an id
-    tempCart.add_item(chosenItem, number_added=1)
+    tempCart.add_item(chosenItem, number_added=quantity)
     request.session['cart'] = tempCart.id
 
     return http.HttpResponseRedirect('%s/cart' % (settings.SHOP_BASE))
