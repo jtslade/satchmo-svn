@@ -4,8 +4,8 @@ import os
 import re
 import sys
 
-from satchmo.localization.models import *
-#from yuiyu.localization.models import *
+#from satchmo.localization.models import *
+from yuiyu.localization.models import *
 
 
 def get_data_models(models_file):
@@ -179,9 +179,9 @@ def load_data(model):
     dic_keys = {}
     csv_separator = ':'
     re_num = re.compile('\d+$')
-    # United Kingdom and countries unhabitted or with a very few habitants.
+    # Countries unhabitted or with a very few habitants.
     # To set off 'display'.
-    display_off = ['AQ', 'BV', 'CP', 'GB', 'HM', 'GS', 'UM']
+#    display_off = ['AQ', 'GS', 'UM']
 
     # Get only the fields name
     fields = [ x for x in model[2:] if not (':' in x or '#' in x) ]
@@ -255,13 +255,15 @@ def load_data(model):
 
     # At the end, save all objects together
     print "Creating %s objects ..." % model_name
+    """
     if model_name == 'Country':
         for num in range(1, line_number+1):
             obj = eval('c%d' % num)
             if obj.alpha2_code in display_off:
                 obj.display = False
             obj.save()
-    elif model_name == 'Language':
+    """
+    if model_name == 'Language':
         # Display the english language.
         for num in range(1, line_number+1):
             obj = eval('c%d' % num)

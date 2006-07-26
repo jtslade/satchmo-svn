@@ -1,24 +1,24 @@
 # * coding: UTF-8 *
-# List of primary subdivisions of countries.
+# List of countries subdivisions.
 #
-# Information got from:
-#  http://www.statoids.com
+# Information:
+#   http://www.statoids.com
 #
 # Country
 # -------
 # It has been added only those countries where is necessary for
 # the mail address:
-#  AU, BR, CA, CN, CU, ES, IE, IT, MX, US
+#   AU, BR, CA, CN, CU, ES, GB, IE, IT, MX, PT, US
 #
 # Subdivision
 # -----------
 # The codes are in 'country.csv'. But it is only added here if
-# is different from general subdivision of the country.
+# is different from the general subdivision.
 #
-# * code: PrimarySubdivision, country, id_name, name, iso_code, main_subdiv *
+# * code: Subdivision, country, name_id, name, iso_code, subdivision *
 #
-# Country : Name identifier : Subdivision name : 3166-2 ISO code :
-#   Primary subdivision
+# Country code : Name identifier : Subdivision name : 3166-2 ISO code :
+#  Primary subdivision
 
 AU:AU-AC:Australian Capital Territory:ACT:ty
 AU:AU-NS:New South Wales:NSW:
@@ -30,6 +30,7 @@ AU:AU-VI:Victoria:VIC:
 AU:AU-WA:Western Australia:WA:
 AU:AU-AS:Ashmore and Cartier Islands::ty
 AU:AU-CR:Coral Sea Islands Territory::ty
+
 BR:BR-AC:Acre:AC:
 BR:BR-AL:Alagoas:AL:
 BR:BR-AP:Amapá:AP:
@@ -57,6 +58,7 @@ BR:BR-SC:Santa Catarina:SC:
 BR:BR-SP:São Paulo:SP:
 BR:BR-SE:Sergipe:SE:
 BR:BR-TO:Tocantins:TO:
+
 CA:CA-AB:Alberta:AB:
 CA:CA-BC:British Columbia:BC:
 CA:CA-MB:Manitoba:MB:
@@ -70,6 +72,7 @@ CA:CA-PE:Prince Edward Island:PE:
 CA:CA-QC:Quebec:QC:
 CA:CA-SK:Saskatchewan:SK:
 CA:CA-YT:Yukon Territory:YT:ty
+
 CN:CN-AH:Anhui::
 CN:CN-BJ:Beijing::mu
 CN:CN-CQ:Chongqing::mu
@@ -101,6 +104,7 @@ CN:CN-XJ:Xinjiang Uygur::ar
 CN:CN-XZ:Xizang::ar
 CN:CN-YN:Yunnan::
 CN:CN-ZJ:Zhejiang::
+
 CU:CU-CG:Camagüey:CG:
 CU:CU-CA:Ciego de Ávila:CA:
 CU:CU-CF:Cienfuegos:CF:
@@ -116,6 +120,12 @@ CU:CU-PR:Pinar del Río:PR:
 CU:CU-SS:Sancti Spíritus:SS:
 CU:CU-SC:Santiago de Cuba:SC:
 CU:CU-VC:Villa Clara:VC:
+
+GB:GB-EN:England::
+GB:GB-NI:Northern Ireland::
+GB:GB-SC:Scotland::
+GB:GB-WA:Wales::
+
 ES:ES-AC:A Coruña:C:
 ES:ES-AA:Álava:VI:
 ES:ES-AB:Albacete:AB:
@@ -131,6 +141,7 @@ ES:ES-CC:Cáceres:CC:
 ES:ES-CD:Cádiz:CA:
 ES:ES-CN:Cantabria:S:
 ES:ES-CS:Castellón:CS:
+ES:ES-CE:Ceuta::
 ES:ES-CR:Ciudad Real:CR:
 ES:ES-CO:Córdoba:CO:
 ES:ES-CU:Cuenca:CU:
@@ -142,17 +153,27 @@ ES:ES-HL:Huelva:H:
 ES:ES-HS:Huesca:HU:
 ES:ES-JA:Jaén:J:
 ES:ES-LR:La Rioja:LO:
+ES:ES-LP:Las Palmas:GC:
+ES:ES-LP.GC:Gran Canaria::is
+ES:ES-LP.LA:Lanzarote::is
+ES:ES-LP.FU:Fuerteventura::is
 ES:ES-LN:León:LE:
 ES:ES-LD:Lleida:L:
 ES:ES-LG:Lugo:LU:
 ES:ES-MD:Madrid:M:
 ES:ES-MG:Málaga:MA:
+ES:ES-ME:Melilla::
 ES:ES-MR:Murcia:MU:
 ES:ES-NV:Navarra:NA:
 ES:ES-OR:Ourense:OR:
 ES:ES-PL:Palencia:P:
 ES:ES-PV:Pontevedra:PO:
 ES:ES-SL:Salamanca:SA:
+ES:ES-TF:Santa Cruz de Tenerife:TF:
+ES:ES-TF.TF:Tenerife::is
+ES:ES-TF.PA:La Palma::is
+ES:ES-TF.GO:La Gomera::is
+ES:ES-TF.HI:El Hierro::is
 ES:ES-SG:Segovia:SG:
 ES:ES-SV:Sevilla:SE:
 ES:ES-SR:Soria:SO:
@@ -164,10 +185,7 @@ ES:ES-VD:Valladolid:VA:
 ES:ES-VZ:Vizcaya:BI:
 ES:ES-ZM:Zamora:ZA:
 ES:ES-ZG:Zaragoza:Z:
-IC:IC-LP:Las Palmas:GC:
-IC:IC-TF:Santa Cruz de Tenerife:TF:
-EA:EA-CE:Ceuta::
-EA:EA-ME:Melilla::
+
 IE:IE-CW:Carlow::
 IE:IE-CN:Cavan::
 IE:IE-CE:Clare::
@@ -194,6 +212,7 @@ IE:IE-WD:Waterford::
 IE:IE-WH:Westmeath::
 IE:IE-WX:Wexford::
 IE:IE-WW:Wicklow::
+
 IT:IT-AG:Agrigento:AG:
 IT:IT-AL:Alessandria:AL:
 IT:IT-AN:Ancona:AN:
@@ -301,6 +320,7 @@ IT:IT-VR:Verona:VR:
 IT:IT-VV:Vibo Valentia:VV:
 IT:IT-VI:Vicenza:VI:
 IT:IT-VT:Viterbo:VT:
+
 MX:MX-AG:Aguascalientes:AGU:
 MX:MX-BN:Baja California:BCN:
 MX:MX-BS:Baja California Sur:BCS:
@@ -333,6 +353,10 @@ MX:MX-TL:Tlaxcala:TLA:
 MX:MX-VE:Veracruz:VER:
 MX:MX-YU:Yucatán:YUC:
 MX:MX-ZA:Zacatecas:ZAC:
+
+PT:PT-PT:Portugal::
+PT:PT-AZ:Azores::
+
 US:US-AL:Alabama:AL:
 US:US-AK:Alaska:AK:
 US:US-AZ:Arizona:AZ:

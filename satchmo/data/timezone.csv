@@ -1,36 +1,19 @@
 # List of time zones.
 #
-# http://www.twinsun.com/tz/tz-link.htm
-# http://pytz.sourceforge.net
+# Information:
+#   http://www.twinsun.com/tz/tz-link.htm
 #
-#  ASCENSION ISLAND:AC:Atlantic/St_Helena (from Saint Helena)
-#ALDERNEY:AY
-#BOUVET ISLAND:BV
-#CLIPPERTON ISLAND:CP
-#SCOTLAND:CT
-#  DIEGO GARCIA:DG:Indian/Chagos (from British Indian Ocean Territory)
-#  CEUTA AND MELILLA:EA:Africa/Ceuta (from Spain)
-#ENGLAND:EN
-#GUERNSEY:GG
-#HEARD ISLAND AND MCDONALD ISLANDS:HM
-#  CANARY ISLANDS:IC:Atlantic/Canary (from Spain)
-#ISLE OF MAN:IM
-#JERSEY:JE
-#NORTHERN IRELAND:ND
-#SARK:RK
-#  TRISTAN DA CUNHA:TA:Atlantic/St_Helena (from Saint Helena)
-#WALES:WA
-#  AZORES:ZO:Atlantic/Azores (from Portugal)
+# To tailor time to the users local time is used the python library:
+#   http://pytz.sourceforge.net
+#
+# There are several territories that are commented out because
+# they are not used in the 'Country' table:
+#   AQ, CC, CX, GS, IO, TF, TW, UM
 #
 # * code: TimeZone, country, zone *
-# country : time zone
 #
-#AC:Atlantic/St_Helena
-#DG:Indian/Chagos
-#EA:Africa/Ceuta
-#IC:Atlantic/Canary
-#TA:Atlantic/St_Helena
-#ZO:Atlantic/Azores
+# Country code : Time zone
+#
 
 AD:Europe/Andorra
 AE:Asia/Dubai
@@ -41,16 +24,16 @@ AL:Europe/Tirane
 AM:Asia/Yerevan
 AN:America/Curacao
 AO:Africa/Luanda
-AQ:Antarctica/McMurdo
-AQ:Antarctica/South_Pole
-AQ:Antarctica/Rothera
-AQ:Antarctica/Palmer
-AQ:Antarctica/Mawson
-AQ:Antarctica/Davis
-AQ:Antarctica/Casey
-AQ:Antarctica/Vostok
-AQ:Antarctica/DumontDUrville
-AQ:Antarctica/Syowa
+#AQ:Antarctica/McMurdo
+#AQ:Antarctica/South_Pole
+#AQ:Antarctica/Rothera
+#AQ:Antarctica/Palmer
+#AQ:Antarctica/Mawson
+#AQ:Antarctica/Davis
+#AQ:Antarctica/Casey
+#AQ:Antarctica/Vostok
+#AQ:Antarctica/DumontDUrville
+#AQ:Antarctica/Syowa
 AR:America/Argentina/Buenos_Aires
 AR:America/Argentina/Cordoba
 AR:America/Argentina/Jujuy
@@ -134,7 +117,7 @@ CA:America/Dawson_Creek
 CA:America/Vancouver
 CA:America/Whitehorse
 CA:America/Dawson
-CC:Indian/Cocos
+#CC:Indian/Cocos
 CD:Africa/Kinshasa
 CD:Africa/Lubumbashi
 CF:Africa/Bangui
@@ -155,7 +138,7 @@ CR:America/Costa_Rica
 CS:Europe/Belgrade
 CU:America/Havana
 CV:Atlantic/Cape_Verde
-CX:Indian/Christmas
+#CX:Indian/Christmas
 CY:Asia/Nicosia
 CZ:Europe/Prague
 DE:Europe/Berlin
@@ -171,8 +154,8 @@ EG:Africa/Cairo
 EH:Africa/El_Aaiun
 ER:Africa/Asmera
 ES:Europe/Madrid
-#ES:Africa/Ceuta
-#ES:Atlantic/Canary
+ES:Africa/Ceuta
+ES:Atlantic/Canary
 ET:Africa/Addis_Ababa
 FI:Europe/Helsinki
 FJ:Pacific/Fiji
@@ -198,7 +181,7 @@ GN:Africa/Conakry
 GP:America/Guadeloupe
 GQ:Africa/Malabo
 GR:Europe/Athens
-GS:Atlantic/South_Georgia
+#GS:Atlantic/South_Georgia
 GT:America/Guatemala
 GU:Pacific/Guam
 GW:Africa/Bissau
@@ -215,7 +198,7 @@ ID:Asia/Jayapura
 IE:Europe/Dublin
 IL:Asia/Jerusalem
 IN:Asia/Calcutta
-IO:Indian/Chagos
+#IO:Indian/Chagos
 IQ:Asia/Baghdad
 IR:Asia/Tehran
 IS:Atlantic/Reykjavik
@@ -312,7 +295,7 @@ PR:America/Puerto_Rico
 PS:Asia/Gaza
 PT:Europe/Lisbon
 PT:Atlantic/Madeira
-#PT:Atlantic/Azores
+PT:Atlantic/Azores
 PW:Pacific/Palau
 PY:America/Asuncion
 QA:Asia/Qatar
@@ -355,7 +338,7 @@ SY:Asia/Damascus
 SZ:Africa/Mbabane
 TC:America/Grand_Turk
 TD:Africa/Ndjamena
-TF:Indian/Kerguelen
+#TF:Indian/Kerguelen
 TG:Africa/Lome
 TH:Asia/Bangkok
 TJ:Asia/Dushanbe
@@ -367,16 +350,16 @@ TO:Pacific/Tongatapu
 TR:Europe/Istanbul
 TT:America/Port_of_Spain
 TV:Pacific/Funafuti
-TW:Asia/Taipei
+#TW:Asia/Taipei
 TZ:Africa/Dar_es_Salaam
 UA:Europe/Kiev
 UA:Europe/Uzhgorod
 UA:Europe/Zaporozhye
 UA:Europe/Simferopol
 UG:Africa/Kampala
-UM:Pacific/Johnston
-UM:Pacific/Midway
-UM:Pacific/Wake
+#UM:Pacific/Johnston
+#UM:Pacific/Midway
+#UM:Pacific/Wake
 US:America/New_York
 US:America/Detroit
 US:America/Kentucky/Louisville

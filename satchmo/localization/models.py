@@ -1,31 +1,50 @@
 from django.db import models
 
 
+CONTINENT = (
+    ('af', _('Africa')),
+    ('am', _('America')),
+    ('e',  _('Europe')),
+    ('as', _('Asia')),
+    ('o',  _('Oceania')),
+)
+
+REGION = (
+    ('af.e',  _('Eastern Africa')),
+    ('af.m',  _('Middle Africa')),
+    ('af.n',  _('Northern Africa')),
+    ('af.s',  _('Southern Africa')),
+    ('af.w',  _('Western Africa')),
+    ('am.ca', _('Caribbean')),
+    ('am.c',  _('Central America')),
+    ('am.s',  _('South America')),
+    ('am.n',  _('Northern America')),
+    ('as.c',  _('Central Asia')),
+    ('as.e',  _('Eastern Asia')),
+    ('as.s',  _('Southern Asia')),
+    ('as.se', _('South-Eastern Asia')),
+    ('as.w',  _('Western Asia')),
+    ('e.e',   _('Eastern Europe')),
+    ('e.n',   _('Northern Europe')),
+    ('e.s',   _('Southern Europe')),
+    ('e.w',   _('Western Europe')),
+    ('o.a',   _('Australia and New Zealand')),
+    ('o.me',  _('Melanesia')),
+    ('o.mi',  _('Micronesia')),
+    ('o.p',   _('Polynesia')),
+)
+
 SUBDIVISION = (
     ('ar', _('Autonomous region')),
+    ('cy', _('Country')),
     ('co', _('County')),
     ('fd', _('Federal district')),
+    ('is', _('Island')),
     ('mu', _('Municipality')),
     ('pr', _('Province')),
     ('sm', _('Special municipality')),
     ('st', _('State')),
     ('ty', _('Territory')),
-)
-
-REGION = (
-    ('a',   _('Africa')),
-    ('an',  _('America, North')),
-    ('as',  _('America, Central and South')),
-    ('ac',  _('America, Caribbean')),
-    ('asc', _('Asia, Central')),
-    ('ase', _('Asia, Eastern and Southeastern')),
-    ('asw', _('Asia, Southern and Western')),
-    ('ee',  _('Europe, Eastern')),
-    ('ew',  _('Europe, Western')),
-    ('o',   _('Oceania')),
-    ('oa',  _('Ocean, Atlantic')),
-    ('oi',  _('Ocean, Indian')),
-    ('os',  _('Oceans, Pacific, Southern and Artic')),
 )
 
 
@@ -35,12 +54,12 @@ class Language(models.Model):
 'synonym' field is used for some languages that are called with
 another name too.
     """
+    name = models.CharField(_('language name'), maxlength=24, unique=True)
     alpha3_code = models.CharField(_('alpha-3 code'), maxlength=3,
         primary_key=True)
     alpha2_code = models.CharField(_('alpha-2 code'), maxlength=2,
         unique=True)
-    name = models.CharField(_('name'), maxlength=24, unique=True)
-    synonym = models.CharField(_('synonym'), maxlength=24)
+    synonym = models.CharField(_('language synonym'), maxlength=24)
     display = models.BooleanField (_('display'), default=False,
         help_text=_('Designates whether the language is shown.'))
 
@@ -52,7 +71,7 @@ another name too.
         list_display = ('name', 'alpha3_code', 'alpha2_code', 'synonym',
                         'display')
         list_filter = ('display',)
-        search_fields = ('name', 'synonym', 'alpha2_code', 'alpha3_code')
+        search_fields = ('name', 'synonym', 'alpha3_code', 'alpha2_code')
 
     def __str__(self):
         return self.alpha3_code
@@ -65,15 +84,15 @@ alpha2_code and alpha3_code are ISO 3166-1 codes.
 'main_subdiv' is the name used for primary subdivision in the country,
 as state in U.S.
     """
+    name = models.CharField(_('country or area name'), maxlength=56,
+        unique=True)
+    alpha3_code = models.CharField(_('alpha-3 code'), maxlength=3,
+        unique=True)
     alpha2_code = models.CharField(_('alpha-2 code'), maxlength=2,
         primary_key=True)
-    alpha3_code = models.CharField(_('alpha-3 code'), maxlength=3)
-#        unique=True)
-    name = models.CharField(_('official english name'), maxlength=52,
-        unique=True)
-    region = models.CharField(_('geographical region'), maxlength=3,
+    region = models.CharField(_('geographical region'), maxlength=5,
         choices=REGION)
-    from_country = models.CharField(_('from'), maxlength=3)
+    territory_of = models.CharField(_('territory of'), maxlength=3)
     main_subdiv = models.CharField(_('primary subdivision'), maxlength=2,
         choices=SUBDIVISION)
     display = models.BooleanField (_('display'), default=True,
@@ -102,10 +121,10 @@ as state in U.S.
             }),
         )
         """
-        list_display = ('name', 'alpha2_code', 'alpha3_code', 'from_country',
+        list_display = ('name', 'alpha3_code', 'alpha2_code', 'territory_of',
                         'display')
-        list_filter = ('region', 'from_country', 'display')
-        search_fields = ('name', 'alpha2_code', 'alpha3_code')
+        list_filter = ('region', 'territory_of', 'display')
+        search_fields = ('name', 'alpha3_code', 'alpha2_code')
 
     def __str__(self):
         if self.alpha3_code:
@@ -121,7 +140,7 @@ as state in U.S.
     country_id = property(_get_name)
 
 
-class PrimarySubdivision(models.Model):
+class Subdivision(models.Model):
     """The major subdivision of the country, known as the state, province,
 county, etc, depending on the country.
 
@@ -130,11 +149,11 @@ In others it is omitted, and in others it is either optional,
 or needed in some cases but omitted in others.
     """
     country = models.ForeignKey(Country)
-    id_name = models.CharField(_('name identifier'), maxlength=5,
+    name_id = models.CharField(_('name identifier'), maxlength=5,
         primary_key=True)
-    name = models.CharField(_('name'), maxlength=50)
+    name = models.CharField(_('subdivision name'), maxlength=32)
     iso_code = models.CharField(_('ISO 3166-2 code'), maxlength=3)
-    main_subdiv = models.CharField(_('primary subdivision'), maxlength=2,
+    subdivision = models.CharField(_('primary subdivision'), maxlength=2,
         choices=SUBDIVISION)
 
     class Meta:

@@ -1,8 +1,8 @@
 # * coding: UTF-8 *
-# List of languages more common
+# List of languages more common.
 #
-# Information got from:
-#  http://www.loc.gov/standards/iso639-2/englangn.html
+# Information:
+#   http://www.loc.gov/standards/iso639-2/englangn.html
 #
 # Alpha-2 code is the ISO 639-1, and alpha-3 code is the ISO 639-2.
 #
@@ -11,7 +11,7 @@
 #
 # * code: Language, name, alpha3_code, alpha2_code, synonym *
 #
-# Language name (english) : Alpha-3 code : Alpha-2 code : Synonym
+# Language name : Alpha-3 code : Alpha-2 code : Language synonym
 
 Abkhazian:abk:ab:
 Afar:aar:aa:
