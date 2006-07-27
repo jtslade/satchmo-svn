@@ -10,7 +10,6 @@ register = template.Library()
 ##################################################
 ## FILTERS ##
 
-@register.filter
 def thumbnail(url, args=''):
     """ Returns thumbnail URL and create it if not already exists.
 
@@ -73,8 +72,8 @@ or if only a width is requested (to be compatibile with admin interface)::
     else:
         return ret
 #
+register.filter('thumbnail', thumbnail)
 
-@register.filter
 def image_width(url):
     """ Returns image width.
 
@@ -86,7 +85,8 @@ Usage:
     return width
 #
 
-@register.filter
+register.filter('image_width', image_width)
+
 def image_height(url):
     """ Returns image height.
 
@@ -97,3 +97,5 @@ Usage:
     width, height = get_image_size(url)
     return height
 #
+
+register.filter('image_height', image_height)
