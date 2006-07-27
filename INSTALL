@@ -51,11 +51,11 @@ Several scripts are included to load temporary data or localization data.
 To see how Satchmo works, try loading the test data - WARNING this will 
 erase your existing Satchmo database.
 
-python /satchmo/load_data.py
+python /path/to/satchmo/load_data.py
 
 To load the localization data:
 
-python /satchmo/load_localization.py
+python /path/to/satchmo/load_localization.py
 
 You can point your browser to localhost:8000/shop to see the default shop.
 
