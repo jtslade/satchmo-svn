@@ -178,9 +178,6 @@ def load_data(model):
     dic_keys = {}
     csv_separator = ':'
     re_num = re.compile('\d+$')
-    # Countries unhabitted or with a very few habitants.
-    # To set off 'display'.
-#    display_off = ['AQ', 'GS', 'UM']
 
     # Get only the fields name
     fields = [ x for x in model[2:] if not (':' in x or '#' in x) ]
@@ -188,6 +185,7 @@ def load_data(model):
     fields_number = len(fields)
     csv_file = model[0]
     model_name = model[1]
+    print "Creating %s objects ..." % model_name
 
     # Get the position of numeric fields
     if ':N' in model:
@@ -204,37 +202,60 @@ def load_data(model):
         keys = [ (int(x.split(',')[0]), x.split(',')[1]) for x in info_keys ]
         dic_keys = dict(keys)
 
+        # To store the keys. Set to values null
+        model_id = {}
+        for x in dic_keys.keys():
+            model_id.setdefault(x, None)
+
     # Convert from CSV to Django ORM
     reader = csv.reader(comment_stripper(
                         open(csv_file)), delimiter=csv_separator)
 
-    id_model = ''
+    line_bool = []  # Lines where is enabled a boolean field.
+    bool_found = False
     line_number = 0
     for csv_line in reader:
+        #debug
+#        if model_name == "CountryLanguage" or \
+#          model_name == "Country" or model_name == "Language" :
+#        if model_name == "Subdivision" or model_name == "TimeZone":
+#            print "\tskip"
+#            break
+
         object_line = []
-        key_line = []
+        key_line_s = []
         line_number += 1
         object_line.append("c%d = %s(" % (line_number, model_name))
-
         for position in range(0, fields_number):
-            # If the field is not empty
-            if csv_line[position]:
+            field_text = csv_line[position]
+            if field_text == 'True':
+                if not bool_found:
+                    bool_field = fields[position]
+                    bool_found = True
+                line_bool.append(line_number)
+            elif field_text:  # If is not empty
+                key_line = []
                 if object_line[-1][-1] != '(':  # Check the last character
                     object_line.append(', ')
                 # If is a key
                 if dic_keys and dic_keys.has_key(position):
-                    object_line.append('%s=id_key' % fields[position])
+                    object_line.append('%s=key_id%d'
+                                       % (fields[position], position))
                     key_model = dic_keys.get(position)
 
-                    if csv_line[position] != id_model:
-                        id_model = csv_line[position]
+                    if csv_line[position] != model_id.get(position):
+                        model_id[position] = csv_line[position]
 
-                        key_line.append('id_key = %s.objects.get(pk=' \
-                                        % key_model)
-                        if re_num.match(id_model):  # integer
-                            key_line.append('%d)' % id_model)
+                        key_line.append('key_id%d = %s.objects.get(pk='
+                                        % (position, key_model))
+                        if re_num.match(model_id.get(position)):  # integer
+                            key_line.append('%d)' % model_id.get(position))
                         else:
-                            key_line.append('"%s")' % id_model)
+                            key_line.append('"%s")' % model_id.get(position))
+
+                        key_line = ''.join(key_line)
+                        key_line_s.append(key_line)
+
                 # If is an integer
                 elif position in position_num:
                     object_line.append('%s=%s' \
@@ -244,34 +265,29 @@ def load_data(model):
                     object_line.append('%s="%s"' \
                         % (fields[position], csv_line[position]))
 
-        if key_line:
-            load_key = ''.join(key_line)
-            exec(load_key)
+        if key_line_s:
+            for key in key_line_s:
+                exec(key)
+#                print key #debug
 
         object_line.append(")")
         load_object = ''.join(object_line)
         exec(load_object)  # Load the object
+#        print load_object #debug
 
     # At the end, save all objects together
-    print "Creating %s objects ..." % model_name
-    """
-    if model_name == 'Country':
-        for num in range(1, line_number+1):
-            obj = eval('c%d' % num)
-            if obj.alpha2_code in display_off:
-                obj.display = False
-            obj.save()
-    """
     if model_name == 'Language':
         # Display the english language.
         for num in range(1, line_number+1):
-            obj = eval('c%d' % num)
+            obj = eval("c%d" % num)
             if obj.alpha3_code == 'eng':
                 obj.display = True
             obj.save()
     else:
         for num in range(1, line_number+1):
-            obj = eval('c%d' % num)
+            obj = eval("c%d" % num)
+            if num in line_bool:
+                exec("obj.%s = True" % bool_field)
             obj.save()
 
 
@@ -281,7 +297,7 @@ def main():
 If you wish to modify data, modify the files in 'data_dir' directory.
 
 The header format in the CSV files has to be:
-[Model name]: [field 1] [, field 2, ... field n]
+* [Model name], [field 1] [, field 2, ... field n] *
     '''
     data_dir = "./data"  # CSV files.
     models_file = "./localization/models.py"

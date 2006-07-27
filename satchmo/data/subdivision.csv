@@ -20,391 +20,380 @@
 # Country code : Name identifier : Subdivision name : 3166-2 ISO code :
 #  Primary subdivision
 
-AU:AU-AC:Australian Capital Territory:ACT:ty
-AU:AU-NS:New South Wales:NSW:
-AU:AU-NT:Northern Territory:NT:ty
-AU:AU-QL:Queensland:QLD:
-AU:AU-SA:South Australia:SA:
-AU:AU-TA:Tasmania:TAS:
-AU:AU-VI:Victoria:VIC:
-AU:AU-WA:Western Australia:WA:
-AU:AU-AS:Ashmore and Cartier Islands::ty
-AU:AU-CR:Coral Sea Islands Territory::ty
-
-BR:BR-AC:Acre:AC:
-BR:BR-AL:Alagoas:AL:
-BR:BR-AP:Amapá:AP:
-BR:BR-AM:Amazonas:AM:
-BR:BR-BA:Bahia:BA:
-BR:BR-CE:Ceará:CE:
-BR:BR-DF:Distrito Federal:DF:fd
-BR:BR-ES:Espírito Santo:ES:
-BR:BR-GO:Goiás:GO:
-BR:BR-MA:Maranhão:MA:
-BR:BR-MT:Mato Grosso:MT:
-BR:BR-MS:Mato Grosso do Sul:MS:
-BR:BR-MG:Minas Gerais:MG:
-BR:BR-PA:Pará:PA:
-BR:BR-PB:Paraíba:PB:
-BR:BR-PR:Paraná:PR:
-BR:BR-PE:Pernambuco:PE:
-BR:BR-PI:Piauí:PI:
-BR:BR-RJ:Rio de Janeiro:RJ:
-BR:BR-RN:Rio Grande do Norte:RN:
-BR:BR-RS:Rio Grande do Sul:RS:
-BR:BR-RO:Rondônia:RO:
-BR:BR-RR:Roraima:RR:
-BR:BR-SC:Santa Catarina:SC:
-BR:BR-SP:São Paulo:SP:
-BR:BR-SE:Sergipe:SE:
-BR:BR-TO:Tocantins:TO:
-
-CA:CA-AB:Alberta:AB:
-CA:CA-BC:British Columbia:BC:
-CA:CA-MB:Manitoba:MB:
-CA:CA-NB:New Brunswick:NB:
-CA:CA-NL:Newfoundland and Labrador:NL:
-CA:CA-NT:Northwest Territories:NT:ty
-CA:CA-NS:Nova Scotia:NS:
-CA:CA-NU:Nunavut:NU:ty
-CA:CA-ON:Ontario:ON:
-CA:CA-PE:Prince Edward Island:PE:
-CA:CA-QC:Quebec:QC:
-CA:CA-SK:Saskatchewan:SK:
-CA:CA-YT:Yukon Territory:YT:ty
-
-CN:CN-AH:Anhui::
-CN:CN-BJ:Beijing::mu
-CN:CN-CQ:Chongqing::mu
-CN:CN-FJ:Fujian::
-CN:CN-GS:Gansu::
-CN:CN-GD:Guangdong::
-CN:CN-GX:Guangxi Zhuang::ar
-CN:CN-GZ:Guizhou::
-CN:CN-HA:Hainan::
-CN:CN-HB:Hebei::
-CN:CN-HL:Heilongjiang::
-CN:CN-HE:Henan::
-CN:CN-HU:Hubei::
-CN:CN-HN:Hunan::
-CN:CN-JS:Jiangsu::
-CN:CN-JX:Jiangxi::
-CN:CN-JL:Jilin::
-CN:CN-LN:Liaoning::
-CN:CN-NM:Nei Mongol::ar
-CN:CN-NX:Ningxia Hui::ar
-CN:CN-QH:Qinghai::
-CN:CN-SA:Shaanxi::
-CN:CN-SD:Shandong::
-CN:CN-SH:Shanghai::mu
-CN:CN-SX:Shanxi::
-CN:CN-SC:Sichuan::
-CN:CN-TJ:Tianjin::mu
-CN:CN-XJ:Xinjiang Uygur::ar
-CN:CN-XZ:Xizang::ar
-CN:CN-YN:Yunnan::
-CN:CN-ZJ:Zhejiang::
-
-CU:CU-CG:Camagüey:CG:
-CU:CU-CA:Ciego de Ávila:CA:
-CU:CU-CF:Cienfuegos:CF:
-CU:CU-CH:Ciudad de la Habana:CH:
-CU:CU-GR:Granma:GR:
-CU:CU-GT:Guantánamo:GT:
-CU:CU-HO:Holguín:HO:
-CU:CU-IJ:Isla de la Juventud:IJ:sm
-CU:CU-HA:La Habana:HA:
-CU:CU-LT:Las Tunas:LT:
-CU:CU-MT:Matanzas:MT:
-CU:CU-PR:Pinar del Río:PR:
-CU:CU-SS:Sancti Spíritus:SS:
-CU:CU-SC:Santiago de Cuba:SC:
-CU:CU-VC:Villa Clara:VC:
-
-GB:GB-EN:England::
-GB:GB-NI:Northern Ireland::
-GB:GB-SC:Scotland::
-GB:GB-WA:Wales::
-
-ES:ES-AC:A Coruña:C:
-ES:ES-AA:Álava:VI:
-ES:ES-AB:Albacete:AB:
-ES:ES-AN:Alicante:A:
-ES:ES-AM:Almería:AL:
-ES:ES-AS:Asturias:O:
-ES:ES-AV:Ávila:AV:
-ES:ES-BD:Badajoz:BA:
-ES:ES-BL:Baleares:PM:
-ES:ES-BR:Barcelona:B:
-ES:ES-BU:Burgos:BU:
-ES:ES-CC:Cáceres:CC:
-ES:ES-CD:Cádiz:CA:
-ES:ES-CN:Cantabria:S:
-ES:ES-CS:Castellón:CS:
-ES:ES-CE:Ceuta::
-ES:ES-CR:Ciudad Real:CR:
-ES:ES-CO:Córdoba:CO:
-ES:ES-CU:Cuenca:CU:
-ES:ES-GN:Girona:GE:
-ES:ES-GD:Granada:GR:
-ES:ES-GJ:Guadalajara:GU:
-ES:ES-GP:Guipúzcoa:SS:
-ES:ES-HL:Huelva:H:
-ES:ES-HS:Huesca:HU:
-ES:ES-JA:Jaén:J:
-ES:ES-LR:La Rioja:LO:
-ES:ES-LP:Las Palmas:GC:
-ES:ES-LP.GC:Gran Canaria::is
-ES:ES-LP.LA:Lanzarote::is
-ES:ES-LP.FU:Fuerteventura::is
-ES:ES-LN:León:LE:
-ES:ES-LD:Lleida:L:
-ES:ES-LG:Lugo:LU:
-ES:ES-MD:Madrid:M:
-ES:ES-MG:Málaga:MA:
-ES:ES-ME:Melilla::
-ES:ES-MR:Murcia:MU:
-ES:ES-NV:Navarra:NA:
-ES:ES-OR:Ourense:OR:
-ES:ES-PL:Palencia:P:
-ES:ES-PV:Pontevedra:PO:
-ES:ES-SL:Salamanca:SA:
-ES:ES-TF:Santa Cruz de Tenerife:TF:
-ES:ES-TF.TF:Tenerife::is
-ES:ES-TF.PA:La Palma::is
-ES:ES-TF.GO:La Gomera::is
-ES:ES-TF.HI:El Hierro::is
-ES:ES-SG:Segovia:SG:
-ES:ES-SV:Sevilla:SE:
-ES:ES-SR:Soria:SO:
-ES:ES-TG:Tarragona:T:
-ES:ES-TE:Teruel:TE:
-ES:ES-TD:Toledo:TO:
-ES:ES-VN:Valencia:V:
-ES:ES-VD:Valladolid:VA:
-ES:ES-VZ:Vizcaya:BI:
-ES:ES-ZM:Zamora:ZA:
-ES:ES-ZG:Zaragoza:Z:
-
-IE:IE-CW:Carlow::
-IE:IE-CN:Cavan::
-IE:IE-CE:Clare::
-IE:IE-CK:Cork::
-IE:IE-DL:Donegal::
-IE:IE-DN:Dublin::
-IE:IE-GY:Galway::
-IE:IE-KY:Kerry::
-IE:IE-KE:Kildare::
-IE:IE-KK:Kilkenny::
-IE:IE-LS:Laoighis::
-IE:IE-LM:Leitrim::
-IE:IE-LK:Limerick::
-IE:IE-LD:Longford::
-IE:IE-LH:Louth::
-IE:IE-MO:Mayo::
-IE:IE-MH:Meath::
-IE:IE-MN:Monaghan::
-IE:IE-OY:Offaly::
-IE:IE-RN:Roscommon::
-IE:IE-SO:Sligo::
-IE:IE-TY:Tipperary::
-IE:IE-WD:Waterford::
-IE:IE-WH:Westmeath::
-IE:IE-WX:Wexford::
-IE:IE-WW:Wicklow::
-
-IT:IT-AG:Agrigento:AG:
-IT:IT-AL:Alessandria:AL:
-IT:IT-AN:Ancona:AN:
-IT:IT-AO:Aosta:AO:
-IT:IT-AR:Arezzo:AR:
-IT:IT-AP:Ascoli Piceno:AP:
-IT:IT-AT:Asti:AT:
-IT:IT-AV:Avellino:AV:
-IT:IT-BA:Bari:BA:
-IT:IT-BL:Belluno:BL:
-IT:IT-BN:Benevento:BN:
-IT:IT-BG:Bergamo:BG:
-IT:IT-BI:Biella:BI:
-IT:IT-BO:Bologna:BO:
-IT:IT-BZ:Bolzano:BZ:
-IT:IT-BS:Brescia:BS:
-IT:IT-BR:Brindisi:BR:
-IT:IT-CA:Cagliari:CA:
-IT:IT-CL:Caltanissetta:CL:
-IT:IT-CB:Campobasso:CB:
-IT:IT-CI:Carbonia-Iglesias:CI:
-IT:IT-CE:Caserta:CE:
-IT:IT-CT:Catania:CT:
-IT:IT-CZ:Catanzaro:CZ:
-IT:IT-CH:Chieti:CH:
-IT:IT-CO:Como:CO:
-IT:IT-CS:Cosenza:CS:
-IT:IT-CR:Cremona:CR:
-IT:IT-KR:Crotone:KR:
-IT:IT-CN:Cuneo:CN:
-IT:IT-EN:Enna:EN:
-IT:IT-FE:Ferrara:FE:
-IT:IT-FI:Florence:FI:
-IT:IT-FG:Foggia:FG:
-IT:IT-FC:Forlì-Cesena:FC:
-IT:IT-FR:Frosinone:FR:
-IT:IT-GE:Genoa:GE:
-IT:IT-GO:Gorizia:GO:
-IT:IT-GR:Grosseto:GR:
-IT:IT-IM:Imperia:IM:
-IT:IT-IS:Isernia:IS:
-IT:IT-AQ:L'Aquila:AQ:
-IT:IT-SP:La Spezia:SP:
-IT:IT-LT:Latina:LT:
-IT:IT-LE:Lecce:LE:
-IT:IT-LC:Lecco:LC:
-IT:IT-LI:Livorno:LI:
-IT:IT-LO:Lodi:LO:
-IT:IT-LU:Lucca:LU:
-IT:IT-MC:Macerata:MC:
-IT:IT-MN:Mantua:MN:
-IT:IT-MS:Massa-Carrara:MS:
-IT:IT-MT:Matera:MT:
-IT:IT-MD:Medio Campidano:MD:
-IT:IT-ME:Messina:ME:
-IT:IT-MI:Milan:MI:
-IT:IT-MO:Modena:MO:
-IT:IT-NA:Naples:NA:
-IT:IT-NO:Novara:NO:
-IT:IT-NU:Nuoro:NU:
-IT:IT-OG:Ogliastra:OG:
-IT:IT-OT:Olbia-Tempio:OT:
-IT:IT-OR:Oristano:OR:
-IT:IT-PD:Padua:PD:
-IT:IT-PA:Palermo:PA:
-IT:IT-PR:Parma:PR:
-IT:IT-PV:Pavia:PV:
-IT:IT-PG:Perugia:PG:
-IT:IT-PU:Pesaro e Urbino:PU:
-IT:IT-PE:Pescara:PE:
-IT:IT-PC:Piacenza:PC:
-IT:IT-PI:Pisa:PI:
-IT:IT-PT:Pistoia:PT:
-IT:IT-PN:Pordenone:PN:
-IT:IT-PZ:Potenza:PZ:
-IT:IT-PO:Prato:PO:
-IT:IT-RG:Ragusa:RG:
-IT:IT-RA:Ravenna:RA:
-IT:IT-RC:Reggio di Calabria:RC:
-IT:IT-RE:Reggio nell'Emilia:RE:
-IT:IT-RI:Rieti:RI:
-IT:IT-RN:Rimini:RN:
-IT:IT-RM:Rome:RM:
-IT:IT-RO:Rovigo:RO:
-IT:IT-SA:Salerno:SA:
-IT:IT-SS:Sassari:SS:
-IT:IT-SV:Savona:SV:
-IT:IT-SI:Siena:SI:
-IT:IT-SO:Sondrio:SO:
-IT:IT-SR:Syracuse:SR:
-IT:IT-TA:Taranto:TA:
-IT:IT-TE:Teramo:TE:
-IT:IT-TR:Terni:TR:
-IT:IT-TP:Trapani:TP:
-IT:IT-TN:Trento:TN:
-IT:IT-TV:Treviso:TV:
-IT:IT-TS:Trieste:TS:
-IT:IT-TO:Turin:TO:
-IT:IT-UD:Udine:UD:
-IT:IT-VA:Varese:VA:
-IT:IT-VE:Venice:VE:
-IT:IT-VB:Verbano-Cusio-Ossola:VB:
-IT:IT-VC:Vercelli:VC:
-IT:IT-VR:Verona:VR:
-IT:IT-VV:Vibo Valentia:VV:
-IT:IT-VI:Vicenza:VI:
-IT:IT-VT:Viterbo:VT:
-
-MX:MX-AG:Aguascalientes:AGU:
-MX:MX-BN:Baja California:BCN:
-MX:MX-BS:Baja California Sur:BCS:
-MX:MX-CM:Campeche:CAM:
-MX:MX-CP:Chiapas:CHP:
-MX:MX-CH:Chihuahua:CHH:
-MX:MX-CA:Coahuila:COA:
-MX:MX-CL:Colima:COL:
-MX:MX-DF:Distrito Federal:DIF:fd
-MX:MX-DU:Durango:DUR:
-MX:MX-GJ:Guanajuato:GUA:
-MX:MX-GR:Guerrero:GRO:
-MX:MX-HI:Hidalgo:HID:
-MX:MX-JA:Jalisco:JAL:
-MX:MX-MX:México:MEX:
-MX:MX-MC:Michoacán:MIC:
-MX:MX-MR:Morelos:MOR:
-MX:MX-NA:Nayarit:NAY:
-MX:MX-NL:Nuevo León:NLE:
-MX:MX-OA:Oaxaca:OAX:
-MX:MX-PU:Puebla:PUE:
-MX:MX-QE:Querétaro:QUE:
-MX:MX-QR:Quintana Roo:ROO:
-MX:MX-SL:San Luis Potosí:SLP:
-MX:MX-SI:Sinaloa:SIN:
-MX:MX-SO:Sonora:SON:
-MX:MX-TB:Tabasco:TAB:
-MX:MX-TM:Tamaulipas:TAM:
-MX:MX-TL:Tlaxcala:TLA:
-MX:MX-VE:Veracruz:VER:
-MX:MX-YU:Yucatán:YUC:
-MX:MX-ZA:Zacatecas:ZAC:
-
-PT:PT-PT:Portugal::
-PT:PT-AZ:Azores::
-
-US:US-AL:Alabama:AL:
-US:US-AK:Alaska:AK:
-US:US-AZ:Arizona:AZ:
-US:US-AR:Arkansas:AR:
-US:US-CA:California:CA:
-US:US-CO:Colorado:CO:
-US:US-CT:Connecticut:CT:
-US:US-DE:Delaware:DE:
-US:US-DC:District of Columbia:DC:fd
-US:US-FL:Florida:FL:
-US:US-GA:Georgia:GA:
-US:US-HI:Hawaii:HI:
-US:US-ID:Idaho:ID:
-US:US-IL:Illinois:IL:
-US:US-IN:Indiana:IN:
-US:US-IA:Iowa:IA:
-US:US-KS:Kansas:KS:
-US:US-KY:Kentucky:KY:
-US:US-LA:Louisiana:LA:
-US:US-ME:Maine:ME:
-US:US-MD:Maryland:MD:
-US:US-MA:Massachusetts:MA:
-US:US-MI:Michigan:MI:
-US:US-MN:Minnesota:MN:
-US:US-MS:Mississippi:MS:
-US:US-MO:Missouri:MO:
-US:US-MT:Montana:MT:
-US:US-NE:Nebraska:NE:
-US:US-NV:Nevada:NV:
-US:US-NH:New Hampshire:NH:
-US:US-NJ:New Jersey:NJ:
-US:US-NM:New Mexico:NM:
-US:US-NY:New York:NY:
-US:US-NC:North Carolina:NC:
-US:US-ND:North Dakota:ND:
-US:US-OH:Ohio:OH:
-US:US-OK:Oklahoma:OK:
-US:US-OR:Oregon:OR:
-US:US-PA:Pennsylvania:PA:
-US:US-RI:Rhode Island:RI:
-US:US-SC:South Carolina:SC:
-US:US-SD:South Dakota:SD:
-US:US-TN:Tennessee:TN:
-US:US-TX:Texas:TX:
-US:US-UT:Utah:UT:
-US:US-VT:Vermont:VT:
-US:US-VA:Virginia:VA:
-US:US-WA:Washington:WA:
-US:US-WV:West Virginia:WV:
-US:US-WI:Wisconsin:WI:
-US:US-WY:Wyoming:WY:
+AUS:AU-AC:Australian Capital Territory:ACT:ty
+AUS:AU-NS:New South Wales:NSW:
+AUS:AU-NT:Northern Territory:NT:ty
+AUS:AU-QL:Queensland:QLD:
+AUS:AU-SA:South Australia:SA:
+AUS:AU-TA:Tasmania:TAS:
+AUS:AU-VI:Victoria:VIC:
+AUS:AU-WA:Western Australia:WA:
+AUS:AU-AS:Ashmore and Cartier Islands::ty
+AUS:AU-CR:Coral Sea Islands Territory::ty
+BRA:BR-AC:Acre:AC:
+BRA:BR-AL:Alagoas:AL:
+BRA:BR-AP:Amapá:AP:
+BRA:BR-AM:Amazonas:AM:
+BRA:BR-BA:Bahia:BA:
+BRA:BR-CE:Ceará:CE:
+BRA:BR-DF:Distrito Federal:DF:fd
+BRA:BR-ES:Espírito Santo:ES:
+BRA:BR-GO:Goiás:GO:
+BRA:BR-MA:Maranhão:MA:
+BRA:BR-MT:Mato Grosso:MT:
+BRA:BR-MS:Mato Grosso do Sul:MS:
+BRA:BR-MG:Minas Gerais:MG:
+BRA:BR-PA:Pará:PA:
+BRA:BR-PB:Paraíba:PB:
+BRA:BR-PR:Paraná:PR:
+BRA:BR-PE:Pernambuco:PE:
+BRA:BR-PI:Piauí:PI:
+BRA:BR-RJ:Rio de Janeiro:RJ:
+BRA:BR-RN:Rio Grande do Norte:RN:
+BRA:BR-RS:Rio Grande do Sul:RS:
+BRA:BR-RO:Rondônia:RO:
+BRA:BR-RR:Roraima:RR:
+BRA:BR-SC:Santa Catarina:SC:
+BRA:BR-SP:São Paulo:SP:
+BRA:BR-SE:Sergipe:SE:
+BRA:BR-TO:Tocantins:TO:
+CAN:CA-AB:Alberta:AB:
+CAN:CA-BC:British Columbia:BC:
+CAN:CA-MB:Manitoba:MB:
+CAN:CA-NB:New Brunswick:NB:
+CAN:CA-NL:Newfoundland and Labrador:NL:
+CAN:CA-NT:Northwest Territories:NT:ty
+CAN:CA-NS:Nova Scotia:NS:
+CAN:CA-NU:Nunavut:NU:ty
+CAN:CA-ON:Ontario:ON:
+CAN:CA-PE:Prince Edward Island:PE:
+CAN:CA-QC:Quebec:QC:
+CAN:CA-SK:Saskatchewan:SK:
+CAN:CA-YT:Yukon Territory:YT:ty
+CHN:CN-AH:Anhui::
+CHN:CN-BJ:Beijing::mu
+CHN:CN-CQ:Chongqing::mu
+CHN:CN-FJ:Fujian::
+CHN:CN-GS:Gansu::
+CHN:CN-GD:Guangdong::
+CHN:CN-GX:Guangxi Zhuang::ar
+CHN:CN-GZ:Guizhou::
+CHN:CN-HA:Hainan::
+CHN:CN-HB:Hebei::
+CHN:CN-HL:Heilongjiang::
+CHN:CN-HE:Henan::
+CHN:CN-HU:Hubei::
+CHN:CN-HN:Hunan::
+CHN:CN-JS:Jiangsu::
+CHN:CN-JX:Jiangxi::
+CHN:CN-JL:Jilin::
+CHN:CN-LN:Liaoning::
+CHN:CN-NM:Nei Mongol::ar
+CHN:CN-NX:Ningxia Hui::ar
+CHN:CN-QH:Qinghai::
+CHN:CN-SA:Shaanxi::
+CHN:CN-SD:Shandong::
+CHN:CN-SH:Shanghai::mu
+CHN:CN-SX:Shanxi::
+CHN:CN-SC:Sichuan::
+CHN:CN-TJ:Tianjin::mu
+CHN:CN-XJ:Xinjiang Uygur::ar
+CHN:CN-XZ:Xizang::ar
+CHN:CN-YN:Yunnan::
+CHN:CN-ZJ:Zhejiang::
+CUB:CU-CG:Camagüey:CG:
+CUB:CU-CA:Ciego de Ávila:CA:
+CUB:CU-CF:Cienfuegos:CF:
+CUB:CU-CH:Ciudad de la Habana:CH:
+CUB:CU-GR:Granma:GR:
+CUB:CU-GT:Guantánamo:GT:
+CUB:CU-HO:Holguín:HO:
+CUB:CU-IJ:Isla de la Juventud:IJ:sm
+CUB:CU-HA:La Habana:HA:
+CUB:CU-LT:Las Tunas:LT:
+CUB:CU-MT:Matanzas:MT:
+CUB:CU-PR:Pinar del Río:PR:
+CUB:CU-SS:Sancti Spíritus:SS:
+CUB:CU-SC:Santiago de Cuba:SC:
+CUB:CU-VC:Villa Clara:VC:
+GBR:GB-EN:England::
+GBR:GB-NI:Northern Ireland::
+GBR:GB-SC:Scotland::
+GBR:GB-WA:Wales::
+ESP:ES-AC:A Coruña:C:
+ESP:ES-AA:Álava:VI:
+ESP:ES-AB:Albacete:AB:
+ESP:ES-AN:Alicante:A:
+ESP:ES-AM:Almería:AL:
+ESP:ES-AS:Asturias:O:
+ESP:ES-AV:Ávila:AV:
+ESP:ES-BD:Badajoz:BA:
+ESP:ES-BL:Baleares:PM:
+ESP:ES-BR:Barcelona:B:
+ESP:ES-BU:Burgos:BU:
+ESP:ES-CC:Cáceres:CC:
+ESP:ES-CD:Cádiz:CA:
+ESP:ES-CN:Cantabria:S:
+ESP:ES-CS:Castellón:CS:
+ESP:ES-CE:Ceuta::
+ESP:ES-CR:Ciudad Real:CR:
+ESP:ES-CO:Córdoba:CO:
+ESP:ES-CU:Cuenca:CU:
+ESP:ES-GN:Girona:GE:
+ESP:ES-GD:Granada:GR:
+ESP:ES-GJ:Guadalajara:GU:
+ESP:ES-GP:Guipúzcoa:SS:
+ESP:ES-HL:Huelva:H:
+ESP:ES-HS:Huesca:HU:
+ESP:ES-JA:Jaén:J:
+ESP:ES-LR:La Rioja:LO:
+ESP:ES-LP:Las Palmas:GC:
+ESP:ES-LP.GC:Gran Canaria::is
+ESP:ES-LP.LA:Lanzarote::is
+ESP:ES-LP.FU:Fuerteventura::is
+ESP:ES-LN:León:LE:
+ESP:ES-LD:Lleida:L:
+ESP:ES-LG:Lugo:LU:
+ESP:ES-MD:Madrid:M:
+ESP:ES-MG:Málaga:MA:
+ESP:ES-ME:Melilla::
+ESP:ES-MR:Murcia:MU:
+ESP:ES-NV:Navarra:NA:
+ESP:ES-OR:Ourense:OR:
+ESP:ES-PL:Palencia:P:
+ESP:ES-PV:Pontevedra:PO:
+ESP:ES-SL:Salamanca:SA:
+ESP:ES-TF:Santa Cruz de Tenerife:TF:
+ESP:ES-TF.TF:Tenerife::is
+ESP:ES-TF.PA:La Palma::is
+ESP:ES-TF.GO:La Gomera::is
+ESP:ES-TF.HI:El Hierro::is
+ESP:ES-SG:Segovia:SG:
+ESP:ES-SV:Sevilla:SE:
+ESP:ES-SR:Soria:SO:
+ESP:ES-TG:Tarragona:T:
+ESP:ES-TE:Teruel:TE:
+ESP:ES-TD:Toledo:TO:
+ESP:ES-VN:Valencia:V:
+ESP:ES-VD:Valladolid:VA:
+ESP:ES-VZ:Vizcaya:BI:
+ESP:ES-ZM:Zamora:ZA:
+ESP:ES-ZG:Zaragoza:Z:
+IRL:IE-CW:Carlow::
+IRL:IE-CN:Cavan::
+IRL:IE-CE:Clare::
+IRL:IE-CK:Cork::
+IRL:IE-DL:Donegal::
+IRL:IE-DN:Dublin::
+IRL:IE-GY:Galway::
+IRL:IE-KY:Kerry::
+IRL:IE-KE:Kildare::
+IRL:IE-KK:Kilkenny::
+IRL:IE-LS:Laoighis::
+IRL:IE-LM:Leitrim::
+IRL:IE-LK:Limerick::
+IRL:IE-LD:Longford::
+IRL:IE-LH:Louth::
+IRL:IE-MO:Mayo::
+IRL:IE-MH:Meath::
+IRL:IE-MN:Monaghan::
+IRL:IE-OY:Offaly::
+IRL:IE-RN:Roscommon::
+IRL:IE-SO:Sligo::
+IRL:IE-TY:Tipperary::
+IRL:IE-WD:Waterford::
+IRL:IE-WH:Westmeath::
+IRL:IE-WX:Wexford::
+IRL:IE-WW:Wicklow::
+ITA:IT-AG:Agrigento:AG:
+ITA:IT-AL:Alessandria:AL:
+ITA:IT-AN:Ancona:AN:
+ITA:IT-AO:Aosta:AO:
+ITA:IT-AR:Arezzo:AR:
+ITA:IT-AP:Ascoli Piceno:AP:
+ITA:IT-AT:Asti:AT:
+ITA:IT-AV:Avellino:AV:
+ITA:IT-BA:Bari:BA:
+ITA:IT-BL:Belluno:BL:
+ITA:IT-BN:Benevento:BN:
+ITA:IT-BG:Bergamo:BG:
+ITA:IT-BI:Biella:BI:
+ITA:IT-BO:Bologna:BO:
+ITA:IT-BZ:Bolzano:BZ:
+ITA:IT-BS:Brescia:BS:
+ITA:IT-BR:Brindisi:BR:
+ITA:IT-CA:Cagliari:CA:
+ITA:IT-CL:Caltanissetta:CL:
+ITA:IT-CB:Campobasso:CB:
+ITA:IT-CI:Carbonia-Iglesias:CI:
+ITA:IT-CE:Caserta:CE:
+ITA:IT-CT:Catania:CT:
+ITA:IT-CZ:Catanzaro:CZ:
+ITA:IT-CH:Chieti:CH:
+ITA:IT-CO:Como:CO:
+ITA:IT-CS:Cosenza:CS:
+ITA:IT-CR:Cremona:CR:
+ITA:IT-KR:Crotone:KR:
+ITA:IT-CN:Cuneo:CN:
+ITA:IT-EN:Enna:EN:
+ITA:IT-FE:Ferrara:FE:
+ITA:IT-FI:Florence:FI:
+ITA:IT-FG:Foggia:FG:
+ITA:IT-FC:Forlì-Cesena:FC:
+ITA:IT-FR:Frosinone:FR:
+ITA:IT-GE:Genoa:GE:
+ITA:IT-GO:Gorizia:GO:
+ITA:IT-GR:Grosseto:GR:
+ITA:IT-IM:Imperia:IM:
+ITA:IT-IS:Isernia:IS:
+ITA:IT-AQ:L'Aquila:AQ:
+ITA:IT-SP:La Spezia:SP:
+ITA:IT-LT:Latina:LT:
+ITA:IT-LE:Lecce:LE:
+ITA:IT-LC:Lecco:LC:
+ITA:IT-LI:Livorno:LI:
+ITA:IT-LO:Lodi:LO:
+ITA:IT-LU:Lucca:LU:
+ITA:IT-MC:Macerata:MC:
+ITA:IT-MN:Mantua:MN:
+ITA:IT-MS:Massa-Carrara:MS:
+ITA:IT-MT:Matera:MT:
+ITA:IT-MD:Medio Campidano:MD:
+ITA:IT-ME:Messina:ME:
+ITA:IT-MI:Milan:MI:
+ITA:IT-MO:Modena:MO:
+ITA:IT-NA:Naples:NA:
+ITA:IT-NO:Novara:NO:
+ITA:IT-NU:Nuoro:NU:
+ITA:IT-OG:Ogliastra:OG:
+ITA:IT-OT:Olbia-Tempio:OT:
+ITA:IT-OR:Oristano:OR:
+ITA:IT-PD:Padua:PD:
+ITA:IT-PA:Palermo:PA:
+ITA:IT-PR:Parma:PR:
+ITA:IT-PV:Pavia:PV:
+ITA:IT-PG:Perugia:PG:
+ITA:IT-PU:Pesaro e Urbino:PU:
+ITA:IT-PE:Pescara:PE:
+ITA:IT-PC:Piacenza:PC:
+ITA:IT-PI:Pisa:PI:
+ITA:IT-PT:Pistoia:PT:
+ITA:IT-PN:Pordenone:PN:
+ITA:IT-PZ:Potenza:PZ:
+ITA:IT-PO:Prato:PO:
+ITA:IT-RG:Ragusa:RG:
+ITA:IT-RA:Ravenna:RA:
+ITA:IT-RC:Reggio di Calabria:RC:
+ITA:IT-RE:Reggio nell'Emilia:RE:
+ITA:IT-RI:Rieti:RI:
+ITA:IT-RN:Rimini:RN:
+ITA:IT-RM:Rome:RM:
+ITA:IT-RO:Rovigo:RO:
+ITA:IT-SA:Salerno:SA:
+ITA:IT-SS:Sassari:SS:
+ITA:IT-SV:Savona:SV:
+ITA:IT-SI:Siena:SI:
+ITA:IT-SO:Sondrio:SO:
+ITA:IT-SR:Syracuse:SR:
+ITA:IT-TA:Taranto:TA:
+ITA:IT-TE:Teramo:TE:
+ITA:IT-TR:Terni:TR:
+ITA:IT-TP:Trapani:TP:
+ITA:IT-TN:Trento:TN:
+ITA:IT-TV:Treviso:TV:
+ITA:IT-TS:Trieste:TS:
+ITA:IT-TO:Turin:TO:
+ITA:IT-UD:Udine:UD:
+ITA:IT-VA:Varese:VA:
+ITA:IT-VE:Venice:VE:
+ITA:IT-VB:Verbano-Cusio-Ossola:VB:
+ITA:IT-VC:Vercelli:VC:
+ITA:IT-VR:Verona:VR:
+ITA:IT-VV:Vibo Valentia:VV:
+ITA:IT-VI:Vicenza:VI:
+ITA:IT-VT:Viterbo:VT:
+MEX:MX-AG:Aguascalientes:AGU:
+MEX:MX-BN:Baja California:BCN:
+MEX:MX-BS:Baja California Sur:BCS:
+MEX:MX-CM:Campeche:CAM:
+MEX:MX-CP:Chiapas:CHP:
+MEX:MX-CH:Chihuahua:CHH:
+MEX:MX-CA:Coahuila:COA:
+MEX:MX-CL:Colima:COL:
+MEX:MX-DF:Distrito Federal:DIF:fd
+MEX:MX-DU:Durango:DUR:
+MEX:MX-GJ:Guanajuato:GUA:
+MEX:MX-GR:Guerrero:GRO:
+MEX:MX-HI:Hidalgo:HID:
+MEX:MX-JA:Jalisco:JAL:
+MEX:MX-MX:México:MEX:
+MEX:MX-MC:Michoacán:MIC:
+MEX:MX-MR:Morelos:MOR:
+MEX:MX-NA:Nayarit:NAY:
+MEX:MX-NL:Nuevo León:NLE:
+MEX:MX-OA:Oaxaca:OAX:
+MEX:MX-PU:Puebla:PUE:
+MEX:MX-QE:Querétaro:QUE:
+MEX:MX-QR:Quintana Roo:ROO:
+MEX:MX-SL:San Luis Potosí:SLP:
+MEX:MX-SI:Sinaloa:SIN:
+MEX:MX-SO:Sonora:SON:
+MEX:MX-TB:Tabasco:TAB:
+MEX:MX-TM:Tamaulipas:TAM:
+MEX:MX-TL:Tlaxcala:TLA:
+MEX:MX-VE:Veracruz:VER:
+MEX:MX-YU:Yucatán:YUC:
+MEX:MX-ZA:Zacatecas:ZAC:
+PRT:PT-PT:Portugal::
+PRT:PT-AZ:Azores::
+USA:US-AL:Alabama:AL:
+USA:US-AK:Alaska:AK:
+USA:US-AZ:Arizona:AZ:
+USA:US-AR:Arkansas:AR:
+USA:US-CA:California:CA:
+USA:US-CO:Colorado:CO:
+USA:US-CT:Connecticut:CT:
+USA:US-DE:Delaware:DE:
+USA:US-DC:District of Columbia:DC:fd
+USA:US-FL:Florida:FL:
+USA:US-GA:Georgia:GA:
+USA:US-HI:Hawaii:HI:
+USA:US-ID:Idaho:ID:
+USA:US-IL:Illinois:IL:
+USA:US-IN:Indiana:IN:
+USA:US-IA:Iowa:IA:
+USA:US-KS:Kansas:KS:
+USA:US-KY:Kentucky:KY:
+USA:US-LA:Louisiana:LA:
+USA:US-ME:Maine:ME:
+USA:US-MD:Maryland:MD:
+USA:US-MA:Massachusetts:MA:
+USA:US-MI:Michigan:MI:
+USA:US-MN:Minnesota:MN:
+USA:US-MS:Mississippi:MS:
+USA:US-MO:Missouri:MO:
+USA:US-MT:Montana:MT:
+USA:US-NE:Nebraska:NE:
+USA:US-NV:Nevada:NV:
+USA:US-NH:New Hampshire:NH:
+USA:US-NJ:New Jersey:NJ:
+USA:US-NM:New Mexico:NM:
+USA:US-NY:New York:NY:
+USA:US-NC:North Carolina:NC:
+USA:US-ND:North Dakota:ND:
+USA:US-OH:Ohio:OH:
+USA:US-OK:Oklahoma:OK:
+USA:US-OR:Oregon:OR:
+USA:US-PA:Pennsylvania:PA:
+USA:US-RI:Rhode Island:RI:
+USA:US-SC:South Carolina:SC:
+USA:US-SD:South Dakota:SD:
+USA:US-TN:Tennessee:TN:
+USA:US-TX:Texas:TX:
+USA:US-UT:Utah:UT:
+USA:US-VT:Vermont:VT:
+USA:US-VA:Virginia:VA:
+USA:US-WA:Washington:WA:
+USA:US-WV:West Virginia:WV:
+USA:US-WI:Wisconsin:WI:
+USA:US-WY:Wyoming:WY:

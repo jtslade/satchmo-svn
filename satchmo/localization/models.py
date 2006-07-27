@@ -87,15 +87,15 @@ as state in U.S.
     name = models.CharField(_('country or area name'), maxlength=56,
         unique=True)
     alpha3_code = models.CharField(_('alpha-3 code'), maxlength=3,
-        unique=True)
-    alpha2_code = models.CharField(_('alpha-2 code'), maxlength=2,
         primary_key=True)
+    alpha2_code = models.CharField(_('alpha-2 code'), maxlength=2,
+        unique=True)
     region = models.CharField(_('geographical region'), maxlength=5,
         choices=REGION)
     territory_of = models.CharField(_('territory of'), maxlength=3)
     main_subdiv = models.CharField(_('primary subdivision'), maxlength=2,
         choices=SUBDIVISION)
-    display = models.BooleanField (_('display'), default=True,
+    display = models.BooleanField(_('display'), default=True,
         help_text=_('Designates whether the country is shown.'))
 
 #    address_format = models.ForeignKey(AddressFormat)
@@ -140,6 +140,35 @@ as state in U.S.
     country_id = property(_get_name)
 
 
+class CountryLanguage(models.Model):
+    """Countries with its languages.
+    """
+    country = models.ForeignKey(Country, edit_inline=models.TABULAR,
+        core=True)
+    language = models.ForeignKey(Language)
+    regional_lang = models.BooleanField(_('regional'), default=False,
+        help_text=_('Designates whether is a regional language.'))
+
+    class Meta:
+        verbose_name = _('country & language')
+        verbose_name_plural = _('countries & languages')
+        ordering = ['country']
+    class Admin:
+        """
+        fields = (
+            (_('Sorry! Not allowed to add or modify items in this model.'), {
+                'fields': ('alpha2_code',)
+            }),
+        )
+        """
+        list_display = ('country', 'language', 'regional_lang')
+        list_filter = ('regional_lang',)
+        search_fields = ('country', 'language')
+
+    def __str__(self):
+        return "%s - %s" % (self.country, self.language)
+
+
 class Subdivision(models.Model):
     """The major subdivision of the country, known as the state, province,
 county, etc, depending on the country.
@@ -148,7 +177,8 @@ In some countries this subdivision is necessary for the mail address.
 In others it is omitted, and in others it is either optional,
 or needed in some cases but omitted in others.
     """
-    country = models.ForeignKey(Country)
+    country = models.ForeignKey(Country, edit_inline=models.TABULAR,
+        core=True)
     name_id = models.CharField(_('name identifier'), maxlength=8,
         primary_key=True)
     name = models.CharField(_('subdivision name'), maxlength=32)
@@ -179,7 +209,7 @@ or needed in some cases but omitted in others.
 class TimeZone(models.Model):
     """The time zones for each country or territory.
     """
-    country = models.ForeignKey(Country)
+    country = models.ForeignKey(Country, edit_inline=models.TABULAR, core=True)
     zone = models.CharField(_('time zone'), maxlength=32, unique=True)
 
     class Meta:
