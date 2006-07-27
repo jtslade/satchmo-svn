@@ -9,15 +9,16 @@
 
 <h4>Contents of your cart</h4>
 <table>
-<tr><th>Quantity</th><th>Item</th><th align="center">Total</th></tr>
+<tr><th></th><th>Quantity</th><th>Item</th><th align="center">Total</th></tr>
 
 {% for item in all_items %}
-    <tr><td>{{item.quantity}} </td>
+    <tr><td> <a href="{{shop_base}}/cart/{{item.id}}/remove">Remove</a> </td>
+        <td align="center">{{item.quantity}} </td>
         <td>{{ item.description }}</td>
         <td align="center">{{ item.line_total }}</td>
     </tr>
 {% endfor %}
-    <tr><td colspan="2" align="right">Cart Total: </td>
+    <tr><td colspan="3" align="right">Cart Total: </td>
         <td>${{total}}</td></tr>
 </table>
 {% endblock %}

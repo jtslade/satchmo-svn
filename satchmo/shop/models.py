@@ -56,11 +56,19 @@ class Cart(models.Model):
     def add_item(self, chosen_item, number_added):
         try:
             itemToModify =  self.cartitem_set.filter(subItem__id = chosen_item.id)[0]
-        except IndexError:
+        except IndexError: #It doesn't exist so create a new one
             itemToModify = CartItem(cart=self, subItem=chosen_item, quantity=0)
         itemToModify.quantity += number_added
         itemToModify.save()
 
+    def remove_item(self, chosen_item_id, number_removed):
+        itemToModify =  self.cartitem_set.get(id = chosen_item_id)
+        if number_removed > itemToModify.quantity:
+            itemToModify.delete()
+        else:
+            itemToModify.quanity -= number_removed
+        self.save()
+    
     class Admin:
         list_display = ('date_time_created','numItems','total')
 

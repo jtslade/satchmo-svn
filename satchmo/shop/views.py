@@ -117,7 +117,15 @@ def add_to_cart(request, id):
     request.session['cart'] = tempCart.id
 
     return http.HttpResponseRedirect('%s/cart' % (settings.SHOP_BASE))
-    
+
+def remove_from_cart(request, id):
+    tempCart = Cart.objects.get(id=request.session['cart'])
+    try:
+        quantity = request.POST['quantity']
+    except:
+        quantity = 9999
+    tempCart.remove_item(id, quantity)
+    return http.HttpResponseRedirect('%s/cart' % (settings.SHOP_BASE))
 
 def account_info(request):
     test_data = "Test Data"

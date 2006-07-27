@@ -10,6 +10,7 @@ urlpatterns = patterns('satchmo.shop.views',
      (r'^category/(?P<slug_parent>[-\w]+)/(?P<slug>[-\w]+)/$','category_children'),
      (r'^category/([-\w]+/)+(?P<slug_parent>[-\w]+)/(?P<slug>[-\w]+)/$','category_children'),
      (r'^cart/(?P<id>\d+)/add/$','add_to_cart'),
+     (r'^cart/(?P<id>\d+)/remove/$','remove_from_cart'),
      (r'^cart/$','display_cart'),
      (r'^account/info/$','account_info'),
 )
