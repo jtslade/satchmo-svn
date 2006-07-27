@@ -9,6 +9,7 @@ from satchmo.product.models import Item, Category, OptionItem
 from satchmo.shop.models import Cart, CartItem
 from sets import Set
 from django.conf import settings
+from django.contrib.auth import logout
 
 def bad_or_missing(request, msg):
     """
@@ -135,3 +136,7 @@ def account_info(request):
 _deco = user_passes_test(lambda u: not u.is_anonymous() ,
                         login_url='%s/account/login/' % (settings.SHOP_BASE))
 account_info = _deco(account_info)
+
+def account_logout(request):
+    logout(request)
+    return http.HttpResponseRedirect('%s/' % (settings.SHOP_BASE))

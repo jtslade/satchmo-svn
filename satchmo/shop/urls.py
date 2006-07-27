@@ -13,6 +13,7 @@ urlpatterns = patterns('satchmo.shop.views',
      (r'^cart/(?P<id>\d+)/remove/$','remove_from_cart'),
      (r'^cart/$','display_cart'),
      (r'^account/info/$','account_info'),
+     (r'^account/logout/$','account_logout'),
 )
 urlpatterns += patterns('',(r'^account/login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}))
     

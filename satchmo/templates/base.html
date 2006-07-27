@@ -38,6 +38,7 @@
             Account Information<br/>
             {% if user.is_authenticated %}
                 <a href="{{shop_base}}/account/info">Account Details</a> <br/>
+                <a href="{{shop_base}}/account/logout">Logout</a><br/>
             {% else %}
                 <a href="{{shop_base}}/account/login">Login</a> <br/>
             {% endif %}

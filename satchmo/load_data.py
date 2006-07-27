@@ -84,7 +84,7 @@ def load_data():
     s2.save()
     print "Creating Categories..."
     #Create some categories
-    cat1 = Category(name="Shirt",slug="shirt",description="Women's Shirts")
+    cat1 = Category(name="Shirts",slug="shirts",description="Women's Shirts")
     cat1.save()
     cat2 = Category(name="Short Sleeve",slug="shortsleeve",description="Short sleeve shirts", parent=cat1)
     cat2.save()
@@ -94,6 +94,9 @@ def load_data():
     cat4.save()
     cat5 = Category(name="Science Fiction",slug="scifi",description="Science Fiction",parent=cat4)
     cat5.save()
+    cat6 = Category(name="Non Fiction",slug="nonfiction",description="Non Fiction",parent=cat3)
+    cat6.save()
+    
     
     print "Creating items..."   
     #Create some items
