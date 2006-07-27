@@ -149,7 +149,7 @@ In others it is omitted, and in others it is either optional,
 or needed in some cases but omitted in others.
     """
     country = models.ForeignKey(Country)
-    name_id = models.CharField(_('name identifier'), maxlength=5,
+    name_id = models.CharField(_('name identifier'), maxlength=8,
         primary_key=True)
     name = models.CharField(_('subdivision name'), maxlength=32)
     iso_code = models.CharField(_('ISO 3166-2 code'), maxlength=3)
