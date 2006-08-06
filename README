@@ -20,6 +20,11 @@ Satchmo is built using the Django framework.  Using this framework has a number 
 
 - Proven performance including a robust caching system.  This is one of the most critical aspects of an online store.  If you make it big and realize your old site can't handle the load, you're in a difficult place.
 
+- Security is also a primary component for any online site these days.  Django's session
+management capabilities makes it more secure by not encoding session ID's in urls so that 
+session-ID theft is not possible via the "Referrer" header.  Also, Django takes care
+of escaping SQL statements so that SQL injection attacks are not possible.
+
 - Robust internationalization support in all phases of a project allow you to tailor your site to different countries and languages.
 
 Django clearly sets Satchmo up to be a robust framework for your store.  The Satchmo framework is still in it's early stages but already provides a number of very sophisticated features.  Some highlights include:
