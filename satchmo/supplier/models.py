@@ -1,8 +1,8 @@
 from django.db import models
-from satchmo.contact.models import Contact
+from satchmo.contact.models import Contact, Organization
 
 class RawItem(models.Model):
-    supplier = models.ForeignKey(Contact)
+    supplier = models.ForeignKey(Organization)
     supplier_num = models.CharField(maxlength=50)
     description = models.CharField(maxlength=200)
     unit_cost = models.FloatField(max_digits=6, decimal_places=2)
@@ -16,7 +16,7 @@ class RawItem(models.Model):
         list_filter = ('supplier',)
         
 class SupplierOrder(models.Model):
-    supplier = models.ForeignKey(Contact)
+    supplier = models.ForeignKey(Organization)
     date_created = models.DateField(auto_now_add=True)
     order_subtotal = models.FloatField(max_digits=6, decimal_places=2)
     order_shipping = models.FloatField(max_digits=6, decimal_places=2)
