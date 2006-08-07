@@ -2,14 +2,45 @@ from django.db import models
 from satchmo.product.models import Sub_Item
 # Create your models here.
 
-class Customer(models.Model):
+CONTACT_CHOICES = (
+    ('Customer', 'Customer'),
+    ('Supplier', 'Supplier'),
+    ('Distributor', 'Distributor'),
+)
+
+ORGANIZATION_CHOICES = (
+    ('Company', 'Company'),
+    ('Government','Government'),
+    ('Non-profit','Non-profit'),
+)
+
+ORGANIZATION_ROLE_CHOICES = (
+    ('Supplier','Supplier'),
+    ('Distributor','Distributor'),
+    ('Manufacturer','Manufacturer'),
+
+)
+class Organization(models.Model):
+    name = models.CharField(maxlength=50, core=True)
+    type = models.CharField(maxlength=30,choices=ORGANIZATION_CHOICES)
+    role = models.CharField(maxlength=30,choices=ORGANIZATION_ROLE_CHOICES)
+    create_date = models.DateField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.name
+    
+    class Admin:
+        list_filter = ['type','role']
+        list_display = ['name','type','role']
+        
+class Contact(models.Model):
     first_name = models.CharField(maxlength=30, core=True)
     last_name = models.CharField(maxlength=30, core=True)
-    dob = models.DateField(blank=True, null=True)
-    phone = models.CharField(blank=True, maxlength=30)
-    fax=models.PhoneNumberField(blank=True)
-    email=models.EmailField(blank=True)
-    notes=models.TextField("Notes",maxlength=500, blank=True)
+    role = models.CharField(maxlength=20, blank=True, null=True, choices=CONTACT_CHOICES)
+    organization = models.ForeignKey(Organization, blank=True, null=True)
+    dob = models.DateField(blank=True, null=True)   
+    email = models.EmailField(blank=True)
+    notes = models.TextField("Notes",maxlength=500, blank=True)
     create_date = models.DateField(auto_now_add=True)
     
     def _get_full_name(self):
@@ -35,12 +66,32 @@ class Customer(models.Model):
         return (self.full_name)
         
     class Admin:
-        list_display = ('last_name','first_name')
-        list_filter = ['create_date']
+        list_display = ('last_name','first_name','organization','role')
+        list_filter = ['create_date', 'role', 'organization']
         ordering = ['last_name']
+
+PHONE_CHOICES = (
+    ('Work', 'Work'),
+    ('Home', 'Home'),
+    ('Fax', 'Fax'),
+    ('Mobile','Mobile'),
+)
+
+class PhoneNumber(models.Model):
+    contact = models.ForeignKey(Contact,edit_inline=models.TABULAR, num_in_admin=1)
+    type = models.CharField("Description", choices=PHONE_CHOICES, maxlength=20)
+    phone = models.PhoneNumberField(blank=True, core=True)
+    primary = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return ("%s - %s" % (self.type, self.phone))
+    
+    class Meta:
+        unique_together = (("contact", "primary"),)
+        ordering = ['-primary']
         
 class AddressBook(models.Model):
-    customer=models.ForeignKey(Customer,edit_inline=models.STACKED, num_in_admin=1)
+    contact=models.ForeignKey(Contact,edit_inline=models.STACKED, num_in_admin=1)
     description=models.CharField("Description", maxlength=20,core=True,help_text='Description of address - Home,Relative, Office, Warehouse ,etc.',)
     street1=models.CharField("Street",maxlength=50)
     street2=models.CharField("Street", maxlength=50, blank=True)
@@ -48,11 +99,11 @@ class AddressBook(models.Model):
     state=models.USStateField("State")
     zip_code=models.CharField("Zip Code", maxlength=50)
     country=models.CharField("Country", maxlength=50, blank=True)
-    is_default_shipping=models.BooleanField("Default Shipping Address ?", default=False)
-    is_default_billing=models.BooleanField("Default Billing Address ?", default=False)
+    is_default_shipping=models.BooleanField("Default Shipping Address", default=False)
+    is_default_billing=models.BooleanField("Default Billing Address", default=False)
 
     def __str__(self):
-       return ("%s - %s" % (self.customer.full_name, self.description))
+       return ("%s - %s" % (self.contact.full_name, self.description))
        
     def save(self):
         """
@@ -60,8 +111,8 @@ class AddressBook(models.Model):
         set the old one to False - we only want 1 default for each.
         If there are none, then set this one to default to both
         """
-        existingBilling = self.customer.billing_address
-        existingShipping = self.customer.shipping_address
+        existingBilling = self.contact.billing_address
+        existingShipping = self.contact.shipping_address
         
         #If we're setting shipping & one already exists set old one to false & save it
         if self.is_default_shipping and existingShipping:
@@ -104,7 +155,7 @@ class Order(models.Model):
     Orders need to contain a copy of all the information at the time the order is placed.
     A users address or other info could change over time.
     """
-    customer = models.ForeignKey(Customer)
+    customer = models.ForeignKey(Contact)
     shipStreet1=models.CharField("Street",maxlength=50, blank=True)
     shipStreet2=models.CharField("Street", maxlength=50, blank=True)
     shipCity=models.CharField("City", maxlength=50, blank=True)
@@ -156,7 +207,7 @@ class Order(models.Model):
         
     class Admin:
         fields = (
-        (None, {'fields': ('customer','method',)}),
+        (None, {'fields': ('contact','method',)}),
         ('Shipping Information', {'fields': ('shipStreet1','shipStreet2', 'shipCity','shipState', 'shipZip_code','shipCountry',), 'classes': 'collapse'}),
         ('Billing Information', {'fields': ('billStreet1','billStreet2', 'billCity','billState', 'billZip_code','billCountry',), 'classes': 'collapse'}),
         ('Totals', {'fields': ( 'shippingCost', 'tax','total','date','payment',),}),       

@@ -83,7 +83,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'satchmo.shop',
-    'satchmo.customer',
+    'satchmo.contact',
     'satchmo.localization',
     'satchmo.product',
     'satchmo.shipping',

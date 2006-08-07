@@ -4,7 +4,7 @@ from os.path import isdir, isfile, join, dirname
 
 os.environ["DJANGO_SETTINGS_MODULE"]="satchmo.settings"
 
-from satchmo.customer.models import *
+from satchmo.contact.models import *
 from satchmo.product.models import * 
 from satchmo.supplier.models import *
 from django.conf import settings
@@ -58,30 +58,45 @@ def load_data():
     config.save()
     print "Creating Customers..."
     # Import some customers
-    c1 = Customer(first_name="Chris", last_name="Smith", phone="655-555-0164",
-                  fax="900-100-9010", email="chris@aol.com", notes="Really cool stuff")
+    c1 = Contact(first_name="Chris", last_name="Smith", email="chris@aol.com", role="Customer", notes="Really cool stuff")
     c1.save()
-    c2 = Customer(first_name="John", last_name="Smith", phone="901-555-9242",
-                    fax="800-199-1000", email="abc@comcast.com", notes="Second user")
+    p1 = PhoneNumber(contact=c1, phone="601-555-5511", type="Home",primary=True)
+    p1.save()
+    c2 = Contact(first_name="John", last_name="Smith", email="abc@comcast.com", role="Customer", notes="Second user")
     c2.save()
+    p2 = PhoneNumber(contact=c2, phone="999-555-5111", type="Work",primary=True)
+    p2.save()
     # Import some addresses for these customers
     a1 = AddressBook(description="Home", street1="8235 Pike Street", city="Anywhere Town", state="TN",
-                 zip_code="38138", country="US", is_default_shipping=True, customer=c1)
+                 zip_code="38138", country="US", is_default_shipping=True, contact=c1)
     a1.save()
     a2 = AddressBook(description="Work", street1="1245 Main Street", city="Stillwater", state="MN",
-                 zip_code="55082", country="US", is_default_shipping=True, customer=c2)
+                 zip_code="55082", country="US", is_default_shipping=True, contact=c2)
     a2.save()
     print "Creating Suppliers..."
     #Import some suppliers
-    s1 = Supplier(name="Rhinestone Ronny", address1="918 Funky Town St", address2="Suite 200",
-                  city="Fishkill", state="NJ", zip="19010", phone1="800-188-7611", fax="900-110-1909", email="ron@rhinestone.com",
-                  notes="My main supplier")
-    s1.save()
+    org1 = Organization(name="Rhinestone Ronny", type="Company",role="Supplier")
+    org1.save()
+    c4 = Contact(first_name="Fred", last_name="Jones", email="fj@rr.com", role="Supplier", organization=org1)
+    c4.save()
+    p4 = PhoneNumber(contact=c4,phone="800-188-7611", type="Work", primary=True)
+    p4.save()
+    p5 = PhoneNumber(contact=c4,phone="755-555-1111",type="Fax")
+    p5.save()
+    a3 = AddressBook(contact=c4, description="Mailing address", street1="Receiving Dept", street2="918 Funky Town St", city="Fishkill",
+                     state="NJ", zip_code="19010")
+    a3.save()
+    #s1 = Supplier(name="Rhinestone Ronny", address1="918 Funky Town St", address2="Suite 200",
+    #              city="Fishkill", state="NJ", zip="19010", phone1="800-188-7611", fax="900-110-1909", email="ron@rhinestone.com",
+    #              notes="My main supplier")
+    #s1.save()
 
-    s2 = Supplier(name="Shirt Sally", address1="9 ABC Lane", 
-                  city="Happyville", state="MD", zip="190111", phone1="888-888-1111", fax="999-110-1909", email="sally@shirts.com",
-                  notes="Shirt Supplier")
-    s2.save()
+    #s2 = Supplier(name="Shirt Sally", address1="9 ABC Lane", 
+    #    city="Happyville", state="MD", zip="190111", phone1="888-888-1111", fax="999-110-1909", email="sally@shirts.com",
+    #              notes="Shirt Supplier")
+    #s2.save()
+    
+    
     print "Creating Categories..."
     #Create some categories
     cat1 = Category(name="Shirts",slug="shirts",description="Women's Shirts")

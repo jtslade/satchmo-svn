@@ -1,7 +1,7 @@
 from django.db import models
 from satchmo.product.models import Item, Sub_Item
 from django.contrib.sites.models import Site
-from satchmo.customer.models import Customer
+from satchmo.contact.models import Contact
 
 class Config(models.Model):
     """
@@ -34,7 +34,7 @@ class Cart(models.Model):
     """
     desc = models.CharField(blank=True, null=True, maxlength=10)
     date_time_created = models.DateTimeField(auto_now_add=True)
-    customer = models.ForeignKey(Customer, blank=True, null=True)
+    customer = models.ForeignKey(Contact, blank=True, null=True)
     
     def _get_count(self):
         itemCount = 0

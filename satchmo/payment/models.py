@@ -1,5 +1,5 @@
 from django.db import models
-from satchmo.customer.models import Order
+from satchmo.contact.models import Order
 
 # Create your models here.
 PAYMENTCHOICES = (
