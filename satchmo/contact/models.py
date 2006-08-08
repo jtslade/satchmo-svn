@@ -25,6 +25,7 @@ class Organization(models.Model):
     type = models.CharField(maxlength=30,choices=ORGANIZATION_CHOICES)
     role = models.CharField(maxlength=30,choices=ORGANIZATION_ROLE_CHOICES)
     create_date = models.DateField(auto_now_add=True)
+    notes = models.TextField(maxlength=200, blank=True, null=True)
     
     def __str__(self):
         return self.name
@@ -77,6 +78,24 @@ PHONE_CHOICES = (
     ('Mobile','Mobile'),
 )
 
+INTERACTION_CHOICES = (
+    ('Email','Email'),
+    ('Phone','Phone'),
+    ('In-person','In-person'),
+)
+
+class Interaction(models.Model):
+    contact = models.ForeignKey(Contact)
+    type = models.CharField(maxlength=30,choices=INTERACTION_CHOICES)
+    date_time = models.DateTimeField(core=True)
+    description = models.TextField(maxlength=200)
+    
+    def __str__(self):
+        return ("%s - %s" % (self.contact.full_name, self.type))
+    
+    class Admin:
+        list_filter = ['type', 'date_time']
+     
 class PhoneNumber(models.Model):
     contact = models.ForeignKey(Contact,edit_inline=models.TABULAR, num_in_admin=1)
     type = models.CharField("Description", choices=PHONE_CHOICES, maxlength=20)
