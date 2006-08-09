@@ -10,9 +10,9 @@ Home
 Welcome to the shop. 
 
 
-{% if all_items %}
+{% if all_items_list %}
     <h4>Featured Items</h4>
-    {% for item in all_items %} 
+    {% for item in all_items_list %} 
             <div class = "productImage">    
            {% if item.main_image %}
               <center>

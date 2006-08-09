@@ -20,20 +20,6 @@ def bad_or_missing(request, msg):
     context = RequestContext(request, {'message': msg})
     return http.HttpResponseNotFound(template.render(context))
 
-
-def index(request):
-    featured_items = Item.objects.filter(active="1").filter(featured="1")
-    return render_to_response('base_index.html', {'all_items': featured_items},
-                              RequestContext(request))
-
-def product(request, slug):
-    #Display the basic product detail page
-    try:
-        item = Item.objects.filter(active="1").get(short_name=slug)
-    except Item.DoesNotExist:
-        return bad_or_missing(request, 'The product you have requested does '
-                'not exist.')
-    return render_to_response('base_product.html',{'item':item},RequestContext(request))
         
 def category_root(request, slug):
     #Display the category page if we're not dealing with a child category
