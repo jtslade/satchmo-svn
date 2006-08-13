@@ -1,48 +1,46 @@
 from django.template import Library, Node
 from satchmo.product.models import Category
+from elementtree.ElementTree import Element, SubElement, tostring
 
 register = Library()
 
-def category_tree(category_root):
+def recurse_for_children(current_node, parent_node):
+    if current_node.child.count() > 0:
+        temp_parent = SubElement(parent_node,"li")
+        attrs = { 'href' : current_node.get_absolute_url() }
+        link = SubElement(temp_parent, "a", attrs)
+        link.text = current_node.name
+        new_parent = SubElement(temp_parent,"ul")
+        children = current_node.child.all()
+        for child in children:
+            recurse_for_children(child, new_parent)
+    else:
+        temp_parent = SubElement(parent_node,"li")
+        attrs = { 'href' : current_node.get_absolute_url() }
+        link = SubElement(temp_parent, "a", attrs)
+        link.text = current_node.name
+
+
+def category_tree():
     """
     Creates an unnumbered list of the categories.  For example:
     <ul>
-        <li>Books</li>
+        <li>Books
             <ul>
-            <li>Science Fiction</li>
+            <li>Science Fiction
                 <ul>
                 <li>Space stories</li>
                 <li>Robot stories</li>
                 </ul>
+            </li>
             <li>Non-fiction</li>
             </ul>
     </ul>
     """
-    category = Category.objects.get(id=category_root)
-    output = "<ul>\n"
-    temp_list, depth_list = category._recurse_for_children(category,0)
-    temp_list.insert(0,category)
-    depth_list.insert(0,0)
-    child_list = zip(temp_list,depth_list)
-    prior_depth = 0
-    for item in child_list:
-        tabs = "\t" * item[1]    
-        if item[1] == prior_depth:
-            output += tabs + '<li><a href="%s">%s</a></li>\n' % (item[0].get_absolute_url(), item[0].name)
-
-        if item[1] > prior_depth:
-            output += tabs + "<ul>\n"
-            output += tabs + '<li><a href="%s">%s</a></li>\n' % (item[0].get_absolute_url(), item[0].name)
-                
-        if item[1] < prior_depth:
-            diff = prior_depth - item[1]
-            for count in range(0,diff):
-                output += tabs + "</ul>\n"
-            output += tabs + '<li><a href="%s">%s</a></li>\n' % (item[0].get_absolute_url(), item[0].name) 
-            
-        prior_depth = item[1]
-        tabs = "\t"    
-    output +="</ul>\n</ul>\n"
-    return output
+    root = Element("ul")
+    for cats in Category.objects.all():
+        if not cats.parent:
+            recurse_for_children(cats, root)
+    return tostring(root)
 
 register.simple_tag(category_tree)

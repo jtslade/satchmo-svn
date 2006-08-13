@@ -22,16 +22,10 @@
         <div id="leftnav">
             {% block sidebar %}
             Shop Categories<br/>
-            <div id="menu_list">
-            {% for category in categories %}
-                {% if not category.parent %}
-                    {% category_tree category.id %}
-                {%endif%}
-                
-            {% endfor %}
-                
-            {% endblock %}
+            <div id="menu_container">
+                {% category_tree %}
             </div>
+            {% endblock %}
         </div>
         
         <div id="rightnav">

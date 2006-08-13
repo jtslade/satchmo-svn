@@ -66,23 +66,6 @@ class Category(models.Model):
             p_list.reverse()
             url_list.reverse()
         return p_list, url_list
-    
-    def _recurse_for_children(self, cat_obj, depth):
-        #Get all the categories and their tree depth (for use in site navigation)
-        child_list = []
-        depth_list = []
-        if cat_obj.child.count > 0:
-            children = cat_obj.child.all()
-            depth += 1
-            for child in children:
-                child_list.append(child)
-                depth_list.append(depth)
-                more, depth_data = self._recurse_for_children(child, depth)
-                if len(more) > 0:
-                    child_list.extend(more)
-                    depth_list.extend(depth_data)
-
-        return child_list, depth_list
 
     def get_url_name(self):
         #Get a list of the url to display and the actual urls

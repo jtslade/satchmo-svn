@@ -1,7 +1,7 @@
 Requirements
 ============
-Satchmo requires a recent (post-magic-removal) version of Django.
-Until a baseline is made, we encourage you to use the latest svn version.
+Satchmo requires a recent (0.95 or higher) version of Django.
+Until we reach 1.0, we encourage you to use the latest svn version of Django.
 
 To get the latest version of Django:
 svn co http://code.djangoproject.com/svn/django/trunk/
@@ -19,6 +19,10 @@ Library (PIL) available here - http://www.pythonware.com/products/pil/#pil115
 
 For the timezone functions you will need pytz - World Time Zone Definitions for
 python available here - http://pytz.sourceforge.net
+
+The category functions use ElementTree to make processing easier.  It will be
+included in Python 2.5.  You can also download it here -
+http://effbot.org/zone/element-index.htm
 
 Since we're still putting this project together, you willl more than likely
 be running this in the development server.  In order to ease the check-in and
