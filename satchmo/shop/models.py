@@ -63,10 +63,9 @@ class Cart(models.Model):
 
     def remove_item(self, chosen_item_id, number_removed):
         itemToModify =  self.cartitem_set.get(id = chosen_item_id)
-        if number_removed > itemToModify.quantity:
+        itemToModify.quantity -= number_removed
+        if itemToModify.quantity <= 0:
             itemToModify.delete()
-        else:
-            itemToModify.quanity -= number_removed
         self.save()
     
     class Admin:

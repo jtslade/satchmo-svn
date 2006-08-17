@@ -53,6 +53,41 @@ margin-right: 200px;
 padding: 1em;
 }
 
+#pagination
+{
+clear:both;
+display: block;
+width:100%;
+float: none;
+padding: 1em;
+}
+
+#pagination ul{
+margin: 0;
+padding: 0;
+text-align: left; 
+font-size: 12px;
+}
+
+#pagination li{
+list-style-type: none;
+display: inline;
+padding-bottom: 1px;
+}
+
+
+#pagination a, #pagination a:visited{
+padding: 0 5px;
+text-decoration: none; 
+}
+
+
+#pagination li.currentpage{
+font-weight: bold;
+padding: 0 5px;
+
+}
+
 #footer
 {
 clear: both;
