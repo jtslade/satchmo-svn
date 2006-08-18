@@ -11,6 +11,7 @@ class Config(models.Model):
     site = models.ForeignKey(Site)
     storeName = models.CharField("Store Name",maxlength=100, unique=True)
     storeDescription = models.TextField(blank=True)
+    storeEmail = models.EmailField(blank=True)
     street1=models.CharField("Street",maxlength=50, blank=True, null=True)
     street2=models.CharField("Street", maxlength=50, blank=True, null=True)
     city=models.CharField("City", maxlength=50, blank=True, null=True)

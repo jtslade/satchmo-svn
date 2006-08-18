@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}The Web Shop{% endblock %}
+
+{% block navbar %}
+<a href="{{shop_base}}">Home</a> ::
+Contact Us
+{% endblock %}
+
+{% block content %}
+<h3>Contact Information</h3>
+
+{% if form.has_errors %}
+<h2>Please correct the following error{{ form.error_dict|pluralize }}:</h2>
+{% endif %}
+
+<table>
+<form method="post" action=".">
+
+
+    <tr><td><label for="id_from">From:</label></td> <td>{{ form.from }}</td></tr>
+    <tr><td></td><td>{% if form.from.errors %}*** {{ form.from.errors|join:", " }}{% endif %}</td></tr>
+
+
+    <tr><td><label for="id_subject">Subject:</label></td><td> {{ form.subject }}</td></tr>
+    <tr><td></td><td>{% if form.subject.errors %}*** {{ form.subject.errors|join:", " }}{% endif %}</td></tr>
+
+    <tr><td><label for="id_inquiry">Inquiry type:</label></td><td> {{ form.inquiry }}</td></tr>
+    <tr><td></td><td>{% if form.inquiry.errors %}*** {{ form.inquiry.errors|join:", " }}{% endif %}</td></tr>
+
+
+    <tr><td><label for="id_contents">Message:</label></td><td> {{ form.contents }}</td></tr>
+    <tr><td></td><td>{% if form.contents.errors %}*** {{ form.contents.errors|join:", " }}{% endif %}</td></tr>
+
+<tr><td></td><td><input type="submit" value="Send Email"/></td></tr>
+</form>
+</table>
+</div>
+{% endblock %}
