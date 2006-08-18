@@ -35,16 +35,41 @@ REGION = (
 )
 
 SUBDIVISION = (
-    ('ar', _('Autonomous region')),
-    ('cy', _('Country')),
+    ('a', _('Another')),
+    ('ar', _('Arrondissement')),
+    ('at', _('Atoll')),
+    ('ai', _('Autonomous island')),
+    ('ca', _('Canton')),
+    ('cm', _('Commune')),
     ('co', _('County')),
-    ('fd', _('Federal district')),
-    ('is', _('Island')),
+    ('dp', _('Department')),
+    ('de', _('Dependency')),
+    ('dt', _('District')),
+    ('dv', _('Division')),
+    ('em', _('Emirate')),
+    ('gv', _('Governorate')),
+    ('i', _('Island')),
+    ('ic', _('Island council')),
+    ('ig', _('Island group')),
+    ('ir', _('Island region')),
+    ('kd', _('Kingdom')),
     ('mu', _('Municipality')),
+    ('pa', _('Parish')),
+    ('pf', _('Prefecture')),
     ('pr', _('Province')),
-    ('sm', _('Special municipality')),
+    ('rg', _('Region')),
+    ('rp', _('Republic')),
+    ('sh', _('Sheading')),
     ('st', _('State')),
+    ('sd', _('Subdivision')),
+    ('sj', _('Subject')),
     ('ty', _('Territory')),
+)
+
+POSITION = (
+    ('l', _('Left')),
+    ('c', _('Center')),
+    ('r', _('Right')),
 )
 
 
@@ -84,7 +109,7 @@ alpha2_code and alpha3_code are ISO 3166-1 codes.
 'main_subdiv' is the name used for primary subdivision in the country,
 as state in U.S.
     """
-    name = models.CharField(_('country or area name'), maxlength=56,
+    name = models.CharField(_('country name'), maxlength=56,
         unique=True)
     alpha3_code = models.CharField(_('alpha-3 code'), maxlength=3,
         primary_key=True)
@@ -93,7 +118,7 @@ as state in U.S.
     region = models.CharField(_('geographical region'), maxlength=5,
         choices=REGION)
     territory_of = models.CharField(_('territory of'), maxlength=3)
-    main_subdiv = models.CharField(_('primary subdivision'), maxlength=2,
+    subdiv = models.CharField(_('subdivision'), maxlength=2,
         choices=SUBDIVISION)
     display = models.BooleanField(_('display'), default=True,
         help_text=_('Designates whether the country is shown.'))
@@ -101,12 +126,6 @@ as state in U.S.
 #    address_format = models.ForeignKey(AddressFormat)
 #, related_name='format')
 #default=1)
-
-#    alpha3_code = models.CharField(_('3 letter ISO code'), maxlength=3,
-#        unique=True)
-#    is_subdivision = models.BooleanField(_('subdivision'), default=False,
-#        help_text=_('Designates whether the country needs the primary \
-#subdivision for the mail delivery.'))
 #'need_subdiv' indicates if is necessary the subdivision for the mail address.
 
     class Meta:
@@ -122,21 +141,15 @@ as state in U.S.
         )
         """
         list_display = ('name', 'alpha3_code', 'alpha2_code', 'territory_of',
-                        'display')
+                        'subdiv', 'display')
         list_filter = ('region', 'territory_of', 'display')
         search_fields = ('name', 'alpha3_code', 'alpha2_code')
 
     def __str__(self):
-        if self.alpha3_code:
-            return self.alpha3_code
-        else:
-            return self.alpha2_code
+        return self.alpha3_code
 
     def _get_name(self):
-        if self.alpha3_code:
-            return "%s (%s)" % (self.name, self.alpha3_code)
-        else:
-            return "%s (%s)" % (self.name, self.alpha2_code)
+        return "%s (%s)" % (self.name, self.alpha3_code)
     country_id = property(_get_name)
 
 
@@ -148,6 +161,8 @@ class CountryLanguage(models.Model):
     language = models.ForeignKey(Language)
     regional_lang = models.BooleanField(_('regional'), default=False,
         help_text=_('Designates whether is a regional language.'))
+    identifier = models.CharField(_('identifier'), maxlength=5,
+        primary_key=True)
 
     class Meta:
         verbose_name = _('country & language')
@@ -179,16 +194,17 @@ or needed in some cases but omitted in others.
     """
     country = models.ForeignKey(Country, edit_inline=models.TABULAR,
         core=True)
-    name_id = models.CharField(_('name identifier'), maxlength=8,
+    name_id = models.CharField(_('name identifier'), maxlength=6,
         primary_key=True)
-    name = models.CharField(_('subdivision name'), maxlength=32)
-    iso_code = models.CharField(_('ISO 3166-2 code'), maxlength=3)
-    subdivision = models.CharField(_('primary subdivision'), maxlength=2,
+    name = models.CharField(_('subdivision name'), maxlength=40)
+    alt_name = models.CharField(_('alternate name'), maxlength=32)
+    abbrev = models.CharField(_('postal abbreviation'), maxlength=3)
+    reg_subdiv = models.CharField(_('regional subdivision'), maxlength=1,
         choices=SUBDIVISION)
 
     class Meta:
-        verbose_name = _('primary subdivision')
-        verbose_name_plural = _('primary subdivisions')
+        verbose_name = _('subdivision')
+        verbose_name_plural = _('subdivisions')
         ordering = ['country']
         unique_together = (('country', 'name'),)
     class Admin:
@@ -199,11 +215,14 @@ or needed in some cases but omitted in others.
             }),
         )
         """
-        list_display = ('country', 'name', 'iso_code')
+        list_display = ('country', 'name', 'alt_name', 'abbrev', 'reg_subdiv')
         search_fields = ('name')
 
     def __str__(self):
-        return "%s (%s)" % (self.iso_code, self.name)
+        if self.abbrev:
+            return "%s (%s)" % (self.abbrev, self.name)
+        else:
+            return self.name
 
 
 class TimeZone(models.Model):
@@ -223,3 +242,30 @@ class TimeZone(models.Model):
     def __str__(self):
         return "%s" % (self.zone)
 
+
+"""
+class AddressFormat(models.Model):
+    '''Address formats for the correct mail delivery.
+    '''
+    country = models.ForeignKey(Country, edit_inline=models.TABULAR, core=True)
+    name = models.CharField(_('name of person'), maxlength=8)
+    address = models.CharField(_('street address'), maxlength=8)
+    locality = models.CharField(_('locality line'), maxlength=16)
+    postalcode = models.CharField(_('postal code'), maxlength=64)
+    aligment = models.CharField(_('alignment of lines'), maxlength=1,
+        choices=POSITION)
+    position = models.CharField(_('position on the envelope'), maxlength=1,
+        choices=POSITION)
+
+    class Meta:
+        verbose_name = _('address format')
+        verbose_name_plural = _('address formats')
+        ordering = ['country']
+    class Admin:
+        list_display = ('country', 'name', 'address', 'locality',
+                        'postalcode', 'aligment', 'position')
+        search_fields = ('country')
+
+    def __str__(self):
+        return "%s" % (self.locality)
+"""
