@@ -63,6 +63,8 @@ python /path/to/satchmo/load_localization.py
 
 You can point your browser to localhost:8000/shop to see the default shop.
 
+If you want to use the email feature, you'll need to make sure you have a
+shop email configured in the admin interface.
 
 Helpful Hints
 =============
