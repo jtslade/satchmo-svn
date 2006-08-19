@@ -2,6 +2,7 @@ import os, sys
 import django.core.management, django.core
 from os.path import isdir, isfile, join, dirname
 
+
 os.environ["DJANGO_SETTINGS_MODULE"]="satchmo.settings"
 
 from satchmo.contact.models import *
