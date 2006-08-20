@@ -2,10 +2,9 @@
 import os
 DIRNAME = os.path.dirname(__file__)
 
-DATABASE_NAME = os.environ['DJANGO_DB_NAME']
-DATABASE_USER = os.environ['DJANGO_DB_USER']
-DATABASE_PASSWORD = os.environ['DJANGO_DB_PASS']
-SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
+DJANGO_PROJECT = 'satchmo'
+DJANGO_SETTINGS_MODULE = 'satchmo.settings'
+
 LOCAL_DEV = True
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -17,6 +16,7 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'mysql'           # 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
+# The following variables should be configured in your local_settings.py file
 #DATABASE_NAME = ''             # Or path to database file if using sqlite3.
 #DATABASE_USER = ''             # Not used with sqlite3.
 #DATABASE_PASSWORD = ''         # Not used with sqlite3.
@@ -97,3 +97,6 @@ INSTALLED_APPS = (
 #This is the base url for the shop.  Only include a leading slash
 #examples: '/shop' or '/mystore'
 SHOP_BASE = '/shop'
+
+# Load the local settings
+from local_settings import *

@@ -3,9 +3,9 @@ import glob
 import os
 import re
 import sys
+os.environ["DJANGO_SETTINGS_MODULE"]="satchmo.settings"
 
 from satchmo.G11n.models import *
-
 
 def get_data_models(models_file):
     '''Get the name of all models and fields.
