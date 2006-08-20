@@ -27,20 +27,16 @@ http://effbot.org/zone/element-index.htm
 Since we're still putting this project together, you willl more than likely
 be running this in the development server.  In order to ease the check-in and
 check-out process, we've modified the settings.py file so that some of the key
-information is read from environment variables.  In order for everything to
-work right on your machine, you should set the following variables in your
-shell (e.g. .bashrc)
+information is read from a local file that is not controlled by svn.  In order for 
+everything to work right on your machine, you should copy the local_settings-customize.py
+to local_settings.py
 
-export PYTHONPATH="/home/user/django-mr/trunk:/home/user/working-dir/satchmo/trunk"
-export DJANGO_PROJECT='satchmo'
-export DJANGO_DB_NAME='YOURDBNAME'
-export DJANGO_DB_PASS='YOURPASSWORD'
-export DJANGO_DB_USER='YOURUSER'
-export DJANGO_SECRET_KEY='YOURSECRETKEY'
-export DJANGO_SETTINGS_MODULE='satchmo.settings'
+Then, edit local_settings.py to have you database specific information
 
-After making these changes, make sure you source your environment again so they
-are visible.
+DATABASE_NAME = 'Your DB Name Here'
+DATABASE_PASSWORD = 'Your DB Password Here'
+DATABASE_USER = 'Your DB User Here'
+SECRET_KEY = 'Your secret key her'
 
 Next, install your databases:
 cd /path/to/satchmo
@@ -59,9 +55,11 @@ python /path/to/satchmo/load_data.py
 
 To load the localization data:
 
-python /path/to/satchmo/load_localization.py
+python /path/to/satchmo/load_G11n.py
 
 You can point your browser to localhost:8000/shop to see the default shop.
+
+Go to localhost:8000/admin to see the admin interface.
 
 If you want to use the email feature, you'll need to make sure you have a
 shop email configured in the admin interface.
