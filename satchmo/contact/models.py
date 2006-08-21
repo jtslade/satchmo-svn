@@ -174,7 +174,7 @@ class Order(models.Model):
     Orders need to contain a copy of all the information at the time the order is placed.
     A users address or other info could change over time.
     """
-    customer = models.ForeignKey(Contact)
+    contact = models.ForeignKey(Contact)
     shipStreet1=models.CharField("Street",maxlength=50, blank=True)
     shipStreet2=models.CharField("Street", maxlength=50, blank=True)
     shipCity=models.CharField("City", maxlength=50, blank=True)
@@ -195,7 +195,7 @@ class Order(models.Model):
     date = models.DateTimeField()
     
     def __str__(self):
-        return self.customer.full_name
+        return self.contact.full_name
     
     def copyAddresses(self):
         """
@@ -231,8 +231,8 @@ class Order(models.Model):
         ('Billing Information', {'fields': ('billStreet1','billStreet2', 'billCity','billState', 'billZip_code','billCountry',), 'classes': 'collapse'}),
         ('Totals', {'fields': ( 'shippingCost', 'tax','total','date','payment',),}),       
         )
-        list_display = ('customer', 'date', 'total','status')
-        list_filter = ['date','customer']
+        list_display = ('contact', 'date', 'total','status')
+        list_filter = ['date','contact']
         date_hierarchy = 'date'
     class Meta:
         verbose_name = "Product Order"
