@@ -31,31 +31,33 @@ information is read from a local file that is not controlled by svn.  In order f
 everything to work right on your machine, you should copy the local_settings-customize.py
 to local_settings.py
 
-Then, edit local_settings.py to have you database specific information
+Then, edit local_settings.py to have you database specific information::
 
-DATABASE_NAME = 'Your DB Name Here'
-DATABASE_PASSWORD = 'Your DB Password Here'
-DATABASE_USER = 'Your DB User Here'
-SECRET_KEY = 'Your secret key her'
+    DATABASE_NAME = 'Your DB Name Here'
+    DATABASE_PASSWORD = 'Your DB Password Here'
+    DATABASE_USER = 'Your DB User Here'
+    SECRET_KEY = 'Your secret key her'
 
-Next, install your databases:
-cd /path/to/satchmo
-python manage.py syncdb
+Next, install your databases::
+    
+    cd /path/to/satchmo
+    python manage.py syncdb
 
-Once the database is installed, try the development server
-python manage.py runserver
+Once the database is installed, try the development server::
+    
+    python manage.py runserver
 
 Point your browser to localhost:8000 and you should see the admin interface
 
 Several scripts are included to load temporary data or localization data.
 To see how Satchmo works, try loading the test data - WARNING this will 
-erase your existing Satchmo database.
+erase your existing Satchmo database.::
 
-python /path/to/satchmo/load_data.py
+    python /path/to/satchmo/load_data.py
 
-To load the localization data:
+To load the localization data::
 
-python /path/to/satchmo/load_G11n.py
+    python /path/to/satchmo/load_G11n.py
 
 You can point your browser to localhost:8000/shop to see the default shop.
 
@@ -66,9 +68,10 @@ shop email configured in the admin interface.
 
 Helpful Hints
 =============
-Here are two shell aliases I use to make it a little easier to develop
-alias delpyc='find ./ -type f -name "*.pyc" -exec rm -f {} \;'
-alias startserver='python manage.py runserver 192.168.1.9:8000'
+Here are two shell aliases I use to make it a little easier to develop::
+
+    alias delpyc='find ./ -type f -name "*.pyc" -exec rm -f {} \;'
+    alias startserver='python manage.py runserver 192.168.1.9:8000'
 
 The delpyc is helpful if you want to clear out all your .pyc files and make 
 sure there isn't any weirdness with old files.

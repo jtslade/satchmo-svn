@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
-<title>Satchmo Overview</title>
+<title></title>
 <style type="text/css">
 
 /*
@@ -286,78 +286,85 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="satchmo-overview">
-<h1 class="title">Satchmo Overview</h1>
-<h2 class="subtitle" id="features">Features</h2>
+<div class="document">
 
-<p>Satchmo is a framework for building web shopping sites.  Satchmo's philosophy
-is to provide all the necessary building blocks to create a unique and robust
-online store.  There is a reference implementation of a simple store that is
-meant to get you up and running quickly so you can see what the store is
-capable of.  It is fully functional but you will rather quickly find that you
-need to change and tweak things to meet your needs.  Satchmo allows you
-to do this relatively quickly and easily.</p>
-<p>Satchmo is built using the Django framework.  Using this framework has a number
-of advantages for building an online shopping site.  Some of them include:</p>
-<ul class="simple">
-<li>A built in Object-relational mapper makes it easy to create and/or modify our
-models and have the underlying database created for you.  The ORM also makes it
-easy to make simple references to complex relationships without being an SQL
-expert.  If you need to drop down to SQL you can.</li>
-<li>An automatic admin interface makes it easy for you to get up and running
-quickly and see all the data in an easy to use set of forms.  The permission
-system also allows you to give selective access to different people on your
-team.</li>
-<li>Flexible URL design that is helpful for making your site look professional
-and show up well in search engines.</li>
-<li>Powerful template system that allows you to configure every aspect of your
-site.  The included reference implementation shows you a very basic site but
-with Django's template you can easily make your site as unique and complex as
-you'd like.</li>
-<li>Proven performance including a robust caching system.  This is one of the
-most critical aspects of an online store.  If you make it big and realize your
-old site can't handle the load, you're in a difficult place.</li>
-<li>Security is also a primary component for any online site these days.
-Django's session management capabilities makes it more secure by not encoding
-session ID's in urls so that session-ID theft is not possible via the &quot;Referrer&quot; header.
-Also, Django takes care of escaping SQL statements so that SQL injection attacks are
-not possible.</li>
-<li>Robust internationalization support in all phases of a project allow you to
-tailor your site to different countries and languages.</li>
-</ul>
-<p>Django clearly sets Satchmo up to be a robust framework for your store.  The
-Satchmo framework is still in it's early stages but already provides a number
-of very sophisticated features.  Some highlights include:</p>
-<ul class="simple">
-<li>A robust customer model that allows you to maintain unlimited addresses for
-each of your customers as well as customer specific notes and information.</li>
-<li>Customer orders can have multiple statuses so it's easy for you to track your
-interactions</li>
-<li>A full localization model that is pre-loaded with over 250 countries and
-information about their subdivisions including states, counties or other
-divisions.</li>
-<li>An extremely flexible category model that allows you to have deeply nested
-categories to help your users find products quickly.</li>
-<li>A sophisticated product model that allows you to describe and categorize the
-products as well as link them to related products.  You can feature certain
-products and store item dimensions in order to use for product shippping.  You
-can also associate as many product options (sizes, colors, etc) with a product
-and manage them in a very simple way.  This feature allows you to manage a
-large number of unique products without a lot of very time consuming steps.
-Each of these unique items can have price changes or other configurable changes
-based on your needs.</li>
-<li>Products also have the capability to have multiple images associated with
-them.  Each image is automatically scaled to a thumbnail size of your choosing
-and is automatically cached for maximum performance.</li>
-</ul>
-<p>Models are currently in place to allow additional shipping and payment options
-as well as flexibly discount options.</p>
-<p>As you can see, we are in the very early stages of the project but there is
-tremendous potential.  Please check back often for the latest updates.  Even
-better, if you have some development skills, roll up your sleeves and help us
-build this framework.</p>
-<p>Thanks,
-The Satchmo Team</p>
+
+<div class="section">
+<h1><a id="requirements" name="requirements">Requirements</a></h1>
+<p>Satchmo requires a recent (0.95 or higher) version of Django.
+Until we reach 1.0, we encourage you to use the latest svn version of Django.</p>
+<p>To get the latest version of Django:
+svn co <a class="reference" href="http://code.djangoproject.com/svn/django/trunk/">http://code.djangoproject.com/svn/django/trunk/</a></p>
+<p>You must now configure Django &amp; get it working on your system.  Follow the
+instructions here -
+<a class="reference" href="http://www.djangoproject.com/documentation/install/">http://www.djangoproject.com/documentation/install/</a></p>
+<p>After Django is working, you can check out the latest version of Satchmo, using
+this command -
+svn co <a class="reference" href="http://svn.satchmo.python-hosting.com/trunk/">http://svn.satchmo.python-hosting.com/trunk/</a></p>
+<p>To use the image functions, you will need a recent copy of the Python Imaging
+Library (PIL) available here - <a class="reference" href="http://www.pythonware.com/products/pil/#pil115">http://www.pythonware.com/products/pil/#pil115</a></p>
+<p>For the timezone functions you will need pytz - World Time Zone Definitions for
+python available here - <a class="reference" href="http://pytz.sourceforge.net">http://pytz.sourceforge.net</a></p>
+<p>The category functions use ElementTree to make processing easier.  It will be
+included in Python 2.5.  You can also download it here -
+<a class="reference" href="http://effbot.org/zone/element-index.htm">http://effbot.org/zone/element-index.htm</a></p>
+<p>Since we're still putting this project together, you willl more than likely
+be running this in the development server.  In order to ease the check-in and
+check-out process, we've modified the settings.py file so that some of the key
+information is read from a local file that is not controlled by svn.  In order for
+everything to work right on your machine, you should copy the local_settings-customize.py
+to local_settings.py</p>
+<p>Then, edit local_settings.py to have you database specific information:</p>
+<pre class="literal-block">
+DATABASE_NAME = 'Your DB Name Here'
+DATABASE_PASSWORD = 'Your DB Password Here'
+DATABASE_USER = 'Your DB User Here'
+SECRET_KEY = 'Your secret key her'
+</pre>
+<p>Next, install your databases:</p>
+<pre class="literal-block">
+cd /path/to/satchmo
+python manage.py syncdb
+</pre>
+<p>Once the database is installed, try the development server:</p>
+<pre class="literal-block">
+python manage.py runserver
+</pre>
+<p>Point your browser to localhost:8000 and you should see the admin interface</p>
+<p>Several scripts are included to load temporary data or localization data.
+To see how Satchmo works, try loading the test data - WARNING this will
+erase your existing Satchmo database.:</p>
+<pre class="literal-block">
+python /path/to/satchmo/load_data.py
+</pre>
+<p>To load the localization data:</p>
+<pre class="literal-block">
+python /path/to/satchmo/load_G11n.py
+</pre>
+<p>You can point your browser to localhost:8000/shop to see the default shop.</p>
+<p>Go to localhost:8000/admin to see the admin interface.</p>
+<p>If you want to use the email feature, you'll need to make sure you have a
+shop email configured in the admin interface.</p>
+</div>
+<div class="section">
+<h1><a id="helpful-hints" name="helpful-hints">Helpful Hints</a></h1>
+<p>Here are two shell aliases I use to make it a little easier to develop:</p>
+<pre class="literal-block">
+alias delpyc='find ./ -type f -name &quot;*.pyc&quot; -exec rm -f {} \;'
+alias startserver='python manage.py runserver 192.168.1.9:8000'
+</pre>
+<p>The delpyc is helpful if you want to clear out all your .pyc files and make
+sure there isn't any weirdness with old files.</p>
+<p>The startserver just makes it easier to start up the development server
+with a given IP.</p>
+<p>The load_data.py script is used to dump your current database and install some sample data.
+Please make sure you know what you're doing before you dump your database - the data will be lost!</p>
+</div>
+<div class="section">
+<h1><a id="thanks" name="thanks">Thanks</a></h1>
+<p>The majority of this info was taken from the Django wiki.  In particular, this
+cookbook entry was very helpful - <a class="reference" href="http://code.djangoproject.com/wiki/SimpleBashScriptToSetupDevelopmentEnvironment">http://code.djangoproject.com/wiki/SimpleBashScriptToSetupDevelopmentEnvironment</a></p>
+</div>
 </div>
 </body>
 </html>
