@@ -121,7 +121,7 @@ class Item(models.Model):
     length = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
     width = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
     height = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
-    create_subs = models.BooleanField("Create Sub Items", default=False, help_text ="This will erase any existing sub-items!")
+    create_subs = models.BooleanField("Create Sub Items", default=False, help_text ="Create new sub-items")
     relatedItems = models.ManyToManyField('self', blank=True, null=True, related_name='related')
     alsoPurchased = models.ManyToManyField('self', blank=True, null=True, related_name='previouslyPurchased')
         
@@ -164,9 +164,16 @@ class Item(models.Model):
             price_delta = 0
             sub = Sub_Item(item=self, items_in_stock=0)
             sub.save()
+            s1 = Set()
             for option in options:
                 sub.options.add(option)
+                optionValue = "%s-%s" % (option.optionGroup.id, option.value)
+                s1.add(optionValue)
                 sub.save()
+            #If the option already exists, lets make sure there are no dupes
+            #TODO: Check before we create the item
+            if self.get_sub_item_count(s1) > 1:              
+                sub.delete()
         return(True)
     
     def get_sub_item(self, optionSet):
@@ -174,17 +181,23 @@ class Item(models.Model):
             if sub.option_values == optionSet:
                 return(sub)
         return(None)
-        
+    
+    def get_sub_item_count(self, optionSet):
+        count = 0
+        for sub in self.sub_item_set.all():
+            if sub.option_values == optionSet:
+                count+=1
+        return count
     
     def save(self):
         '''
         Right now this only works if you save the suboptions, then go back and choose to create the sub_items
         '''
-        super(Item,self).save()
+        #super(Item,self).save()
         if self.create_subs:
             self.create_subitems()
             self.create_subs = False
-        #super(Item, self).save()
+        super(Item, self).save()
     
     def get_absolute_url(self):
         return "%s/product/%s" % (settings.SHOP_BASE,self.short_name)
@@ -244,7 +257,7 @@ class Sub_Item(models.Model):
             return self.item.verbose_name
         output = self.item.verbose_name + " ( "
         numProcessed = 0
-        for option in self.options.all():
+        for option in self.options.order_by('displayOrder'):
             numProcessed += 1
             if numProcessed == self.options.count():
                 output += option.name
@@ -268,7 +281,7 @@ class Sub_Item(models.Model):
         """
         output = Set()
         for option in self.options.all():
-            outvalue = "%s-%s" % (option.optionGroup.name,option.value)
+            outvalue = "%s-%s" % (option.optionGroup.id,option.value)
             output.add(outvalue)
         return(output)
     option_values = property(_get_optionValues)

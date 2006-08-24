@@ -24,7 +24,7 @@
 <p>Please choose your options:</p>
 {% for option in item.option_group.all %}
  {{ option }}
-    <select name="{{ option }}" id="{{option}}">
+    <select name="{{ option.id }}" id="{{option.id}}">
     {% for choice in option.optionitem_set.all %}
      <option value="{{ choice.value }}">{{ choice }}
         {% if choice.price_change %}

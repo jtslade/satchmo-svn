@@ -115,7 +115,8 @@ def add_to_cart(request, id):
         return bad_or_missing(request, 'The product you have requested does '
                 'not exist.')
     for option in product.option_group.all():
-        chosenOptions.add('%s-%s' % (option.name,request.POST[option.name]))
+        chosenOptions.add('%s-%s' % (option.id,request.POST[str(option.id)]))
+        #print '%s-%s' % (option.id,request.POST[str(option.id)])
     try:
         quantity = int(request.POST['quantity'])
     except ValueError:
