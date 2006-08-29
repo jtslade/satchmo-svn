@@ -13,6 +13,7 @@ urlpatterns = patterns('satchmo.shop.views',
      (r'^account/info/$','account_info'),
      (r'^account/logout/$','account_logout'),
      (r'^contact/$','contact_form'),
+     (r'^account/create/$','account_create'),
      
 )
 #Note with the last category url - this allows category depth to be as deep as we want but the downside
@@ -37,6 +38,7 @@ urlpatterns += patterns('django.views.generic',
                         (r'^$','list_detail.object_list',index_dict),
                         (r'^product/(?P<slug>[-\w]+)/$','list_detail.object_detail',product_dict),
                         (r'^contact/thankyou/$','simple.direct_to_template',{'template':'thanks.html'}),
+                        (r'^account/thankyou/$','simple.direct_to_template',{'template':'account_thanks.html'}),    
                         )
                         
                         

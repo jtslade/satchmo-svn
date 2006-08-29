@@ -9,17 +9,18 @@ from satchmo.product.models import Item, Category, OptionItem
 from satchmo.shop.models import Cart, CartItem, Config
 from sets import Set
 from django.conf import settings
-from django.contrib.auth import logout
+from django.contrib.auth import logout, login, authenticate
 from django import forms
+from django.core import validators
 from django.core.mail import send_mail
-
+from django.contrib.auth.models import User
 
 email_choices = (
     ("General Question", "General question"),
     ("Order Problem", "Order problem"),
 )
 
-class ContactManipulator(forms.Manipulator):
+class ContactFormManipulator(forms.Manipulator):
     def __init__(self):
         self.fields = (
             forms.EmailField(field_name="from", length=30, is_required=True),
@@ -30,7 +31,7 @@ class ContactManipulator(forms.Manipulator):
 
 
 def contact_form(request):
-    manipulator = ContactManipulator()
+    manipulator = ContactFormManipulator()
     if request.POST:
         new_data = request.POST.copy()
         errors = manipulator.get_validation_errors(new_data)
@@ -51,6 +52,48 @@ def contact_form(request):
         errors = new_data = {}
     form = forms.FormWrapper(manipulator, new_data, errors)
     return render_to_response('contact_form.html', {'form': form},
+                                RequestContext(request))
+
+
+class AccountManipulator(forms.Manipulator):
+    def __init__(self):
+        self.fields = (
+            forms.EmailField(field_name="email", length=30, is_required=True, validator_list=[self.isUniqueEmail]),
+            forms.PasswordField(field_name="password", length=30, is_required=True),
+            forms.PasswordField(field_name="password2", length=30, is_required=True, validator_list=[self.isValidPassword]),
+            forms.TextField(field_name="first_name",length=30, is_required=True),
+            forms.TextField(field_name="last_name",length=30, is_required=True),
+            forms.TextField(field_name="user_name",length=30, is_required=True),
+        )
+        
+    def isValidPassword(self, field_data, all_data):
+        if not (field_data == all_data['password']):
+            raise validators.ValidationError("Your passwords do not match.")
+    
+    def isUniqueEmail(self, field_data, all_data):
+        if User.objects.filter(email=field_data).count() > 0:
+            raise validators.ValidationError("That email address already exists.")
+        
+def account_create(request):
+    manipulator = AccountManipulator()
+    if request.POST:
+        new_data = request.POST.copy()
+        errors = manipulator.get_validation_errors(new_data)
+        if not errors:
+            user_name = request.POST['user_name']
+            password = request.POST['password']
+            tmp_user = User.objects.create_user(user_name, request.POST['email'], password)
+            tmp_user.last_name = request.POST['last_name']
+            tmp_user.first_name = request.POST['first_name']
+            tmp_user.save()
+
+            #user = authenticate()
+            #login(request, user)
+            return http.HttpResponseRedirect('%s/account/thankyou' % (settings.SHOP_BASE))
+    else:
+        errors = new_data = {}
+    form = forms.FormWrapper(manipulator, new_data, errors)
+    return render_to_response('account_create_form.html', {'form': form},
                                 RequestContext(request))
 
 def bad_or_missing(request, msg):
