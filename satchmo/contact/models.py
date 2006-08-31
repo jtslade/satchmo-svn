@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User 
 from satchmo.product.models import Sub_Item
 # Create your models here.
 
@@ -37,6 +38,8 @@ class Organization(models.Model):
 class Contact(models.Model):
     first_name = models.CharField(maxlength=30, core=True)
     last_name = models.CharField(maxlength=30, core=True)
+    user = models.ForeignKey(User, unique=True, blank=True, null=True, edit_inline=models.TABULAR, 
+                            num_in_admin=1,min_num_in_admin=1, max_num_in_admin=1,num_extra_on_change=0)
     role = models.CharField(maxlength=20, blank=True, null=True, choices=CONTACT_CHOICES)
     organization = models.ForeignKey(Organization, blank=True, null=True)
     dob = models.DateField(blank=True, null=True)   

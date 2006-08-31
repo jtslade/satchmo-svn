@@ -14,6 +14,8 @@ from django import forms
 from django.core import validators
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import AuthenticationForm
+from satchmo.contact.models import Contact
 
 email_choices = (
     ("General Question", "General question"),
@@ -55,12 +57,14 @@ def contact_form(request):
                                 RequestContext(request))
 
 
-class AccountManipulator(forms.Manipulator):
-    def __init__(self):
+class AccountManipulator(AuthenticationForm):
+    def __init__(self, request):
+        AuthenticationForm.__init__(self, request)
         self.fields = (
             forms.EmailField(field_name="email", length=30, is_required=True, validator_list=[self.isUniqueEmail]),
             forms.PasswordField(field_name="password", length=30, is_required=True),
-            forms.PasswordField(field_name="password2", length=30, is_required=True, validator_list=[self.isValidPassword]),
+            forms.PasswordField(field_name="password2", length=30, is_required=True,
+                                validator_list=[validators.AlwaysMatchesOtherField('password', "The two password fields didn't match.")]),
             forms.TextField(field_name="first_name",length=30, is_required=True),
             forms.TextField(field_name="last_name",length=30, is_required=True),
             forms.TextField(field_name="user_name",length=30, is_required=True),
@@ -73,22 +77,31 @@ class AccountManipulator(forms.Manipulator):
     def isUniqueEmail(self, field_data, all_data):
         if User.objects.filter(email=field_data).count() > 0:
             raise validators.ValidationError("That email address already exists.")
-        
+    
+    def save(self, data):
+        user_name = data['user_name']
+        password = data['password']
+        email = data['email']
+        first_name = data['first_name']
+        last_name = data['last_name']
+        u = User.objects.create_user(user_name, email, password)
+        u.first_name = first_name
+        u.last_name = last_name
+        u.save()
+        contact = Contact(first_name=first_name, last_name=last_name, email=email, role="Customer", user=u)
+        contact.save()
+    
+    
 def account_create(request):
-    manipulator = AccountManipulator()
+    manipulator = AccountManipulator(request)
     if request.POST:
         new_data = request.POST.copy()
         errors = manipulator.get_validation_errors(new_data)
         if not errors:
-            user_name = request.POST['user_name']
-            password = request.POST['password']
-            tmp_user = User.objects.create_user(user_name, request.POST['email'], password)
-            tmp_user.last_name = request.POST['last_name']
-            tmp_user.first_name = request.POST['first_name']
-            tmp_user.save()
-
-            #user = authenticate()
-            #login(request, user)
+            data = request.POST.copy()
+            manipulator.save(data)
+            user = authenticate(username=data['user_name'], password=data['password'])
+            login(request, user)
             return http.HttpResponseRedirect('%s/account/thankyou' % (settings.SHOP_BASE))
     else:
         errors = new_data = {}
