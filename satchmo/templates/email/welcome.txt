@@ -1,0 +1,9 @@
+Dear {{ first_name }} {{ last_name }},
+
+Thank you for signing up with {{ company_name }}.
+
+Your new username is {{ user_name }}, and you can login at {{ login_url }} . Once logged in, you'll be able to access more features on our website.
+
+Regards,
+
+Store Management

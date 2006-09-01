@@ -3,7 +3,7 @@
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import user_passes_test
 from django import http
-from django.template import RequestContext
+from django.template import RequestContext, Context
 from django.template import loader
 from satchmo.product.models import Item, Category, OptionItem
 from satchmo.shop.models import Cart, CartItem, Config
@@ -25,7 +25,8 @@ email_choices = (
 class ContactFormManipulator(forms.Manipulator):
     def __init__(self):
         self.fields = (
-            forms.EmailField(field_name="from", length=30, is_required=True),
+            forms.TextField(field_name="name", length=20, is_required=True),
+            forms.EmailField(field_name="email", length=30, is_required=True),
             forms.TextField(field_name="subject", length=30, maxlength=200, is_required=True),
             forms.SelectField(field_name="inquiry", choices=email_choices),
             forms.LargeTextField(field_name="contents", is_required=True),
@@ -39,15 +40,16 @@ def contact_form(request):
         errors = manipulator.get_validation_errors(new_data)
         if not errors:
             manipulator.do_html2python(new_data)
-            text = "A %s from %s \n=============\n" % (request.POST['inquiry'],request.POST['from'])
-            subject = request.POST['subject']
-            text += request.POST['contents']
-            #try:
+            t = loader.get_template('email/contact_us.txt')
+            c = Context({
+            'request_type': new_data['inquiry'],
+            'name': new_data['name'],
+            'email': new_data['email'],    
+            'request_text': new_data['contents'] })
+            subject = new_data['subject']
             shop_config = Config.objects.get(site=settings.SITE_ID)
             shop_email = shop_config.storeEmail
-            #except: 
-            #shop_email = "noone@nowhere.com"
-            send_mail(subject, text, shop_email,
+            send_mail(subject, t.render(c), shop_email,
                      [shop_email], fail_silently=False)
             return http.HttpResponseRedirect('%s/contact/thankyou' % (settings.SHOP_BASE))
     else:
@@ -90,6 +92,18 @@ class AccountManipulator(AuthenticationForm):
         u.save()
         contact = Contact(first_name=first_name, last_name=last_name, email=email, role="Customer", user=u)
         contact.save()
+        t = loader.get_template('email/welcome.txt')
+        c = Context({
+            'first_name': data['first_name'],
+            'last_name' : data['last_name'],  
+            'user_name': data['user_name'] })
+        shop_config = Config.objects.get(site=settings.SITE_ID)
+        shop_email = shop_config.storeEmail
+        subject = "Welcome to %s" % (shop_config.storeName)
+        c['company_name'] = shop_config.storeName
+        c['login_url'] = "http://%s%s/account/login" % (shop_config.site.domain, settings.SHOP_BASE)
+        send_mail(subject, t.render(c), shop_email,
+                     [email], fail_silently=False)
     
     
 def account_create(request):

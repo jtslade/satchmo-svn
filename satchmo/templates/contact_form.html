@@ -18,9 +18,11 @@ Contact Us
 <form method="post" action=".">
 
 
-    <tr><td><label for="id_from">From:</label></td> <td>{{ form.from }}</td></tr>
-    <tr><td></td><td>{% if form.from.errors %}*** {{ form.from.errors|join:", " }}{% endif %}</td></tr>
+    <tr><td><label for="id_from">Your Name:</label></td> <td>{{ form.name }}</td></tr>
+    <tr><td></td><td>{% if form.name.errors %}*** {{ form.name.errors|join:", " }}{% endif %}</td></tr>
 
+    <tr><td><label for="id_from">Your Email:</label></td> <td>{{ form.email }}</td></tr>
+    <tr><td></td><td>{% if form.email.errors %}*** {{ form.email.errors|join:", " }}{% endif %}</td></tr>
 
     <tr><td><label for="id_subject">Subject:</label></td><td> {{ form.subject }}</td></tr>
     <tr><td></td><td>{% if form.subject.errors %}*** {{ form.subject.errors|join:", " }}{% endif %}</td></tr>

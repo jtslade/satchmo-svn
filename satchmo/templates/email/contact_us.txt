@@ -1,0 +1,4 @@
+Here's a {{ request_type }} from {{ name }} ( {{ email }} ) sent via the web contact form
+=========================================================================
+
+{{ request_text }}
