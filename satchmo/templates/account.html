@@ -7,4 +7,8 @@
 {% block content %}
  <h4>Your Account info</h4>
 <p>Welcome, {{ user.username }}. Thanks for logging in.</p> 
+Account options:
+<ul>
+<li><a href="{{shop_base}}/account/password_change/">Change your password</a></li>
+</ul>
 {% endblock %}
