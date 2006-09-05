@@ -34,7 +34,7 @@ REGION = (
     ('o.p',   _('Polynesia')),
 )
 
-SUBDIVISION = (
+AREA = (
     ('a', _('Another')),
     ('ar', _('Arrondissement')),
     ('at', _('Atoll')),
@@ -79,7 +79,8 @@ class Language(models.Model):
 'synonym' field is used for some languages that are called with
 another name too.
     """
-    name = models.CharField(_('language name'), maxlength=24, unique=True)
+    name = models.CharField(_('language name'), maxlength=24,
+        unique=True)
     alpha3_code = models.CharField(_('alpha-3 code'), maxlength=3,
         primary_key=True)
     alpha2_code = models.CharField(_('alpha-2 code'), maxlength=2,
@@ -106,8 +107,6 @@ class Country(models.Model):
     """Country or territory.
 
 alpha2_code and alpha3_code are ISO 3166-1 codes.
-'main_subdiv' is the name used for primary subdivision in the country,
-as state in U.S.
     """
     name = models.CharField(_('country name'), maxlength=56,
         unique=True)
@@ -118,15 +117,10 @@ as state in U.S.
     region = models.CharField(_('geographical region'), maxlength=5,
         choices=REGION)
     territory_of = models.CharField(_('territory of'), maxlength=3)
-    subdiv = models.CharField(_('subdivision'), maxlength=2,
-        choices=SUBDIVISION)
+    adm_area = models.CharField(_('administrative area'), maxlength=2,
+        choices=AREA)
     display = models.BooleanField(_('display'), default=True,
         help_text=_('Designates whether the country is shown.'))
-
-#    address_format = models.ForeignKey(AddressFormat)
-#, related_name='format')
-#default=1)
-#'need_subdiv' indicates if is necessary the subdivision for the mail address.
 
     class Meta:
         verbose_name = _('country')
@@ -136,12 +130,12 @@ as state in U.S.
         """
         fields = (
             (_('Sorry! Not allowed to add or modify items in this model.'), {
-                'fields': ('alpha2_code',)
+                'fields': ('alpha3_code',)
             }),
         )
         """
         list_display = ('name', 'alpha3_code', 'alpha2_code', 'territory_of',
-                        'subdiv', 'display')
+                        'adm_area', 'display')
         list_filter = ('region', 'territory_of', 'display')
         search_fields = ('name', 'alpha3_code', 'alpha2_code')
 
@@ -169,13 +163,6 @@ class CountryLanguage(models.Model):
         verbose_name_plural = _('countries & languages')
         ordering = ['country']
     class Admin:
-        """
-        fields = (
-            (_('Sorry! Not allowed to add or modify items in this model.'), {
-                'fields': ('alpha2_code',)
-            }),
-        )
-        """
         list_display = ('country', 'language', 'regional_lang')
         list_filter = ('regional_lang',)
         search_fields = ('country', 'language')
@@ -184,11 +171,11 @@ class CountryLanguage(models.Model):
         return "%s - %s" % (self.country, self.language)
 
 
-class Subdivision(models.Model):
-    """The major subdivision of the country, known as the state, province,
-county, etc, depending on the country.
+class Area(models.Model):
+    """Top-level area division in the country, such as
+state, district, province, island, region, etc.
 
-In some countries this subdivision is necessary for the mail address.
+In some countries is necessary for the mail address.
 In others it is omitted, and in others it is either optional,
 or needed in some cases but omitted in others.
     """
@@ -196,26 +183,19 @@ or needed in some cases but omitted in others.
         core=True)
     name_id = models.CharField(_('name identifier'), maxlength=6,
         primary_key=True)
-    name = models.CharField(_('subdivision name'), maxlength=40)
+    name = models.CharField(_('area name'), maxlength=40)
     alt_name = models.CharField(_('alternate name'), maxlength=32)
     abbrev = models.CharField(_('postal abbreviation'), maxlength=3)
-    reg_subdiv = models.CharField(_('regional subdivision'), maxlength=1,
-        choices=SUBDIVISION)
+    reg_area = models.CharField(_('regional area'), maxlength=1,
+        choices=AREA)
 
     class Meta:
-        verbose_name = _('subdivision')
-        verbose_name_plural = _('subdivisions')
+        verbose_name = _('area')
+        verbose_name_plural = _('areas')
         ordering = ['country']
         unique_together = (('country', 'name'),)
     class Admin:
-        """
-        fields = (
-            (_('Sorry! Not allowed to add or modify items in this model.'), {
-                'fields': ('code',)
-            }),
-        )
-        """
-        list_display = ('country', 'name', 'alt_name', 'abbrev', 'reg_subdiv')
+        list_display = ('country', 'name', 'alt_name', 'abbrev', 'reg_area')
         search_fields = ('name')
 
     def __str__(self):
@@ -228,8 +208,10 @@ or needed in some cases but omitted in others.
 class TimeZone(models.Model):
     """The time zones for each country or territory.
     """
-    country = models.ForeignKey(Country, edit_inline=models.TABULAR, core=True)
-    zone = models.CharField(_('time zone'), maxlength=32, unique=True)
+    country = models.ForeignKey(Country, edit_inline=models.TABULAR,
+        core=True)
+    zone = models.CharField(_('time zone'), maxlength=32,
+        unique=True)
 
     class Meta:
         verbose_name = _('time zone')
@@ -240,7 +222,35 @@ class TimeZone(models.Model):
         search_fields = ('country')
 
     def __str__(self):
-        return "%s" % (self.zone)
+        return self.zone
+
+
+class Phone(models.Model):
+    """Information related to phones as country code, lengths, and prefixes.
+    """
+    country = models.ForeignKey(Country, edit_inline=models.TABULAR,
+        core=True)
+    code = models.PositiveSmallIntegerField(_('country code'), null=True)
+    ln_area = models.CharField(_('length of area code'), maxlength=10)
+    ln_sn = models.CharField(_('length of subscriber number (SN)'),
+        maxlength=8)
+    ln_area_sn = models.CharField(_('length of area code and SN'),
+        maxlength=8)
+    nat_prefix = models.CharField(_('national prefix'), maxlength=2)
+    int_prefix = models.CharField(_('international prefix'), maxlength=4)
+
+    class Meta:
+        verbose_name = _('phone')
+        verbose_name_plural = _('phones')
+        ordering = ['country']
+    class Admin:
+        list_display = ('country', 'code', 'ln_area', 'ln_sn', 'ln_area_sn',
+                        'nat_prefix', 'int_prefix')
+        search_fields = ('country', 'code')
+
+    def __str__(self):
+        if self.code:
+            return "%s" % self.code
 
 
 """

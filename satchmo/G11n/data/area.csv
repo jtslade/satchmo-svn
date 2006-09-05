@@ -18,11 +18,10 @@
 # The codes are in 'country.csv'. It is used 'i' for an island and 'a' to
 # indicating that is different from the general subdivision.
 #
-# * code: Subdivision, country, name_id, name, alt_name, abbrev,
-#   reg_subdiv *
+# * code: Area, country, name_id, name, alt_name, abbrev, reg_area *
 #
-# Country code : Name identifier : Subdivision name : Aternate name :
-#  Postal abbreviation : Regional subdivision
+# Country id : Name identifier : Area name : Aternate name :
+#  Postal abbreviation : Regional area
 
 AIA:AI-BP:Blowing Point:::
 AIA:AI-EE:East End:::

@@ -30,8 +30,8 @@
 #   South Georgia and the South Sandwich Islands:GS:GBR
 #   United States Minor Outlying Islands:UM:USA
 #
-# Subdivision codes
-# -----------------
+# Codes of administrative area
+# ----------------------------
 #   a  = Another
 #   ar = Arrondissement
 #   at = Atoll
@@ -93,10 +93,10 @@
 #   o.p  = Polynesia
 #
 # * code: Country, name, alpha3_code, alpha2_code, region, territory_of,
-#   subdiv *
+#   adm_area *
 #
 # Country name : ISO Alpha-3 code : ISO Alpha-2 code : Geographical region :
-#  Territory of : Subdivision
+#  Territory of : Administrative area
 
 Afghanistan:AFG:AF:as.s::pr
 ÅLand Islands:ALA:AX:e.n:FIN:mu

@@ -10,7 +10,7 @@
 #
 # * code: CountryLanguage, country, language, identifier, regional_lang *
 #
-# Country code : Language code : Identifier : Regional language
+# Country id : Language id : Identifier : Regional language
 
 ABW:dut:nl-AW:
 AFG:per:fa-AF:
