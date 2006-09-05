@@ -9,9 +9,9 @@
 # It's used the 'Synonym' field because some languages are
 # called with another name too.
 #
-# * code: Language, name, alpha3_code, alpha2_code, synonym *
+# * code: Language, name, iso3_code, iso2_code, synonym *
 #
-# Language name : Alpha-3 code : Alpha-2 code : Language synonym
+# Language name : Alpha-3 ISO code : Alpha-2 ISO code : Language synonym
 
 Abkhazian:abk:ab:
 Afar:aar:aa:

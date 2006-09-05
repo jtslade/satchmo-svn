@@ -286,7 +286,7 @@ def load_data(model):
         # Display the english language.
         for num in range(1, line_number+1):
             obj = eval("c%d" % num)
-            if obj.alpha3_code == 'eng':
+            if obj.iso3_code == 'eng':
                 obj.display = True
             obj.save()
     else:

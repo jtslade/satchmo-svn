@@ -92,10 +92,10 @@
 #   o.mi = Micronesia
 #   o.p  = Polynesia
 #
-# * code: Country, name, alpha3_code, alpha2_code, region, territory_of,
+# * code: Country, name, iso3_code, iso2_code, region, territory_of,
 #   adm_area *
 #
-# Country name : ISO Alpha-3 code : ISO Alpha-2 code : Geographical region :
+# Country name : Alpha-3 ISO code : Alpha-2 ISO code : Geographical region :
 #  Territory of : Administrative area
 
 Afghanistan:AFG:AF:as.s::pr

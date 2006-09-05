@@ -81,9 +81,9 @@ another name too.
     """
     name = models.CharField(_('language name'), maxlength=24,
         unique=True)
-    alpha3_code = models.CharField(_('alpha-3 code'), maxlength=3,
+    iso3_code = models.CharField(_('alpha-3 ISO code'), maxlength=3,
         primary_key=True)
-    alpha2_code = models.CharField(_('alpha-2 code'), maxlength=2,
+    iso2_code = models.CharField(_('alpha-2 ISO code'), maxlength=2,
         unique=True)
     synonym = models.CharField(_('language synonym'), maxlength=24)
     display = models.BooleanField (_('display'), default=False,
@@ -94,25 +94,25 @@ another name too.
         verbose_name_plural = _('languages')
         ordering = ['name']
     class Admin:
-        list_display = ('name', 'alpha3_code', 'alpha2_code', 'synonym',
+        list_display = ('name', 'iso3_code', 'iso2_code', 'synonym',
                         'display')
         list_filter = ('display',)
-        search_fields = ('name', 'synonym', 'alpha3_code', 'alpha2_code')
+        search_fields = ('name', 'synonym', 'iso3_code', 'iso2_code')
 
     def __str__(self):
-        return self.alpha3_code
+        return self.iso3_code
 
 
 class Country(models.Model):
     """Country or territory.
 
-alpha2_code and alpha3_code are ISO 3166-1 codes.
+iso2_code and iso3_code are ISO 3166-1 codes.
     """
     name = models.CharField(_('country name'), maxlength=56,
         unique=True)
-    alpha3_code = models.CharField(_('alpha-3 code'), maxlength=3,
+    iso3_code = models.CharField(_('alpha-3 ISO code'), maxlength=3,
         primary_key=True)
-    alpha2_code = models.CharField(_('alpha-2 code'), maxlength=2,
+    iso2_code = models.CharField(_('alpha-2 ISO code'), maxlength=2,
         unique=True)
     region = models.CharField(_('geographical region'), maxlength=5,
         choices=REGION)
@@ -130,20 +130,20 @@ alpha2_code and alpha3_code are ISO 3166-1 codes.
         """
         fields = (
             (_('Sorry! Not allowed to add or modify items in this model.'), {
-                'fields': ('alpha3_code',)
+                'fields': ('iso3_code',)
             }),
         )
         """
-        list_display = ('name', 'alpha3_code', 'alpha2_code', 'territory_of',
+        list_display = ('name', 'iso3_code', 'iso2_code', 'territory_of',
                         'adm_area', 'display')
         list_filter = ('region', 'territory_of', 'display')
-        search_fields = ('name', 'alpha3_code', 'alpha2_code')
+        search_fields = ('name', 'iso3_code', 'iso2_code')
 
     def __str__(self):
-        return self.alpha3_code
+        return self.iso3_code
 
     def _get_name(self):
-        return "%s (%s)" % (self.name, self.alpha3_code)
+        return "%s (%s)" % (self.name, self.iso3_code)
     country_id = property(_get_name)
 
 
