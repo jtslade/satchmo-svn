@@ -54,6 +54,10 @@ def contact_form(request):
             return http.HttpResponseRedirect('%s/contact/thankyou' % (settings.SHOP_BASE))
     else:
         errors = new_data = {}
+        if request.user.is_authenticated():
+            new_data['email'] = request.user.email
+            new_data['name'] = Contact.objects.filter(user=request.user.id)[0].full_name
+            errors = {}
     form = forms.FormWrapper(manipulator, new_data, errors)
     return render_to_response('contact_form.html', {'form': form},
                                 RequestContext(request))
@@ -228,8 +232,8 @@ def remove_from_cart(request, id):
     return http.HttpResponseRedirect('%s/cart' % (settings.SHOP_BASE))
 
 def account_info(request):
-    test_data = "Test Data"
-    return render_to_response('account.html', {'test_data': test_data},
+    user_data = Contact.objects.filter(user=request.user.id)[0]
+    return render_to_response('account.html', {'user_data': user_data},
                               RequestContext(request))
                               
 _deco = user_passes_test(lambda u: not u.is_anonymous() ,
