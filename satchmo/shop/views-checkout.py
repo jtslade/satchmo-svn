@@ -62,8 +62,8 @@ def checkout(request):
         errors = manipulator.get_validation_errors(new_data)
         if not errors:
             data = request.POST.copy()
-            manipulator.save(data)
-            return http.HttpResponseRedirect('%s/account/thankyou' % (settings.SHOP_BASE))
+            #manipulator.save(data)
+            return http.HttpResponseRedirect('%s/' % (settings.SHOP_BASE))
     else:
         errors = new_data = {}
     form = forms.FormWrapper(manipulator, new_data, errors)
