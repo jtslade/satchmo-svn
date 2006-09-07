@@ -56,7 +56,7 @@ def contact_form(request):
         errors = new_data = {}
         if request.user.is_authenticated():
             new_data['email'] = request.user.email
-            new_data['name'] = Contact.objects.filter(user=request.user.id)[0].full_name
+            new_data['name'] = request.user.first_name + " " + request.user.last_name
             errors = {}
     form = forms.FormWrapper(manipulator, new_data, errors)
     return render_to_response('contact_form.html', {'form': form},
@@ -232,7 +232,11 @@ def remove_from_cart(request, id):
     return http.HttpResponseRedirect('%s/cart' % (settings.SHOP_BASE))
 
 def account_info(request):
-    user_data = Contact.objects.filter(user=request.user.id)[0]
+    try:
+        user_data = Contact.objects.filter(user=request.user.id)[0]
+    except:
+        #This case happens if a user is created in admin but does not have account info
+        return bad_or_missing(request, 'The person you are logged in as, does not have an account.  Please create one.')
     return render_to_response('account.html', {'user_data': user_data},
                               RequestContext(request))
                               
