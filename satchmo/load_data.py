@@ -184,8 +184,10 @@ def load_data():
     i4.create_subs = True
     i4.save()
     print "Create a test user..."
-    user = User.objects.create_user('test', 'tester@testsite.com', 'test')
+    user = User.objects.create_user('csmith', 'tester@testsite.com', 'test')
     user.save()
+    c1.user = user
+    c1.save()
     
 def main(): 
     """Flush it all, baby!"""

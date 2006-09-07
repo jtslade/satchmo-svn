@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}The Web Shop{% endblock %}
+
+{% block navbar %}
+<a href="{{shop_base}}">Home</a> ::
+Checkout
+{% endblock %}
+
+{% block content %}
+<h3>Checkout</h3>
+<h4>Please complete the following information in order to submit your order.</h4>
+{% if form.has_errors %}
+<h2>Please correct the following error{{ form.error_dict|pluralize }}:</h2>
+{% endif %}
+
+<table>
+<form method="post" action=".">
+
+
+    <tr><td><label for="id_email">Email Address:</label></td> <td>{{ form.email }}</td></tr>
+    <tr><td></td><td>{% if form.email.errors %}*** {{ form.email.errors|join:", " }}{% endif %}</td></tr>
+
+    <tr><td><label for="id_first_name">First Name:</label></td><td> {{ form.first_name }}</td></tr>
+    <tr><td></td><td>{% if form.first_name.errors %}*** {{ form.first_name.errors|join:", " }}{% endif %}</td></tr>
+
+    <tr><td><label for="id_contents">Last Name:</label></td><td> {{ form.last_name }}</td></tr>
+    <tr><td></td><td>{% if form.last_name.errors %}*** {{ form.last_name.errors|join:", " }}{% endif %}</td></tr>
+    
+    <tr><td><label for="id_street1">Street</label></td><td> {{ form.street1 }}</td></tr>
+    <tr><td></td><td>{% if form.street1.errors %}*** {{ form.street1.errors|join:", " }}{% endif %}</td></tr>
+
+    <tr><td><label for="id_street2">Street</label></td><td> {{ form.street2 }}</td></tr>
+    <tr><td></td><td>{% if form.street2.errors %}*** {{ form.street2.errors|join:", " }}{% endif %}</td></tr>
+
+    <tr><td><label for="id_city">City</label></td><td> {{ form.city }}</td></tr>
+    <tr><td></td><td>{% if form.city.errors %}*** {{ form.city.errors|join:", " }}{% endif %}</td></tr>
+
+    <tr><td><label for="id_state">{{country.get_adm_area_display}}</label></td><td> {{ form.state }}</td></tr>
+    <tr><td></td><td>{% if form.state.errors %}*** {{ form.state.errors|join:", " }}{% endif %}</td></tr>
+    
+    <tr><td><label for="id_zip">Zip code</label></td><td> {{ form.zip }}</td></tr>
+    <tr><td></td><td>{% if form.zip.errors %}*** {{ form.zip.errors|join:", " }}{% endif %}</td></tr>
+
+<tr><td></td><td><input type="submit" value="Continue Checkout"/></td></tr>
+</form>
+</table>
+</div>
+{% endblock %}

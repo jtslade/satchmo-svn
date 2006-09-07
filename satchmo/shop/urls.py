@@ -13,11 +13,14 @@ urlpatterns = patterns('satchmo.shop.views',
      (r'^account/info/$','account_info'),
      (r'^account/logout/$','account_logout'),
      (r'^contact/$','contact_form'),
-     (r'^account/create/$','account_create'),
-     
+     (r'^account/create/$','account_create'),   
 )
 #Note with the last category url - this allows category depth to be as deep as we want but the downside
 #is that we ignore all but the child and parent category.  In practice this should be ok
+
+urlpatterns += patterns('satchmo.shop.views-checkout',
+    (r'^checkout/$','checkout'))
+
 
 index_dict = {
     'queryset': Item.objects.filter(active="1").filter(featured="1"),
