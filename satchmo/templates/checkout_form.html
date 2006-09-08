@@ -24,8 +24,13 @@ Checkout
     <tr><td><label for="id_first_name">First Name:</label></td><td> {{ form.first_name }}</td></tr>
     <tr><td></td><td>{% if form.first_name.errors %}*** {{ form.first_name.errors|join:", " }}{% endif %}</td></tr>
 
-    <tr><td><label for="id_contents">Last Name:</label></td><td> {{ form.last_name }}</td></tr>
+    <tr><td><label for="id_last_name">Last Name:</label></td><td> {{ form.last_name }}</td></tr>
     <tr><td></td><td>{% if form.last_name.errors %}*** {{ form.last_name.errors|join:", " }}{% endif %}</td></tr>
+    
+    <tr><td><label for="id_phone">Phone Number</label></td><td> {{ form.phone }}</td></tr>
+    <tr><td></td><td>{% if form.phone.errors %}*** {{ form.phone.errors|join:", " }}{% endif %}</td></tr>
+    
+    <tr><td><h4>Billing Information</h4></td></tr>
     
     <tr><td><label for="id_street1">Street</label></td><td> {{ form.street1 }}</td></tr>
     <tr><td></td><td>{% if form.street1.errors %}*** {{ form.street1.errors|join:", " }}{% endif %}</td></tr>
@@ -41,6 +46,30 @@ Checkout
     
     <tr><td><label for="id_zip">Zip code</label></td><td> {{ form.zip }}</td></tr>
     <tr><td></td><td>{% if form.zip.errors %}*** {{ form.zip.errors|join:", " }}{% endif %}</td></tr>
+    
+    <tr><td><label for="id_country">Country</label></td><td> {{ form.country }}</td></tr>
+    <tr><td></td><td>{% if form.country.errors %}*** {{ form.country.errors|join:", " }}{% endif %}</td></tr>
+    
+    <tr><td><h4>Shipping Information</h4></td></tr>
+    
+    <tr><td><label for="id_ship_street1">Street</label></td><td> {{ form.ship_street1 }}</td></tr>
+    <tr><td></td><td>{% if form.ship_street1.errors %}*** {{ form.ship_street1.errors|join:", " }}{% endif %}</td></tr>
+
+    <tr><td><label for="id_ship_street2">Street</label></td><td> {{ form.ship_street2 }}</td></tr>
+    <tr><td></td><td>{% if form.ship_street2.errors %}*** {{ form.ship_street2.errors|join:", " }}{% endif %}</td></tr>
+
+    <tr><td><label for="id_ship_city">City</label></td><td> {{ form.ship_city }}</td></tr>
+    <tr><td></td><td>{% if form.ship_city.errors %}*** {{ form.ship_city.errors|join:", " }}{% endif %}</td></tr>
+
+    <tr><td><label for="id_ship_state">{{country.get_adm_area_display}}</label></td><td> {{ form.ship_state }}</td></tr>
+    <tr><td></td><td>{% if form.ship_state.errors %}*** {{ form.state.errors|join:", " }}{% endif %}</td></tr>
+    
+    <tr><td><label for="id_zip">Zip code</label></td><td> {{ form.ship_zip }}</td></tr>
+    <tr><td></td><td>{% if form.ship_zip.errors %}*** {{ form.ship_zip.errors|join:", " }}{% endif %}</td></tr>
+    
+    <tr><td><h4>Discounts</h4></td></tr>
+    <tr><td><label for="id_discount">Discount code</label></td><td> {{ form.discount }}</td></tr>
+    <tr><td></td><td>{% if form.discount.errors %}*** {{ form.discount.errors|join:", " }}{% endif %}</td></tr>
 
 <tr><td></td><td><input type="submit" value="Continue Checkout"/></td></tr>
 </form>
