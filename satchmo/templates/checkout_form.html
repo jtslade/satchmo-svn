@@ -52,6 +52,9 @@ Checkout
     
     <tr><td><h4>Shipping Information</h4></td></tr>
     
+    <tr><td><label for="id_copyaddress">Shipping same as billing?</label></td><td> {{ form.copyaddress }}</td></tr>
+    <tr><td></td><td>{% if form.copyaddress.errors %}*** {{ form.copyaddress.errors|join:", " }}{% endif %}</td></tr>
+    
     <tr><td><label for="id_ship_street1">Street</label></td><td> {{ form.ship_street1 }}</td></tr>
     <tr><td></td><td>{% if form.ship_street1.errors %}*** {{ form.ship_street1.errors|join:", " }}{% endif %}</td></tr>
 

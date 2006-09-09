@@ -1,5 +1,6 @@
 from django.db import models
 from satchmo.product.models import Item
+from datetime import date
 
 class Discount(models.Model):
     description = models.CharField(maxlength=100)
@@ -18,5 +19,15 @@ class Discount(models.Model):
     def __str__(self):
         return(self.description)
     
+    def isValid(self):
+        #Make sure this discount still has available uses and is in the current date range
+        if self.startDate > date.today():
+            return(False,"This coupon is not active yet.")
+        if self.endDate < date.today():
+            return(False,"This coupon has expired")
+        if self.numUses > self.allowedUses:
+            return(False,"This discount has exceeded the number of uses.")
+        return(True, "Valid")
+        
     class Admin:
         list_display=('description','active')

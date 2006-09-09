@@ -2,6 +2,7 @@ from django.db import models
 from satchmo.product.models import Item, Sub_Item
 from django.contrib.sites.models import Site
 from satchmo.contact.models import Contact
+from satchmo.G11n.models import Country
 
 class Config(models.Model):
     """
@@ -17,7 +18,7 @@ class Config(models.Model):
     city=models.CharField("City", maxlength=50, blank=True, null=True)
     state=models.USStateField("State", blank=True, null=True)
     zip_code=models.CharField("Zip Code", blank=True, null=True,maxlength=9)
-    country=models.CharField("Country", maxlength=50, blank=True, null=True)
+    country=models.ForeignKey(Country, blank=True, null=True)
     phone = models.PhoneNumberField(blank=True, null=True)
     noStockCheckout = models.BooleanField("Purchase item not in stock?")
     

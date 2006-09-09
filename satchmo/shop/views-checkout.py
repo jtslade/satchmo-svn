@@ -50,11 +50,12 @@ class CheckoutManipulator(forms.Manipulator):
             GeographySelectField(field_name="state", is_required=True, choices=areas, validator_list=[self.isValidArea]),
             GeographySelectField(field_name="country", is_required=True, choices=countries),
             forms.TextField(field_name="zip",length=5, is_required=True),
-            forms.TextField(field_name="ship_street1",length=30, is_required=True),
-            forms.TextField(field_name="ship_street2",length=30, is_required=True),
-            forms.TextField(field_name="ship_city",length=30, is_required=True),
-            GeographySelectField(field_name="ship_state", is_required=True, choices=areas, validator_list=[self.isValidArea]),
-            forms.TextField(field_name="ship_zip",length=5, is_required=True),
+            forms.CheckboxField(field_name="copyaddress"),
+            forms.TextField(field_name="ship_street1",length=30),
+            forms.TextField(field_name="ship_street2",length=30),
+            forms.TextField(field_name="ship_city",length=30),
+            GeographySelectField(field_name="ship_state", choices=areas, validator_list=[self.isValidArea]),
+            forms.TextField(field_name="ship_zip",length=5),
             forms.TextField(field_name="discount",length=30, validator_list=[self.isValidDiscount])
         )
     
@@ -66,9 +67,9 @@ class CheckoutManipulator(forms.Manipulator):
         discount = Discount.objects.filter(code=field_data).filter(active=True)
         if discount.count() == 0:
             raise validators.ValidationError("Invalid discount")
-        discount_detail = discount[0]
-        if discount_detail.numUses > discount_detail.allowedUses:
-            raise validators.ValidationError("This discount can not be used anymore")
+        valid, msg = discount[0].isValid()
+        if not valid:
+            raise validators.ValidationError(msg)
         # todo: validate that it can work with these products
     
     def save(self, data):
