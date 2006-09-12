@@ -3,24 +3,25 @@ import os
 from django.conf import settings
 from satchmo.product.models import Item
 
+#The following views are custom to Satchmo
+
 urlpatterns = patterns('satchmo.shop.views',
-     (r'^category/(?P<slug>[-\w]+)/$','category_root'),
-     (r'^category/(?P<slug_parent>[-\w]+)/(?P<slug>[-\w]+)/$','category_children'),
-     (r'^category/([-\w]+/)+(?P<slug_parent>[-\w]+)/(?P<slug>[-\w]+)/$','category_children'),
-     (r'^cart/(?P<id>\d+)/add/$','add_to_cart'),
-     (r'^cart/(?P<id>\d+)/remove/$','remove_from_cart'),
-     (r'^cart/$','display_cart'),
-     (r'^account/info/$','account_info'),
-     (r'^account/logout/$','account_logout'),
-     (r'^contact/$','contact_form'),
-     (r'^account/create/$','account_create'),   
+     (r'^category/(?P<slug>[-\w]+)/$','category.root'),
+     (r'^category/(?P<slug_parent>[-\w]+)/(?P<slug>[-\w]+)/$','category.children'),
+     (r'^category/([-\w]+/)+(?P<slug_parent>[-\w]+)/(?P<slug>[-\w]+)/$','category.children'),
+     (r'^cart/(?P<id>\d+)/add/$','cart.add'),
+     (r'^cart/(?P<id>\d+)/remove/$','cart.remove'),
+     (r'^cart/$','cart.display'),
+     (r'^account/create/$','account.create'),
+     (r'^account/info/$','account.info'),
+     (r'^account/logout/$','account.shop_logout'),
+     (r'^contact/$','contact.form'),
+     (r'^checkout/$','checkout.bill_ship'),     
 )
 #Note with the last category url - this allows category depth to be as deep as we want but the downside
 #is that we ignore all but the child and parent category.  In practice this should be ok
 
-urlpatterns += patterns('satchmo.shop.views-checkout',
-    (r'^checkout/$','checkout'))
-
+#Dictionaries for generic views used in Satchmo
 
 index_dict = {
     'queryset': Item.objects.filter(active="1").filter(featured="1"),
@@ -36,10 +37,7 @@ product_dict = {
     'template_object_name' : 'item', 
     'template_name': 'base_product.html',
 }
-password_reset_dict = {
-    'template_name': 'password_reset_form.html',
-    'email_template_name': 'email/password_reset.txt',
-}
+
 
 urlpatterns += patterns('django.views.generic',
                         (r'^$','list_detail.object_list',index_dict),
@@ -47,7 +45,12 @@ urlpatterns += patterns('django.views.generic',
                         (r'^contact/thankyou/$','simple.direct_to_template',{'template':'thanks.html'}),
                         (r'^account/thankyou/$','simple.direct_to_template',{'template':'account_thanks.html'}),    
                         )
-                        
+
+#Dictionary for authentication views
+password_reset_dict = {
+    'template_name': 'password_reset_form.html',
+    'email_template_name': 'email/password_reset.txt',
+}
                         
 urlpatterns += patterns('django.contrib.auth.views',
                         (r'^account/login/$', 'login', {'template_name': 'login.html'}),
@@ -57,7 +60,7 @@ urlpatterns += patterns('django.contrib.auth.views',
                         (r'^account/password_change/done/$', 'password_change_done', {'template_name':'password_change_done.html'}),
                         )
   
-
+#Make sure thumbnails and images are served up properly when using the dev server
 if settings.LOCAL_DEV:
     urlpatterns += patterns('',
         (r'^site_media/(.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
