@@ -15,8 +15,17 @@ from django.core import validators
 from django.contrib.auth.models import User
 from satchmo.G11n.models import Country
 from satchmo.discount.models import Discount
+from datetime import date
+import calendar
+from satchmo.shop.views.utils import CreditCard
+from satchmo.shipping.modules import *
 
 selection = "Please Select"
+credit_types = (
+                ('Visa','Visa'),
+                ('Mastercard','Mastercard'),
+                ('Discover','Discover'),
+                )
 
 class GeographySelectField(forms.SelectField):
     #This field is used to override the error that's thrown if a selection is not in the list
@@ -28,7 +37,7 @@ class GeographySelectField(forms.SelectField):
             raise validators.ValidationError, gettext("Select a valid choice;")
 
 
-class CheckoutManipulator(forms.Manipulator):
+class ContactInfoManipulator(forms.Manipulator):
     def __init__(self, request, iso2="US"):
         self.country = Country.objects.get(iso2_code=iso2)
         areas = [(selection,selection)]
@@ -77,7 +86,39 @@ class CheckoutManipulator(forms.Manipulator):
         first_name = data['first_name']
         last_name = data['last_name']
 
-def bill_ship(request):
+class payShipManipulator(forms.Manipulator):
+    def __init__(self, request):
+        year_now = date.today().year
+
+        shipping_options = []
+        for module in activeModules:
+            shipping_module = eval(module)
+            shipping_instance = shipping_module()
+            shipping_options.append((shipping_instance.description(), shipping_instance.description()))
+        self.fields = (
+            forms.SelectField(field_name="credit_type", choices=credit_types,is_required=True),
+            forms.TextField(field_name="credit_number",length=20, is_required=True, validator_list=[self.isCardValid]),
+            forms.SelectField(field_name="month_expires",choices=[(month,month) for month in range(1,13)], is_required=True),
+            forms.SelectField(field_name="year_expires",choices=[(year,year) for year in range(year_now,year_now+5)], is_required=True,  
+                                                        validator_list=[self.isCardExpired]),
+            forms.TextField(field_name="ccv", length=4, is_required=True),
+            forms.RadioSelectField(field_name="shipping",choices=shipping_options),
+            )
+            
+    def isCardExpired(self,field_data,all_data):
+        entered_year = int(all_data["year_expires"])
+        entered_month = int(all_data["month_expires"])
+        max_day = calendar.monthrange(entered_year,entered_month)[1]
+        if date.today() > date(year=entered_year, month=entered_month,day=max_day):
+            raise validators.ValidationError("Your card has expired.")
+    
+    def isCardValid(self, field_data, all_data):
+        card = CreditCard(all_data["credit_number"], all_data["ccv"], all_data["credit_type"])
+        results, msg = card.verifyCardTypeandNumber()
+        if not results:
+            raise validators.ValidationError(msg)
+        
+def contact_info(request):
     #First verify that the cart exists and has items
     if request.session.get('cart',False):
         tempCart = Cart.objects.get(id=request.session['cart'])
@@ -88,18 +129,37 @@ def bill_ship(request):
     else:
         iso2 = 'US'
     country = Country.objects.get(iso2_code=iso2)
-    manipulator = CheckoutManipulator(request, iso2)
+    manipulator = ContactInfoManipulator(request, iso2)
     if request.POST:
         new_data = request.POST.copy()
         errors = manipulator.get_validation_errors(new_data)
         if not errors:
             data = request.POST.copy()
             #manipulator.save(data)
-            return http.HttpResponseRedirect('%s/' % (settings.SHOP_BASE))
+            return http.HttpResponseRedirect('%s/checkout/pay' % (settings.SHOP_BASE))
     else:
         errors = new_data = {}
     form = forms.FormWrapper(manipulator, new_data, errors)
     return render_to_response('checkout_form.html', {'form': form, 'country':country},
                                 RequestContext(request))
 
-    
+def pay_ship(request):
+    #First verify that the cart exists and has items
+    if request.session.get('cart',False):
+        tempCart = Cart.objects.get(id=request.session['cart'])
+        if tempCart.numItems == 0:
+            return render_to_response('checkout_empty_cart.html',RequestContext(request))    
+    #Verify order info is here
+    manipulator = payShipManipulator(request)
+    if request.POST:
+        new_data = request.POST.copy()
+        errors = manipulator.get_validation_errors(new_data)
+        if not errors:
+            data = request.POST.copy()
+            #manipulator.save(data)
+            return http.HttpResponseRedirect('%s/confirm' % (settings.SHOP_BASE))
+    else:
+        errors = new_data = {}
+    form = forms.FormWrapper(manipulator, new_data, errors)
+    return render_to_response('checkout_pay_ship.html', {'form': form},
+                                RequestContext(request))    

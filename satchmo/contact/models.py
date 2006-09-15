@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User 
 from satchmo.product.models import Sub_Item
+#from satchmo.shop.models import Cart
 # Create your models here.
 
 CONTACT_CHOICES = (
@@ -191,6 +192,7 @@ class Order(models.Model):
     billZip_code=models.CharField("Zip Code", maxlength=50, blank=True)
     billCountry=models.CharField("Country", maxlength=50, blank=True)
     total = models.FloatField(max_digits=6,decimal_places=2)
+    discount = models.FloatField(max_digits=6, decimal_places=2)
     payment= models.CharField(choices=PAYMENT_CHOICES, maxlength=25)
     method = models.CharField(choices=ORDER_CHOICES, maxlength=50)
     shippingCost = models.FloatField(max_digits=6, decimal_places=2)
@@ -219,6 +221,9 @@ class Order(models.Model):
         self.billZip_code = billaddress.zip_code
         self.billCountry = billaddress.country
         
+    def copyItems(self):
+        pass
+    
     def _status(self):
         return(self.supplierorderstatus_set.latest('date').status)
     status = property(_status)        
