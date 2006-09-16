@@ -44,8 +44,8 @@ Checkout
     <tr><td><label for="id_state">{{country.get_adm_area_display}}</label></td><td> {{ form.state }}</td></tr>
     <tr><td></td><td>{% if form.state.errors %}*** {{ form.state.errors|join:", " }}{% endif %}</td></tr>
     
-    <tr><td><label for="id_zip">Zip code</label></td><td> {{ form.zip }}</td></tr>
-    <tr><td></td><td>{% if form.zip.errors %}*** {{ form.zip.errors|join:", " }}{% endif %}</td></tr>
+    <tr><td><label for="id_zip_code">Zip code</label></td><td> {{ form.zip_code }}</td></tr>
+    <tr><td></td><td>{% if form.zip_code.errors %}*** {{ form.zip_code.errors|join:", " }}{% endif %}</td></tr>
     
     <tr><td><label for="id_country">Country</label></td><td> {{ form.country }}</td></tr>
     <tr><td></td><td>{% if form.country.errors %}*** {{ form.country.errors|join:", " }}{% endif %}</td></tr>
@@ -67,12 +67,9 @@ Checkout
     <tr><td><label for="id_ship_state">{{country.get_adm_area_display}}</label></td><td> {{ form.ship_state }}</td></tr>
     <tr><td></td><td>{% if form.ship_state.errors %}*** {{ form.state.errors|join:", " }}{% endif %}</td></tr>
     
-    <tr><td><label for="id_zip">Zip code</label></td><td> {{ form.ship_zip }}</td></tr>
-    <tr><td></td><td>{% if form.ship_zip.errors %}*** {{ form.ship_zip.errors|join:", " }}{% endif %}</td></tr>
+    <tr><td><label for="id_zip">Zip code</label></td><td> {{ form.ship_zip_code }}</td></tr>
+    <tr><td></td><td>{% if form.ship_zip_code.errors %}*** {{ form.ship_zip_code.errors|join:", " }}{% endif %}</td></tr>
     
-    <tr><td><h4>Discounts</h4></td></tr>
-    <tr><td><label for="id_discount">Discount code</label></td><td> {{ form.discount }}</td></tr>
-    <tr><td></td><td>{% if form.discount.errors %}*** {{ form.discount.errors|join:", " }}{% endif %}</td></tr>
 
 <tr><td></td><td><input type="submit" value="Continue Checkout"/></td></tr>
 </form>

@@ -115,8 +115,8 @@ class PhoneNumber(models.Model):
         
 class AddressBook(models.Model):
     contact=models.ForeignKey(Contact,edit_inline=models.STACKED, num_in_admin=1)
-    description=models.CharField("Description", maxlength=20,core=True,help_text='Description of address - Home,Relative, Office, Warehouse ,etc.',)
-    street1=models.CharField("Street",maxlength=50)
+    description=models.CharField("Description", maxlength=20,help_text='Description of address - Home,Relative, Office, Warehouse ,etc.',)
+    street1=models.CharField("Street",core=True, maxlength=50)
     street2=models.CharField("Street", maxlength=50, blank=True)
     city=models.CharField("City", maxlength=50)
     state=models.USStateField("State")
@@ -134,8 +134,12 @@ class AddressBook(models.Model):
         set the old one to False - we only want 1 default for each.
         If there are none, then set this one to default to both
         """
-        existingBilling = self.contact.billing_address
-        existingShipping = self.contact.shipping_address
+        try:
+            existingBilling = self.contact.billing_address
+            existingShipping = self.contact.shipping_address
+        except:
+            existingBilling = None
+            existingShipping = None
         
         #If we're setting shipping & one already exists set old one to false & save it
         if self.is_default_shipping and existingShipping:

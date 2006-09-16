@@ -6,7 +6,7 @@ from django.template import RequestContext, Context
 from django.template import loader
 from satchmo.product.models import Item, Category, OptionItem
 from satchmo.shop.models import Cart, CartItem, Config
-from satchmo.contact.models import Contact
+from satchmo.contact.models import Contact, AddressBook, PhoneNumber
 from sets import Set
 from django.conf import settings
 from django.contrib.auth import logout, login, authenticate
@@ -54,37 +54,56 @@ class ContactInfoManipulator(forms.Manipulator):
             forms.TextField(field_name="last_name",length=30, is_required=True),
             forms.TextField(field_name="phone",length=30, is_required=True),
             forms.TextField(field_name="street1",length=30, is_required=True),
-            forms.TextField(field_name="street2",length=30, is_required=True),
+            forms.TextField(field_name="street2",length=30),
             forms.TextField(field_name="city",length=30, is_required=True),
             GeographySelectField(field_name="state", is_required=True, choices=areas, validator_list=[self.isValidArea]),
             GeographySelectField(field_name="country", is_required=True, choices=countries),
-            forms.TextField(field_name="zip",length=5, is_required=True),
+            forms.TextField(field_name="zip_code",length=5, is_required=True),
             forms.CheckboxField(field_name="copyaddress"),
             forms.TextField(field_name="ship_street1",length=30),
             forms.TextField(field_name="ship_street2",length=30),
             forms.TextField(field_name="ship_city",length=30),
             GeographySelectField(field_name="ship_state", choices=areas, validator_list=[self.isValidArea]),
-            forms.TextField(field_name="ship_zip",length=5),
-            forms.TextField(field_name="discount",length=30, validator_list=[self.isValidDiscount])
+            forms.TextField(field_name="ship_zip_code",length=5),
         )
     
     def isValidArea(self, field_data, all_data):
         if (field_data == selection):
             raise validators.ValidationError("Please choose your %s." % self.country.get_adm_area_display())    
-    
-    def isValidDiscount(self, field_data, all_data):
-        discount = Discount.objects.filter(code=field_data).filter(active=True)
-        if discount.count() == 0:
-            raise validators.ValidationError("Invalid discount")
-        valid, msg = discount[0].isValid()
-        if not valid:
-            raise validators.ValidationError(msg)
-        # todo: validate that it can work with these products
-    
+       
     def save(self, data):
-        user_name = data['user_name']
-        first_name = data['first_name']
-        last_name = data['last_name']
+        #Check to see if contact exists
+        #If not, create a contact and copy in the address and phone number
+        newCustomer = Contact()
+        for field in newCustomer.__dict__.keys():
+            if data.has_key(field):
+                newCustomer.__setattr__(field,data[field])
+        newCustomer.role = "Customer"
+        newCustomer.save()
+        address = AddressBook()
+        for field in address.__dict__.keys():
+            if data.has_key(field):
+                address.__setattr__(field,data[field])
+        address.contact = newCustomer
+        address.is_default_billing = True
+        address.save()
+        newCustomer.save()
+        if data.has_key('copyaddress'):
+            address.is_default_shipping = True
+        else:
+            ship_address = AddressBook()
+            for field in address.__dict__.keys():
+                if data.has_key('ship_'+field):
+                    ship_address.__setattr__(field,data['ship_'+field])
+            ship_address.is_default_shipping = True
+            ship_address.contact = newCustomer
+            ship_address.save()
+        phone = PhoneNumber()
+        phone.primary = True
+        phone.phone = data['phone']
+        phone.contact = newCustomer
+        phone.save()
+        return(newCustomer.id)
 
 class payShipManipulator(forms.Manipulator):
     def __init__(self, request):
@@ -103,6 +122,7 @@ class payShipManipulator(forms.Manipulator):
                                                         validator_list=[self.isCardExpired]),
             forms.TextField(field_name="ccv", length=4, is_required=True),
             forms.RadioSelectField(field_name="shipping",choices=shipping_options),
+            forms.TextField(field_name="discount",length=30, validator_list=[self.isValidDiscount]),
             )
             
     def isCardExpired(self,field_data,all_data):
@@ -117,6 +137,15 @@ class payShipManipulator(forms.Manipulator):
         results, msg = card.verifyCardTypeandNumber()
         if not results:
             raise validators.ValidationError(msg)
+    
+    def isValidDiscount(self, field_data, all_data):
+        discount = Discount.objects.filter(code=field_data).filter(active=True)
+        if discount.count() == 0:
+            raise validators.ValidationError("Invalid discount")
+        valid, msg = discount[0].isValid()
+        if not valid:
+            raise validators.ValidationError(msg)
+        # todo: validate that it can work with these products   
         
 def contact_info(request):
     #First verify that the cart exists and has items
@@ -124,6 +153,8 @@ def contact_info(request):
         tempCart = Cart.objects.get(id=request.session['cart'])
         if tempCart.numItems == 0:
             return render_to_response('checkout_empty_cart.html',RequestContext(request))
+    else:
+        return render_to_response('checkout_empty_cart.html',RequestContext(request))
     if request.GET.get('iso2', False):
         iso2 = request.GET['iso2']
     else:
@@ -135,8 +166,10 @@ def contact_info(request):
         errors = manipulator.get_validation_errors(new_data)
         if not errors:
             data = request.POST.copy()
-            #manipulator.save(data)
-            return http.HttpResponseRedirect('%s/checkout/pay' % (settings.SHOP_BASE))
+            custID = manipulator.save(data)
+            request.session['custID'] = custID
+            print custID
+            return http.HttpResponseRedirect('%s/checkout/pay/' % (settings.SHOP_BASE))
     else:
         errors = new_data = {}
     form = forms.FormWrapper(manipulator, new_data, errors)
@@ -144,11 +177,16 @@ def contact_info(request):
                                 RequestContext(request))
 
 def pay_ship(request):
-    #First verify that the cart exists and has items
+    #First verify that the customer exists
+    if not request.session.get('custID', False):
+        return http.HttpResponseRedirect('%s/checkout' % (settings.SHOP_BASE))
+    #Verify we still have items in the cart
     if request.session.get('cart',False):
         tempCart = Cart.objects.get(id=request.session['cart'])
         if tempCart.numItems == 0:
-            return render_to_response('checkout_empty_cart.html',RequestContext(request))    
+            return render_to_response('checkout_empty_cart.html',RequestContext(request))
+    else:
+        return render_to_response('checkout_empty_cart.html',RequestContext(request))    
     #Verify order info is here
     manipulator = payShipManipulator(request)
     if request.POST:
