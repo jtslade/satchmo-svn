@@ -34,8 +34,8 @@ class GeographySelectField(forms.SelectField):
         str_data = str(data)
         str_choices = [str(item[0]) for item in self.choices]
         if (str_data not in str_choices) and (str_data != selection):
-            raise validators.ValidationError, gettext("Select a valid choice;")
-
+            raise validators.ValidationError, gettext("Select a valid choice.")
+        print data, forms
 
 class ContactInfoManipulator(forms.Manipulator):
     def __init__(self, request, iso2="US"):
@@ -56,38 +56,45 @@ class ContactInfoManipulator(forms.Manipulator):
             forms.TextField(field_name="street1",length=30, is_required=True),
             forms.TextField(field_name="street2",length=30),
             forms.TextField(field_name="city",length=30, is_required=True),
-            GeographySelectField(field_name="state", is_required=True, choices=areas, validator_list=[self.isValidArea]),
+            GeographySelectField(field_name="state", is_required=True, choices=areas, validator_list=[self.isValidShipArea]),
             GeographySelectField(field_name="country", is_required=True, choices=countries),
             forms.TextField(field_name="zip_code",length=5, is_required=True),
             forms.CheckboxField(field_name="copyaddress"),
             forms.TextField(field_name="ship_street1",length=30),
             forms.TextField(field_name="ship_street2",length=30),
             forms.TextField(field_name="ship_city",length=30),
-            GeographySelectField(field_name="ship_state", choices=areas, validator_list=[self.isValidArea]),
+            GeographySelectField(field_name="ship_state", choices=areas, is_required=False, validator_list=[self.isValidBillArea]),
             forms.TextField(field_name="ship_zip_code",length=5),
         )
     
-    def isValidArea(self, field_data, all_data):
+    def isValidShipArea(self, field_data, all_data):
         if (field_data == selection):
             raise validators.ValidationError("Please choose your %s." % self.country.get_adm_area_display())    
-       
-    def save(self, data):
+    
+    def isValidBillArea(self, field_data, all_data):
+        if not all_data.has_key('copyaddress') and (field_data == selection):
+            raise validators.ValidationError("Please choose your %s." % self.country.get_adm_area_display()) 
+        
+    def save(self, data, contact=None):
         #Check to see if contact exists
         #If not, create a contact and copy in the address and phone number
-        newCustomer = Contact()
-        for field in newCustomer.__dict__.keys():
+        if not contact:
+            customer = Contact()
+        else:
+            customer = contact
+        for field in customer.__dict__.keys():
             if data.has_key(field):
-                newCustomer.__setattr__(field,data[field])
-        newCustomer.role = "Customer"
-        newCustomer.save()
+                customer.__setattr__(field,data[field])
+        customer.role = "Customer"
+        customer.save()
         address = AddressBook()
         for field in address.__dict__.keys():
             if data.has_key(field):
                 address.__setattr__(field,data[field])
-        address.contact = newCustomer
+        address.contact = customer
         address.is_default_billing = True
         address.save()
-        newCustomer.save()
+        customer.save()
         if data.has_key('copyaddress'):
             address.is_default_shipping = True
         else:
@@ -96,14 +103,17 @@ class ContactInfoManipulator(forms.Manipulator):
                 if data.has_key('ship_'+field):
                     ship_address.__setattr__(field,data['ship_'+field])
             ship_address.is_default_shipping = True
-            ship_address.contact = newCustomer
+            ship_address.contact = customer
             ship_address.save()
-        phone = PhoneNumber()
-        phone.primary = True
+        if not customer.primary_phone:
+            phone = PhoneNumber()
+            phone.primary = True
+        else:
+            phone = customer.primary_phone
         phone.phone = data['phone']
-        phone.contact = newCustomer
-        phone.save()
-        return(newCustomer.id)
+        phone.contact = customer
+        phone.save()        
+        return(customer.id)
 
 class payShipManipulator(forms.Manipulator):
     def __init__(self, request):
@@ -159,6 +169,10 @@ def contact_info(request):
         iso2 = request.GET['iso2']
     else:
         iso2 = 'US'
+    if request.session.get('custID', False):
+        contact = Contact.objects.get(id=request.session['custID'])
+    else:
+        contact = None
     country = Country.objects.get(iso2_code=iso2)
     manipulator = ContactInfoManipulator(request, iso2)
     if request.POST:
@@ -166,12 +180,22 @@ def contact_info(request):
         errors = manipulator.get_validation_errors(new_data)
         if not errors:
             data = request.POST.copy()
-            custID = manipulator.save(data)
-            request.session['custID'] = custID
+            if not contact:
+                custID = manipulator.save(data)
+                request.session['custID'] = custID
+            else:
+                custID = manipulator.save(data, contact)
             print custID
             return http.HttpResponseRedirect('%s/checkout/pay/' % (settings.SHOP_BASE))
     else:
         errors = new_data = {}
+        if contact:
+            new_data = {}
+            errors = {}
+            for item in contact.__dict__.keys():
+                new_data[item] = contact.__getattribute__(item)
+            print new_data
+            
     form = forms.FormWrapper(manipulator, new_data, errors)
     return render_to_response('checkout_form.html', {'form': form, 'country':country},
                                 RequestContext(request))

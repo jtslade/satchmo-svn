@@ -67,6 +67,13 @@ class Contact(models.Model):
         return(None)
     billing_address = property(_billing_address)
     
+    def _primary_phone(self):
+        for phone in self.phonenumber_set.all():
+            if phone.primary:
+                return(phone)
+        return(None)
+    primary_phone = property(_primary_phone)
+    
     def __str__(self):
         return (self.full_name)
         
@@ -141,15 +148,12 @@ class AddressBook(models.Model):
             existingBilling = None
             existingShipping = None
         
-        #If we're setting shipping & one already exists set old one to false & save it
+        #If we're setting shipping & one already exists delete it
         if self.is_default_shipping and existingShipping:
-            existingShipping.is_default_shipping = False
-            super(AddressBook, existingShipping).save()
-        #If we're setting billing & one already exists set old one to false and save it
+            existingShipping.delete()
+        #If we're setting billing & one already exists delete it
         if self.is_default_billing and existingBilling:
-            existingBilling.is_default_billing = False
-            super(AddressBook, existingBilling).save()
-            
+            existingBilling.delete()
         if not existingBilling:
             self.is_default_billing = True
         if not existingShipping:

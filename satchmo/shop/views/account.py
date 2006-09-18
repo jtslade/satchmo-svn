@@ -79,6 +79,8 @@ def create(request):
             manipulator.save(data)
             user = authenticate(username=data['user_name'], password=data['password'])
             login(request, user)
+            contact = Contact.objects.get(user=user.id)
+            request.session['custID'] = contact.id
             return http.HttpResponseRedirect('%s/account/thankyou' % (settings.SHOP_BASE))
     else:
         errors = new_data = {}
@@ -88,7 +90,7 @@ def create(request):
 
 def info(request):
     try:
-        user_data = Contact.objects.filter(user=request.user.id)[0]
+        user_data = Contact.objects.get(user=request.user.id)
     except:
         #This case happens if a user is created in admin but does not have account info
         return bad_or_missing(request, 'The person you are logged in as, does not have an account.  Please create one.')
