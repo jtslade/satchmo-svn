@@ -35,7 +35,7 @@ class GeographySelectField(forms.SelectField):
         str_choices = [str(item[0]) for item in self.choices]
         if (str_data not in str_choices) and (str_data != selection):
             raise validators.ValidationError, gettext("Select a valid choice.")
-        print data, forms
+        #print data, forms
 
 class ContactInfoManipulator(forms.Manipulator):
     def __init__(self, request, iso2="US"):
@@ -84,24 +84,25 @@ class ContactInfoManipulator(forms.Manipulator):
             customer = contact
         for field in customer.__dict__.keys():
             if data.has_key(field):
-                customer.__setattr__(field,data[field])
+                setattr(customer,field,data[field])
         customer.role = "Customer"
         customer.save()
         address = AddressBook()
         for field in address.__dict__.keys():
             if data.has_key(field):
-                address.__setattr__(field,data[field])
+                setattr(address,field,data[field])
         address.contact = customer
         address.is_default_billing = True
         address.save()
         customer.save()
         if data.has_key('copyaddress'):
             address.is_default_shipping = True
+            address.save()
         else:
             ship_address = AddressBook()
             for field in address.__dict__.keys():
                 if data.has_key('ship_'+field):
-                    ship_address.__setattr__(field,data['ship_'+field])
+                    setattr(ship_address,field,data['ship_'+field])
             ship_address.is_default_shipping = True
             ship_address.contact = customer
             ship_address.save()
@@ -130,7 +131,7 @@ class payShipManipulator(forms.Manipulator):
             forms.SelectField(field_name="month_expires",choices=[(month,month) for month in range(1,13)], is_required=True),
             forms.SelectField(field_name="year_expires",choices=[(year,year) for year in range(year_now,year_now+5)], is_required=True,  
                                                         validator_list=[self.isCardExpired]),
-            forms.TextField(field_name="ccv", length=4, is_required=True),
+            forms.TextField(field_name="ccv", length=4, is_required=True, validator_list=[validators.isOnlyDigits]),
             forms.RadioSelectField(field_name="shipping",choices=shipping_options),
             forms.TextField(field_name="discount",length=30, validator_list=[self.isValidDiscount]),
             )
@@ -193,7 +194,7 @@ def contact_info(request):
             new_data = {}
             errors = {}
             for item in contact.__dict__.keys():
-                new_data[item] = contact.__getattribute__(item)
+                new_data[item] = getattr(contact,item)
             print new_data
             
     form = forms.FormWrapper(manipulator, new_data, errors)

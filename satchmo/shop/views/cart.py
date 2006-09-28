@@ -68,9 +68,6 @@ def add(request, id):
 
 def remove(request, id):
     tempCart = Cart.objects.get(id=request.session['cart'])
-    if request.has_key('quantity'):
-        quantity = request.POST['quantity']
-    else:
-        quantity = 9999
+    quantity = int(request.POST.get('quantity','999999'))
     tempCart.remove_item(id, quantity)
     return http.HttpResponseRedirect('%s/cart' % (settings.SHOP_BASE))
