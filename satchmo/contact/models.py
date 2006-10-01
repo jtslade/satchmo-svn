@@ -171,6 +171,7 @@ ORDER_CHOICES = (
 )
 
 ORDER_STATUS = (
+    ('Temp', 'Temp'),
     ('Pending', 'Pending'),
     ('Shipped', 'Shipped'),
 )

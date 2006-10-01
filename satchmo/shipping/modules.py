@@ -7,33 +7,93 @@ activeModules = ["FlatRate","PerItem"]
 class FlatRate(object):
     
     flatRateFee = 5.00
+    id = "FaltRate"
     
     def __init__(self):
         pass
     
     def __str__(self):
+        """
+        This is mainly helpful for debugging purposes
+        """
         return("Flat Rate")
     
     def description(self):
-        return("Flat Rate Shipping - $%s" % self.CalcCost())
+        """
+        A basic description that will be displayed to the user when selecting their shipping options
+        """
+        return("Flat Rate Shipping")
         
-    def CalcCost(self):
+    def cost(self):
+        """
+        Complex calculations can be done here as long as the return value is a dollar figure
+        """
         return(self.flatRateFee)
-
+    
+    def method(self):
+        """
+        Describes the actual delivery service (Mail, FedEx, DHL, UPS, etc)
+        """
+        return("US Mail")
+        
+    def expectedDelivery(self):
+        """
+        Can be a plain string or complex calcuation returning an actual date
+        """
+        return("3 - 4 business days")
+        
+    def valid(self, order=None):
+        """
+        Can do complex validation about whether or not this option is valid.  For example,
+        may check to see if the recipient is in an allowed country or location.
+        """
+        return(True)
+        
 class PerItem(object):
     
+    id = "PerItem"
     perItemFee = 10.00
     
     def __init__(self):
         pass
-        
+    
     def __str__(self):
-        return("Cost per item")
+        """
+        This is mainly helpful for debugging purposes
+        """
+        return("Per Item")
     
     def description(self):
-        return("Charge per item")
+        """
+        A basic description that will be displayed to the user when selecting their shipping options
+        """
+        return("Per Item shipping")
         
-    def CalcCost(self):
-        return(CustomerOrder.orderitem_set.count() * self.perItemFee)
+    def cost(self, order=None):
+        """
+        Complex calculations can be done here as long as the return value is a dollar figure
+        """
+        #return(order.orderitem_set.count() * self.perItemFee)
+        return(3 * self.perItemFee)
+    
+    def method(self):
+        """
+        Describes the actual delivery service (Mail, FedEx, DHL, UPS, etc)
+        """
+        return("US Mail")
+        
+    def expectedDelivery(self):
+        """
+        Can be a plain string or complex calcuation returning an actual date
+        """
+        return("3 - 4 business days")
+        
+    def valid(self, order=None):
+        """
+        Can do complex validation about whether or not this option is valid.  For example,
+        may check to see if the recipient is in an allowed country or location.
+        """
+        return(True)
+        
         
         

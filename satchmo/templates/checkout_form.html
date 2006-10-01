@@ -9,6 +9,13 @@ Checkout
 
 {% block content %}
 <h3>Checkout</h3>
+<div id="checkoutprogress">
+<ul>
+    <li class="first">Ship/Bill</li>
+    <li>Payment</li>
+    <li>Confirmation</li>
+</ul>
+</div>
 <h4>Please complete the following information in order to submit your order.</h4>
 {% if form.has_errors %}
 <h2>Please correct the following error{{ form.error_dict|pluralize }}:</h2>

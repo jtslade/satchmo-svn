@@ -122,9 +122,17 @@ class payShipManipulator(forms.Manipulator):
 
         shipping_options = []
         for module in activeModules:
+            #Create the list of information the user will see
             shipping_module = eval(module)
             shipping_instance = shipping_module()
-            shipping_options.append((shipping_instance.description(), shipping_instance.description()))
+            if shipping_instance.valid():
+                t = loader.get_template('shipping_options.html')
+                c = Context({
+                    'amount': shipping_instance.cost(),
+                    'description' : shipping_instance.description(),
+                    'method' : shipping_instance.method(),
+                    'expected_delivery' : shipping_instance.expectedDelivery() })
+                shipping_options.append((shipping_instance.id, t.render(c)))
         self.fields = (
             forms.SelectField(field_name="credit_type", choices=credit_types,is_required=True),
             forms.TextField(field_name="credit_number",length=20, is_required=True, validator_list=[self.isCardValid]),
@@ -186,16 +194,17 @@ def contact_info(request):
                 request.session['custID'] = custID
             else:
                 custID = manipulator.save(data, contact)
-            print custID
+            #print custID
+            #TODO - Create an order here an associate it with a session
             return http.HttpResponseRedirect('%s/checkout/pay/' % (settings.SHOP_BASE))
     else:
         errors = new_data = {}
         if contact:
+            #If a person has their contact info, make sure we populate it in the form
             new_data = {}
             errors = {}
             for item in contact.__dict__.keys():
                 new_data[item] = getattr(contact,item)
-            print new_data
             
     form = forms.FormWrapper(manipulator, new_data, errors)
     return render_to_response('checkout_form.html', {'form': form, 'country':country},

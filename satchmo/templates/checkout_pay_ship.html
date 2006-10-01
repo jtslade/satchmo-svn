@@ -9,6 +9,13 @@ Checkout
 
 {% block content %}
 <h3>Checkout</h3>
+<div id="checkoutprogress">
+<ul>
+    <li class="first">Ship/Bill</li>
+    <li class="active">Payment</li>
+    <li>Confirmation</li>
+</ul>
+</div>
 <h4>Please complete the following information in order to submit your order.</h4>
 {% if form.has_errors %}
 <h2>Please correct the following error{{ form.error_dict|pluralize }}:</h2>
@@ -35,13 +42,14 @@ Checkout
     <tr><td><label for="id_discount">Discount code</label></td><td> {{ form.discount }}</td></tr>
     <tr><td></td><td>{% if form.discount.errors %}*** {{ form.discount.errors|join:", " }}{% endif %}</td></tr>
     
-    
     <tr><td><h4>Shipping Information</h4></td></tr>
-    <tr><td><label for="id_shipping">Shipping Options</label></td><td> {{ form.shipping}}</td></tr>
-    <tr><td></td><td>{% if form.shipping.errors %}*** {{ form.shipping.errors|join:", " }}{% endif %}</td></tr>
-    
-<tr><td></td><td><input type="submit" value="Confirm"/></td></tr>
+    </table>
+    <div id="shipping">
+    <label for="id_shipping">Please Choose your preferred shipping method</label>{{ form.shipping}}
+    {% if form.shipping.errors %}*** {{ form.shipping.errors|join:", " }}{% endif %}
+    </div>
+    <input type="submit" value="Confirm"/>
 </form>
-</table>
+
 </div>
 {% endblock %}
