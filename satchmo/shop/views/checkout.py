@@ -121,10 +121,12 @@ class payShipManipulator(forms.Manipulator):
         year_now = date.today().year
 
         shipping_options = []
+        tempCart = Cart.objects.get(id=request.session['cart'])
+        tempContact = Contact.objects.get(id=request.session['custID'])
         for module in activeModules:
             #Create the list of information the user will see
             shipping_module = eval(module)
-            shipping_instance = shipping_module()
+            shipping_instance = shipping_module(tempCart, tempContact)
             if shipping_instance.valid():
                 t = loader.get_template('shipping_options.html')
                 c = Context({

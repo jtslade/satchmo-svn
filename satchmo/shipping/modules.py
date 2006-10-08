@@ -9,8 +9,9 @@ class FlatRate(object):
     flatRateFee = 5.00
     id = "FaltRate"
     
-    def __init__(self):
-        pass
+    def __init__(self, cart, contact):
+        self.cart = cart
+        self.contact = contact
     
     def __str__(self):
         """
@@ -54,8 +55,9 @@ class PerItem(object):
     id = "PerItem"
     perItemFee = 10.00
     
-    def __init__(self):
-        pass
+    def __init__(self, cart, contact):
+        self.cart = cart
+        self.contact = contact
     
     def __str__(self):
         """
@@ -69,12 +71,11 @@ class PerItem(object):
         """
         return("Per Item shipping")
         
-    def cost(self, order=None):
+    def cost(self):
         """
         Complex calculations can be done here as long as the return value is a dollar figure
         """
-        #return(order.orderitem_set.count() * self.perItemFee)
-        return(3 * self.perItemFee)
+        return(self.cart.numItems * self.perItemFee)
     
     def method(self):
         """
