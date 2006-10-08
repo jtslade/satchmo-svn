@@ -85,6 +85,30 @@ class Category(models.Model):
             raise validators.ValidationError("You must not save a category in itself!")
         super(Category, self).save()
         
+    def _flatten(self, L):
+        """
+        Taken from a python newsgroup post
+        """
+        if type(L) != type([]): return [L]
+        if L == []: return L
+        return self._flatten(L[0]) + self._flatten(L[1:])
+            
+    def _recurse_for_children(self, node):
+        children = []
+        children.append(node)
+        for child in node.child.all():
+            children_list = self._recurse_for_children(child)
+            children.append(children_list)
+        return(children)
+
+    def get_all_children(self):
+        """
+        Gets a list of all of the children categories.
+        """
+        children_list = self._recurse_for_children(self)
+        flat_list = self._flatten(children_list[1:])
+        return(flat_list)
+    
     class Admin:
         list_display = ('name', '_parents_repr')
         ordering = ['name']

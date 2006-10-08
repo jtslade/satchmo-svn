@@ -11,7 +11,8 @@ def root(request, slug):
     except IndexError:
         return bad_or_missing(request, 'The category you have requested does '
             'not exist.')
-    return render_to_response('base_category.html',{'category':category},
+    child_categories = category.get_all_children()
+    return render_to_response('base_category.html',{'category':category, 'child_categories': child_categories},
                                 RequestContext(request))
 
 def children(request, slug_parent, slug):
@@ -26,6 +27,6 @@ def children(request, slug_parent, slug):
     except IndexError:
         return bad_or_missing(request, 'The category you have requested does '
             'not exist.')
-            
-    return render_to_response('base_category.html',{'category':category}, 
+    child_categories = category.get_all_children()         
+    return render_to_response('base_category.html',{'category':category, 'child_categories': child_categories}, 
                                 RequestContext(request))
