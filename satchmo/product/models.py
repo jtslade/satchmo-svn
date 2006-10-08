@@ -132,7 +132,7 @@ class OptionGroup(models.Model):
         ordering = ['sort_order']
         
 class Item(models.Model):
-    category = models.ForeignKey(Category)
+    category = models.ManyToManyField(Category, filter_interface=True)
     verbose_name = models.CharField("Full Name", maxlength=255)
     short_name = models.SlugField("Slug Name", prepopulate_from=("verbose_name",), unique=True, help_text="This is a short, descriptive name of the shirt that will be used in the URL link to this item")
     description = models.TextField("Description of product", help_text="This field can contain HTML and should be a few paragraphs explaining the background of the product, and anything that would help the potential customer make their purchase.")
