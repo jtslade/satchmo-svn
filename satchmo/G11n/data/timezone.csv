@@ -1,5 +1,14 @@
 # List of time zones.
 #
+# ---------------------------------------------------------
+# Copyright © 2006 Jonás Melián. Some rights reserved.
+#
+# This data sheet is licensed under the Creative Commons
+# Attribution-NonCommercial-ShareAlike 2.5 License.
+#
+# You must read the LICENSE file.
+# ---------------------------------------------------------
+#
 # Information:
 #   http://www.twinsun.com/tz/tz-link.htm
 #
@@ -124,7 +133,7 @@ CHN:Asia/Shanghai
 CHN:Asia/Urumqi
 COL:America/Bogota
 CRI:America/Costa_Rica
-SCG:Europe/Belgrade
+#SCG:Europe/Belgrade
 CUB:America/Havana
 CPV:Atlantic/Cape_Verde
 CYP:Asia/Nicosia

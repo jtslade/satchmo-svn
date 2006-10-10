@@ -1,5 +1,14 @@
 # List of countries with its languages.
 #
+# ---------------------------------------------------------
+# Copyright © 2006 Jonás Melián. Some rights reserved.
+#
+# This data sheet is licensed under the Creative Commons
+# Attribution-NonCommercial-ShareAlike 2.5 License.
+#
+# You must read the LICENSE file.
+# ---------------------------------------------------------
+#
 # Information:
 #   http://en.wikipedia.org/wiki/
 #
@@ -241,6 +250,7 @@ MLI:fre:fr-ML:
 MLT:mlt:mt-MT:
 MLT:eng:en-MT:
 MMR:bur:my-MM:
+MNE:scc:sr-ME:
 MNG:mon:mn-MN:
 MNP:eng:en-MP:
 MNP:cha:ch-MP:
@@ -314,12 +324,6 @@ RWA:fre:fr-RW:
 RWA:eng:en-RW:
 RWA:kin:rw-RW:
 SAU:ara:ar-SA:
-SCG:scc:sr-CS:
-SCG:scr:hr-CS:
-SCG:rum:ro-CS:True
-SCG:hun:hu-CS:True
-SCG:slo:sk-CS:True
-SCG:alb:sq-CS:True
 SDN:ara:ar-SD:
 SEN:fre:fr-SN:
 SGP:eng:en-SG:
@@ -336,6 +340,12 @@ SMR:ita:it-SM:
 SOM:som:so-SO:
 SOM:ara:ar-SO:
 SPM:fre:fr-PM:
+SRB:scc:sr-RS:
+SRB:scr:hr-RS:
+SRB:rum:ro-RS:True
+SRB:hun:hu-RS:True
+SRB:slo:sk-RS:True
+SRB:alb:sq-RS:True
 STP:por:pt-ST:
 SUR:dut:nl-SR:
 SVK:slo:sk-SK:

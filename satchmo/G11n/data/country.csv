@@ -1,5 +1,13 @@
-# * coding: UTF-8 *
 # List of countries.
+#
+# ---------------------------------------------------------
+# Copyright © 2006 Jonás Melián. Some rights reserved.
+#
+# This data sheet is licensed under the Creative Commons
+# Attribution-NonCommercial-ShareAlike 2.5 License.
+#
+# You must read the LICENSE file.
+# ---------------------------------------------------------
 #
 # Information:
 #
@@ -235,6 +243,7 @@ Mexico:MEX:MX:am.c::st
 Micronesia, Federated States of:FSM:FM:o.mi::st
 Monaco:MCO:MC:e.w::cm
 Mongolia:MNG:MN:as.e::pr
+Montenegro:MNE:ME:e.s::rp
 Montserrat:MSR:MS:am.ca:GBR:pa
 Morocco:MAR:MA:af.n::rg
 Mozambique:MOZ:MZ:af.e::pr
@@ -283,7 +292,7 @@ San Marino:SMR:SM:e.s::mu
 Sao Tome and Principe:STP:ST:af.m::mu
 Saudi Arabia:SAU:SA:as.w::rg
 Senegal:SEN:SN:af.w::rg
-Serbia and Montenegro:SCG:CS:e.s::rp
+Serbia:SRB:RS:e.s::rp
 Seychelles:SYC:SC:af.e::dt
 Sierra Leone:SLE:SL:af.w::pr
 Singapore:SGP:SG:as.se::dt
