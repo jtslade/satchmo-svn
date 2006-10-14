@@ -1,3 +1,5 @@
-The data sheets do not comprise of django/Satchmo directly else that are a separate project.
+The data sheets do not comprise of django/Satchmo directly else that are a
+separate project.
 
-But, if Chris is agree, they will be here only during the process of development and integration with django/Satchmo.
+But they will be here only during the process of development and integration
+with django/Satchmo.
