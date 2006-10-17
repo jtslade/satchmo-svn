@@ -1,3 +1,6 @@
+# Copyright © 2006 Jonás Melián. All rights reserved.
+# Licensed under the New BSD license
+
 import csv
 import glob
 import os
