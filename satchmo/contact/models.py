@@ -200,13 +200,13 @@ class Order(models.Model):
     billState=models.USStateField("State", blank=True)
     billZip_code=models.CharField("Zip Code", maxlength=50, blank=True)
     billCountry=models.CharField("Country", maxlength=50, blank=True)
-    total = models.FloatField(max_digits=6,decimal_places=2)
-    discount = models.FloatField(max_digits=6, decimal_places=2)
-    payment= models.CharField(choices=PAYMENT_CHOICES, maxlength=25)
-    method = models.CharField(choices=ORDER_CHOICES, maxlength=50)
-    shippingCost = models.FloatField(max_digits=6, decimal_places=2)
-    tax = models.FloatField(max_digits=6, decimal_places=2)
-    date = models.DateTimeField()
+    total = models.FloatField(max_digits=6,decimal_places=2, blank=True)
+    discount = models.FloatField(max_digits=6, decimal_places=2, blank=True, null=True)
+    payment= models.CharField(choices=PAYMENT_CHOICES, maxlength=25, blank=True)
+    method = models.CharField(choices=ORDER_CHOICES, maxlength=50, blank=True)
+    shippingCost = models.FloatField(max_digits=6, decimal_places=2, blank=True, null=True)
+    tax = models.FloatField(max_digits=6, decimal_places=2, blank=True, null=True)
+    date = models.DateTimeField(blank=True, null=True)
     
     def __str__(self):
         return self.contact.full_name
@@ -215,8 +215,8 @@ class Order(models.Model):
         """
         Copy the address so we know what the information was at time of order
         """
-        shipaddress = self.customer.shipping_address
-        billaddress = self.customer.billing_address
+        shipaddress = self.contact.shipping_address
+        billaddress = self.contact.billing_address
         self.shipStreet1 = shipaddress.street1
         self.shipStreet2 = shipaddress.street2
         self.shipCity = shipaddress.city

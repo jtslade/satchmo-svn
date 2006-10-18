@@ -19,6 +19,7 @@ from datetime import date
 import calendar
 from satchmo.shop.views.utils import CreditCard
 from satchmo.shipping.modules import *
+from satchmo.contact.models import Order, OrderItem, OrderStatus
 
 selection = "Please Select"
 credit_types = (
@@ -121,12 +122,12 @@ class payShipManipulator(forms.Manipulator):
         year_now = date.today().year
 
         shipping_options = []
-        tempCart = Cart.objects.get(id=request.session['cart'])
-        tempContact = Contact.objects.get(id=request.session['custID'])
+        self.tempCart = Cart.objects.get(id=request.session['cart'])
+        self.tempContact = Contact.objects.get(id=request.session['custID'])
         for module in activeModules:
             #Create the list of information the user will see
             shipping_module = eval(module)
-            shipping_instance = shipping_module(tempCart, tempContact)
+            shipping_instance = shipping_module(self.tempCart, self.tempContact)
             if shipping_instance.valid():
                 t = loader.get_template('shipping_options.html')
                 c = Context({
@@ -167,6 +168,16 @@ class payShipManipulator(forms.Manipulator):
         if not valid:
             raise validators.ValidationError(msg)
         # todo: validate that it can work with these products   
+    
+    def save(self, newOrder):
+        newOrder.total = self.tempCart.total
+        newOrder.discount = 1.2
+        newOrder.save()
+        newOrder.copyAddresses()
+        for item in self.tempCart.cartitem_set.all():
+            newOrderItem = OrderItem(order=newOrder, item=item.subItem, quantity=item.quantity, 
+                                     unitPrice=item.subItem.unit_price, lineItemPrice=item.line_total)       
+            newOrderItem.save()
         
 def contact_info(request):
     #First verify that the cart exists and has items
@@ -207,10 +218,15 @@ def contact_info(request):
             errors = {}
             for item in contact.__dict__.keys():
                 new_data[item] = getattr(contact,item)
+            for item in contact.shipping_address.__dict__.keys():
+                new_data["ship_"+item] = getattr(contact.shipping_address,item)
+            for item in contact.billing_address.__dict__.keys():
+                new_data[item] = getattr(contact.billing_address,item)
+            new_data['phone'] = contact.primary_phone
             
     form = forms.FormWrapper(manipulator, new_data, errors)
     return render_to_response('checkout_form.html', {'form': form, 'country':country},
-                                RequestContext(request))
+                                RequestContext(request))  
 
 def pay_ship(request):
     #First verify that the customer exists
@@ -230,10 +246,26 @@ def pay_ship(request):
         errors = manipulator.get_validation_errors(new_data)
         if not errors:
             data = request.POST.copy()
-            #manipulator.save(data)
-            return http.HttpResponseRedirect('%s/confirm' % (settings.SHOP_BASE))
+            contact = Contact.objects.get(id=request.session['custID'])
+            if request.session.get('orderID',False):
+                #order exists so get it
+                newOrder = Order.objects.get(id=request.session['orderID'])
+                newOrder.contact = contact
+            else:
+                #create a new order
+                newOrder = Order(contact=contact)
+            #copy data over to the oder
+            manipulator.save(newOrder)
+            request.session['orderID'] = newOrder.id
+            return http.HttpResponseRedirect('%s/checkout/confirm' % (settings.SHOP_BASE))
     else:
         errors = new_data = {}
     form = forms.FormWrapper(manipulator, new_data, errors)
     return render_to_response('checkout_pay_ship.html', {'form': form},
                                 RequestContext(request))    
+                                
+def confirm(request):
+    if not request.session.get('orderID', False):
+        return http.HttpResponseRedirect('%s/checkout' % (settings.SHOP_BASE))
+    order = Order.objects.get(id=request.session['orderID'])
+    return render_to_response('checkout_confirm.html', {'order': order}, RequestContext(request))

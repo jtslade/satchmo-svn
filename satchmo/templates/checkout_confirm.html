@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+<a href="{{shop_base}}">Home</a> ::
+Checkout
+{% endblock %}
+
+{% block content %}
+<h3>Checkout</h3>
+<div id="checkoutprogress">
+<ul>
+    <li class="first">Ship/Bill</li>
+    <li>Payment</li>
+    <li class="active">Confirmation</li>
+</ul>
+</div>
+<h4>Please validate the following information, then submit your order.</h4>
+{{ order.contact }}
+
+
+</div>
+{% endblock %}

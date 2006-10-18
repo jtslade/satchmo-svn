@@ -17,7 +17,8 @@ urlpatterns = patterns('satchmo.shop.views',
      (r'^account/logout/$','account.shop_logout'),
      (r'^contact/$','contact.form'),
      (r'^checkout/$','checkout.contact_info'),
-     (r'^checkout/pay/$','checkout.pay_ship'),     
+     (r'^checkout/pay/$','checkout.pay_ship'),  
+     (r'^checkout/confirm/$','checkout.confirm'),     
 )
 #Note with the last category url - this allows category depth to be as deep as we want but the downside
 #is that we ignore all but the child and parent category.  In practice this should be ok
