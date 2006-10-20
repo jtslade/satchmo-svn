@@ -20,8 +20,9 @@ Library (PIL) available here - http://www.pythonware.com/products/pil/#pil115
 For the timezone functions you will need pytz - World Time Zone Definitions for
 python available here - http://pytz.sourceforge.net
 
-The category functions use ElementTree to make processing easier.  It will be
-included in Python 2.5.  You can also download it here -
+The category functions use ElementTree to make processing easier.  If you have
+Python 2.5 or higher you don't need to do anything else.
+If you have an older python version you can download it here -
 http://effbot.org/zone/element-index.htm
 
 Since we're still putting this project together, you willl more than likely
