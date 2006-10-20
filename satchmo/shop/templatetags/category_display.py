@@ -1,6 +1,10 @@
 from django.template import Library, Node
 from satchmo.product.models import Category
-from elementtree.ElementTree import Element, SubElement, tostring
+
+try:
+    from xml.etree.ElementTree import Element, SubElement, tostring
+except ImportError:
+    from elementtree.ElementTree import Element, SubElement, tostring 
 
 register = Library()
 

@@ -267,5 +267,12 @@ def pay_ship(request):
 def confirm(request):
     if not request.session.get('orderID', False):
         return http.HttpResponseRedirect('%s/checkout' % (settings.SHOP_BASE))
-    order = Order.objects.get(id=request.session['orderID'])
-    return render_to_response('checkout_confirm.html', {'order': order}, RequestContext(request))
+    if request.POST:
+        #Do the credit card processing here
+        #If it passes, remove the items from the cart
+        #Convert order status
+        #Redirect to the success page
+        return http.HttpResponseRedirect('%s/checkout/success' % (settings.SHOP_BASE))
+    else:
+        order = Order.objects.get(id=request.session['orderID'])
+        return render_to_response('checkout_confirm.html', {'order': order}, RequestContext(request))

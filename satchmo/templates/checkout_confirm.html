@@ -15,8 +15,36 @@ Checkout
 </ul>
 </div>
 <h4>Please validate the following information, then submit your order.</h4>
-{{ order.contact }}
 
+<h5>Items Ordered</h5>
+{% for item in order.orderitem_set.all %}
+{{ item }} - ${{item.unitPrice}}<br/>
+{% endfor %}
+
+<h5>Contact Information</h5>
+{{ order.contact.full_name }}<br/>
+{{ order.contact.email }}<br/>
+{{ order.contact.primary_phone }}<br/>
+
+<h5>Billing Information</h5>
+{{ order.contact.billing_address.street1 }}<br/>
+{{ order.contact.billing_address.street2 }}<br/>
+{{ order.contact.billing_address.state }}<br/>
+{{ order.contact.billing_address.zip_code }}<br/>
+{{ order.contact.billing_address.country }}<br/>
+
+<h5>Shipping Information</h5>
+{{ order.contact.shipping_address.street1 }}<br/>
+{{ order.contact.shipping_address.street2 }}<br/>
+{{ order.contact.shipping_address.state }}<br/>
+{{ order.contact.shipping_address.zip_code }}<br/>
+{{ order.contact.shipping_address.country }}<br/>
+
+<h5>Payment</h5>
+<form method="post" action=".">
+<input type="hidden" name="Process" value="True">
+<input type="submit" value="Purchase Items"/>
+</form>
 
 </div>
 {% endblock %}
