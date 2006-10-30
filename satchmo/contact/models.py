@@ -68,9 +68,9 @@ class Contact(models.Model):
     billing_address = property(_billing_address)
     
     def _primary_phone(self):
-        for phone in self.phonenumber_set.all():
-            if phone.primary:
-                return(phone)
+        for phonenum in self.phonenumber_set.all():
+            if phonenum.primary:
+                return(phonenum)
         return(None)
     primary_phone = property(_primary_phone)
     

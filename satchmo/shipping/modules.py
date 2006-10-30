@@ -7,7 +7,7 @@ activeModules = ["FlatRate","PerItem"]
 class FlatRate(object):
     
     flatRateFee = 5.00
-    id = "FaltRate"
+    id = "FlatRate"
     
     def __init__(self, cart, contact):
         self.cart = cart

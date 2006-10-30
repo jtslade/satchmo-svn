@@ -43,7 +43,7 @@ class ContactInfoManipulator(forms.Manipulator):
         self.country = Country.objects.get(iso2_code=iso2)
         areas = [(selection,selection)]
         for area in self.country.area_set.all():
-            value_to_choose = (area.name,area.name)
+            value_to_choose = (area.abbrev,area.name)
             areas.append(value_to_choose)
         countries = [(self.country.iso2_code, self.country.name)]
         for country in Country.objects.filter(display=True):
@@ -201,12 +201,13 @@ def contact_info(request):
         new_data = request.POST.copy()
         errors = manipulator.get_validation_errors(new_data)
         if not errors:
-            data = request.POST.copy()
+            manipulator.do_html2python(new_data)
+            #data = request.POST.copy()
             if not contact:
-                custID = manipulator.save(data)
+                custID = manipulator.save(new_data)
                 request.session['custID'] = custID
             else:
-                custID = manipulator.save(data, contact)
+                custID = manipulator.save(new_data, contact)
             #print custID
             #TODO - Create an order here an associate it with a session
             return http.HttpResponseRedirect('%s/checkout/pay/' % (settings.SHOP_BASE))
@@ -222,7 +223,7 @@ def contact_info(request):
                 new_data["ship_"+item] = getattr(contact.shipping_address,item)
             for item in contact.billing_address.__dict__.keys():
                 new_data[item] = getattr(contact.billing_address,item)
-            new_data['phone'] = contact.primary_phone
+            new_data['phone'] = contact.primary_phone.phone
             
     form = forms.FormWrapper(manipulator, new_data, errors)
     return render_to_response('checkout_form.html', {'form': form, 'country':country},
@@ -245,7 +246,8 @@ def pay_ship(request):
         new_data = request.POST.copy()
         errors = manipulator.get_validation_errors(new_data)
         if not errors:
-            data = request.POST.copy()
+            #data = request.POST.copy()
+            manipulator.do_html2python(new_data)
             contact = Contact.objects.get(id=request.session['custID'])
             if request.session.get('orderID',False):
                 #order exists so get it
