@@ -12,6 +12,7 @@ from django.conf import settings
 from satchmo.shop.models import Config
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
+from satchmo.G11n.models import *
 
 def find_site(): 
     """Find the site by looking at the environment."""
@@ -196,7 +197,14 @@ def load_data():
     user.save()
     c1.user = user
     c1.save()
-    
+    print "Creating country..."
+    #Create the US - all data will be loaded once the internationalization piece is completed
+    c1 = Country(name="United States", iso3_code="USA", iso2_code="US", region="am.n", adm_area="st",display=True)
+    c1.save()
+    area1 = Area(country=c1, name_id="MN", name="Minnesota", alt_name="Minnesota", abbrev="MN", reg_area="st")    
+    area1.save()
+    area2 = Area(country=c1, name_id="CA", name="California", alt_name="California", abbrev="CA", reg_area="st")
+    area2.save()
 def main(): 
     """Flush it all, baby!"""
     try: 
