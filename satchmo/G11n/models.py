@@ -192,7 +192,7 @@ or needed in some cases but omitted in others.
     name = models.CharField(_('area name'), maxlength=40)
     alt_name = models.CharField(_('area alternate name'), maxlength=32)
     abbrev = models.CharField(_('postal abbreviation'), maxlength=3)
-    reg_area = models.CharField(_('regional administrative area'), maxlength=1,
+    reg_area = models.CharField(_('regional administrative area'), maxlength=2,
         choices=AREA)
 
     class Meta:

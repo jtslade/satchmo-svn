@@ -56,7 +56,7 @@ def load_data():
     site.domain = "192.168.1.9:8000"  #Change this to match your server
     site.name = "Home server"
     site.save()
-    config = Config(site=site, storeName = "My Nifty Store")
+    config = Config(site=site, storeName = "My Nifty Store", noStockCheckout=False)
     config.save()
     print "Creating Customers..."
     # Import some customers
