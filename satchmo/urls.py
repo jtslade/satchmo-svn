@@ -10,7 +10,7 @@ urlpatterns = patterns('',
 )
 #The following is used to serve up local media files like images
 if settings.LOCAL_DEV:
-   baseurlregex = '^' + settings.MEDIA_ROOT[1:] + '/(?P<path>.*)$' 
+   baseurlregex = '^' +  "static" + '/(?P<path>.*)$'
    urlpatterns += patterns('',
        (baseurlregex, 'django.views.static.serve',
        {'document_root':  settings.MEDIA_ROOT}),

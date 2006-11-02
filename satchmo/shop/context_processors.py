@@ -26,5 +26,6 @@ def settings(request):
     all_categories = Category.objects.all()
     return {'shop_base': settings.SHOP_BASE,
              'shop_name': shop_name,
+             'media_url': settings.MEDIA_URL,
              'cart_count': cart_count,
              'categories': all_categories}

@@ -17,7 +17,7 @@ Welcome to the shop.
             <div class = "productImage">    
            {% if item.main_image %}
               <center>
-              <a href="{{ item.get_absolute_url }}"><img src="{{ item.main_image.get_picture_url|thumbnail:"width=85" }}" width="85" /> </a>
+              <a href="{{ item.get_absolute_url }}"><img src="{{media_url}}{{ item.main_image.get_picture_url|thumbnail:"width=85" }}" width="85" /> </a>
               </center>
            {% endif %}     
             <p><a href="{{ item.get_absolute_url }}">{{ item.verbose_name }}</a></p>

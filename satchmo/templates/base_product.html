@@ -5,7 +5,7 @@
 {% block navbar %}
 
 <a href="{{shop_base}}">Home</a> 
-{% for urls in item.category.get_url_name %}
+{% for urls in item.category.all.0.get_url_name %}
     ::<a href="{{urls.1}}">{{ urls.0 }}</a>
 {% endfor %}
 
@@ -16,7 +16,7 @@
 <p>{{ item.description }}</p>
 <h3>${{ item.price }}</h3>
 {% for pic in item.itemimage_set.all %}
-    <img src="{{ pic.get_picture_url|thumbnail:"width=280" }}" width="280" />
+    <img src="{{media_url}}{{ pic.get_picture_url|thumbnail:"width=280" }}" width="280" />
 {% endfor %}
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}

@@ -36,12 +36,13 @@ SITE_ID = 1
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = os.path.join(DIRNAME, 'static')
-
+#Image files will be stored off of this path
+MEDIA_ROOT = os.path.join(DIRNAME, 'static/')
+#MEDIA_ROOT = "/static"
 # URL that handles the media served from MEDIA_ROOT.
 # Example: "http://media.lawrence.com"
-MEDIA_URL = 'site_media'
-
+#MEDIA_URL = 'site_media'
+MEDIA_URL="/static"
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".

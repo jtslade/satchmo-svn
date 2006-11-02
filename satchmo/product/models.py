@@ -242,7 +242,7 @@ class Item(models.Model):
         
 class ItemImage(models.Model):
     item = models.ForeignKey(Item, edit_inline=models.TABULAR, num_in_admin=3)
-    picture = ImageWithThumbnailField(upload_to=os.path.join(settings.DIRNAME,"static/images"))
+    picture = ImageWithThumbnailField(upload_to="./images") #Media root is automatically appended
     caption = models.CharField("Optional caption",maxlength=100,null=True, blank=True)
     sort = models.IntegerField("Sort Order", help_text="Leave blank to delete", core=True)
     
