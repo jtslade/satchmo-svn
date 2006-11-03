@@ -9,38 +9,38 @@ Checkout
 <h3>Checkout</h3>
 <div id="checkoutprogress">
 <ul>
-    <li class="first">Ship/Bill</li>
-    <li>Payment</li>
+    <li class="first"><a href="{{shop_base}}/checkout">Ship/Bill</a></li>
+    <li><a href="{{shop_base}}/checkout/pay">Payment</a></li>
     <li class="active">Confirmation</li>
 </ul>
 </div>
-<h4>Please validate the following information, then submit your order.</h4>
+<h3>Please validate the following information, then submit your order.</h3>
 
-<h5>Items Ordered</h5>
+<h4>Items Ordered</h4>
 {% for item in order.orderitem_set.all %}
 {{ item }} - ${{item.unitPrice}}<br/>
 {% endfor %}
 
-<h5>Contact Information</h5>
+<h4>Contact Information</h4>
 {{ order.contact.full_name }}<br/>
 {{ order.contact.email }}<br/>
-{{ order.contact.primary_phone }}<br/>
+{{ order.contact.primary_phone.phone }}<br/>
 
-<h5>Billing Information</h5>
+<h4>Billing Information</h4>
 {{ order.contact.billing_address.street1 }}<br/>
 {{ order.contact.billing_address.street2 }}<br/>
 {{ order.contact.billing_address.state }}<br/>
 {{ order.contact.billing_address.zip_code }}<br/>
 {{ order.contact.billing_address.country }}<br/>
 
-<h5>Shipping Information</h5>
+<h4>Shipping Information</h4>
 {{ order.contact.shipping_address.street1 }}<br/>
 {{ order.contact.shipping_address.street2 }}<br/>
 {{ order.contact.shipping_address.state }}<br/>
 {{ order.contact.shipping_address.zip_code }}<br/>
 {{ order.contact.shipping_address.country }}<br/>
 
-<h5>Payment</h5>
+<h4>Payment</h4>
 <form method="post" action=".">
 <input type="hidden" name="Process" value="True">
 <input type="submit" value="Purchase Items"/>

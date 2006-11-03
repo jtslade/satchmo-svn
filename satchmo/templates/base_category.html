@@ -12,6 +12,7 @@
 
 
 {% block content %}
+<div id="product_category">
 <h3>{{ category.name }}</h3>
     <ul>
     {% for item in category.item_set.all %} 
@@ -32,4 +33,5 @@
             </ul>
         {% endfor %}
 {% endif %}
+</div>
 {% endblock %}

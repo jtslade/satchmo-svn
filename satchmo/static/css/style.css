@@ -163,6 +163,9 @@ margin-bottom:2px;
 	background-color: #ccc;
 }
 
+#product_category ul li {
+	list-style: none;
+}
 
 #menu_container a
 {
