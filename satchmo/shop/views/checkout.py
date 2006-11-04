@@ -253,6 +253,7 @@ def pay_ship(request):
                 #order exists so get it
                 newOrder = Order.objects.get(id=request.session['orderID'])
                 newOrder.contact = contact
+                newOrder.removeAllItems() #Make sure any existing items are gone
             else:
                 #create a new order
                 newOrder = Order(contact=contact)
@@ -269,9 +270,15 @@ def pay_ship(request):
 def confirm(request):
     if not request.session.get('orderID', False):
         return http.HttpResponseRedirect('%s/checkout' % (settings.SHOP_BASE))
+    if request.session.get('cart',False):
+        tempCart = Cart.objects.get(id=request.session['cart'])
+        if tempCart.numItems == 0:
+            return render_to_response('checkout_empty_cart.html',RequestContext(request))
+    else:
+        return render_to_response('checkout_empty_cart.html',RequestContext(request))    
     if request.POST:
         #Do the credit card processing here
-        #If it passes, remove the items from the cart
+        tempCart.empty()
         #Convert order status
         #Redirect to the success page
         return http.HttpResponseRedirect('%s/checkout/success' % (settings.SHOP_BASE))

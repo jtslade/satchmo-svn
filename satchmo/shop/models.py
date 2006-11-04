@@ -70,6 +70,11 @@ class Cart(models.Model):
             itemToModify.delete()
         self.save()
     
+    def empty(self):
+        for item in self.cartitem_set.all():
+            item.delete()
+        self.save()
+    
     class Admin:
         list_display = ('date_time_created','numItems','total')
 

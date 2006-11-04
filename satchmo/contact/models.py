@@ -237,6 +237,11 @@ class Order(models.Model):
         return(self.supplierorderstatus_set.latest('date').status)
     status = property(_status)        
     
+    def removeAllItems(self):
+        for item in self.orderitem_set.all():
+            item.delete()
+        self.save()
+    
     def save(self):
         self.copyAddresses()
         super(Order, self).save() # Call the "real" save() method.
