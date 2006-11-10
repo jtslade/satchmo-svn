@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User 
 from satchmo.product.models import Sub_Item
+from satchmo.shipping.modules import activeModules
 #from satchmo.shop.models import Cart
 # Create your models here.
 
@@ -200,10 +201,14 @@ class Order(models.Model):
     billState=models.USStateField("State", blank=True)
     billZip_code=models.CharField("Zip Code", maxlength=50, blank=True)
     billCountry=models.CharField("Country", maxlength=50, blank=True)
+    sub_total = models.FloatField(max_digits=6, decimal_places=2, blank=True)
     total = models.FloatField(max_digits=6,decimal_places=2, blank=True)
     discount = models.FloatField(max_digits=6, decimal_places=2, blank=True, null=True)
     payment= models.CharField(choices=PAYMENT_CHOICES, maxlength=25, blank=True)
     method = models.CharField(choices=ORDER_CHOICES, maxlength=50, blank=True)
+    shippingDescription = models.CharField(maxlength=50, blank=True, null=True)
+    shippingMethod = models.CharField(maxlength=50, blank=True, null=True)
+    shippingModel = models.CharField(choices=activeModules, maxlength=30, blank=True, null=True)
     shippingCost = models.FloatField(max_digits=6, decimal_places=2, blank=True, null=True)
     tax = models.FloatField(max_digits=6, decimal_places=2, blank=True, null=True)
     date = models.DateTimeField(blank=True, null=True)

@@ -126,7 +126,7 @@ class payShipManipulator(forms.Manipulator):
         self.tempContact = Contact.objects.get(id=request.session['custID'])
         for module in activeModules:
             #Create the list of information the user will see
-            shipping_module = eval(module)
+            shipping_module = eval(module[0])
             shipping_instance = shipping_module(self.tempCart, self.tempContact)
             if shipping_instance.valid():
                 t = loader.get_template('shipping_options.html')
@@ -143,7 +143,7 @@ class payShipManipulator(forms.Manipulator):
             forms.SelectField(field_name="year_expires",choices=[(year,year) for year in range(year_now,year_now+5)], is_required=True,  
                                                         validator_list=[self.isCardExpired]),
             forms.TextField(field_name="ccv", length=4, is_required=True, validator_list=[validators.isOnlyDigits]),
-            forms.RadioSelectField(field_name="shipping",choices=shipping_options),
+            forms.RadioSelectField(field_name="shipping",choices=shipping_options, is_required=True),
             forms.TextField(field_name="discount",length=30, validator_list=[self.isValidDiscount]),
             )
             
@@ -169,9 +169,23 @@ class payShipManipulator(forms.Manipulator):
             raise validators.ValidationError(msg)
         # todo: validate that it can work with these products   
     
-    def save(self, newOrder):
-        newOrder.total = self.tempCart.total
-        newOrder.discount = 1.2
+    def save(self, newOrder, new_data, cart, contact):
+        shipping_module = eval(new_data['shipping'])
+        shipping_instance = shipping_module(cart, contact)
+        newOrder.shippingDescription = shipping_instance.description()
+        newOrder.shippingMethod = shipping_instance.method()
+        newOrder.shippingCost = shipping_instance.cost()
+        newOrder.shippingModel = new_data['shipping']
+        
+        if new_data.get('discount',False):
+            discountObject = Discount.objects.filter(code=new_data['discount'])[0]
+            discount = discountObject.amount
+        else: 
+            discount = 0
+        newOrder.discount = discount
+        newOrder.total = float(cart.total) + float(shipping_instance.cost()) - float(discount)
+        newOrder.tax = 0
+        newOrder.sub_total = cart.total
         newOrder.save()
         newOrder.copyAddresses()
         for item in self.tempCart.cartitem_set.all():
@@ -258,7 +272,7 @@ def pay_ship(request):
                 #create a new order
                 newOrder = Order(contact=contact)
             #copy data over to the oder
-            manipulator.save(newOrder)
+            manipulator.save(newOrder, new_data, tempCart, contact)
             request.session['orderID'] = newOrder.id
             return http.HttpResponseRedirect('%s/checkout/confirm' % (settings.SHOP_BASE))
     else:

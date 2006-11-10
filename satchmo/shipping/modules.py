@@ -2,7 +2,9 @@
 Each shipping option uses the data in an Order object to calculate the shipping cost and return the value
 """
 
-activeModules = ["FlatRate","PerItem"]
+activeModules = (
+("FlatRate","FlatRate"),
+("PerItem", "PerItem"))
 
 class FlatRate(object):
     

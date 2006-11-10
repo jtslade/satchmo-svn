@@ -18,7 +18,7 @@ Checkout
 
 <h4>Items Ordered</h4>
 {% for item in order.orderitem_set.all %}
-{{ item }} - ${{item.unitPrice}}<br/>
+{{ item }} - ${{item.unitPrice}} x {{item.quantity}} = ${{item.lineItemPrice}}<br/>
 {% endfor %}
 
 <h4>Contact Information</h4>
@@ -33,14 +33,23 @@ Checkout
 {{ order.contact.billing_address.zip_code }}<br/>
 {{ order.contact.billing_address.country }}<br/>
 
-<h4>Shipping Information</h4>
+<h4>Shipping Address</h4>
 {{ order.contact.shipping_address.street1 }}<br/>
 {{ order.contact.shipping_address.street2 }}<br/>
 {{ order.contact.shipping_address.state }}<br/>
 {{ order.contact.shipping_address.zip_code }}<br/>
 {{ order.contact.shipping_address.country }}<br/>
+<h4>Shipping Method</h4>
+{{ order.shippingDescription }}<br/>
+{{ order.shippingMethod }} <br/>
+{{ order.shippingCost }} <br/>
 
 <h4>Payment</h4>
+<h4>Total</h4>
+Discount - {{order.discount}}<br/>
+Shipping + {{order.shippingCost}}<br/>
+Tax + {{order.tax}}<br/>
+Total = {{order.total}}<br/>
 <form method="post" action=".">
 <input type="hidden" name="Process" value="True">
 <input type="submit" value="Purchase Items"/>
