@@ -211,7 +211,7 @@ class Order(models.Model):
     shippingModel = models.CharField(choices=activeModules, maxlength=30, blank=True, null=True)
     shippingCost = models.FloatField(max_digits=6, decimal_places=2, blank=True, null=True)
     tax = models.FloatField(max_digits=6, decimal_places=2, blank=True, null=True)
-    date = models.DateTimeField(blank=True, null=True)
+    timeStamp = models.DateTimeField(blank=True, null=True, auto_now_add=True)
     
     def __str__(self):
         return self.contact.full_name
@@ -239,7 +239,7 @@ class Order(models.Model):
         pass
     
     def _status(self):
-        return(self.supplierorderstatus_set.latest('date').status)
+        return(self.supplierorderstatus_set.latest('timeStamp').status)
     status = property(_status)        
     
     def removeAllItems(self):
@@ -256,11 +256,11 @@ class Order(models.Model):
         (None, {'fields': ('contact','method',)}),
         ('Shipping Information', {'fields': ('shipStreet1','shipStreet2', 'shipCity','shipState', 'shipZip_code','shipCountry',), 'classes': 'collapse'}),
         ('Billing Information', {'fields': ('billStreet1','billStreet2', 'billCity','billState', 'billZip_code','billCountry',), 'classes': 'collapse'}),
-        ('Totals', {'fields': ( 'shippingCost', 'tax','total','date','payment',),}),       
+        ('Totals', {'fields': ( 'shippingCost', 'tax','total','timeStamp','payment',),}),       
         )
-        list_display = ('contact', 'date', 'total','status')
-        list_filter = ['date','contact']
-        date_hierarchy = 'date'
+        list_display = ('contact', 'timeStamp', 'total','status')
+        list_filter = ['timeStamp','contact']
+        date_hierarchy = 'timeStamp'
     class Meta:
         verbose_name = "Product Order"
         
@@ -278,7 +278,7 @@ class OrderStatus(models.Model):
     order = models.ForeignKey(Order, edit_inline=models.STACKED, num_in_admin=1)
     status = models.CharField(maxlength=20, choices=ORDER_STATUS, core=True, blank=True)
     notes = models.CharField(maxlength=100, blank=True)
-    date = models.DateTimeField(blank=True)
+    timeStamp = models.DateTimeField(blank=True, auto_now_add=True)
     
     def __str__(self):
         return self.status

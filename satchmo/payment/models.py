@@ -1,10 +1,19 @@
 from django.db import models
 from satchmo.contact.models import Order
+import base64
+from Crypto.Cipher import Blowfish
+from django.conf import settings
 
 # Create your models here.
 PAYMENTCHOICES = (
  ('CreditCard','CreditCard'),
 )
+
+CREDITCHOICES = (
+                ('Visa','Visa'),
+                ('Mastercard','Mastercard'),
+                ('Discover','Discover'),
+                )
 
 
 class PaymentOption(models.Model):
@@ -19,7 +28,17 @@ class PaymentOption(models.Model):
         
 class CreditCardDetail(models.Model):
     order = models.ForeignKey(Order, edit_inline=True, num_in_admin=1, max_num_in_admin=1)
-    ccnum = models.IntegerField(core=True)
+    creditType = models.CharField(maxlength=16, choices=CREDITCHOICES)
+    displayCC = models.CharField(maxlength=4, core=True)
+    encryptedCC = models.CharField(maxlength=30, blank=True, null=True)
     expireMonth = models.IntegerField()
     expireYear = models.IntegerField()
+    ccv = models.IntegerField(blank=True, null=True)
     
+    
+    def storeCC(self, ccnum):
+        # Take as input a valid cc, encrypt it and store the last 4 digits in a visible form
+        secret_key = settings.SECRET_KEY
+        encryption_object = Blowfish.new(secret_key)
+        self.encryptedCC = base64.b64encode(encryption_object.encrypt(ccnum))
+        self.displayCC = ccnum[-4:]

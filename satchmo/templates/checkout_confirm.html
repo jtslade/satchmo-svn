@@ -44,12 +44,16 @@ Checkout
 {{ order.shippingMethod }} <br/>
 {{ order.shippingCost }} <br/>
 
-<h4>Payment</h4>
 <h4>Total</h4>
 Discount - {{order.discount}}<br/>
 Shipping + {{order.shippingCost}}<br/>
 Tax + {{order.tax}}<br/>
 Total = {{order.total}}<br/>
+
+<h4>Payment</h4>
+Your {{ order.creditcarddetail_set.all.0.creditType }} card ending in 
+{{ order.creditcarddetail_set.all.0.creditType.displayCC}} will be charged - $ {{order.total}}
+
 <form method="post" action=".">
 <input type="hidden" name="Process" value="True">
 <input type="submit" value="Purchase Items"/>

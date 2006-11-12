@@ -19,12 +19,18 @@ def confirm_info(request):
             return render_to_response('checkout_empty_cart.html',RequestContext(request))
     else:
         return render_to_response('checkout_empty_cart.html',RequestContext(request))    
+    orderToProcess = Order.objects.get(id=request.session['orderID'])
     if request.POST:
-        #Do the credit card processing here
+        #Do the credit card processing here & if successful, empty the cart and update the status
         tempCart.empty()
-        #Convert order status
+        #Update status
+        status = OrderStatus()
+        status.status = "Pending"
+        status.notes = "Order successfully submitted"
+        status.order = orderToProcess
+        status.save()
+        del request.session['orderID']
         #Redirect to the success page
         return http.HttpResponseRedirect('%s/checkout/success' % (settings.SHOP_BASE))
     else:
-        order = Order.objects.get(id=request.session['orderID'])
-        return render_to_response('checkout_confirm.html', {'order': order}, RequestContext(request))
+        return render_to_response('checkout_confirm.html', {'order': orderToProcess}, RequestContext(request))

@@ -12,22 +12,20 @@ from django.conf import settings
 from django import forms
 from django.core import validators
 from satchmo.discount.models import Discount
-from datetime import date
+#from datetime import date
+import datetime
 import calendar
 from satchmo.shop.views.utils import CreditCard
 from satchmo.shipping.modules import *
-from satchmo.contact.models import Order, OrderItem, OrderStatus
+from satchmo.contact.models import Order, OrderItem
+from satchmo.payment.models import CREDITCHOICES, CreditCardDetail
 
 selection = "Please Select"
-credit_types = (
-                ('Visa','Visa'),
-                ('Mastercard','Mastercard'),
-                ('Discover','Discover'),
-                )
+
 
 class payShipManipulator(forms.Manipulator):
     def __init__(self, request):
-        year_now = date.today().year
+        year_now = datetime.date.today().year
 
         shipping_options = []
         self.tempCart = Cart.objects.get(id=request.session['cart'])
@@ -45,7 +43,7 @@ class payShipManipulator(forms.Manipulator):
                     'expected_delivery' : shipping_instance.expectedDelivery() })
                 shipping_options.append((shipping_instance.id, t.render(c)))
         self.fields = (
-            forms.SelectField(field_name="credit_type", choices=credit_types,is_required=True),
+            forms.SelectField(field_name="credit_type", choices=CREDITCHOICES,is_required=True),
             forms.TextField(field_name="credit_number",length=20, is_required=True, validator_list=[self.isCardValid]),
             forms.SelectField(field_name="month_expires",choices=[(month,month) for month in range(1,13)], is_required=True),
             forms.SelectField(field_name="year_expires",choices=[(year,year) for year in range(year_now,year_now+5)], is_required=True,  
@@ -59,7 +57,7 @@ class payShipManipulator(forms.Manipulator):
         entered_year = int(all_data["year_expires"])
         entered_month = int(all_data["month_expires"])
         max_day = calendar.monthrange(entered_year,entered_month)[1]
-        if date.today() > date(year=entered_year, month=entered_month,day=max_day):
+        if datetime.date.today() > datetime.date(year=entered_year, month=entered_month,day=max_day):
             raise validators.ValidationError("Your card has expired.")
     
     def isCardValid(self, field_data, all_data):
@@ -78,6 +76,7 @@ class payShipManipulator(forms.Manipulator):
         # todo: validate that it can work with these products   
     
     def save(self, newOrder, new_data, cart, contact):
+        # Save the shipping info
         shipping_module = eval(new_data['shipping'])
         shipping_instance = shipping_module(cart, contact)
         newOrder.shippingDescription = shipping_instance.description()
@@ -85,22 +84,43 @@ class payShipManipulator(forms.Manipulator):
         newOrder.shippingCost = shipping_instance.cost()
         newOrder.shippingModel = new_data['shipping']
         
+        #Process any discounts
         if new_data.get('discount',False):
             discountObject = Discount.objects.filter(code=new_data['discount'])[0]
             discount = discountObject.amount
         else: 
             discount = 0
         newOrder.discount = discount
+        
+        #Calculate the totals
         newOrder.total = float(cart.total) + float(shipping_instance.cost()) - float(discount)
         newOrder.tax = 0
         newOrder.sub_total = cart.total
         newOrder.save()
         newOrder.copyAddresses()
+        
+        #Add all the items in the cart to the order
         for item in self.tempCart.cartitem_set.all():
             newOrderItem = OrderItem(order=newOrder, item=item.subItem, quantity=item.quantity, 
                                      unitPrice=item.subItem.unit_price, lineItemPrice=item.line_total)       
             newOrderItem.save()
-
+        
+        # Save the credit card information
+        cc = CreditCardDetail()
+        cc.storeCC(new_data['credit_number'])
+        cc.order = newOrder
+        cc.expireMonth = new_data['month_expires']
+        cc.expireYear = new_data['year_expires']
+        cc.ccv = new_data['ccv']
+        cc.creditType = new_data['credit_type']
+        cc.save()
+        
+        # Make final additions to the order info
+        newOrder.method = "Online"
+        newOrder.payment = "Credit Card"
+        newOrder.save()
+        
+        
 def pay_ship_info(request):
     #First verify that the customer exists
     if not request.session.get('custID', False):

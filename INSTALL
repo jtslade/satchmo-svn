@@ -17,6 +17,10 @@ svn co http://svn.satchmo.python-hosting.com/trunk/
 To use the image functions, you will need a recent copy of the Python Imaging
 Library (PIL) available here - http://www.pythonware.com/products/pil/#pil115
 
+The python cryptography Toolkit is required for storing credit card numbers. You
+can find it here -
+http://www.amk.ca/python/code/crypto
+
 For the timezone functions you will need pytz - World Time Zone Definitions for
 python available here - http://pytz.sourceforge.net
 
