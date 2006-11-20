@@ -14,6 +14,7 @@ from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 from satchmo.G11n.models import *
 
+
 def find_site(): 
     """Find the site by looking at the environment."""
     try: 
@@ -192,6 +193,17 @@ def load_data():
     i3.save()
     i4.create_subs = True
     i4.save()
+    #This doesn't work yet
+    #print "Adding images to the items"
+    #image1 = ItemImage(item=i1, picture="./images/django-rocks.gif", sort=1)
+    #image1.save()
+    #image2 = ItemImage(item=i2, picture="./images/python-rocks.gif", sort=1)
+    #image2.save()
+    #image3 = ItemImage(item=i3, picture="./images/really-neat-book.gif", sort=1)
+    #image3.save()
+    #image4 = ItemImage(item=i4, picture="./images/robots-attack.gif", sort=1)
+    #image4.save()
+    
     print "Create a test user..."
     user = User.objects.create_user('csmith', 'tester@testsite.com', 'test')
     user.save()

@@ -38,7 +38,18 @@ class CreditCardDetail(models.Model):
     
     def storeCC(self, ccnum):
         # Take as input a valid cc, encrypt it and store the last 4 digits in a visible form
+        # Must remember to save it after calling!
         secret_key = settings.SECRET_KEY
         encryption_object = Blowfish.new(secret_key)
         self.encryptedCC = base64.b64encode(encryption_object.encrypt(ccnum))
         self.displayCC = ccnum[-4:]
+    
+    def _decryptCC(self):
+        secret_key = settings.SECRET_KEY
+        encryption_object = Blowfish.new(secret_key)
+        return(encryption_object.decrypt(base64.b64decode(self.encryptedCC)))
+    decryptedCC = property(_decryptCC) 
+
+    def _expireDate(self):
+        return(str(self.expireMonth) + "/" + str(self.expireYear))
+    expirationDate = property(_expireDate)

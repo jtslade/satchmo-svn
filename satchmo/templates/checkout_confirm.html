@@ -14,8 +14,12 @@ Checkout
     <li class="active">Confirmation</li>
 </ul>
 </div>
-<h3>Please validate the following information, then submit your order.</h3>
-
+{% if errors %}
+    <h3>The following error was returned while trying to process your card.  Please correct and resubmit</h3>
+    {{ errors }}
+{% else %}
+    <h3>Please validate the following information, then submit your order.</h3>
+{% endif %}
 <h4>Items Ordered</h4>
 {% for item in order.orderitem_set.all %}
 {{ item }} - ${{item.unitPrice}} x {{item.quantity}} = ${{item.lineItemPrice}}<br/>
@@ -27,32 +31,34 @@ Checkout
 {{ order.contact.primary_phone.phone }}<br/>
 
 <h4>Billing Information</h4>
-{{ order.contact.billing_address.street1 }}<br/>
-{{ order.contact.billing_address.street2 }}<br/>
-{{ order.contact.billing_address.state }}<br/>
-{{ order.contact.billing_address.zip_code }}<br/>
-{{ order.contact.billing_address.country }}<br/>
+{{ order.fullBillStreet }}<br/>
+{{ order.billState }}<br/>
+{{ order.billZip_code }}<br/>
+{{ order.billingCountry }}<br/>
 
 <h4>Shipping Address</h4>
-{{ order.contact.shipping_address.street1 }}<br/>
-{{ order.contact.shipping_address.street2 }}<br/>
-{{ order.contact.shipping_address.state }}<br/>
-{{ order.contact.shipping_address.zip_code }}<br/>
-{{ order.contact.shipping_address.country }}<br/>
+{{ order.fullShipStreet }}<br/>
+{{ order.shipState }}<br/>
+{{ order.shipZip_code }}<br/>
+{{ order.shipCountry }}<br/>
 <h4>Shipping Method</h4>
 {{ order.shippingDescription }}<br/>
 {{ order.shippingMethod }} <br/>
 {{ order.shippingCost }} <br/>
 
 <h4>Total</h4>
-Discount - {{order.discount}}<br/>
+{% if order.discount %}
+    Discount - {{order.discount}}<br/>
+{% endif %}
 Shipping + {{order.shippingCost}}<br/>
-Tax + {{order.tax}}<br/>
+{% if order.tax %}
+    Tax + {{order.tax}}<br/>
+{% endif %}
 Total = {{order.total}}<br/>
 
 <h4>Payment</h4>
-Your {{ order.creditcarddetail_set.all.0.creditType }} card ending in 
-{{ order.creditcarddetail_set.all.0.creditType.displayCC}} will be charged - $ {{order.total}}
+Your {{ order.CC.creditType }} card ending in 
+{{ order.CC.displayCC}} will be charged - $ {{order.total}}
 
 <form method="post" action=".">
 <input type="hidden" name="Process" value="True">

@@ -239,13 +239,31 @@ class Order(models.Model):
         pass
     
     def _status(self):
-        return(self.supplierorderstatus_set.latest('timeStamp').status)
+        return(self.orderstatus_set.latest('timeStamp').status)
     status = property(_status)        
     
     def removeAllItems(self):
         for item in self.orderitem_set.all():
             item.delete()
         self.save()
+    
+    def _CC(self):
+        return(self.creditcarddetail_set.all()[0])
+    CC = property(_CC)
+    
+    def _fullBillStreet(self, delim="<br/>"):
+        if self.billStreet2:
+            return (self.billStreet1 + delim + self.billStreet2)
+        else:
+            return (self.billStreet1)
+    fullBillStreet = property(_fullBillStreet)
+    
+    def _fullShipStreet(self, delim="<br/>"):
+        if self.shipStreet2:
+            return (self.shipStreet1 + delim + self.shipStreet2)
+        else:
+            return (self.shipStreet1)
+    fullShipStreet = property(_fullShipStreet)
     
     def save(self):
         self.copyAddresses()
@@ -278,9 +296,8 @@ class OrderStatus(models.Model):
     order = models.ForeignKey(Order, edit_inline=models.STACKED, num_in_admin=1)
     status = models.CharField(maxlength=20, choices=ORDER_STATUS, core=True, blank=True)
     notes = models.CharField(maxlength=100, blank=True)
-    timeStamp = models.DateTimeField(blank=True, auto_now_add=True)
+    timeStamp = models.DateTimeField()
     
     def __str__(self):
         return self.status
- 
 
