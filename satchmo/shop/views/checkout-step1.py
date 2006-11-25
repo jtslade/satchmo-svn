@@ -36,7 +36,9 @@ class ContactInfoManipulator(forms.Manipulator):
         countries = [(self.country.iso2_code, self.country.name)]
         for country in Country.objects.filter(display=True):
             country_to_choose = (country.iso2_code, country.name)
-            countries.append(country_to_choose)
+            #Make sure the default only shows up once
+            if self.country.iso2_code <> country.iso2_code:
+                countries.append(country_to_choose)
         self.fields = (
             forms.EmailField(field_name="email", length=30, is_required=True),
             forms.TextField(field_name="first_name",length=30, is_required=True),
