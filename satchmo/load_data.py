@@ -1,6 +1,7 @@
 import os, sys
 import django.core.management, django.core
 from os.path import isdir, isfile, join, dirname
+import string
 
 
 os.environ["DJANGO_SETTINGS_MODULE"]="satchmo.settings"
@@ -13,7 +14,8 @@ from satchmo.shop.models import Config
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 from satchmo.G11n.models import *
-
+import urllib
+import os
 
 def find_site(): 
     """Find the site by looking at the environment."""
@@ -211,24 +213,55 @@ def load_data():
     c1.save()
     print "Creating country..."
     #Create the US - all data will be loaded once the internationalization piece is completed
-    c1 = Country(name="United States", iso3_code="USA", iso2_code="US", region="am.n", adm_area="st",display=True)
-    c1.save()
-    area1 = Area(country=c1, name_id="MN", name="Minnesota", alt_name="Minnesota", abbrev="MN", reg_area="st")    
-    area1.save()
-    area2 = Area(country=c1, name_id="CA", name="California", alt_name="California", abbrev="CA", reg_area="st")
-    area2.save()
-def main(): 
-    """Flush it all, baby!"""
+    #c1 = Country(name="United States", iso3_code="USA", iso2_code="US", region="am.n", adm_area="st",display=True)
+    #c1.save()
+    #area1 = Area(country=c1, name_id="MN", name="Minnesota", alt_name="Minnesota", abbrev="MN", reg_area="st")    
+    #area1.save()
+    #area2 = Area(country=c1, name_id="CA", name="California", alt_name="California", abbrev="CA", reg_area="st")
+    #area2.save()
+
+def eraseDB(): 
+    """Erase database and init it"""
     try: 
         site, settings = find_site()
         delete_db(settings)
         init_and_install()
-        load_data()
     except AssertionError, ex: 
         print ex.args[0]
-        
+
+def load_webda():
+    """Load internationalization data"""
+    baseURL = "http://svn.webda.python-hosting.com/branches"
+    dataFile = "Webda-0.9.tar.gz"
+    modelFile = "Webda-Django-0.9.tar.gz"
+    loaderFile = "webda.py"
+    print "Retrieving data files..."
+    if os.path.isfile(dataFile):
+        print "%s - already exists.  Skipping download" % dataFile
+    else:
+        urllib.urlretrieve(baseURL+"/"+dataFile, dataFile)
+    if os.path.isfile(modelFile):
+        print "%s - already exists.  Skipping download" % dataFile
+    else:
+        urllib.urlretrieve(baseURL+"/"+modelFile, modelFile)
+    urllib.urlretrieve(baseURL+"/"+loaderFile, loaderFile)
+    print "Extracting files..."
+    os.system('tar -xvzf %s' % modelFile)
+    os.system('tar -xvzf %s -C ./i18n' % dataFile)
+
 if __name__ == '__main__': 
-    main()
+    responseWebda = string.lower(raw_input("Type 'yes' to load internationalization data: "))
+    if responseWebda == 'yes':
+        load_webda()
+    response = string.lower(raw_input("Type 'yes' to erase the database and reinstall all models: "))
+    if response == 'yes':
+        eraseDB()
+    if responseWebda =='yes':
+        os.system('python webda.py')
+    response = string.lower(raw_input("Type 'yes' to load sample store data: "))
+    if response == 'yes':
+        load_data()
+
 
    
 

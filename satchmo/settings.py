@@ -92,7 +92,7 @@ INSTALLED_APPS = (
     'satchmo.discount',
     'satchmo.supplier',
     'satchmo.thumbnail',
-    
+    'satchmo.i18n',
 )
 
 #This is the base url for the shop.  Only include a leading slash

@@ -1,0 +1,232 @@
+# List of languages.
+# Copyright (c) 2006, Jonás Melián
+# This data sheet is licensed under CC by-nc-sa. Read the LICENSE file
+#
+#
+# Information:
+#   http://www.loc.gov/standards/iso639-2/
+#
+# Alpha-2 code is the ISO 639-1, and alpha-3 code is the ISO 639-2.
+#
+# It's used the 'synonym' field because some languages are
+# called with another name too.
+#
+# * code: Language, name, iso3_code, iso2_code, synonym *
+#
+# Language name : Alpha-3 ISO code : Alpha-2 ISO code : Language synonym
+
+Abkhazian:abk:ab:
+Afar:aar:aa:
+Afrikaans:afr:af:
+Akan:aka:ak:
+Albanian:alb:sq:
+Altaic:tut::Gagauz
+Amharic:amh:am:
+Arabic:ara:ar:
+Aragonese:arg:an:
+Armenian:arm:hy:
+Aromanian:rup::
+Assamese:asm:as:
+Austronesian:map::Carolinian; Futunan; Ulithian
+Avaric:ava:av:
+Avestan:ave:ae:
+Aymara:aym:ay:
+Azerbaijani:aze:az:
+Bambara:bam:bm:
+Bantu:bnt::Comorian
+Bashkir:bak:ba:
+Basque:baq:eu:
+Belarusian:bel:be:
+Bengali:ben:bn:
+Berber:ber::Tamazight
+Bihari:bih:bh:
+Bislama:bis:bi:
+Bosnian:bos:bs:
+Breton:bre:br:
+Bulgarian:bul:bg:
+Burmese:bur:my:
+Catalan:cat:ca:Valencian
+Chamorro:cha:ch:
+Chechen:che:ce:
+Chinese:chi:zh:
+Chuukese:chk::
+Chuvash:chv:cv:
+Cornish:cor:kw:
+Corsican:cos:co:
+Cree:cre:cr:
+Creoles and pidgins, English based:cpe::Pitkern
+Creoles and pidgins, French-based:cpf::Seychellois
+Croatian:scr:hr:
+Czech:cze:cs:
+Danish:dan:da:
+Divehi:div:dv:Dhivehi; Maldivian
+Dogri:doi::
+Dutch:dut:nl:Flemish
+Dzongkha:dzo:dz:
+English:eng:en:
+Esperanto:epo:eo:
+Estonian:est:et:
+Ewe:ewe:ee:
+Faroese:fao:fo:
+Fijian:fij:fj:
+Filipino:fil::Pilipino
+Finnish:fin:fi:
+French:fre:fr:
+Fulah:ful:ff:
+Gaelic:gla:gd:Scottish Gaelic
+Galician:glg:gl:
+Ganda:lug:lg:
+Georgian:geo:ka:
+German:ger:de:
+Greek:gre:el:
+Guarani:grn:gn:
+Gujarati:guj:gu:
+Haitian Creole:hat:ht:Haitian
+Hausa:hau:ha:
+Hebrew:heb:he:
+Herero:her:hz:
+Hindi:hin:hi:
+Hiri Motu:hmo:ho:
+Hungarian:hun:hu:
+Icelandic:ice:is:
+Ido:ido:io:
+Igbo:ibo:ig:
+Indonesian:ind:id:
+Interlingua (IALA):ina:ia:
+Interlingue:ile:ie:
+Inuktitut:iku:iu:
+Inupiaq:ipk:ik:
+Irish:gle:ga:
+Italian:ita:it:
+Japanese:jpn:ja:
+Javanese:jav:jv:
+Kalaallisut:kal:kl:Greenlandic
+Kannada:kan:kn:
+Kanuri:kau:kr:
+Kashmiri:kas:ks:
+Kazakh:kaz:kk:
+Khmer:khm:km:
+Kikuyu:kik:ki:Gikuyu
+Kinyarwanda:kin:rw:
+Kirghiz:kir:ky:
+Komi:kom:kv:
+Kongo:kon:kg:
+Konkani:kok::
+Korean:kor:ko:
+Kosraean:kos::
+Kuanyama:kua:kj:Kwanyama
+Kurdish:kur:ku:
+Lao:lao:lo:
+Latin:lat:la:
+Latvian:lav:lv:
+Letzeburgesch:ltz:lb:Luxembourgish
+Limburgish:lim:li:Limburgan; Limburger
+Lingala:lin:ln:
+Lithuanian:lit:lt:
+Low German:nds::Low Saxon
+Luba-Katanga:lub:lu:
+Macedonian:mac:mk:
+Maithili:mai::
+Malagasy:mlg:mg:
+Malay:may:ms:
+Malayalam:mal:ml:
+Maltese:mlt:mt:
+Manx:glv:gv:
+Maori:mao:mi:
+Marathi:mar:mr:
+Marshallese:mah:mh:
+Mirandese:mwl::
+Moldavian:mol:mo:
+Mongolian:mon:mn:
+Nauru:nau:na:
+Navajo:nav:nv:Navaho
+Ndebele, North:nde:nd:
+Ndebele, South:nbl:nr:
+Ndonga:ndo:ng:
+Nepali:nep:ne:
+Niuean:niu::
+Northern Sami:sme:se:
+Norwegian:nor:no:
+Norwegian Bokmål:nob:nb:
+Norwegian Nynorsk:nno:nn:
+Nyanja:nya:ny:Chewa; Chichewa
+Occitan:oci:oc:Provençal
+Ojibwa:oji:oj:
+Oriya:ori:or:
+Oromo:orm:om:
+Ossetic:oss:os:Ossetian
+Palauan:pau::
+Pali:pli:pi:
+Panjabi:pan:pa:Punjabi
+Papiamento:pap::
+Persian:per:fa:
+Pohnpeian:pon::
+Polish:pol:pl:
+Portuguese:por:pt:
+Pushto:pus:ps:
+Quechua:que:qu:
+Raeto-Romance:roh:rm:
+Romance:roa::Dgèrnésiais; Jèrriais
+Romanian:rum:ro:
+Romany:rom::
+Rundi:run:rn:
+Russian:rus:ru:
+Samoan:smo:sm:
+Sango:sag:sg:
+Sanskrit:san:sa:
+Sardinian:srd:sc:
+Scots:sco::
+Serbian:scc:sr:
+Shona:sna:sn:
+Sichuan Yi:iii:ii:
+Sindhi:snd:sd:
+Sinhala:sin:si:Sinhalese
+Sino-Tibetan:sit::Bodo
+Slovak:slo:sk:
+Slovenian:slv:sl:
+Somali:som:so:
+Sorbian languages:wen::
+Sotho, Northern:nso::
+Sotho, Southern:sot:st:
+Spanish:spa:es:Castilian
+Sundanese:sun:su:
+Swahili:swa:sw:
+Swati:ssw:ss:
+Swedish:swe:sv:
+Syriac:syr::
+Tagalog:tgl:tl:
+Tahitian:tah:ty:
+Tajik:tgk:tg:
+Tamil:tam:ta:
+Tatar:tat:tt:
+Telugu:tel:te:
+Tetum:tet::
+Thai:tha:th:
+Tibetan:tib:bo:
+Tigrinya:tir:ti:
+Tok Pisin:tpi::
+Tokelau:tkl::
+Tonga (Tonga Islands):ton:to:
+Tsonga:tso:ts:
+Tswana:tsn:tn:
+Turkish:tur:tr:
+Turkmen:tuk:tk:
+Tuvalu:tvl::
+Twi:twi:tw:
+Uighur:uig:ug:Uyghur
+Ukrainian:ukr:uk:
+Urdu:urd:ur:
+Uzbek:uzb:uz:
+Venda:ven:ve:
+Vietnamese:vie:vi:
+Volapük:vol:vo:
+Walloon:wln:wa:
+Welsh:wel:cy:
+Western Frisian:fry:fy:
+Wolof:wol:wo:
+Xhosa:xho:xh:
+Yapese:yap::
+Yiddish:yid:yi:
+Yoruba:yor:yo:
+Zhuang:zha:za:Chuang
+Zulu:zul:zu:
