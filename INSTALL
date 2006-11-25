@@ -43,6 +43,8 @@ Then, edit local_settings.py to have you database specific information::
     DATABASE_USER = 'Your DB User Here'
     SECRET_KEY = 'Your secret key her'
 
+To use authorize.net, you'll also need to configure those settings in local_settings.
+
 Next, install your databases::
     
     cd /path/to/satchmo
@@ -55,14 +57,18 @@ Once the database is installed, try the development server::
 Point your browser to localhost:8000 and you should see the admin interface
 
 Several scripts are included to load temporary data or localization data.
-To see how Satchmo works, try loading the test data - WARNING this will 
+To see how Satchmo works, try loading the test data - WARNING this can
 erase your existing Satchmo database.::
 
     python /path/to/satchmo/load_data.py
 
-To load the localization data::
+You will be asked a series of questions.  Answer yes to load the latest 
+internationalization data.
 
-    python /path/to/satchmo/load_G11n.py
+Note:  you need to make sure your path settings include the path to Satchmo
+as well as Django.  To make loading data easier, you can set these paths
+at the top of the load_data.py script.  Try this if you're getting any errors trying
+to find Satchmo.
 
 You can point your browser to localhost:8000/shop to see the default shop.
 

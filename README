@@ -65,6 +65,7 @@ of very sophisticated features.  Some highlights include:
 -   Products also have the capability to have multiple images associated with 
     them.  Each image is automatically scaled to a thumbnail size of your choosing 
     and is automatically cached for maximum performance.
+-   Support for Authorize.net
 
 Models are currently in place to allow additional shipping and payment options 
 as well as flexibly discount options.
