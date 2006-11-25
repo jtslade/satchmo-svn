@@ -12,7 +12,7 @@ from satchmo.contact.models import Contact, AddressBook, PhoneNumber
 from django.conf import settings
 from django import forms
 from django.core import validators
-from satchmo.G11n.models import Country
+from satchmo.i18n.models import Country
 
 selection = "Please Select"
 

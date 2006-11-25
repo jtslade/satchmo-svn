@@ -2,7 +2,7 @@ from django.db import models
 from satchmo.product.models import Item, Sub_Item
 from django.contrib.sites.models import Site
 from satchmo.contact.models import Contact
-from satchmo.G11n.models import Country
+from satchmo.i18n.models import Country
 
 class Config(models.Model):
     """
