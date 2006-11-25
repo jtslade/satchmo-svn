@@ -1,21 +1,18 @@
 import os, sys
-import django.core.management, django.core
+import urllib
 from os.path import isdir, isfile, join, dirname
 import string
+sys.path.insert(0, "django-src-here")
+sys.path.insert(0, "satchmo-src-here")
 
 
 os.environ["DJANGO_SETTINGS_MODULE"]="satchmo.settings"
 
-from satchmo.contact.models import *
-from satchmo.product.models import * 
-from satchmo.supplier.models import *
+import django.core.management, django.core
 from django.conf import settings
-from satchmo.shop.models import Config
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
-from satchmo.G11n.models import *
-import urllib
-import os
+
 
 def find_site(): 
     """Find the site by looking at the environment."""
@@ -53,6 +50,10 @@ def init_and_install():
     django.core.management.syncdb()
     
 def load_data():
+    from satchmo.contact.models import Contact, AddressBook, PhoneNumber
+    from satchmo.product.models import Item, Category, OptionGroup, OptionItem 
+    from satchmo.supplier.models import Organization
+    from satchmo.shop.models import Config
     #Load basic configuration information
     print "Creating site..."
     site = Site.objects.get(id=settings.SITE_ID)
@@ -211,7 +212,7 @@ def load_data():
     user.save()
     c1.user = user
     c1.save()
-    print "Creating country..."
+    #print "Creating country..."
     #Create the US - all data will be loaded once the internationalization piece is completed
     #c1 = Country(name="United States", iso3_code="USA", iso2_code="US", region="am.n", adm_area="st",display=True)
     #c1.save()
