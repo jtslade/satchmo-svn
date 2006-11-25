@@ -258,7 +258,9 @@ if __name__ == '__main__':
     if response == 'yes':
         eraseDB()
     if responseWebda =='yes':
-        os.system('python webda.py')
+        #os.system('python webda.py')
+        import webda
+        webda.main()
     response = string.lower(raw_input("Type 'yes' to load sample store data: "))
     if response == 'yes':
         load_data()
