@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User 
-from satchmo.product.models import Sub_Item
+from satchmo.product.models import SubItem
 from satchmo.shipping.modules import activeModules
 #from satchmo.shop.models import Cart
 # Create your models here.
@@ -284,7 +284,7 @@ class Order(models.Model):
         
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, edit_inline=models.TABULAR, num_in_admin=3)
-    item = models.ForeignKey(Sub_Item)
+    item = models.ForeignKey(SubItem)
     quantity = models.IntegerField(core=True)
     unitPrice = models.FloatField(max_digits=6,decimal_places=2)
     lineItemPrice = models.FloatField(max_digits=6,decimal_places=2)

@@ -186,7 +186,7 @@ class Item(models.Model):
         #Create new sub_items for each combo
         for options in combinedlist:
             price_delta = 0
-            sub = Sub_Item(item=self, items_in_stock=0)
+            sub = SubItem(item=self, items_in_stock=0)
             sub.save()
             s1 = Set()
             for option in options:
@@ -201,21 +201,21 @@ class Item(models.Model):
         return(True)
     
     def get_sub_item(self, optionSet):
-        for sub in self.sub_item_set.all():
+        for sub in self.subitem_set.all():
             if sub.option_values == optionSet:
                 return(sub)
         return(None)
     
     def get_sub_item_count(self, optionSet):
         count = 0
-        for sub in self.sub_item_set.all():
+        for sub in self.subitem_set.all():
             if sub.option_values == optionSet:
                 count+=1
         return count
     
     def save(self):
         '''
-        Right now this only works if you save the suboptions, then go back and choose to create the sub_items
+        Right now this only works if you save the suboptions, then go back and choose to create the subitems
         '''
         #super(Item,self).save()
         if self.create_subs:
@@ -266,7 +266,7 @@ class OptionItem(models.Model):
     class Meta:
         ordering = ['displayOrder']
         
-class Sub_Item(models.Model):
+class SubItem(models.Model):
     item = models.ForeignKey(Item)
     items_in_stock = models.IntegerField("Number in stock", core=True)
     weight = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)

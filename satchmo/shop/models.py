@@ -1,5 +1,5 @@
 from django.db import models
-from satchmo.product.models import Item, Sub_Item
+from satchmo.product.models import Item, SubItem
 from django.contrib.sites.models import Site
 from satchmo.contact.models import Contact
 from satchmo.i18n.models import Country
@@ -80,7 +80,7 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, edit_inline=models.TABULAR, num_in_admin=3)
-    subItem = models.ForeignKey(Sub_Item, blank=True, null=True)
+    subItem = models.ForeignKey(SubItem, blank=True, null=True)
     quantity = models.IntegerField(core=True)
     
     def _get_line_total(self):
