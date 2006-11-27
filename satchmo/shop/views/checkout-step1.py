@@ -49,13 +49,13 @@ class ContactInfoManipulator(forms.Manipulator):
             forms.TextField(field_name="city",length=30, is_required=True),
             GeographySelectField(field_name="state", is_required=True, choices=areas, validator_list=[self.isValidShipArea]),
             GeographySelectField(field_name="country", is_required=True, choices=countries),
-            forms.TextField(field_name="zip_code",length=5, is_required=True),
+            forms.TextField(field_name="postalCode",length=5, is_required=True),
             forms.CheckboxField(field_name="copyaddress"),
             forms.TextField(field_name="ship_street1",length=30),
             forms.TextField(field_name="ship_street2",length=30),
             forms.TextField(field_name="ship_city",length=30),
             GeographySelectField(field_name="ship_state", choices=areas, is_required=False, validator_list=[self.isValidBillArea]),
-            forms.TextField(field_name="ship_zip_code",length=5),
+            forms.TextField(field_name="ship_postalCode",length=5),
         )
     
     def isValidShipArea(self, field_data, all_data):

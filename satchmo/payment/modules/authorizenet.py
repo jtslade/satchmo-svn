@@ -28,7 +28,7 @@ class PaymentProcessor(object):
             'x_address': data.fullBillStreet,
             'x_city': data.billCity,
             'x_state' : data.billState,
-            'x_zip' : data.billZip_code,
+            'x_zip' : data.billPostalCode,
             'x_country': data.billCountry,
             'x_phone' : data.contact.primary_phone
             }
@@ -44,6 +44,7 @@ class PaymentProcessor(object):
             
     def process(self):
         # Execute the post to Authorize Net
+        print self.postString
         conn = urllib2.Request(url=self.connection, data=self.postString)
         f = urllib2.urlopen(conn)
         all_results = f.read()
@@ -85,12 +86,12 @@ if __name__ == "__main__":
     sampleOrder.contact.last_name = 'Smith'
     sampleOrder.contact.primary_phone = '801-555-9242'
     sampleOrder.fullBillStreet = '123 Main Street'
-    sampleOrder.billZip_code = '12345'
+    sampleOrder.billPostalCode = '12345'
     sampleOrder.billState = 'TN'
     sampleOrder.billCity = 'Some City'
     sampleOrder.billCountry = 'US'
     sampleOrder.total = "27.00"
-    sampleOrder.CC.decryptedCC = '4222222222222'
+    sampleOrder.CC.decryptedCC = '6011000000000012'
     sampleOrder.CC.expirationDate = "10/09"
     sampleOrder.CC.ccv = "144"
 

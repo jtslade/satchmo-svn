@@ -111,7 +111,7 @@ class Interaction(models.Model):
 class PhoneNumber(models.Model):
     contact = models.ForeignKey(Contact,edit_inline=models.TABULAR, num_in_admin=1)
     type = models.CharField("Description", choices=PHONE_CHOICES, maxlength=20)
-    phone = models.PhoneNumberField(blank=True, core=True)
+    phone = models.CharField(blank=True, maxlength=12, core=True)
     primary = models.BooleanField(default=False)
     
     def __str__(self):
@@ -127,8 +127,8 @@ class AddressBook(models.Model):
     street1=models.CharField("Street",core=True, maxlength=50)
     street2=models.CharField("Street", maxlength=50, blank=True)
     city=models.CharField("City", maxlength=50)
-    state=models.USStateField("State")
-    zip_code=models.CharField("Zip Code", maxlength=50)
+    state=models.CharField("State", maxlength=10)
+    postalCode=models.CharField("Zip Code", maxlength=10)
     country=models.CharField("Country", maxlength=50, blank=True)
     is_default_shipping=models.BooleanField("Default Shipping Address", default=False)
     is_default_billing=models.BooleanField("Default Billing Address", default=False)
@@ -192,14 +192,14 @@ class Order(models.Model):
     shipStreet1=models.CharField("Street",maxlength=50, blank=True)
     shipStreet2=models.CharField("Street", maxlength=50, blank=True)
     shipCity=models.CharField("City", maxlength=50, blank=True)
-    shipState=models.USStateField("State", blank=True)
-    shipZip_code=models.CharField("Zip Code", maxlength=50, blank=True)
+    shipState=models.CharField("State", maxlength=10, blank=True)
+    shipPostalCode=models.CharField("Zip Code", maxlength=10, blank=True)
     shipCountry=models.CharField("Country", maxlength=50, blank=True)
     billStreet1=models.CharField("Street",maxlength=50, blank=True)
     billStreet2=models.CharField("Street", maxlength=50, blank=True)
     billCity=models.CharField("City", maxlength=50, blank=True)
-    billState=models.USStateField("State", blank=True)
-    billZip_code=models.CharField("Zip Code", maxlength=50, blank=True)
+    billState=models.CharField("State", maxlength=10, blank=True)
+    billPostalCode=models.CharField("Zip Code", maxlength=10, blank=True)
     billCountry=models.CharField("Country", maxlength=50, blank=True)
     sub_total = models.FloatField(max_digits=6, decimal_places=2, blank=True)
     total = models.FloatField(max_digits=6,decimal_places=2, blank=True)
@@ -226,13 +226,13 @@ class Order(models.Model):
         self.shipStreet2 = shipaddress.street2
         self.shipCity = shipaddress.city
         self.shipState = shipaddress.state
-        self.shipZip_code = shipaddress.zip_code
+        self.shipPostalCode = shipaddress.postalCode
         self.shipCountry = shipaddress.country
         self.billStreet1 = billaddress.street1
         self.billStreet2 = billaddress.street2
         self.billCity = billaddress.city
         self.billState = billaddress.state
-        self.billZip_code = billaddress.zip_code
+        self.billPostalCode = billaddress.postalCode
         self.billCountry = billaddress.country
         
     def copyItems(self):
@@ -272,8 +272,8 @@ class Order(models.Model):
     class Admin:
         fields = (
         (None, {'fields': ('contact','method',)}),
-        ('Shipping Information', {'fields': ('shipStreet1','shipStreet2', 'shipCity','shipState', 'shipZip_code','shipCountry',), 'classes': 'collapse'}),
-        ('Billing Information', {'fields': ('billStreet1','billStreet2', 'billCity','billState', 'billZip_code','billCountry',), 'classes': 'collapse'}),
+        ('Shipping Information', {'fields': ('shipStreet1','shipStreet2', 'shipCity','shipState', 'shipPostalCode','shipCountry',), 'classes': 'collapse'}),
+        ('Billing Information', {'fields': ('billStreet1','billStreet2', 'billCity','billState', 'billPostalCode','billCountry',), 'classes': 'collapse'}),
         ('Totals', {'fields': ( 'shippingCost', 'tax','total','timeStamp','payment',),}),       
         )
         list_display = ('contact', 'timeStamp', 'total','status')

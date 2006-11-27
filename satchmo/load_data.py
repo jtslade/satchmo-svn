@@ -51,7 +51,7 @@ def init_and_install():
     
 def load_data():
     from satchmo.contact.models import Contact, AddressBook, PhoneNumber
-    from satchmo.product.models import Item, Category, OptionGroup, OptionItem 
+    from satchmo.product.models import Item, Category, OptionGroup, OptionItem, ItemImage 
     from satchmo.supplier.models import Organization
     from satchmo.shop.models import Config
     #Load basic configuration information
@@ -74,10 +74,10 @@ def load_data():
     p2.save()
     # Import some addresses for these customers
     a1 = AddressBook(description="Home", street1="8235 Pike Street", city="Anywhere Town", state="TN",
-                 zip_code="38138", country="US", is_default_shipping=True, contact=c1)
+                 postalCode="38138", country="US", is_default_shipping=True, contact=c1)
     a1.save()
     a2 = AddressBook(description="Work", street1="1245 Main Street", city="Stillwater", state="MN",
-                 zip_code="55082", country="US", is_default_shipping=True, contact=c2)
+                 postalCode="55082", country="US", is_default_shipping=True, contact=c2)
     a2.save()
     print "Creating Suppliers..."
     #Import some suppliers
@@ -90,7 +90,7 @@ def load_data():
     p5 = PhoneNumber(contact=c4,phone="755-555-1111",type="Fax")
     p5.save()
     a3 = AddressBook(contact=c4, description="Mailing address", street1="Receiving Dept", street2="918 Funky Town St", city="Fishkill",
-                     state="NJ", zip_code="19010")
+                     state="NJ", postalCode="19010")
     a3.save()
     #s1 = Supplier(name="Rhinestone Ronny", address1="918 Funky Town St", address2="Suite 200",
     #              city="Fishkill", state="NJ", zip="19010", phone1="800-188-7611", fax="900-110-1909", email="ron@rhinestone.com",
@@ -198,7 +198,9 @@ def load_data():
     i4.save()
     #This doesn't work yet
     #print "Adding images to the items"
-    #image1 = ItemImage(item=i1, picture="./images/django-rocks.gif", sort=1)
+    #image1 = ItemImage(item=i1, sort=1)
+    #image1.save()
+    #image1.picture = "./images/django-rocks.gif"
     #image1.save()
     #image2 = ItemImage(item=i2, picture="./images/python-rocks.gif", sort=1)
     #image2.save()
@@ -212,14 +214,7 @@ def load_data():
     user.save()
     c1.user = user
     c1.save()
-    #print "Creating country..."
-    #Create the US - all data will be loaded once the internationalization piece is completed
-    #c1 = Country(name="United States", iso3_code="USA", iso2_code="US", region="am.n", adm_area="st",display=True)
-    #c1.save()
-    #area1 = Area(country=c1, name_id="MN", name="Minnesota", alt_name="Minnesota", abbrev="MN", reg_area="st")    
-    #area1.save()
-    #area2 = Area(country=c1, name_id="CA", name="California", alt_name="California", abbrev="CA", reg_area="st")
-    #area2.save()
+
 
 def eraseDB(): 
     """Erase database and init it"""
