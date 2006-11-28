@@ -228,8 +228,8 @@ def eraseDB():
 def load_webda():
     """Load internationalization data"""
     baseURL = "http://svn.webda.python-hosting.com/branches"
-    dataFile = "Webda-0.9.tar.gz"
-    modelFile = "Webda-Django-0.9.tar.gz"
+    dataFile = "Webda-0.9.1.tar.gz"
+    modelFile = "Webda-Django-0.9.1.tar.gz"
     loaderFile = "webda.py"
     print "Retrieving data files..."
     if os.path.isfile(dataFile):
