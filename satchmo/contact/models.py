@@ -1,3 +1,7 @@
+"""
+Stores Customer and Order information
+"""
+
 from django.db import models
 from django.contrib.auth.models import User 
 from satchmo.product.models import SubItem

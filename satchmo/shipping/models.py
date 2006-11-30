@@ -1,3 +1,7 @@
+"""
+Helper models used to control available shipping choices through the
+admin interface.
+"""
 from django.db import models
 
 # Create your models here.

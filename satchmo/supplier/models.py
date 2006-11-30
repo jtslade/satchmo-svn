@@ -1,3 +1,8 @@
+"""
+Used to manage raw inventory and supplier relationships.  This is still
+under heavy development.
+"""
+
 from django.db import models
 from satchmo.contact.models import Contact, Organization
 

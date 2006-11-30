@@ -1,3 +1,7 @@
+"""
+Sets up a discount that can be applied to a product
+"""
+
 from django.db import models
 from satchmo.product.models import Item
 from datetime import date

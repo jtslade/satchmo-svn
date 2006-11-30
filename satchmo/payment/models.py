@@ -1,3 +1,8 @@
+"""
+Stores details about the available payment options.
+Also stores credit card info in an ecrypted format.
+"""
+
 from django.db import models
 from satchmo.contact.models import Order
 import base64

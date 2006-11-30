@@ -1,3 +1,8 @@
+"""
+Configuration items for the shop.
+Also contains shopping cart and related classes.
+"""
+
 from django.db import models
 from satchmo.product.models import Item, SubItem
 from django.contrib.sites.models import Site
@@ -17,7 +22,7 @@ class Config(models.Model):
     street2=models.CharField("Street", maxlength=50, blank=True, null=True)
     city=models.CharField("City", maxlength=50, blank=True, null=True)
     state=models.USStateField("State", blank=True, null=True)
-    zip_code=models.CharField("Zip Code", blank=True, null=True,maxlength=9)
+    postalCode=models.CharField("Zip Code", blank=True, null=True,maxlength=9)
     country=models.ForeignKey(Country, blank=True, null=True)
     phone = models.PhoneNumberField(blank=True, null=True)
     noStockCheckout = models.BooleanField("Purchase item not in stock?")

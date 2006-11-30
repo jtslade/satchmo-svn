@@ -1,3 +1,9 @@
+"""
+Base model used for products.  Stores hierarchical categories
+as well as individual product level information which includes
+options.
+"""
+
 from django.db import models
 from django.core import validators
 from sets import Set

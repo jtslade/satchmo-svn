@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<title>Satchmo documentation</title>
+<style type="text/css">
+
+/*
+:Authors: Ian Bicking, Michael Foord
+:Contact: fuzzyman@voidspace.org.uk
+:Date: 2005/08/26 
+:Version: 0.1.0
+:Copyright: This stylesheet has been placed in the public domain.
+
+Stylesheet for Docutils.
+Based on ``blue_box.css`` by Ian Bicking
+and ``html4css1.css`` revision 1.46.
+*/
+
+@import url(html4css1.css);
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+em, i {
+  /* Typically serif fonts have much nicer italics */
+  font-family: Times New Roman, Times, serif;
+}
+
+a.target {
+  color: blue;
+}
+
+a.target {
+  color: blue;
+}
+
+a.toc-backref {
+  text-decoration: none;
+  color: black;
+}
+
+a.toc-backref:hover {
+  background-color: inherit;
+}
+
+a:hover {
+  background-color: #cccccc;
+}
+
+div.attention, div.caution, div.danger, div.error, div.hint,
+div.important, div.note, div.tip, div.warning {
+  background-color: #cccccc;
+  padding: 3px;
+  width: 80%;
+}
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title  {
+  text-align: center;
+  background-color: #999999;
+  display: block;
+  margin: 0;
+}
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title {
+  color: #cc0000;
+  font-family: sans-serif;
+  text-align: center;
+  background-color: #999999;
+  display: block;
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Helvetica, Arial, sans-serif;
+  border: thin solid black;
+  /* This makes the borders rounded on Mozilla, which pleases me */
+  -moz-border-radius: 8px;
+  padding: 4px;
+}
+
+h1 {
+  background-color: #444499;
+  color: #ffffff;
+  border: medium solid black;
+}
+
+h1 a.toc-backref, h2 a.toc-backref { 
+  color: #ffffff;
+}
+
+h2 {
+  background-color: #666666;
+  color: #ffffff;
+  border: medium solid black;
+}
+
+h3, h4, h5, h6 {
+  background-color: #cccccc;
+  color: #000000;
+}
+
+h3 a.toc-backref, h4 a.toc-backref, h5 a.toc-backref, 
+h6 a.toc-backref { 
+  color: #000000;
+}
+
+h1.title {
+  text-align: center;
+  background-color: #444499;
+  color: #eeeeee;
+  border: thick solid black;
+  -moz-border-radius: 20px;
+}
+
+table.footnote {
+  padding-left: 0.5ex;
+}
+
+table.citation {
+  padding-left: 0.5ex
+}
+
+pre.literal-block, pre.doctest-block {
+  border: thin black solid;
+  padding: 5px;
+}
+
+.image img { border-style : solid;
+            border-width : 2px;
+}
+
+h1 tt, h2 tt, h3 tt, h4 tt, h5 tt, h6 tt {
+  font-size: 100%;
+}
+
+code, tt {
+  color: #000066;
+}
+
+</style>
+</head>
+<body>
+<div class="document" id="satchmo-documentation">
+<h1 class="title">Satchmo documentation</h1>
+
+<div class="section">
+<h1><a id="table-of-contents" name="table-of-contents">Table of Contents</a></h1>
+<ul>
+<li><dl class="first docutils">
+<dt>Introduction</dt>
+<dd><ul class="first last simple">
+<li>History</li>
+<li>Project mission</li>
+<li>Features</li>
+<li>Development Status</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Requirements</p>
+</li>
+<li><dl class="first docutils">
+<dt>Installation</dt>
+<dd><ul class="first last simple">
+<li>Django installation</li>
+<li>Getting source</li>
+<li>Testing it</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Basic configuration</dt>
+<dd><ul class="first last simple">
+<li>Loading data</li>
+<li>Site specific configs</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Setting up your store</dt>
+<dd><ul class="first last simple">
+<li>Loading products</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Framework design</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>Description of the models</dt>
+<dd><ul class="first last simple">
+<li>Contact</li>
+<li>Discount</li>
+<li>Payment</li>
+<li>Product</li>
+<li>Shipping</li>
+<li>Shop</li>
+<li>Supplier</li>
+<li>Thumbnails</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Templates</p>
+</li>
+<li><p class="first">Static information</p>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Roadmap</p>
+</li>
+</ul>
+</div>
+<div class="section">
+<h1><a id="introduction" name="introduction">Introduction</a></h1>
+<div class="section">
+<h2><a id="history" name="history">History</a></h2>
+<p>Like most Open Source projects, Satchmo was started to &quot;scratch an itch.&quot;  This
+particular itch was to create a framework for developing shopping cart software
+using the Django framework.  After a little bit of discussion on the Django list,
+we created our own project in April 2006.</p>
+</div>
+<div class="section">
+<h2><a id="project-mission" name="project-mission">Project Mission</a></h2>
+<p>Satchmo's mission is to use Django to create an open source framework for creating
+unique and robust online stores. To provide maximum flexibility, Satchmo is licensed
+under the BSD license.</p>
+</div>
+<div class="section">
+<h2><a id="features" name="features">Features</a></h2>
+</div>
+<div class="section">
+<h2><a id="current-development-status" name="current-development-status">Current Development Status</a></h2>
+<p>Satchmo is currently in alpha status.  Many functions work but there is still a lot
+of change in the underlying api.</p>
+</div>
+</div>
+<div class="section">
+<h1><a id="requirements" name="requirements">Requirements</a></h1>
+<p>Satchmo is based on the Django framework, therefore you do need a fully functioning
+Django instance to use Satchmo.  The Django installation guide will step you
+through the process - <a class="reference" href="http://www.djangoproject.com/documentation/install/">http://www.djangoproject.com/documentation/install/</a></p>
+<p>There are a number of other Python packages that are required for usage of all the
+features in Satchmo.</p>
+<ul class="simple">
+<li>Python Imaging Library</li>
+<li>Elementtree (included in Python 2.5+)</li>
+<li>Python cryptography toolkit</li>
+<li>Reportlab</li>
+</ul>
+</div>
+<div class="section">
+<h1><a id="installation" name="installation">Installation</a></h1>
+<p>This guide assumes that Django is properly installed and that you have installed the
+dependencies mentioned in the Requirements section.</p>
+</div>
+</div>
+</body>
+</html>
