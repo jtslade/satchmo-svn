@@ -151,105 +151,124 @@ code, tt {
 <div class="document" id="satchmo-documentation">
 <h1 class="title">Satchmo documentation</h1>
 
-<div class="section">
-<h1><a id="table-of-contents" name="table-of-contents">Table of Contents</a></h1>
-<ul>
-<li><dl class="first docutils">
-<dt>Introduction</dt>
-<dd><ul class="first last simple">
-<li>History</li>
-<li>Project mission</li>
-<li>Features</li>
-<li>Development Status</li>
+<div class="contents topic">
+<p class="topic-title first"><a id="table-of-contents" name="table-of-contents">Table of Contents</a></p>
+<ul class="simple">
+<li><a class="reference" href="#introduction" id="id1" name="id1">Introduction</a><ul>
+<li><a class="reference" href="#history" id="id2" name="id2">History</a></li>
+<li><a class="reference" href="#project-mission" id="id3" name="id3">Project Mission</a></li>
+<li><a class="reference" href="#features" id="id4" name="id4">Features</a></li>
+<li><a class="reference" href="#current-development-status" id="id5" name="id5">Current Development Status</a></li>
 </ul>
-</dd>
-</dl>
 </li>
-<li><p class="first">Requirements</p>
-</li>
-<li><dl class="first docutils">
-<dt>Installation</dt>
-<dd><ul class="first last simple">
-<li>Django installation</li>
-<li>Getting source</li>
-<li>Testing it</li>
+<li><a class="reference" href="#requirements" id="id6" name="id6">Requirements</a></li>
+<li><a class="reference" href="#installation" id="id7" name="id7">Installation</a></li>
+<li><a class="reference" href="#basic-configuration" id="id8" name="id8">Basic Configuration</a><ul>
+<li><a class="reference" href="#site-configurations" id="id9" name="id9">Site Configurations</a></li>
+<li><a class="reference" href="#loading-data" id="id10" name="id10">Loading Data</a></li>
 </ul>
-</dd>
-</dl>
 </li>
-<li><dl class="first docutils">
-<dt>Basic configuration</dt>
-<dd><ul class="first last simple">
-<li>Loading data</li>
-<li>Site specific configs</li>
+<li><a class="reference" href="#setting-up-your-store" id="id11" name="id11">Setting up your store</a></li>
+<li><a class="reference" href="#framework-design" id="id12" name="id12">Framework design</a><ul>
+<li><a class="reference" href="#models" id="id13" name="id13">Models</a><ul>
+<li><a class="reference" href="#contact" id="id14" name="id14">Contact</a></li>
+<li><a class="reference" href="#discount" id="id15" name="id15">Discount</a></li>
+<li><a class="reference" href="#payment" id="id16" name="id16">Payment</a></li>
+<li><a class="reference" href="#product" id="id17" name="id17">Product</a></li>
+<li><a class="reference" href="#shipping" id="id18" name="id18">Shipping</a></li>
+<li><a class="reference" href="#shop" id="id19" name="id19">Shop</a></li>
+<li><a class="reference" href="#supplier" id="id20" name="id20">Supplier</a></li>
+<li><a class="reference" href="#thumbnails" id="id21" name="id21">Thumbnails</a></li>
 </ul>
-</dd>
-</dl>
 </li>
-<li><dl class="first docutils">
-<dt>Setting up your store</dt>
-<dd><ul class="first last simple">
-<li>Loading products</li>
+<li><a class="reference" href="#templates" id="id22" name="id22">Templates</a></li>
 </ul>
-</dd>
-</dl>
 </li>
-<li><dl class="first docutils">
-<dt>Framework design</dt>
-<dd><ul class="first last">
-<li><dl class="first docutils">
-<dt>Description of the models</dt>
-<dd><ul class="first last simple">
-<li>Contact</li>
-<li>Discount</li>
-<li>Payment</li>
-<li>Product</li>
-<li>Shipping</li>
-<li>Shop</li>
-<li>Supplier</li>
-<li>Thumbnails</li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><p class="first">Templates</p>
-</li>
-<li><p class="first">Static information</p>
-</li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><p class="first">Roadmap</p>
-</li>
+<li><a class="reference" href="#roadmap" id="id23" name="id23">Roadmap</a></li>
 </ul>
 </div>
 <div class="section">
-<h1><a id="introduction" name="introduction">Introduction</a></h1>
+<h1><a class="toc-backref" href="#id1" id="introduction" name="introduction">Introduction</a></h1>
 <div class="section">
-<h2><a id="history" name="history">History</a></h2>
+<h2><a class="toc-backref" href="#id2" id="history" name="history">History</a></h2>
 <p>Like most Open Source projects, Satchmo was started to &quot;scratch an itch.&quot;  This
 particular itch was to create a framework for developing shopping cart software
 using the Django framework.  After a little bit of discussion on the Django list,
 we created our own project in April 2006.</p>
 </div>
 <div class="section">
-<h2><a id="project-mission" name="project-mission">Project Mission</a></h2>
+<h2><a class="toc-backref" href="#id3" id="project-mission" name="project-mission">Project Mission</a></h2>
 <p>Satchmo's mission is to use Django to create an open source framework for creating
 unique and robust online stores. To provide maximum flexibility, Satchmo is licensed
 under the BSD license.</p>
 </div>
 <div class="section">
-<h2><a id="features" name="features">Features</a></h2>
+<h2><a class="toc-backref" href="#id4" id="features" name="features">Features</a></h2>
+<p>Satchmo is built using the Django framework.  Using this framework has a number
+of advantages for building an online shopping site.  Some of them include:</p>
+<ul class="simple">
+<li>A built in Object-relational mapper makes it easy to create and/or modify our
+models and have the underlying database created for you.  The ORM also makes it
+easy to make simple references to complex relationships without being an SQL
+expert.  If you need to drop down to SQL you can.</li>
+<li>An automatic admin interface makes it easy for you to get up and running
+quickly and see all the data in an easy to use set of forms.  The permission
+system also allows you to give selective access to different people on your
+team.</li>
+<li>Flexible URL design that is helpful for making your site look professional
+and show up well in search engines.</li>
+<li>Powerful template system that allows you to configure every aspect of your
+site.  The included reference implementation shows you a very basic site but
+with Django's template you can easily make your site as unique and complex as
+you'd like.</li>
+<li>Proven performance including a robust caching system.  This is one of the
+most critical aspects of an online store.  If you make it big and realize your
+old site can't handle the load, you're in a difficult place.</li>
+<li>Security is also a primary component for any online site these days.
+Django's session management capabilities makes it more secure by not encoding
+session ID's in urls so that session-ID theft is not possible via the &quot;Referrer&quot; header.
+Also, Django takes care of escaping SQL statements so that SQL injection attacks are
+not possible.</li>
+<li>Robust internationalization support in all phases of a project allow you to
+tailor your site to different countries and languages.</li>
+</ul>
+<p>Django clearly sets Satchmo up to be a robust framework for your store.  The
+Satchmo framework is still in it's early stages but already provides a number
+of very sophisticated features.  Some highlights include:</p>
+<ul class="simple">
+<li>A robust customer model that allows you to maintain unlimited addresses for
+each of your customers as well as customer specific notes and information.</li>
+<li>Customer orders can have multiple statuses so it's easy for you to track your
+interactions</li>
+<li>A full localization model that is pre-loaded with over 250 countries and
+information about their subdivisions including states, counties or other
+divisions.</li>
+<li>An extremely flexible category model that allows you to have deeply nested
+categories to help your users find products quickly.</li>
+<li>A sophisticated product model that allows you to describe and categorize the
+products as well as link them to related products.  You can feature certain
+products and store item dimensions in order to use for product shippping.  You
+can also associate as many product options (sizes, colors, etc) with a product
+and manage them in a very simple way.  This feature allows you to manage a
+large number of unique products without a lot of very time consuming steps.
+Each of these unique items can have price changes or other configurable changes
+based on your needs.</li>
+<li>Products also have the capability to have multiple images associated with
+them.  Each image is automatically scaled to a thumbnail size of your choosing
+and is automatically cached for maximum performance.</li>
+<li>Support for Authorize.net</li>
+</ul>
+<p>Models are currently in place to allow additional shipping and payment options
+as well as flexibly discount options.</p>
 </div>
 <div class="section">
-<h2><a id="current-development-status" name="current-development-status">Current Development Status</a></h2>
+<h2><a class="toc-backref" href="#id5" id="current-development-status" name="current-development-status">Current Development Status</a></h2>
 <p>Satchmo is currently in alpha status.  Many functions work but there is still a lot
 of change in the underlying api.</p>
 </div>
 </div>
 <div class="section">
-<h1><a id="requirements" name="requirements">Requirements</a></h1>
+<h1><a class="toc-backref" href="#id6" id="requirements" name="requirements">Requirements</a></h1>
 <p>Satchmo is based on the Django framework, therefore you do need a fully functioning
 Django instance to use Satchmo.  The Django installation guide will step you
 through the process - <a class="reference" href="http://www.djangoproject.com/documentation/install/">http://www.djangoproject.com/documentation/install/</a></p>
@@ -263,9 +282,65 @@ features in Satchmo.</p>
 </ul>
 </div>
 <div class="section">
-<h1><a id="installation" name="installation">Installation</a></h1>
+<h1><a class="toc-backref" href="#id7" id="installation" name="installation">Installation</a></h1>
 <p>This guide assumes that Django is properly installed and that you have installed the
 dependencies mentioned in the Requirements section.</p>
+</div>
+<div class="section">
+<h1><a class="toc-backref" href="#id8" id="basic-configuration" name="basic-configuration">Basic Configuration</a></h1>
+<div class="section">
+<h2><a class="toc-backref" href="#id9" id="site-configurations" name="site-configurations">Site Configurations</a></h2>
+</div>
+<div class="section">
+<h2><a class="toc-backref" href="#id10" id="loading-data" name="loading-data">Loading Data</a></h2>
+</div>
+</div>
+<div class="section">
+<h1><a class="toc-backref" href="#id11" id="setting-up-your-store" name="setting-up-your-store">Setting up your store</a></h1>
+</div>
+<div class="section">
+<h1><a class="toc-backref" href="#id12" id="framework-design" name="framework-design">Framework design</a></h1>
+<div class="section">
+<h2><a class="toc-backref" href="#id13" id="models" name="models">Models</a></h2>
+<p>The following diagrams show all of the current models, their data elements and their relationships.</p>
+<div class="section">
+<h3><a class="toc-backref" href="#id14" id="contact" name="contact">Contact</a></h3>
+<img alt="contact.gif" src="contact.gif" />
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id15" id="discount" name="discount">Discount</a></h3>
+<img alt="discount.gif" src="discount.gif" />
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id16" id="payment" name="payment">Payment</a></h3>
+<img alt="payment.gif" src="payment.gif" />
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id17" id="product" name="product">Product</a></h3>
+<img alt="product.gif" src="product.gif" />
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id18" id="shipping" name="shipping">Shipping</a></h3>
+<img alt="shipping.gif" src="shipping.gif" />
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id19" id="shop" name="shop">Shop</a></h3>
+<img alt="shop.gif" src="shop.gif" />
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id20" id="supplier" name="supplier">Supplier</a></h3>
+<img alt="supplier.gif" src="supplier.gif" />
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id21" id="thumbnails" name="thumbnails">Thumbnails</a></h3>
+</div>
+</div>
+<div class="section">
+<h2><a class="toc-backref" href="#id22" id="templates" name="templates">Templates</a></h2>
+</div>
+</div>
+<div class="section">
+<h1><a class="toc-backref" href="#id23" id="roadmap" name="roadmap">Roadmap</a></h1>
 </div>
 </div>
 </body>

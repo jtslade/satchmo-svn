@@ -6,7 +6,7 @@ import os
 
 os.environ["DJANGO_SETTINGS_MODULE"]="satchmo.settings"
 pathToModelviz = "."
-modelsToProcess = ["contact", "discount", "payment", "product", "shipping", "shop"]
+modelsToProcess = ["contact", "discount", "payment", "product", "shipping", "shop", "supplier"]
 pathToRest = "/home/chris/python-stuff/docutils/tools"
 print "Creating images"
 for model in modelsToProcess:

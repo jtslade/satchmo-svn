@@ -2,10 +2,10 @@
 """Django model to DOT (Graphviz) converter
 by Antonio Cavedoni <antonio@cavedoni.org>
 
-Make sure your DJANGO_SETTINGS_MODULE is set to your project and call 
-the script like this:
+Lightly modified by Chris Moffitt
+Included in Satchmo with permission
 
-$ python modelviz.py <app_label> > <filename>.dot
+
 """
 
 __version__ = "0.6"
