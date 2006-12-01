@@ -88,21 +88,34 @@ of change in the underlying api.
 Requirements
 ------------
 Satchmo is based on the Django framework, therefore you do need a fully functioning 
-Django instance to use Satchmo.  The Django installation guide will step you 
-through the process - http://www.djangoproject.com/documentation/install/
+Django instance to use Satchmo.  The `Django installation guide`_ will step you 
+through the process. 
 
 There are a number of other Python packages that are required for usage of all the 
 features in Satchmo.
 
-- Python Imaging Library
-- Elementtree (included in Python 2.5+)
-- Python cryptography toolkit
-- Reportlab
+- `Python Imaging Library`_
+- `Elementtree`_ (included in Python 2.5+)
+- `Python cryptography toolkit`_
+- `ReportLab`_
+
+The following packages are optional but encouraged:
+
+- `DocUtils`_
+
+The following Internationalization data can be automatically installed by the
+Satchmo scripts.
+
+- `Webda`_
 
 Installation
 ------------
 This guide assumes that Django is properly installed and that you have installed the
-dependencies mentioned in the Requirements section.
+dependencies mentioned in the `Requirements`_ section.
+
+1. Get the latest Satchmo source::
+
+    svn co http://svn.satchmo.python-hosting.com/trunk/
 
 Basic Configuration
 -------------------
@@ -160,3 +173,11 @@ Templates
 Roadmap
 -------
 
+
+.. _Django installation guide: http://www.djangoproject.com/documentation/install/
+.. _Python Imaging Library: http://www.pythonware.com/products/pil/
+.. _Elementtree: http://effbot.org/zone/element-index.htm
+.. _Python cryptography toolkit: http://www.amk.ca/python/code/crypto
+.. _ReportLab: http://www.reportlab.org/
+.. _DocUtils: http://docutils.sourceforge.net/
+.. _Webda: http://webda.python-hosting.com/

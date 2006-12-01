@@ -270,21 +270,37 @@ of change in the underlying api.</p>
 <div class="section">
 <h1><a class="toc-backref" href="#id6" id="requirements" name="requirements">Requirements</a></h1>
 <p>Satchmo is based on the Django framework, therefore you do need a fully functioning
-Django instance to use Satchmo.  The Django installation guide will step you
-through the process - <a class="reference" href="http://www.djangoproject.com/documentation/install/">http://www.djangoproject.com/documentation/install/</a></p>
+Django instance to use Satchmo.  The <a class="reference" href="http://www.djangoproject.com/documentation/install/">Django installation guide</a> will step you
+through the process.</p>
 <p>There are a number of other Python packages that are required for usage of all the
 features in Satchmo.</p>
 <ul class="simple">
-<li>Python Imaging Library</li>
-<li>Elementtree (included in Python 2.5+)</li>
-<li>Python cryptography toolkit</li>
-<li>Reportlab</li>
+<li><a class="reference" href="http://www.pythonware.com/products/pil/">Python Imaging Library</a></li>
+<li><a class="reference" href="http://effbot.org/zone/element-index.htm">Elementtree</a> (included in Python 2.5+)</li>
+<li><a class="reference" href="http://www.amk.ca/python/code/crypto">Python cryptography toolkit</a></li>
+<li><a class="reference" href="http://www.reportlab.org/">ReportLab</a></li>
+</ul>
+<p>The following packages are optional but encouraged:</p>
+<ul class="simple">
+<li><a class="reference" href="http://docutils.sourceforge.net/">DocUtils</a></li>
+</ul>
+<p>The following Internationalization data can be automatically installed by the
+Satchmo scripts.</p>
+<ul class="simple">
+<li><a class="reference" href="http://webda.python-hosting.com/">Webda</a></li>
 </ul>
 </div>
 <div class="section">
 <h1><a class="toc-backref" href="#id7" id="installation" name="installation">Installation</a></h1>
 <p>This guide assumes that Django is properly installed and that you have installed the
-dependencies mentioned in the Requirements section.</p>
+dependencies mentioned in the <a class="reference" href="#requirements">Requirements</a> section.</p>
+<ol class="arabic">
+<li><p class="first">Get the latest Satchmo source:</p>
+<pre class="literal-block">
+svn co http://svn.satchmo.python-hosting.com/trunk/
+</pre>
+</li>
+</ol>
 </div>
 <div class="section">
 <h1><a class="toc-backref" href="#id8" id="basic-configuration" name="basic-configuration">Basic Configuration</a></h1>

@@ -7,6 +7,10 @@ from satchmo.product.models import Item
 from datetime import date
 
 class Discount(models.Model):
+    """
+    Allows for multiple types of discounts including % and dollar off.
+    Also allows finite number of uses.
+    """
     description = models.CharField(maxlength=100)
     code = models.CharField(maxlength=20, help_text="Coupon Code")
     amount = models.FloatField("Discount Amount", decimal_places=2, max_digits=4, blank=True, help_text="Enter absolute amount OR percentage")

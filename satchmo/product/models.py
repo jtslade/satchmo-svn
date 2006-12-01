@@ -14,6 +14,9 @@ import os
 # Create your models here.
 
 class Category(models.Model):
+    """
+    Basic hierarchical category model for storing products
+    """
     name = models.CharField(core=True, maxlength=200)
     slug = models.SlugField(prepopulate_from=('name',),help_text="Used for URLs",)
     parent = models.ForeignKey('self', blank=True, null=True, related_name='child')
@@ -124,6 +127,10 @@ class Category(models.Model):
         verbose_name_plural = "Categories"
 
 class OptionGroup(models.Model):
+    """
+    A set of options that can be applied to an item.
+    Examples - Size, Color, Shape, etc
+    """
     name = models.CharField("Name of Option Group",maxlength = 50, core=True, help_text='This will be the text displayed on the product page',)
     description = models.CharField("Detailed Description",maxlength = 100, blank=True, help_text='Further description of this group i.e. shirt size vs shoe size',)
     sort_order = models.IntegerField(help_text="The order they will be displayed on the screen")
@@ -138,6 +145,9 @@ class OptionGroup(models.Model):
         ordering = ['sort_order']
         
 class Item(models.Model):
+    """
+    The basic product being sold in the store.  This is what the customer sees.
+    """
     category = models.ManyToManyField(Category, filter_interface=True)
     verbose_name = models.CharField("Full Name", maxlength=255)
     short_name = models.SlugField("Slug Name", prepopulate_from=("verbose_name",), unique=True, help_text="This is a short, descriptive name of the shirt that will be used in the URL link to this item")
@@ -247,6 +257,10 @@ class Item(models.Model):
         verbose_name = "Master Product"
         
 class ItemImage(models.Model):
+    """
+    A picture of an item.  Can have many pictures associated with an item.
+    Thumbnails are automatically created.
+    """
     item = models.ForeignKey(Item, edit_inline=models.TABULAR, num_in_admin=3)
     picture = ImageWithThumbnailField(upload_to="./images") #Media root is automatically appended
     caption = models.CharField("Optional caption",maxlength=100,null=True, blank=True)
@@ -259,6 +273,10 @@ class ItemImage(models.Model):
         ordering = ['sort']
         
 class OptionItem(models.Model):
+    """
+    These are the actual items in and OptionGroup.  If the OptionGroup is Size, then an OptionItem
+    would be Small.
+    """
     optionGroup = models.ForeignKey(OptionGroup, edit_inline=models.TABULAR, num_in_admin=5)
     name = models.CharField("Display value", maxlength = 50, core=True)
     value = models.CharField("Stored value", prepopulate_from=("name",), maxlength = 50)
@@ -273,6 +291,10 @@ class OptionItem(models.Model):
         ordering = ['displayOrder']
         
 class SubItem(models.Model):
+    """
+    The unique inventoriable item.  For instance, if a shirt has a size and color, then
+    only 1 SubItem would have Size=Small and Color=Black
+    """
     item = models.ForeignKey(Item)
     items_in_stock = models.IntegerField("Number in stock", core=True)
     weight = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)

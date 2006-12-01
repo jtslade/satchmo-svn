@@ -84,6 +84,9 @@ class Cart(models.Model):
         list_display = ('date_time_created','numItems','total')
 
 class CartItem(models.Model):
+    """
+    An individual item in the cart
+    """
     cart = models.ForeignKey(Cart, edit_inline=models.TABULAR, num_in_admin=3)
     subItem = models.ForeignKey(SubItem, blank=True, null=True)
     quantity = models.IntegerField(core=True)

@@ -22,6 +22,10 @@ CREDITCHOICES = (
 
 
 class PaymentOption(models.Model):
+    """
+    If there are multiple options - CC, Cash, COD, etc this class allows
+    configuration.
+    """
     description = models.CharField(maxlength=20)
     active = models.BooleanField(help_text="Should this be displayed as an option for the user?")
     optionName = models.CharField(maxlength=20, choices=PAYMENTCHOICES, unique=True, help_text="The class name as defined in payment.py")
@@ -32,6 +36,9 @@ class PaymentOption(models.Model):
         ordering = ['sortOrder']
         
 class CreditCardDetail(models.Model):
+    """
+    Stores and encrypted CC number and info as well as a displayable number
+    """
     order = models.ForeignKey(Order, edit_inline=True, num_in_admin=1, max_num_in_admin=1)
     creditType = models.CharField(maxlength=16, choices=CREDITCHOICES)
     displayCC = models.CharField(maxlength=4, core=True)

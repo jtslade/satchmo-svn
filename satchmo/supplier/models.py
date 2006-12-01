@@ -7,6 +7,10 @@ from django.db import models
 from satchmo.contact.models import Contact, Organization
 
 class RawItem(models.Model):
+    """
+    A raw good supplied by a supplier.  For instance, it could be a plain 
+    shirt that you process to make your Item
+    """
     supplier = models.ForeignKey(Organization)
     supplier_num = models.CharField(maxlength=50)
     description = models.CharField(maxlength=200)
@@ -21,6 +25,9 @@ class RawItem(models.Model):
         list_filter = ('supplier',)
         
 class SupplierOrder(models.Model):
+    """
+    An order the store owner places to a supplier for a raw good.
+    """
     supplier = models.ForeignKey(Organization)
     date_created = models.DateField(auto_now_add=True)
     order_subtotal = models.FloatField(max_digits=6, decimal_places=2)
@@ -42,6 +49,9 @@ class SupplierOrder(models.Model):
         date_hierarchy = 'date_created'
     
 class SupplierOrderItem(models.Model):
+    """
+    Individual line items for an order
+    """
     order = models.ForeignKey(SupplierOrder,edit_inline=models.TABULAR, num_in_admin=3)
     line_item = models.ForeignKey(RawItem, core=True)
     line_item_quantity = models.IntegerField(core=True)
@@ -59,6 +69,10 @@ SUPPLIERORDER_STATUS = (
 
 
 class SupplierOrderStatus(models.Model):
+    """
+    Status of a supplier's order.  There will be multiple statuses as it is
+    placed and subsequently processed and received.
+    """
     order = models.ForeignKey(SupplierOrder, edit_inline=models.STACKED, num_in_admin=1)
     status = models.CharField(maxlength=20, choices=SUPPLIERORDER_STATUS, core=True, blank=True)
     notes = models.CharField(maxlength=100, blank=True)

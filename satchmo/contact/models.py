@@ -28,6 +28,10 @@ ORGANIZATION_ROLE_CHOICES = (
 
 )
 class Organization(models.Model):
+    """
+    An organization can be a company, government or any kind of group to 
+    collect contact info.
+    """
     name = models.CharField(maxlength=50, core=True)
     type = models.CharField(maxlength=30,choices=ORGANIZATION_CHOICES)
     role = models.CharField(maxlength=30,choices=ORGANIZATION_ROLE_CHOICES)
@@ -42,6 +46,9 @@ class Organization(models.Model):
         list_display = ['name','type','role']
         
 class Contact(models.Model):
+    """
+    A customer, supplier or any individual that a store owner might interact with.
+    """
     first_name = models.CharField(maxlength=30, core=True)
     last_name = models.CharField(maxlength=30, core=True)
     user = models.ForeignKey(User, unique=True, blank=True, null=True, edit_inline=models.TABULAR, 
@@ -101,6 +108,10 @@ INTERACTION_CHOICES = (
 )
 
 class Interaction(models.Model):
+    """
+    A type of activity with the customer.  Useful to track emails, phone calls or
+    in-person interactions.
+    """
     contact = models.ForeignKey(Contact)
     type = models.CharField(maxlength=30,choices=INTERACTION_CHOICES)
     date_time = models.DateTimeField(core=True)
@@ -113,6 +124,9 @@ class Interaction(models.Model):
         list_filter = ['type', 'date_time']
      
 class PhoneNumber(models.Model):
+    """
+    Multiple phone numbers can be associated with a contact.  Cell, Home, Business etc.
+    """
     contact = models.ForeignKey(Contact,edit_inline=models.TABULAR, num_in_admin=1)
     type = models.CharField("Description", choices=PHONE_CHOICES, maxlength=20)
     phone = models.CharField(blank=True, maxlength=12, core=True)
@@ -126,6 +140,9 @@ class PhoneNumber(models.Model):
         ordering = ['-primary']
         
 class AddressBook(models.Model):
+    """
+    Address information associated with a contact.
+    """
     contact=models.ForeignKey(Contact,edit_inline=models.STACKED, num_in_admin=1)
     description=models.CharField("Description", maxlength=20,help_text='Description of address - Home,Relative, Office, Warehouse ,etc.',)
     street1=models.CharField("Street",core=True, maxlength=50)
@@ -190,7 +207,7 @@ PAYMENT_CHOICES = (
 class Order(models.Model):
     """
     Orders need to contain a copy of all the information at the time the order is placed.
-    A users address or other info could change over time.
+    A user's address or other info could change over time.
     """
     contact = models.ForeignKey(Contact)
     shipStreet1=models.CharField("Street",maxlength=50, blank=True)
@@ -287,6 +304,9 @@ class Order(models.Model):
         verbose_name = "Product Order"
         
 class OrderItem(models.Model):
+    """
+    A line item on an order.
+    """
     order = models.ForeignKey(Order, edit_inline=models.TABULAR, num_in_admin=3)
     item = models.ForeignKey(SubItem)
     quantity = models.IntegerField(core=True)
@@ -297,6 +317,9 @@ class OrderItem(models.Model):
         return self.item.full_name
 
 class OrderStatus(models.Model):
+    """
+    An order will have multiple statuses as it moves its way through processing.
+    """
     order = models.ForeignKey(Order, edit_inline=models.STACKED, num_in_admin=1)
     status = models.CharField(maxlength=20, choices=ORDER_STATUS, core=True, blank=True)
     notes = models.CharField(maxlength=100, blank=True)
