@@ -23,7 +23,7 @@
 <form action="{{shop_base}}/cart/{{ item.id }}/add/" method="post">
 <p>Please choose your options:</p>
 {% for option in item.option_group.all %}
- {{ option }}
+ {{ option.name }}
     <select name="{{ option.id }}" id="{{option.id}}">
     {% for choice in option.optionitem_set.all %}
      <option value="{{ choice.value }}">{{ choice }}

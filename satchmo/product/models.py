@@ -136,10 +136,13 @@ class OptionGroup(models.Model):
     sort_order = models.IntegerField(help_text="The order they will be displayed on the screen")
     
     def __str__(self):
-        return self.name
+        if self.description:
+            return ("%s - %s" % (self.name, self.description))
+        else:
+            return self.name
     
     class Admin:
-        list_display = ('name', 'description')
+        pass
         
     class Meta:
         ordering = ['sort_order']
