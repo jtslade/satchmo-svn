@@ -18,4 +18,4 @@ if response == 'yes':
         os.system("rm " + model + ".dot")
 #Now process rest documents
 print "Creating documents"
-os.system(pathToRest + "/rst2html.py --stylesheet-path=./alternate-1.css " + "./satchmo-outline.rst >" + "satchmo-doc.html")
+os.system(pathToRest + "/rst2html.py --stylesheet-path=./alternate-1.css " + "./satchmo-doc.txt >" + "satchmo-doc.html")
