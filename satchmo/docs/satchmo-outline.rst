@@ -78,7 +78,7 @@ of very sophisticated features.  Some highlights include:
 -   Support for Authorize.net
 
 Models are currently in place to allow additional shipping and payment options 
-as well as flexibly discount options.
+as well as flexible discount options.
 
 Current Development Status
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -115,10 +115,71 @@ dependencies mentioned in the `Requirements`_ section.
 
 1. Get the latest Satchmo source::
 
-    svn co http://svn.satchmo.python-hosting.com/trunk/
+        svn co http://svn.satchmo.python-hosting.com/trunk/
+    
+2.  Create a local_settings.py file::
 
+        cp local_settings-customize.py local_settings.py
+
+3.  Edit your local_settings file for your database.  The following values need to be changed::
+
+        DATABASE_NAME = 'Your DB Name Here'
+        DATABASE_PASSWORD = 'Your DB Password Here'
+        DATABASE_USER = 'Your DB User Here'
+        SECRET_KEY = 'Your secret key her'
+
+.. warning::
+    The next step can erase data in the database. Be sure to have a backup of any critical data
+
+4.  Load the sample data::
+
+        python load_data.py
+    
+5.  When prompted, enter Yes to all the questions.  This script will also install the i18n data.
+
+6.  Start up the sample webserver to see your store::
+
+        python manage.py startserver
+        
+7.  In order to see your sample store, point your browser to::
+    
+        http://localhost/store to see your store
+
+8.  If you want to see the admin interface, point your browser to::
+
+        http://localhost/admin
+
+.. note::
+    The above urls will be dependent on your Django setup.  If you're running the webserver on the
+    same machine you're developing on, the above urls should work.  If not, use the appropriate url.
+    
 Basic Configuration
 -------------------
+If you followed the steps above, you should have a basic store to start playing with.  There are a
+number of places you might want to configure.
+
+1. In the settings.py file, there are a number of general Django settings.  However, there are a
+   few that are specific to Satchmo.
+
+    - SHOP_BASE is used as the prefix for your store.  In the default setting, your store is 
+      located at www.yourname.com/shop.  If you would like to change this setting, this is the 
+      place to do it.
+    - Make sure that your DATABASE_ENGINE variable is also set correctly.
+    - You should ensure that all of your paths are setup correctly.  Key ones to look at are:
+        
+        + MEDIA_ROOT (this is where images will be stored)
+        + MEDIA_URL
+        + ADMIN_MEDIA_PREFIX
+        + TEMPLATE_DIRS
+        
+2. The local_settings.py file also includes information for configuring `Authorize.net`_.  Make changes
+   here if you are planning to use this service.
+
+3. The load_data.py script is helpful during testing.  You'll probably want to change 2 lines in this
+   script for maximum usefulness.  Change the following 2 assignments near line 60:
+    
+    - site.domain = "Put your IP or url here"
+    - site.name = "Put your name here"
 
 Site Configurations
 ~~~~~~~~~~~~~~~~~~~
@@ -181,3 +242,4 @@ Roadmap
 .. _ReportLab: http://www.reportlab.org/
 .. _DocUtils: http://docutils.sourceforge.net/
 .. _Webda: http://webda.python-hosting.com/
+.. _Authorize.net: http://www.authorize.net/
