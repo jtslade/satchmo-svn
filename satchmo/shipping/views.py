@@ -5,6 +5,8 @@ import settings
 from satchmo.shop.models import Config
 from django.shortcuts import get_object_or_404
 from satchmo.contact.models import Order
+from django.contrib.admin.views.decorators import staff_member_required
+from django.views.decorators.cache import never_cache
 
 def invoice(request, id):
     # Create the HttpResponse object with the appropriate PDF headers.
@@ -25,3 +27,4 @@ def invoice(request, id):
     pdf = trml2pdf.parseString(t.render(c))
     response.write(pdf)
     return response
+invoice = staff_member_required(never_cache(invoice))
