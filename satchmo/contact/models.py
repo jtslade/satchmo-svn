@@ -289,7 +289,11 @@ class Order(models.Model):
     def save(self):
         self.copyAddresses()
         super(Order, self).save() # Call the "real" save() method.
-        
+    
+    def invoice(self):
+        return('<a href="/admin/invoice/%s/">View</a>' % self.id)
+    invoice.allow_tags = True
+    
     class Admin:
         fields = (
         (None, {'fields': ('contact','method',)}),
@@ -297,7 +301,7 @@ class Order(models.Model):
         ('Billing Information', {'fields': ('billStreet1','billStreet2', 'billCity','billState', 'billPostalCode','billCountry',), 'classes': 'collapse'}),
         ('Totals', {'fields': ( 'shippingCost', 'tax','total','timeStamp','payment',),}),       
         )
-        list_display = ('contact', 'timeStamp', 'total','status')
+        list_display = ('contact', 'timeStamp', 'total','status', 'invoice')
         list_filter = ['timeStamp','contact']
         date_hierarchy = 'timeStamp'
     class Meta:

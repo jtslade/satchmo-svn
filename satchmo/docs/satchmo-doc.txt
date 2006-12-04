@@ -98,6 +98,7 @@ features in Satchmo.
 - `Elementtree`_ (included in Python 2.5+)
 - `Python cryptography toolkit`_
 - `ReportLab`_
+- `Tiny RML2PDF`_ (`download link`_)
 
 The following packages are optional but encouraged:
 
@@ -243,3 +244,5 @@ Roadmap
 .. _DocUtils: http://docutils.sourceforge.net/
 .. _Webda: http://webda.python-hosting.com/
 .. _Authorize.net: http://www.authorize.net/
+.. _Tiny RML2PDF: http://www.openreport.org/index.py/static/page/trml2pdf
+.. _download link: http://tinyforge.org/frs/download.php/1/trml2pdf.tar.gz

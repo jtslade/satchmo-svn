@@ -63,6 +63,7 @@ urlpatterns += patterns('django.contrib.auth.views',
                         (r'^account/password_change/done/$', 'password_change_done', {'template_name':'password_change_done.html'}),
                         )
   
+
 #Make sure thumbnails and images are served up properly when using the dev server
 if settings.LOCAL_DEV:
     urlpatterns += patterns('',
