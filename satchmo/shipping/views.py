@@ -8,23 +8,30 @@ from satchmo.contact.models import Order
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.cache import never_cache
 
-def invoice(request, id):
-    # Create the HttpResponse object with the appropriate PDF headers.
+def displayDoc(request, id, doc):
+    # Create the HttpResponse object with the appropriate PDF headers for an invoice or a packing slip
     order = get_object_or_404(Order, pk=id)
-    filename = "mystore-invoice.pdf"
+    if doc not in ["invoice", "packingslip"]:
+        return http.HttpResponseRedirect('/admin')
+    if doc == "invoice":
+        filename = "mystore-invoice.pdf"
+        template = "invoice.rml"
+    elif doc == "packingslip":
+        filename = "mystore-packingslip.pdf"
+        template = "packing-slip.rml"
     response = HttpResponse(mimetype='application/pdf')
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
     shopDetails = Config.objects.get(site=settings.SITE_ID)
-    t = loader.get_template('pdf/invoice.rml')
+    t = loader.get_template('pdf/%s' % template)
     c = Context({
                 'filename' : filename,
                 'templateDir' : settings.TEMPLATE_DIRS[0],
                 'shopDetails' : shopDetails,
                 'order' : order
                 })
-    
-    tmpPath =  "~/working-dir/trunk/satchmo/templates/pdf"
     pdf = trml2pdf.parseString(t.render(c))
     response.write(pdf)
     return response
-invoice = staff_member_required(never_cache(invoice))
+displayDoc = staff_member_required(never_cache(displayDoc))
+
+    

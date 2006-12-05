@@ -5,7 +5,7 @@ from django.conf import settings
 shopregex = '^' + settings.SHOP_BASE[1:] + "/"
 
 urlpatterns = patterns('',
-     (r'^admin/invoice/(?P<id>\d+)', 'satchmo.shipping.views.invoice'),
+     (r'^admin/print/(?P<doc>[-\w]+)/(?P<id>\d+)', 'satchmo.shipping.views.displayDoc'),
      (r'^admin/', include('django.contrib.admin.urls')),
      (shopregex, include('satchmo.shop.urls')),
 )

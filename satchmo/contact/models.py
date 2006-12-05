@@ -291,8 +291,12 @@ class Order(models.Model):
         super(Order, self).save() # Call the "real" save() method.
     
     def invoice(self):
-        return('<a href="/admin/invoice/%s/">View</a>' % self.id)
+        return('<a href="/admin/print/invoice/%s/">View</a>' % self.id)
     invoice.allow_tags = True
+    
+    def packingslip(self):
+        return('<a href="/admin/print/packingslip/%s/">View</a>' % self.id)
+    packingslip.allow_tags = True
     
     class Admin:
         fields = (
@@ -301,7 +305,7 @@ class Order(models.Model):
         ('Billing Information', {'fields': ('billStreet1','billStreet2', 'billCity','billState', 'billPostalCode','billCountry',), 'classes': 'collapse'}),
         ('Totals', {'fields': ( 'shippingCost', 'tax','total','timeStamp','payment',),}),       
         )
-        list_display = ('contact', 'timeStamp', 'total','status', 'invoice')
+        list_display = ('contact', 'timeStamp', 'total','status', 'invoice', 'packingslip')
         list_filter = ['timeStamp','contact']
         date_hierarchy = 'timeStamp'
     class Meta:
