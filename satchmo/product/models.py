@@ -159,7 +159,7 @@ class Item(models.Model):
     active = models.BooleanField("Is product active?", default=True, help_text="This will determine whether or not this product will appear on the site")
     featured = models.BooleanField("Featured Item", default=False, help_text="Featured items will show on the front page")
     option_group = models.ManyToManyField(OptionGroup, filter_interface=True, blank=True)
-    price = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True, help_text="Base price for this item")
+    price = models.FloatField(max_digits=6, decimal_places=2, help_text="Base price for this item")
     weight = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True, )
     length = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
     width = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
@@ -327,7 +327,7 @@ class SubItem(models.Model):
         for option in self.options.all():
             if option.price_change:
                 price_delta += option.price_change
-        return(self.item.price + price_delta)
+            return(self.item.price + price_delta)
     unit_price = property(_get_fullPrice)
     
     def _get_optionValues(self):
