@@ -11,14 +11,18 @@ from django.views.decorators.cache import never_cache
 def displayDoc(request, id, doc):
     # Create the HttpResponse object with the appropriate PDF headers for an invoice or a packing slip
     order = get_object_or_404(Order, pk=id)
-    if doc not in ["invoice", "packingslip"]:
-        return http.HttpResponseRedirect('/admin')
+
     if doc == "invoice":
         filename = "mystore-invoice.pdf"
         template = "invoice.rml"
     elif doc == "packingslip":
         filename = "mystore-packingslip.pdf"
         template = "packing-slip.rml"
+    elif doc == "shippinglabel":
+        filename = "mystore-shippinglabel.pdf"
+        template = "shipping-label.rml"
+    else:
+        return http.HttpResponseRedirect('/admin')
     response = HttpResponse(mimetype='application/pdf')
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
     shopDetails = Config.objects.get(site=settings.SITE_ID)

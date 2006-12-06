@@ -298,6 +298,10 @@ class Order(models.Model):
         return('<a href="/admin/print/packingslip/%s/">View</a>' % self.id)
     packingslip.allow_tags = True
     
+    def shippinglabel(self):
+        return('<a href="/admin/print/shippinglabel/%s/">View</a>' % self.id)
+    shippinglabel.allow_tags = True
+    
     class Admin:
         fields = (
         (None, {'fields': ('contact','method',)}),
@@ -305,7 +309,7 @@ class Order(models.Model):
         ('Billing Information', {'fields': ('billStreet1','billStreet2', 'billCity','billState', 'billPostalCode','billCountry',), 'classes': 'collapse'}),
         ('Totals', {'fields': ( 'shippingCost', 'tax','total','timeStamp','payment',),}),       
         )
-        list_display = ('contact', 'timeStamp', 'total','status', 'invoice', 'packingslip')
+        list_display = ('contact', 'timeStamp', 'total','status', 'invoice', 'packingslip', 'shippinglabel')
         list_filter = ['timeStamp','contact']
         date_hierarchy = 'timeStamp'
     class Meta:
