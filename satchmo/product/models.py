@@ -327,12 +327,13 @@ class SubItem(models.Model):
         for option in self.options.all():
             if option.price_change:
                 price_delta += option.price_change
-            return(self.item.price + price_delta)
+            return(float(self.item.price) + price_delta)
     unit_price = property(_get_fullPrice)
     
     def _get_optionValues(self):
         """
-        Return a set of all the valid options for this sub item.  A set makes sure we don't have to worry about ordering
+        Return a set of all the valid options for this sub item.  
+        A set makes sure we don't have to worry about ordering
         """
         output = Set()
         for option in self.options.all():

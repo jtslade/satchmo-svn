@@ -1,5 +1,6 @@
 # Django settings for satchmo project.
 import os
+import logging as LOGGING
 DIRNAME = os.path.dirname(__file__)
 
 DJANGO_PROJECT = 'satchmo'
