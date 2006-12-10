@@ -9,6 +9,7 @@ from django.core import validators
 from sets import Set
 from satchmo.thumbnail.field import ImageWithThumbnailField
 from django.conf import settings
+from satchmo.tax.models import TaxClass
 import os
 
 # Create your models here.
@@ -167,7 +168,9 @@ class Item(models.Model):
     create_subs = models.BooleanField("Create Sub Items", default=False, help_text ="Create new sub-items")
     relatedItems = models.ManyToManyField('self', blank=True, null=True, related_name='related')
     alsoPurchased = models.ManyToManyField('self', blank=True, null=True, related_name='previouslyPurchased')
-        
+    taxable = models.BooleanField(default=False)
+    taxClass = models.ForeignKey(TaxClass, blank=True, null=True, help_text="If it is taxable, what kind of tax?")    
+    
     def __str__(self):
         return self.short_name 
     
@@ -252,7 +255,8 @@ class Item(models.Model):
         (None, {'fields': ('category','verbose_name','short_name','description','date_added','active','featured','price',)}),
         ('Item Dimensions', {'fields': (('length', 'width','height',),'weight'), 'classes': 'collapse'}),
         ('Options', {'fields': ('option_group','create_subs',),}), 
-        ('Related Products', {'fields':('relatedItems','alsoPurchased'),'classes':'collapse'}),            
+        ('Tax', {'fields':('taxable', 'taxClass'), 'classes': 'collapse'}),
+        ('Related Products', {'fields':('relatedItems','alsoPurchased'),'classes':'collapse'}), 
         )
         list_filter = ('category',)
         

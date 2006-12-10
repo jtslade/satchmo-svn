@@ -1,7 +1,7 @@
 import trml2pdf
 from django.http import HttpResponse
 from django.template import loader, Context
-import settings
+from django.conf import settings
 from satchmo.shop.models import Config
 from django.shortcuts import get_object_or_404
 from satchmo.contact.models import Order
