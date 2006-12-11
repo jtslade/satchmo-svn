@@ -17,6 +17,9 @@ class TaxClass(models.Model):
     def __str__(self):
         return self.title
     
+    class Meta:
+        verbose_name_plural = "Tax Classes"
+    
     class Admin:
         pass
         
@@ -28,8 +31,12 @@ class TaxRate(models.Model):
     taxZone = models.ForeignKey(Area)
     percentage = models.FloatField(max_digits=6, decimal_places=4, help_text="% tax for this area and type")
     
+    def _country(self):
+        return self.taxZone.country.name
+    country = property(_country)
+    
     def __str__(self):
         return ("%s - %s" % (self.taxClass, self.taxZone))
     
     class Admin:
-        pass
+        list_display = ("taxClass", "taxZone", "percentage")

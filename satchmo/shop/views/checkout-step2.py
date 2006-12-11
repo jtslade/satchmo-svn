@@ -19,6 +19,7 @@ from satchmo.shop.views.utils import CreditCard
 from satchmo.shipping.modules import *
 from satchmo.contact.models import Order, OrderItem
 from satchmo.payment.models import CREDITCHOICES, CreditCardDetail
+from satchmo.tax.modules import simpleTax
 
 selection = "Please Select"
 
@@ -92,9 +93,9 @@ class payShipManipulator(forms.Manipulator):
             discount = 0
         newOrder.discount = discount
         
-        #Calculate the totals
-        newOrder.total = float(cart.total) + float(shipping_instance.cost()) - float(discount)
-        newOrder.tax = 0
+        # Temp setting of the tax and total so we can save it
+        newOrder.total = 0.0
+        newOrder.tax = 0.0
         newOrder.sub_total = cart.total
         newOrder.save()
         newOrder.copyAddresses()
@@ -104,6 +105,13 @@ class payShipManipulator(forms.Manipulator):
             newOrderItem = OrderItem(order=newOrder, item=item.subItem, quantity=item.quantity, 
                                      unitPrice=item.subItem.unit_price, lineItemPrice=item.line_total)       
             newOrderItem.save()
+        
+        #Now that we have everything, we can see if there's any sales tax to apply
+        # Create the appropriate tax model here
+        taxProcessor = simpleTax(newOrder)
+        newOrder.tax = taxProcessor.process()
+        #Calculate the totals
+        newOrder.total = float(cart.total) + float(shipping_instance.cost()) - float(discount) + float(newOrder.tax)
         
         # Save the credit card information
         cc = CreditCardDetail()
@@ -117,9 +125,9 @@ class payShipManipulator(forms.Manipulator):
         
         # Make final additions to the order info
         newOrder.method = "Online"
-        newOrder.payment = "Credit Card"
+        newOrder.payment = "Credit Card"     
         newOrder.save()
-        
+
         
 def pay_ship_info(request):
     #First verify that the customer exists

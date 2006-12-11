@@ -44,7 +44,7 @@ class PaymentProcessor(object):
             
     def process(self):
         # Execute the post to Authorize Net
-        print self.postString
+        # print self.postString
         conn = urllib2.Request(url=self.connection, data=self.postString)
         f = urllib2.urlopen(conn)
         all_results = f.read()

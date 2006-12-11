@@ -2,6 +2,7 @@ import os, sys
 import urllib
 from os.path import isdir, isfile, join, dirname
 import string
+import csv
 sys.path.insert(0, "django-src-here")
 sys.path.insert(0, "satchmo-src-here")
 
@@ -245,6 +246,22 @@ def load_webda():
     os.system('tar -xvzf %s' % modelFile)
     os.system('tar -xvzf %s -C ./i18n' % dataFile)
 
+def load_US_tax_table():
+    """ Load a simple sales tax table for the US """
+    from satchmo.tax.models import TaxRate, TaxClass
+    from satchmo.i18n.models import Area, Country
+    us = Country.objects.get(iso2_code="US")
+    defaultTax = TaxClass(description="Default", title="Default")
+    defaultTax.save()
+    dataFile = "tax-table.csv"
+    dataDir = "./tax/data/"
+    reader = csv.reader(open(os.path.join(dataDir, dataFile), "rb"))
+    reader.next()       #Skip the header row
+    for row in reader:
+        state = Area.objects.get(country=us, abbrev=row[0])
+        stateTax = TaxRate(taxClass=defaultTax, taxZone=state, percentage=row[1])
+        stateTax.save()        
+    
 if __name__ == '__main__': 
     responseWebda = string.lower(raw_input("Type 'yes' to load internationalization data: "))
     if responseWebda == 'yes':
@@ -259,7 +276,9 @@ if __name__ == '__main__':
     response = string.lower(raw_input("Type 'yes' to load sample store data: "))
     if response == 'yes':
         load_data()
-
+    response = string.lower(raw_input("Type 'yes' to load a tax table for the US: "))
+    if response == 'yes':
+        load_US_tax_table()
 
    
 
