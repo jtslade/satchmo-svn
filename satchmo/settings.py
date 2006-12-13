@@ -100,5 +100,8 @@ INSTALLED_APPS = (
 #examples: '/shop' or '/mystore'
 SHOP_BASE = '/shop'
 
+# Currency symbol to use
+CURRENCY = '$'
+
 # Load the local settings
 from local_settings import *

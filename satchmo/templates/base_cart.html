@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load satchmo.thumbnail %}
+{% load satchmo.currency_filter %}
 
 {% block navbar %}
 <a href="{{shop_base}}">Home</a>
@@ -19,11 +20,11 @@
         <tr><td> <a href="{{shop_base}}/cart/{{item.id}}/remove">Remove</a> </td>
             <td align="center">{{item.quantity}} </td>
             <td>{{ item.description }}</td>
-        <td align="center">{{ item.line_total }}</td>
+        <td align="center">{{ item.line_total|currency }}</td>
         </tr>
     {% endfor %}
     <tr><td colspan="3" align="right">Cart Total: </td>
-        <td>${{total}}</td></tr>
+        <td>{{total|currency}}</td></tr>
     </table>
     
     <a href="{{shop_base}}/checkout/">Checkout</a>

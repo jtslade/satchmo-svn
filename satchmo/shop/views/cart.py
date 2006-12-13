@@ -26,7 +26,6 @@ def add(request, id):
     #Todo: Error checking for invalid combos
     #Add an item to the session/cart
     chosenOptions = Set()
-    price_delta = 0
     try:
         product = Item.objects.get(pk=id)
     except Item.DoesNotExist:

@@ -75,7 +75,8 @@ of very sophisticated features.  Some highlights include:
 -   Products also have the capability to have multiple images associated with 
     them.  Each image is automatically scaled to a thumbnail size of your choosing 
     and is automatically cached for maximum performance.
--   Support for Authorize.net
+-   Support for Authorize.net credit card processing.
+-   Support for invoice, packing slip and shipping label creation and printing.
 
 Models are currently in place to allow additional shipping and payment options 
 as well as flexible discount options.
@@ -130,7 +131,7 @@ dependencies mentioned in the `Requirements`_ section.
         SECRET_KEY = 'Your secret key her'
 
 .. warning::
-    The next step can erase data in the database. Be sure to have a backup of any critical data
+    The next step can erase data in the satchmo database. Be sure to have a backup of any critical data
 
 4.  Load the sample data::
 
@@ -165,6 +166,7 @@ number of places you might want to configure.
     - SHOP_BASE is used as the prefix for your store.  In the default setting, your store is 
       located at www.yourname.com/shop.  If you would like to change this setting, this is the 
       place to do it.
+    - CURRENCY is the currency symbol to use within the store.
     - Make sure that your DATABASE_ENGINE variable is also set correctly.
     - You should ensure that all of your paths are setup correctly.  Key ones to look at are:
         
@@ -182,11 +184,38 @@ number of places you might want to configure.
     - site.domain = "Put your IP or url here"
     - site.name = "Put your name here"
 
-Site Configurations
-~~~~~~~~~~~~~~~~~~~
+Module Configurations
+~~~~~~~~~~~~~~~~~~~~~
+
+There are a number of additional places where you can customize Satchmo for your needs.
+
+One setting that will need to be modified is the payment processor you need to use for processing
+credit cards.  A module for `Authorize.net`_ is included but not installed by default.  A dummy module
+is installed that does nothing but return a true value.  To change to authorize.net, change the import
+statement in satchmo/shop/views/checkout-step3 from::
+    
+    #from satchmo.payment.modules.authorizenet import PaymentProcessor
+    # Change this to your appropriate payment processor
+    from satchmo.payment.modules.dummy import PaymentProcessor
+    
+to::
+
+    from satchmo.payment.modules.authorizenet import PaymentProcessor
+    # Change this to your appropriate payment processor
+    #from satchmo.payment.modules.dummy import PaymentProcessor
+    
+Satchmo allows very flexible shipping calculations.  You will want to tailor the default ones stored
+in /satchmo/shipping/modules.py.  The API is fairly simple but will be covered in more detail later
+in this document.
+
+Satchmo has support for selling taxable products.  Since tax calculations include many different 
+calculations, you can modify the tax calculations using the objects in /satchmo/tax/modules.py.  The
+API will be covered in more detail later in this document.
 
 Loading Data
 ~~~~~~~~~~~~
+
+
 
 Setting up your store
 ---------------------
@@ -226,11 +255,27 @@ Supplier
 ++++++++
 .. image:: supplier.gif
 
+Tax
++++
+.. image:: tax.gif
+
 Thumbnails
 ++++++++++
 
 Templates
 ~~~~~~~~~
+
+- Base site
+- Email
+- PDF
+
+
+Module APIs
+~~~~~~~~~~~
+
+- Shipping
+- Payment
+- Tax
 
 Roadmap
 -------

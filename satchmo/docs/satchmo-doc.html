@@ -164,7 +164,7 @@ code, tt {
 <li><a class="reference" href="#requirements" id="id6" name="id6">Requirements</a></li>
 <li><a class="reference" href="#installation" id="id7" name="id7">Installation</a></li>
 <li><a class="reference" href="#basic-configuration" id="id8" name="id8">Basic Configuration</a><ul>
-<li><a class="reference" href="#site-configurations" id="id9" name="id9">Site Configurations</a></li>
+<li><a class="reference" href="#module-configurations" id="id9" name="id9">Module Configurations</a></li>
 <li><a class="reference" href="#loading-data" id="id10" name="id10">Loading Data</a></li>
 </ul>
 </li>
@@ -178,13 +178,15 @@ code, tt {
 <li><a class="reference" href="#shipping" id="id18" name="id18">Shipping</a></li>
 <li><a class="reference" href="#shop" id="id19" name="id19">Shop</a></li>
 <li><a class="reference" href="#supplier" id="id20" name="id20">Supplier</a></li>
-<li><a class="reference" href="#thumbnails" id="id21" name="id21">Thumbnails</a></li>
+<li><a class="reference" href="#tax" id="id21" name="id21">Tax</a></li>
+<li><a class="reference" href="#thumbnails" id="id22" name="id22">Thumbnails</a></li>
 </ul>
 </li>
-<li><a class="reference" href="#templates" id="id22" name="id22">Templates</a></li>
+<li><a class="reference" href="#templates" id="id23" name="id23">Templates</a></li>
+<li><a class="reference" href="#module-apis" id="id24" name="id24">Module APIs</a></li>
 </ul>
 </li>
-<li><a class="reference" href="#roadmap" id="id23" name="id23">Roadmap</a></li>
+<li><a class="reference" href="#roadmap" id="id25" name="id25">Roadmap</a></li>
 </ul>
 </div>
 <div class="section">
@@ -256,7 +258,8 @@ based on your needs.</li>
 <li>Products also have the capability to have multiple images associated with
 them.  Each image is automatically scaled to a thumbnail size of your choosing
 and is automatically cached for maximum performance.</li>
-<li>Support for Authorize.net</li>
+<li>Support for Authorize.net credit card processing.</li>
+<li>Support for invoice, packing slip and shipping label creation and printing.</li>
 </ul>
 <p>Models are currently in place to allow additional shipping and payment options
 as well as flexible discount options.</p>
@@ -317,7 +320,7 @@ SECRET_KEY = 'Your secret key her'
 </ol>
 <div class="warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">The next step can erase data in the database. Be sure to have a backup of any critical data</p>
+<p class="last">The next step can erase data in the satchmo database. Be sure to have a backup of any critical data</p>
 </div>
 <ol class="arabic" start="4">
 <li><p class="first">Load the sample data:</p>
@@ -362,6 +365,8 @@ few that are specific to Satchmo.</p>
 located at www.yourname.com/shop.  If you would like to change this setting, this is the
 place to do it.</p>
 </li>
+<li><p class="first">CURRENCY is the currency symbol to use within the store.</p>
+</li>
 <li><p class="first">Make sure that your DATABASE_ENGINE variable is also set correctly.</p>
 </li>
 <li><p class="first">You should ensure that all of your paths are setup correctly.  Key ones to look at are:</p>
@@ -391,7 +396,29 @@ script for maximum usefulness.  Change the following 2 assignments near line 60:
 </li>
 </ol>
 <div class="section">
-<h2><a class="toc-backref" href="#id9" id="site-configurations" name="site-configurations">Site Configurations</a></h2>
+<h2><a class="toc-backref" href="#id9" id="module-configurations" name="module-configurations">Module Configurations</a></h2>
+<p>There are a number of additional places where you can customize Satchmo for your needs.</p>
+<p>One setting that will need to be modified is the payment processor you need to use for processing
+credit cards.  A module for <a class="reference" href="http://www.authorize.net/">Authorize.net</a> is included but not installed by default.  A dummy module
+is installed that does nothing but return a true value.  To change to authorize.net, change the import
+statement in satchmo/shop/views/checkout-step3 from:</p>
+<pre class="literal-block">
+#from satchmo.payment.modules.authorizenet import PaymentProcessor
+# Change this to your appropriate payment processor
+from satchmo.payment.modules.dummy import PaymentProcessor
+</pre>
+<p>to:</p>
+<pre class="literal-block">
+from satchmo.payment.modules.authorizenet import PaymentProcessor
+# Change this to your appropriate payment processor
+#from satchmo.payment.modules.dummy import PaymentProcessor
+</pre>
+<p>Satchmo allows very flexible shipping calculations.  You will want to tailor the default ones stored
+in /satchmo/shipping/modules.py.  The API is fairly simple but will be covered in more detail later
+in this document.</p>
+<p>Satchmo has support for selling taxable products.  Since tax calculations include many different
+calculations, you can modify the tax calculations using the objects in /satchmo/tax/modules.py.  The
+API will be covered in more detail later in this document.</p>
 </div>
 <div class="section">
 <h2><a class="toc-backref" href="#id10" id="loading-data" name="loading-data">Loading Data</a></h2>
@@ -434,15 +461,32 @@ script for maximum usefulness.  Change the following 2 assignments near line 60:
 <img alt="supplier.gif" src="supplier.gif" />
 </div>
 <div class="section">
-<h3><a class="toc-backref" href="#id21" id="thumbnails" name="thumbnails">Thumbnails</a></h3>
+<h3><a class="toc-backref" href="#id21" id="tax" name="tax">Tax</a></h3>
+<img alt="tax.gif" src="tax.gif" />
+</div>
+<div class="section">
+<h3><a class="toc-backref" href="#id22" id="thumbnails" name="thumbnails">Thumbnails</a></h3>
 </div>
 </div>
 <div class="section">
-<h2><a class="toc-backref" href="#id22" id="templates" name="templates">Templates</a></h2>
+<h2><a class="toc-backref" href="#id23" id="templates" name="templates">Templates</a></h2>
+<ul class="simple">
+<li>Base site</li>
+<li>Email</li>
+<li>PDF</li>
+</ul>
+</div>
+<div class="section">
+<h2><a class="toc-backref" href="#id24" id="module-apis" name="module-apis">Module APIs</a></h2>
+<ul class="simple">
+<li>Shipping</li>
+<li>Payment</li>
+<li>Tax</li>
+</ul>
 </div>
 </div>
 <div class="section">
-<h1><a class="toc-backref" href="#id23" id="roadmap" name="roadmap">Roadmap</a></h1>
+<h1><a class="toc-backref" href="#id25" id="roadmap" name="roadmap">Roadmap</a></h1>
 </div>
 </div>
 </body>

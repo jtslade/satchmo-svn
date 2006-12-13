@@ -7,7 +7,7 @@ import string
 
 os.environ["DJANGO_SETTINGS_MODULE"]="satchmo.settings"
 pathToModelviz = "."
-modelsToProcess = ["contact", "discount", "payment", "product", "shipping", "shop", "supplier"]
+modelsToProcess = ["contact", "discount", "payment", "product", "shipping", "shop", "supplier", "tax"]
 pathToRest = "/home/chris/python-stuff/docutils/tools"
 response = string.lower(raw_input("Type 'yes' to create images of models: "))
 if response == 'yes':

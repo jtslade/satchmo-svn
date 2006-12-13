@@ -1,3 +1,4 @@
+{% load satchmo.currency_filter %}
 {% extends "base.html" %}
 
 {% block navbar %}
@@ -22,7 +23,7 @@ Checkout
 {% endif %}
 <h4>Items Ordered</h4>
 {% for item in order.orderitem_set.all %}
-{{ item }} - ${{item.unitPrice}} x {{item.quantity}} = ${{item.lineItemPrice}}<br/>
+{{ item }} - {{item.unitPrice|currency}} x {{item.quantity}} = {{item.lineItemPrice|currency}}<br/>
 {% endfor %}
 
 <h4>Contact Information</h4>
@@ -50,17 +51,17 @@ Checkout
 
 <h4>Total</h4>
 {% if order.discount %}
-    Discount - {{order.discount}}<br/>
+    Discount - {{order.discount|currency}}<br/>
 {% endif %}
-Shipping + {{order.shippingCost}}<br/>
+Shipping + {{order.shippingCost|currency}}<br/>
 {% if order.tax %}
-    Tax + {{order.tax}}<br/>
+    Tax + {{order.tax|currency}}<br/>
 {% endif %}
-Total = {{order.total}}<br/>
+Total = {{order.total|currency}}<br/>
 
 <h4>Payment</h4>
 Your {{ order.CC.creditType }} card ending in 
-{{ order.CC.displayCC}} will be charged - $ {{order.total}}
+{{ order.CC.displayCC}} will be charged - {{order.total|currency}}
 
 <form method="post" action=".">
 <input type="hidden" name="Process" value="True">

@@ -1,3 +1,5 @@
-${{ amount|stringformat:".2f" }} : {{ description }}<br>
+{% load satchmo.currency_filter %}
+
+{{ amount|currency }} : {{ description }}<br>
 Sent via {{ method }} arrives approximately {{ expected_delivery }}
 <hr>

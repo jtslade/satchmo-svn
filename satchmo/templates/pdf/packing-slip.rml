@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="no" ?>
 <!DOCTYPE document SYSTEM "rml_1_0.dtd">
+{% load satchmo.currency_filter %}
 <document filename="{{filename}}">
 <template pageSize="(21.5cm, 28cm)" leftMargin="1.0cm" rightMargin="1.0cm" topMargin="1.0cm" bottomMargin="1.0cm" title="Store Packing Slip" author="My Store" allowSplitting="20">
 	<pageTemplate id="first">
@@ -116,8 +117,8 @@
     <tr>
         <td><para>{{ item }}</para></td>
         <td>{{ item.quantity }} </td>
-        <td>${{ item.unitPrice }}</td>
-        <td>${{ item.lineItemPrice }} </td>
+        <td>{{ item.unitPrice|currency }}</td>
+        <td>{{ item.lineItemPrice|currency }} </td>
     </tr>
     {% endfor %}
 	<tr><td></td></tr>
@@ -129,23 +130,23 @@
 	<blockTable colWidths="7cm, 3.5cm, 3.5cm,3.5cm" style="products2">
 	<tr>
         <td></td><td></td>
-		<td>Sub-Total:</td><td>${{order.sub_total}}</td>
+		<td>Sub-Total:</td><td>{{order.sub_total|currency}}</td>
     </tr>
     <tr>
         <td></td>
-        <td></td><td>{{order.shippingMethod}} - {{order.shippingDescription}}</td><td>${{order.shippingCost}}</td>
+        <td></td><td>{{order.shippingMethod}} - {{order.shippingDescription}}</td><td>{{order.shippingCost|currency}}</td>
     </tr>
     <tr>
         <td></td><td></td>
-		<td>Tax: (0%)</td><td>${{order.tax}}</td>
+		<td>Tax: </td><td>{{order.tax|currency}}</td>
 	</tr><tr>
         <td></td><td></td>
-		<td>Total:</td><td>${{order.total}}</td>
+		<td>Total:</td><td>{{order.total|currency}}</td>
 	</tr>
 	</blockTable>
 	<spacer length="2cm" width="1mm"/>
 	<para style="payment">
-		${{order.total}} was charged to your {{order.CC.creditType}} card (x{{order.CC.displayCC}}) on {{order.timeStamp|date:"F j, Y"}}.
+		{{order.total|currency}} was charged to your {{order.CC.creditType}} card (x{{order.CC.displayCC}}) on {{order.timeStamp|date:"F j, Y"}}.
 	</para>
 	<spacer length="0.5cm" width="1mm"/>
 	<para style="payment">

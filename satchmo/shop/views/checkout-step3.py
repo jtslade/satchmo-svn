@@ -10,7 +10,9 @@ from satchmo.shop.models import Cart, CartItem, Config
 from django.conf import settings
 from satchmo.contact.models import Order, OrderItem, OrderStatus
 import datetime
-from satchmo.payment.modules.authorizenet import PaymentProcessor
+#from satchmo.payment.modules.authorizenet import PaymentProcessor
+# Change this to your appropriate payment processor
+from satchmo.payment.modules.dummy import PaymentProcessor
 
 def confirm_info(request):
     if not request.session.get('orderID', False):
