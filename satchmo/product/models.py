@@ -316,12 +316,14 @@ class SubItem(models.Model):
             return self.item.verbose_name
         output = self.item.verbose_name + " ( "
         numProcessed = 0
-        for option in self.options.order_by('displayOrder'):
+        # We want the options to be sorted in a consistent manner
+        optionDict = dict([(sub.optionGroup.sort_order, sub) for sub in self.options.all()])
+        for optionNum in sorted(optionDict.keys()):
             numProcessed += 1
             if numProcessed == self.options.count():
-                output += option.name
+                output += optionDict[optionNum].name
             else:
-                output += option.name + "/"
+                output += optionDict[optionNum].name + "/"
         output += " )"
         return output
     full_name = property(_get_optionName)
