@@ -1,0 +1,90 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/dashboard.css{% endblock %}
+{% block coltype %}colMS{% endblock %}
+{% block bodyclass %}dashboard{% endblock %}
+{% block breadcrumbs %}{% endblock %}
+{% block content %}
+<div id="content-main">
+
+{% block branding %}
+<h1 id="site-name">{% trans 'Satchmo Portal' %}</h1>
+{% endblock %}
+        <a href=".?legacy=True">Switch to Legacy View</a>
+
+        <div class="module">
+        <table summary="Store Configuration">
+        <caption>Store Configuration</caption>
+            <tr>
+                <th scope="row"><a href="/admin/shop/config">Store Details</a></th>
+                <td><a href="/admin/shop/config/add/" class="addlink">{% trans 'Add' %}</a></td>
+                <td><a href="/admin/shop/config/" class="changelink">{% trans 'Change' %}</a></td>
+            </tr>
+            <tr>
+                <th scope="row"><a href="/admin/sites/site">Store Web Site</a></th>
+                <td><a href="/admin/sites/site/add/" class="addlink">{% trans 'Add' %}</a></td>
+                <td><a href="/admin/sites/site" class="changelink">{% trans 'Change' %}</a></td>
+            </tr>
+        </table>
+        </div>
+   
+       <div class="module">
+            <table summary="Product Configuration">
+            <caption>Product Configuration</caption>
+                <tr>
+                    <th scope="row"><a href="/admin/product/category">Product Categories</a></th>
+                    <td><a href="/admin/product/category/add/" class="addlink">{% trans 'Add' %}</a></td>
+                    <td><a href="/admin/product/category" class="changelink">{% trans 'Change' %}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row"><a href="/admin/product/item">Master Products</a></th>
+                    <td><a href="/admin/product/item/add/" class="addlink">{% trans 'Add' %}</a></td>
+                    <td><a href="/admin/product/item" class="changelink">{% trans 'Change' %}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row"><a href="/admin/product/optiongroup">Product Options</a></th>
+                    <td><a href="/admin/product/optiongroup/add/" class="addlink">{% trans 'Add' %}</a></td>
+                    <td><a href="/admin/product/optiongroup" class="changelink">{% trans 'Change' %}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row"><a href="/admin/product/subitem">Individual Products</a></th>
+                    <td><a href="/admin/product/subitem/add/" class="addlink">{% trans 'Add' %}</a></td>
+                    <td><a href="/admin/product/subitem" class="changelink">{% trans 'Change' %}</a></td>
+                </tr>
+            </table>
+            </div>
+            
+        <div class="module">
+            <table summary="Contacts">
+            <caption>Contacts</caption>
+                <tr>
+                    <th scope="row"><a href="/admin/contact/contact">Contact</a></th>
+                    <td><a href="/admin/contact/contact/add/" class="addlink">{% trans 'Add' %}</a></td>
+                    <td><a href="/admin/contact/contact" class="changelink">{% trans 'Change' %}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row"><a href="/admin/contact/interaction">Contact Interactions</a></th>
+                    <td><a href="/admin/contact/interaction/add/" class="addlink">{% trans 'Add' %}</a></td>
+                    <td><a href="/admin/contact/interaction" class="changelink">{% trans 'Change' %}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row"><a href="/admin/contact/organization">Organizations</a></th>
+                    <td><a href="/admin/contact/organization/add/" class="addlink">{% trans 'Add' %}</a></td>
+                    <td><a href="/admin/contact/organization" class="changelink">{% trans 'Change' %}</a></td>
+                </tr>
+            </table>
+            </div>
+   
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<div id="content-related">
+    <div class="module" id="Orders">
+        <h2>{% trans 'New Orders' %}</h2>
+        <h2>{% trans 'Orders in Process' %}</h2>
+
+    </div>
+</div>
+{% endblock %}
