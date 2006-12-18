@@ -195,6 +195,7 @@ ORDER_CHOICES = (
 ORDER_STATUS = (
     ('Temp', 'Temp'),
     ('Pending', 'Pending'),
+    ('In Process', 'In Process'),
     ('Shipped', 'Shipped'),
 )
 
@@ -233,6 +234,7 @@ class Order(models.Model):
     shippingCost = models.FloatField(max_digits=6, decimal_places=2, blank=True, null=True)
     tax = models.FloatField(max_digits=6, decimal_places=2, blank=True, null=True)
     timeStamp = models.DateTimeField(blank=True, null=True, auto_now_add=True)
+    status = models.CharField(maxlength=20, choices=ORDER_STATUS, core=True, blank=True, help_text="This is automatically set")
     
     def __str__(self):
         return self.contact.full_name
@@ -259,9 +261,9 @@ class Order(models.Model):
     def copyItems(self):
         pass
     
-    def _status(self):
-        return(self.orderstatus_set.latest('timeStamp').status)
-    status = property(_status)        
+    #def _status(self):
+    #    return(self.orderstatus_set.latest('timeStamp').status)
+    #status = property(_status)        
     
     def removeAllItems(self):
         for item in self.orderitem_set.all():
@@ -304,7 +306,7 @@ class Order(models.Model):
     
     class Admin:
         fields = (
-        (None, {'fields': ('contact','method',)}),
+        (None, {'fields': ('contact','method','status')}),
         ('Shipping Information', {'fields': ('shipStreet1','shipStreet2', 'shipCity','shipState', 'shipPostalCode','shipCountry',), 'classes': 'collapse'}),
         ('Billing Information', {'fields': ('billStreet1','billStreet2', 'billCity','billState', 'billPostalCode','billCountry',), 'classes': 'collapse'}),
         ('Totals', {'fields': ( 'shippingCost', 'tax','total','timeStamp','payment',),}),       
@@ -340,3 +342,7 @@ class OrderStatus(models.Model):
     def __str__(self):
         return self.status
 
+    def save(self):
+        super(OrderStatus, self).save()
+        self.order.status = self.status
+        self.order.save()
