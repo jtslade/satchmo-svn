@@ -254,7 +254,7 @@ def load_US_tax_table():
     defaultTax = TaxClass(description="Default", title="Default")
     defaultTax.save()
     dataFile = "tax-table.csv"
-    dataDir = "./tax/data/"
+    dataDir = os.path.join(settings.DIRNAME,"tax/data")
     reader = csv.reader(open(os.path.join(dataDir, dataFile), "rb"))
     reader.next()       #Skip the header row
     for row in reader:
@@ -270,7 +270,6 @@ if __name__ == '__main__':
     if response == 'yes':
         eraseDB()
     if responseWebda =='yes':
-        #os.system('python webda.py')
         import webda
         webda.main()
     response = string.lower(raw_input("Type 'yes' to load sample store data: "))
