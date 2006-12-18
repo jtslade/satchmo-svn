@@ -11,16 +11,14 @@ def display(request):
     #Show the items in the cart
     cart_list = []
     total = 0
+    all_items = []
     if request.session.get('cart',False):
         tempCart = Cart.objects.get(id=request.session['cart'])
         total = tempCart.total
-        return render_to_response('base_cart.html', {'all_items': tempCart.cartitem_set.all(),
-                                                       'total': total},
-                                                        RequestContext(request))
-    else:
-        return render_to_response('base_cart.html', {'all_items' : [],
-                                                        'total':total},
-                                                        RequestContext(request))
+        all_items = tempCart.cartitem_set.all()
+    return render_to_response('base_cart.html', {'all_items' : all_items,
+                                                 'total':total},
+                                                 RequestContext(request))
 
 def add(request, id):
     #Todo: Error checking for invalid combos
@@ -33,7 +31,6 @@ def add(request, id):
                 'not exist.')
     for option in product.option_group.all():
         chosenOptions.add('%s-%s' % (option.id,request.POST[str(option.id)]))
-        #print '%s-%s' % (option.id,request.POST[str(option.id)])
     try:
         quantity = int(request.POST['quantity'])
     except ValueError:
