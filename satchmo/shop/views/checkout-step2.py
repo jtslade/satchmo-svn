@@ -9,7 +9,7 @@ from django.template import loader
 from satchmo.shop.models import Cart, CartItem, Config
 from satchmo.contact.models import Contact
 from django.conf import settings
-from django import forms
+from django import oldforms as forms
 from django.core import validators
 from satchmo.discount.models import Discount
 #from datetime import date

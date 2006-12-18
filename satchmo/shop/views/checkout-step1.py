@@ -10,7 +10,7 @@ from satchmo.product.models import Item, Category, OptionItem
 from satchmo.shop.models import Cart, CartItem, Config
 from satchmo.contact.models import Contact, AddressBook, PhoneNumber
 from django.conf import settings
-from django import forms
+from django import oldforms as forms
 from django.core import validators
 from satchmo.i18n.models import Country
 

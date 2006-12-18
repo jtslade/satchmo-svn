@@ -1,4 +1,4 @@
-from django import forms
+from django import oldforms as forms
 from django.template import RequestContext, Context
 from django.template import loader
 from django import http
