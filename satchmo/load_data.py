@@ -240,8 +240,11 @@ def load_webda():
     if os.path.isfile(modelFile):
         print "%s - already exists.  Skipping download" % dataFile
     else:
-        urllib.urlretrieve(baseURL+"/"+modelFile, modelFile)
-    urllib.urlretrieve(baseURL+"/"+loaderFile, loaderFile)
+        urllib.urlretrieve(baseURL+"/"+modelFile, modelFile) 
+    if os.path.isfile(loaderFile):
+	print "%s - already exists. Skipping download" % loaderFile
+    else:
+    	urllib.urlretrieve(baseURL+"/"+loaderFile, loaderFile)
     print "Extracting files..."
     os.system('tar -xvzf %s' % modelFile)
     os.system('tar -xvzf %s -C ./i18n' % dataFile)
