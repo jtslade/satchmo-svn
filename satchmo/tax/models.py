@@ -29,7 +29,7 @@ class TaxRate(models.Model):
     """
     taxClass = models.ForeignKey(TaxClass)
     taxZone = models.ForeignKey(Area)
-    percentage = models.FloatField(max_digits=6, decimal_places=4, help_text="% tax for this area and type")
+    percentage = models.FloatField(max_digits=7, decimal_places=6, help_text="% tax for this area and type")
     
     def _country(self):
         return self.taxZone.country.name
