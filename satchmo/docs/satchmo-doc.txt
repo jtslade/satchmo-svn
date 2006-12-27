@@ -123,7 +123,10 @@ dependencies mentioned in the `Requirements`_ section.
 
         cp local_settings-customize.py local_settings.py
 
-3.  Edit your local_settings file for your database.  The following values need to be changed::
+3.  Edit your existing local_settings.py file or copy and customize the settings-customize.py file.  The 
+following values need to be changed::
+
+	cp settings-customize.py settings.py
 
         DATABASE_NAME = 'Your DB Name Here'
         DATABASE_PASSWORD = 'Your DB Password Here'
