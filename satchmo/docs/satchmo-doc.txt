@@ -169,6 +169,8 @@ number of places you might want to configure.
     - SHOP_BASE is used as the prefix for your store.  In the default setting, your store is 
       located at www.yourname.com/shop.  If you would like to change this setting, this is the 
       place to do it.
+    - LOCAL_DEV is used to make sure static files are served properly when developing.  This must
+      be set to FALSE when you deploy your site.
     - CURRENCY is the currency symbol to use within the store.
     - Make sure that your DATABASE_ENGINE variable is also set correctly.
     - You should ensure that all of your paths are setup correctly.  Key ones to look at are:

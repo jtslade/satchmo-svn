@@ -1,6 +1,7 @@
 """
 Each shipping option uses the data in an Order object to calculate the shipping cost and return the value
 """
+from decimal import Decimal
 
 activeModules = (
 ("FlatRate","FlatRate"),
@@ -8,7 +9,7 @@ activeModules = (
 
 class FlatRate(object):
     
-    flatRateFee = 5.00
+    flatRateFee = Decimal("5.00")
     id = "FlatRate"
     
     def __init__(self, cart, contact):
@@ -55,7 +56,7 @@ class FlatRate(object):
 class PerItem(object):
     
     id = "PerItem"
-    perItemFee = 10.00
+    perItemFee = Decimal("4.00")
     
     def __init__(self, cart, contact):
         self.cart = cart

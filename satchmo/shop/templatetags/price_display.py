@@ -12,9 +12,9 @@ def option_price(option_item):
     """
     output = ""
     if option_item.price_change < 0:
-        output = "(- %s%.2f)" % (settings.CURRENCY, abs(option_item.price_change))
+        output = "(- %s%s)" % (settings.CURRENCY, abs(option_item.price_change))
     if option_item.price_change > 0:
-        output = "(+ %s%.2f)" % (settings.CURRENCY, option_item.price_change)
+        output = "(+ %s%s)" % (settings.CURRENCY, option_item.price_change)
     return output
 
 register.simple_tag(option_price)

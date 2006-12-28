@@ -6,11 +6,12 @@ from sets import Set
 from django.template import RequestContext, Context
 from django.conf import settings
 from satchmo.shop.views.utils import bad_or_missing
+from decimal import Decimal
 
 def display(request):
     #Show the items in the cart
     cart_list = []
-    total = 0
+    total = Decimal("0")
     all_items = []
     if request.session.get('cart',False):
         tempCart = Cart.objects.get(id=request.session['cart'])

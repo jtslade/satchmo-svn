@@ -11,6 +11,7 @@ from satchmo.thumbnail.field import ImageWithThumbnailField
 from django.conf import settings
 from satchmo.tax.models import TaxClass
 import os
+from decimal import Decimal
 
 # Create your models here.
 
@@ -329,11 +330,11 @@ class SubItem(models.Model):
     full_name = property(_get_optionName)
     
     def _get_fullPrice(self):
-        price_delta = 0.0
+        price_delta = Decimal("0.0")
         for option in self.options.all():
             if option.price_change:
-                price_delta += float(option.price_change)
-        return(float(self.item.price) + float(price_delta))
+                price_delta += option.price_change
+        return(self.item.price + price_delta)
     unit_price = property(_get_fullPrice)
     
     def _get_optionValues(self):

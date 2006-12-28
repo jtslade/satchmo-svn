@@ -309,15 +309,17 @@ svn co http://svn.satchmo.python-hosting.com/trunk/
 cp local_settings-customize.py local_settings.py
 </pre>
 </li>
-<li><p class="first">Edit your local_settings file for your database.  The following values need to be changed:</p>
+</ol>
+<p>3.  Edit your existing local_settings.py file or copy and customize the settings-customize.py file.  The
+following values need to be changed:</p>
 <pre class="literal-block">
+cp settings-customize.py settings.py
+
 DATABASE_NAME = 'Your DB Name Here'
 DATABASE_PASSWORD = 'Your DB Password Here'
 DATABASE_USER = 'Your DB User Here'
 SECRET_KEY = 'Your secret key her'
 </pre>
-</li>
-</ol>
 <div class="warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">The next step can erase data in the satchmo database. Be sure to have a backup of any critical data</p>
@@ -364,6 +366,9 @@ few that are specific to Satchmo.</p>
 <li><p class="first">SHOP_BASE is used as the prefix for your store.  In the default setting, your store is
 located at www.yourname.com/shop.  If you would like to change this setting, this is the
 place to do it.</p>
+</li>
+<li><p class="first">LOCAL_DEV is used to make sure static files are served properly when developing.  This must
+be set to FALSE when you deploy your site.</p>
 </li>
 <li><p class="first">CURRENCY is the currency symbol to use within the store.</p>
 </li>

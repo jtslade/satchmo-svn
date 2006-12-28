@@ -47,7 +47,7 @@ Checkout
 <h4>Shipping Method</h4>
 {{ order.shippingDescription }}<br/>
 {{ order.shippingMethod }} <br/>
-{{ order.shippingCost }} <br/>
+{{ order.shippingCost|currency }} <br/>
 
 <h4>Total</h4>
 {% if order.discount %}

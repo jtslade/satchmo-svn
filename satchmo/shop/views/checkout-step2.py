@@ -20,6 +20,7 @@ from satchmo.shipping.modules import *
 from satchmo.contact.models import Order, OrderItem
 from satchmo.payment.models import CREDITCHOICES, CreditCardDetail
 from satchmo.tax.modules import simpleTax
+from decimal import Decimal
 
 selection = "Please Select"
 
@@ -90,12 +91,12 @@ class payShipManipulator(forms.Manipulator):
             discountObject = Discount.objects.filter(code=new_data['discount'])[0]
             discount = discountObject.amount
         else: 
-            discount = 0
+            discount = Decimal("0")
         newOrder.discount = discount
         
         # Temp setting of the tax and total so we can save it
-        newOrder.total = 0.0
-        newOrder.tax = 0.0
+        newOrder.total = Decimal("0")
+        newOrder.tax = Decimal("0")
         newOrder.sub_total = cart.total
         newOrder.save()
         newOrder.copyAddresses()
@@ -111,7 +112,7 @@ class payShipManipulator(forms.Manipulator):
         taxProcessor = simpleTax(newOrder)
         newOrder.tax = taxProcessor.process()
         #Calculate the totals
-        newOrder.total = float(cart.total) + float(shipping_instance.cost()) - float(discount) + float(newOrder.tax)
+        newOrder.total = cart.total + shipping_instance.cost() - discount + newOrder.tax
         
         # Save the credit card information
         cc = CreditCardDetail()

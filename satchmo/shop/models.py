@@ -8,6 +8,7 @@ from satchmo.product.models import Item, SubItem
 from django.contrib.sites.models import Site
 from satchmo.contact.models import Contact
 from satchmo.i18n.models import Country
+from decimal import Decimal
 
 class Config(models.Model):
     """
@@ -51,7 +52,7 @@ class Cart(models.Model):
     numItems = property(_get_count)
     
     def _get_total(self):
-        total = 0
+        total = Decimal("0")
         for item in self.cartitem_set.all():
             total += item.subItem.unit_price * item.quantity
         return(total)

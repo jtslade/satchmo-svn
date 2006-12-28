@@ -5,6 +5,7 @@ to be applied to the order.
 This is called during the checkout process.  You must make sure the order
 gets updated with the new tax value
 """
+from decimal import Decimal
 
 class simpleTax(object):
     """
@@ -23,4 +24,4 @@ class simpleTax(object):
         """
         Calculate the tax and return it
         """
-        return 3.5
+        return Decimal("3.5")
