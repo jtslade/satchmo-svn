@@ -170,12 +170,16 @@ class AddressBook(models.Model):
             existingBilling = None
             existingShipping = None
         
-        #If we're setting shipping & one already exists delete it
+        #If we're setting shipping & one already exists remove previous default
         if self.is_default_shipping and existingShipping:
-            existingShipping.delete()
-        #If we're setting billing & one already exists delete it
+            #existingShipping.delete()
+            existingShipping.is_default_shipping = False
+            existingShipping.save()
+        #If we're setting billing & one already exists remove previous default
         if self.is_default_billing and existingBilling:
-            existingBilling.delete()
+            #existingBilling.delete()
+            existingBilling.is_default_billing = False
+            existingBilling.save()
         if not existingBilling:
             self.is_default_billing = True
         if not existingShipping:
