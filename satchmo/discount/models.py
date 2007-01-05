@@ -5,6 +5,11 @@ Sets up a discount that can be applied to a product
 from django.db import models
 from satchmo.product.models import Item
 from datetime import date
+from satchmo.shop.utils.validators import MutuallyExclusiveWithField
+
+
+percentage_validator = MutuallyExclusiveWithField('amount')
+amount_validator = MutuallyExclusiveWithField('percentage')
 
 class Discount(models.Model):
     """
@@ -13,8 +18,10 @@ class Discount(models.Model):
     """
     description = models.CharField(maxlength=100)
     code = models.CharField(maxlength=20, help_text="Coupon Code")
-    amount = models.FloatField("Discount Amount", decimal_places=2, max_digits=4, blank=True, help_text="Enter absolute amount OR percentage")
-    percentage = models.FloatField("Discount Percentage", decimal_places=2, max_digits=4, blank=True, null=True, help_text="Enter absolute amount OR percentage")
+    amount = models.FloatField("Discount Amount", decimal_places=2, max_digits=4, blank=True, null=True,
+                                help_text="Enter absolute amount OR percentage", validator_list=[amount_validator])
+    percentage = models.FloatField("Discount Percentage", decimal_places=2, max_digits=4, blank=True, 
+                                    null=True, help_text="Enter absolute amount OR percentage", validator_list=[percentage_validator])
     allowedUses = models.IntegerField("Number of allowed uses", blank=True, null=True)
     numUses = models.IntegerField("Number of times already used", blank=True, null=True)
     minOrder = models.FloatField("Minimum order value", decimal_places=2, max_digits=6, blank=True, null=True)

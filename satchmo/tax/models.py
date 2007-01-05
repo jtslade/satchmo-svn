@@ -3,7 +3,8 @@ Store tables used to calculate tax on a product
 """
 
 from django.db import models
-from satchmo.i18n.models import Area
+from satchmo.i18n.models import Area, Country
+from satchmo.shop.utils.validators import MutuallyExclusiveWithField
 
 class TaxClass(models.Model):
     """
@@ -23,20 +24,30 @@ class TaxClass(models.Model):
     class Admin:
         pass
         
+
+taxrate_zoneandcountry_zone_validator = MutuallyExclusiveWithField('taxCountry')
+taxrate_zoneandcountry_country_validator = MutuallyExclusiveWithField('taxZone')
 class TaxRate(models.Model):
     """
     Actual percentage tax based on area and product class
     """
     taxClass = models.ForeignKey(TaxClass)
-    taxZone = models.ForeignKey(Area)
+    taxZone = models.ForeignKey(Area, blank=True, null=True, 
+                                validator_list=[taxrate_zoneandcountry_zone_validator])
+    taxCountry = models.ForeignKey(Country, blank=True, null=True,
+                                   validator_list=[taxrate_zoneandcountry_country_validator])
     percentage = models.FloatField(max_digits=7, decimal_places=6, help_text="% tax for this area and type")
     
     def _country(self):
-        return self.taxZone.country.name
+        if self.taxZone:
+            return self.taxZone.country.name
+        else:
+            return self.taxCountry.name
     country = property(_country)
     
     def __str__(self):
-        return ("%s - %s" % (self.taxClass, self.taxZone))
+        return ("%s - %s" % (self.taxClass,
+                             self.taxZone and self.taxZone or self.taxCountry))
     
     class Admin:
-        list_display = ("taxClass", "taxZone", "percentage")
+        list_display = ("taxClass", "taxZone", "taxCountry", "percentage")
