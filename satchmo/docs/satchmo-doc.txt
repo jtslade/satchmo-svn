@@ -97,7 +97,7 @@ features in Satchmo.
 
 - `Python Imaging Library`_
 - `Elementtree`_ (included in Python 2.5+)
-- `Python cryptography toolkit`_
+- `Python cryptography toolkit`_ ('Python cryptography toolkit(windows)'_)
 - `ReportLab`_
 - `Tiny RML2PDF`_ (`download link`_)
 
@@ -290,6 +290,7 @@ Roadmap
 .. _Python Imaging Library: http://www.pythonware.com/products/pil/
 .. _Elementtree: http://effbot.org/zone/element-index.htm
 .. _Python cryptography toolkit: http://www.amk.ca/python/code/crypto
+.. _Python cryptography toolkit(windows): http://www.voidspace.org.uk/python/modules.shtml#pycrypto
 .. _ReportLab: http://www.reportlab.org/
 .. _DocUtils: http://docutils.sourceforge.net/
 .. _Webda: http://webda.python-hosting.com/

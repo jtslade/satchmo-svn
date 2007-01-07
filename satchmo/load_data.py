@@ -3,6 +3,8 @@ import urllib
 from os.path import isdir, isfile, join, dirname
 import string
 import csv
+import tarfile
+import shutil
 sys.path.insert(0, "django-src-here")
 sys.path.insert(0, "satchmo-src-here")
 
@@ -242,12 +244,21 @@ def load_webda():
     else:
         urllib.urlretrieve(baseURL+"/"+modelFile, modelFile) 
     if os.path.isfile(loaderFile):
-	print "%s - already exists. Skipping download" % loaderFile
+        print "%s - already exists. Skipping download" % loaderFile
     else:
     	urllib.urlretrieve(baseURL+"/"+loaderFile, loaderFile)
     print "Extracting files..."
-    os.system('tar -xvzf %s' % modelFile)
-    os.system('tar -xvzf %s -C ./i18n' % dataFile)
+    #Use tar so it's easier on Windows boxes
+    #File moves are required for windows but work fine in unix
+    tar = tarfile.open(modelFile, 'r:gz')
+    tar.extractall()
+    tar.close()
+    tar = tarfile.open(dataFile, 'r:gz')
+    tar.extractall()
+    tar.close()
+    if os.path.exists("./i18n/data"):
+        shutil.rmtree("./i18n/data")
+    shutil.move("./data","./i18n/data")
 
 def load_US_tax_table():
     """ Load a simple sales tax table for the US """
