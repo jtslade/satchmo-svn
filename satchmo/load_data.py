@@ -248,17 +248,23 @@ def load_webda():
     else:
     	urllib.urlretrieve(baseURL+"/"+loaderFile, loaderFile)
     print "Extracting files..."
-    #Use tar so it's easier on Windows boxes
+    #Use tarfile so it's easier on Windows boxes
     #File moves are required for windows but work fine in unix
-    tar = tarfile.open(modelFile, 'r:gz')
-    tar.extractall()
-    tar.close()
-    tar = tarfile.open(dataFile, 'r:gz')
-    tar.extractall()
-    tar.close()
-    if os.path.exists("./i18n/data"):
-        shutil.rmtree("./i18n/data")
-    shutil.move("./data","./i18n/data")
+    #Extract all is in newer python versions.  Drop back to system
+    #calls if this doesn't work
+    try:
+        tar = tarfile.open(modelFile, 'r:gz')
+        tar.extractall()
+        tar.close()
+        tar = tarfile.open(dataFile, 'r:gz')
+        tar.extractall()
+        tar.close()
+        if os.path.exists("./i18n/data"):
+            shutil.rmtree("./i18n/data")
+        shutil.move("./data","./i18n/data")
+    except AttributeError:
+        os.system('tar -xvzf %s' % modelFile)
+        os.system('tar -xvzf %s -C ./i18n' % dataFile)
 
 def load_US_tax_table():
     """ Load a simple sales tax table for the US """
