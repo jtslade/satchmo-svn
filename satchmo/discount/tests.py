@@ -13,15 +13,24 @@ r"""
 #Change start date to the future
 >>> start = datetime.date(2007, 5, 1)                                           
 >>> disc1.startDate = start
+>>> disc1.save()
 >>> disc1.isValid()
 (False, 'This coupon is not active yet.')
 
 #Change end date to the past
 >>> end = datetime.date(2006, 12, 31)
 >>> disc1.endDate = end
+>>> disc1.save()
 >>> disc1.isValid()
 (False, 'This coupon is not active yet.')
 
+#Make it invalid
+>>> disc1.endDate = datetime.date(2008, 12, 1)
+>>> disc1.startDate = datetime.date(2006, 12, 1)
+>>> disc1.active = False
+>>> disc1.save()
+>>> disc1.isValid()
+(False, 'This coupon is not active.')
 """
 
 if __name__ == "__main__":

@@ -51,6 +51,7 @@ IntegrityError: (1062, "Duplicate entry '1-1' for key 2")
 >>> contact1.shipping_address
 <AddressBook: Jim Tester - Work Address>
 
+
 #Need to add some more checks here
 """
 

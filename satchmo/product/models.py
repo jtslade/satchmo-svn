@@ -22,6 +22,7 @@ class Category(models.Model):
     name = models.CharField(core=True, maxlength=200)
     slug = models.SlugField(prepopulate_from=('name',),help_text="Used for URLs",)
     parent = models.ForeignKey('self', blank=True, null=True, related_name='child')
+    meta = models.TextField(blank=True, null=True, help_text="Meta information for category")
     description = models.TextField(blank=True,help_text="Optional")
         
     def _recurse_for_parents_slug(self, cat_obj):
@@ -157,11 +158,12 @@ class Item(models.Model):
     verbose_name = models.CharField("Full Name", maxlength=255)
     short_name = models.SlugField("Slug Name", prepopulate_from=("verbose_name",), unique=True, help_text="This is a short, descriptive name of the shirt that will be used in the URL link to this item")
     description = models.TextField("Description of product", help_text="This field can contain HTML and should be a few paragraphs explaining the background of the product, and anything that would help the potential customer make their purchase.")
+    meta = models.TextField(maxlength=200, blank=True, null=True, help_text="Meta information for this item")
     date_added = models.DateField(null=True, blank=True, auto_now_add=True)
     active = models.BooleanField("Is product active?", default=True, help_text="This will determine whether or not this product will appear on the site")
     featured = models.BooleanField("Featured Item", default=False, help_text="Featured items will show on the front page")
     option_group = models.ManyToManyField(OptionGroup, filter_interface=True, blank=True)
-    price = models.FloatField(max_digits=6, decimal_places=2, help_text="Base price for this item")
+    base_price = models.FloatField(max_digits=6, decimal_places=2, help_text="Base price for this item")
     weight = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True, )
     length = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
     width = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
@@ -174,6 +176,11 @@ class Item(models.Model):
     
     def __str__(self):
         return self.short_name 
+    
+    def _get_price(self):
+        # On some systems, the price was not getting set as a decimal type.  This ensures that it does.
+        return Decimal(self.base_price)
+    price = property(_get_price)
     
     def _get_mainImage(self):
         if self.itemimage_set.count() > 0:
@@ -253,7 +260,8 @@ class Item(models.Model):
     class Admin: 
         list_display = ('verbose_name', 'active')
         fields = (
-        (None, {'fields': ('category','verbose_name','short_name','description','date_added','active','featured','price',)}),
+        (None, {'fields': ('category','verbose_name','short_name','description','date_added','active','featured','base_price',)}),
+        ('Meta Data', {'fields': ('meta',), 'classes': 'collapse'}),
         ('Item Dimensions', {'fields': (('length', 'width','height',),'weight'), 'classes': 'collapse'}),
         ('Options', {'fields': ('option_group','create_subs',),}), 
         ('Tax', {'fields':('taxable', 'taxClass'), 'classes': 'collapse'}),
@@ -333,7 +341,7 @@ class SubItem(models.Model):
         price_delta = Decimal("0.0")
         for option in self.options.all():
             if option.price_change:
-                price_delta += option.price_change
+                price_delta += Decimal(option.price_change)
         return(self.item.price + price_delta)
     unit_price = property(_get_fullPrice)
     

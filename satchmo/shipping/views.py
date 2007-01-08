@@ -34,8 +34,10 @@ def displayDoc(request, id, doc):
                 'order' : order
                 })
     pdf = trml2pdf.parseString(t.render(c))
+    print "test"
     response.write(pdf)
     return response
 displayDoc = staff_member_required(never_cache(displayDoc))
 
-    
+#Note - rendering an image in the file causes problems when running the dev
+#server on windows.  Seems to be an issue with trml2pdf

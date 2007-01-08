@@ -124,22 +124,24 @@ def load_data():
     
     print "Creating items..."   
     #Create some items
-    i1 = Item(verbose_name="Django Rocks shirt", short_name="DJ-Rocks", description="Really cool shirt", price="20.00", 
+    from decimal import Decimal
+    p1 = Decimal("20.00")
+    i1 = Item(verbose_name="Django Rocks shirt", short_name="DJ-Rocks", description="Really cool shirt", base_price=p1, 
              active=True, featured=True)
     i1.save()
     i1.category.add(cat1)
     i1.save()
-    i2 = Item(verbose_name="Python Rocks shirt", short_name="PY-Rocks", description="Really cool python shirt", price="19.50", 
+    i2 = Item(verbose_name="Python Rocks shirt", short_name="PY-Rocks", description="Really cool python shirt", base_price="19.50", 
              active=True, featured=True)
     i2.save()
     i2.category.add(cat2)
     i2.save()
-    i3 = Item(verbose_name="A really neat book", short_name="neat-book", description="A neat book.  You should buy it.", price="5.00", 
+    i3 = Item(verbose_name="A really neat book", short_name="neat-book", description="A neat book.  You should buy it.", base_price="5.00", 
              active=True, featured=True)
     i3.save()
     i3.category.add(cat4)
     i3.save()
-    i4 = Item(verbose_name="Robots Attack!", short_name="robot-attack", description="Robots try to take over the world.", price="7.99", 
+    i4 = Item(verbose_name="Robots Attack!", short_name="robot-attack", description="Robots try to take over the world.", base_price="7.99", 
              active=True, featured=True)
     i4.save()
     i4.category.add(cat5)

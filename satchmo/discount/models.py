@@ -36,6 +36,8 @@ class Discount(models.Model):
     
     def isValid(self):
         #Make sure this discount still has available uses and is in the current date range
+        if not self.active:
+            return(False, "This coupon is not active.")
         if self.startDate > date.today():
             return(False,"This coupon is not active yet.")
         if self.endDate < date.today():
