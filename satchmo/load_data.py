@@ -1,6 +1,7 @@
 import os, sys
 import urllib
 from os.path import isdir, isfile, join, dirname
+import os
 import string
 import csv
 import tarfile
@@ -45,6 +46,25 @@ def delete_db(settings):
         for cmd in ['drop database if exists %s', 
                     'create database %s']: 
             s.query(cmd % settings.DATABASE_NAME)
+            
+    elif engine == 'postgresql':
+
+        if settings.DATABASE_NAME == '':
+            raise AssertionError, "You must specified a value for DATABASE_NAME in local_settings.py."
+        if settings.DATABASE_USER == '':
+            raise AssertionError, "You must specified a value for DATABASE_USER in local_settings.py."
+        params=" --username=%s  --password" % settings.DATABASE_USER
+        if settings.DATABASE_HOST:
+            params += " --host=%s" % settings.DATABASE_HOST
+        if settings.DATABASE_PORT:
+            params += " --port=%s" % settings.DATABASE_PORT
+        params += " %s" % settings.DATABASE_NAME
+        print """You will be prompted for the password for the user
+        '%s' twice.  Once to drop an existing database and then a second time
+        for create the database """ % settings.DATABASE_USER
+        for cmd in ['dropdb %s', 'createdb %s']:
+            os.system(cmd % params) 
+    
     else: 
         raise AssertionError, "Unknown database engine %s", engine
 
