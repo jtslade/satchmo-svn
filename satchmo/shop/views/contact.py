@@ -39,7 +39,12 @@ def form(request):
                      [shop_email], fail_silently=False)
             return http.HttpResponseRedirect('%s/contact/thankyou' % (settings.SHOP_BASE))
     else: #Not a post so create an empty form
-        form = ContactForm()
+        initialData = {}
+        if request.user.is_authenticated():
+            initialData['sender'] = request.user.email
+            initialData['name'] = request.user.first_name + " " + request.user.last_name
+        form = ContactForm(initial=initialData)
+        
 
     return render_to_response('contact_form.html', {'form': form},
                                 RequestContext(request))
