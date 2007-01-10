@@ -22,7 +22,7 @@ class Category(models.Model):
     name = models.CharField(core=True, maxlength=200)
     slug = models.SlugField(prepopulate_from=('name',),help_text="Used for URLs",)
     parent = models.ForeignKey('self', blank=True, null=True, related_name='child')
-    meta = models.TextField(blank=True, null=True, help_text="Meta information for category")
+    meta = models.TextField(blank=True, null=True, help_text="Meta description for this category")
     description = models.TextField(blank=True,help_text="Optional")
         
     def _recurse_for_parents_slug(self, cat_obj):
@@ -158,7 +158,7 @@ class Item(models.Model):
     verbose_name = models.CharField("Full Name", maxlength=255)
     short_name = models.SlugField("Slug Name", prepopulate_from=("verbose_name",), unique=True, help_text="This is a short, descriptive name of the shirt that will be used in the URL link to this item")
     description = models.TextField("Description of product", help_text="This field can contain HTML and should be a few paragraphs explaining the background of the product, and anything that would help the potential customer make their purchase.")
-    meta = models.TextField(maxlength=200, blank=True, null=True, help_text="Meta information for this item")
+    meta = models.TextField(maxlength=200, blank=True, null=True, help_text="Meta description for this item")
     date_added = models.DateField(null=True, blank=True, auto_now_add=True)
     active = models.BooleanField("Is product active?", default=True, help_text="This will determine whether or not this product will appear on the site")
     featured = models.BooleanField("Featured Item", default=False, help_text="Featured items will show on the front page")

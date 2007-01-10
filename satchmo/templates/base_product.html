@@ -1,4 +1,11 @@
 {% extends "base.html" %}
+
+{% block extra-head %}
+{% if item.meta %}
+    <meta name="description" content="{{item.meta}}">
+{% endif %}
+{% endblock %}
+
 {% load satchmo.thumbnail %}
 {% load satchmo.price_display %}
 {% load satchmo.currency_filter %}

@@ -3,6 +3,8 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
+    {% block extra-head %}
+    {% endblock %}
     <link rel="stylesheet" href="{{media_url}}/css/style.css" />
     <title>{% block title %} {{ shop_name }} {% endblock %}</title>
 </head>
