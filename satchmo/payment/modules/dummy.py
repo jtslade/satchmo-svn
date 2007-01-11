@@ -5,6 +5,7 @@ interface.
 
 See the authorizenet module for the reference implementation
 """
+from django.utils.translation import gettext_lazy as _
 
 class PaymentProcessor(object):
     
@@ -18,6 +19,6 @@ class PaymentProcessor(object):
         # Do some processing here
         
         reason_code = "0"
-        response_text = "Success"
+        response_text = _("Success")
         
         return (True, reason_code, response_text)

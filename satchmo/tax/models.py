@@ -5,6 +5,7 @@ Store tables used to calculate tax on a product
 from django.db import models
 from satchmo.i18n.models import Area, Country
 from satchmo.shop.utils.validators import MutuallyExclusiveWithField
+from django.utils.translation import gettext_lazy as _
 
 class TaxClass(models.Model):
     """
@@ -12,14 +13,15 @@ class TaxClass(models.Model):
     might vary based on the type of product.  In the US, clothing could be 
     taxed at a different rate than food items.
     """
-    title = models.CharField("Title", maxlength=20, help_text="Displayed title of this tax")
-    description = models.CharField("Description", maxlength=30,help_text='Description of products that would be taxed')
+    title = models.CharField(_("Title"), maxlength=20, help_text=_("Displayed title of this tax"))
+    description = models.CharField(_("Description"), maxlength=30,help_text=_('Description of products that would be taxed'))
     
     def __str__(self):
         return self.title
     
     class Meta:
-        verbose_name_plural = "Tax Classes"
+        verbose_name = _("Tax Class")
+        verbose_name_plural = _("Tax Classes")
     
     class Admin:
         pass
@@ -27,6 +29,7 @@ class TaxClass(models.Model):
 
 taxrate_zoneandcountry_zone_validator = MutuallyExclusiveWithField('taxCountry')
 taxrate_zoneandcountry_country_validator = MutuallyExclusiveWithField('taxZone')
+
 class TaxRate(models.Model):
     """
     Actual percentage tax based on area and product class
@@ -36,7 +39,7 @@ class TaxRate(models.Model):
                                 validator_list=[taxrate_zoneandcountry_zone_validator])
     taxCountry = models.ForeignKey(Country, blank=True, null=True,
                                    validator_list=[taxrate_zoneandcountry_country_validator])
-    percentage = models.FloatField(max_digits=7, decimal_places=6, help_text="% tax for this area and type")
+    percentage = models.FloatField(_("Percentage"), max_digits=7, decimal_places=6, help_text=_("% tax for this area and type"))
     
     def _country(self):
         if self.taxZone:
@@ -51,3 +54,7 @@ class TaxRate(models.Model):
     
     class Admin:
         list_display = ("taxClass", "taxZone", "taxCountry", "percentage")
+
+    class Meta:
+        verbose_name = _("Tax Rate")
+        verbose_name_plural = _("Tax Rates")

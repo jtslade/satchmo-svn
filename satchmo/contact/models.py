@@ -6,25 +6,24 @@ from django.db import models
 from django.contrib.auth.models import User 
 from satchmo.product.models import SubItem
 from satchmo.shipping.modules import activeModules
-#from satchmo.shop.models import Cart
-# Create your models here.
+from django.utils.translation import gettext_lazy as _
 
 CONTACT_CHOICES = (
-    ('Customer', 'Customer'),
-    ('Supplier', 'Supplier'),
-    ('Distributor', 'Distributor'),
+    (_('Customer'), _('Customer')),
+    (_('Supplier'), _('Supplier')),
+    (_('Distributor'), _('Distributor')),
 )
 
 ORGANIZATION_CHOICES = (
-    ('Company', 'Company'),
-    ('Government','Government'),
-    ('Non-profit','Non-profit'),
+    (_('Company'), _('Company')),
+    (_('Government'),_('Government')),
+    (_('Non-profit'),_('Non-profit')),
 )
 
 ORGANIZATION_ROLE_CHOICES = (
-    ('Supplier','Supplier'),
-    ('Distributor','Distributor'),
-    ('Manufacturer','Manufacturer'),
+    (_('Supplier'),_('Supplier')),
+    (_('Distributor'),_('Distributor')),
+    (_('Manufacturer'),_('Manufacturer')),
 
 )
 class Organization(models.Model):
@@ -32,11 +31,11 @@ class Organization(models.Model):
     An organization can be a company, government or any kind of group to 
     collect contact info.
     """
-    name = models.CharField(maxlength=50, core=True)
-    type = models.CharField(maxlength=30,choices=ORGANIZATION_CHOICES)
-    role = models.CharField(maxlength=30,choices=ORGANIZATION_ROLE_CHOICES)
-    create_date = models.DateField(auto_now_add=True)
-    notes = models.TextField(maxlength=200, blank=True, null=True)
+    name = models.CharField(_("Name"), maxlength=50, core=True)
+    type = models.CharField(_("Type"), maxlength=30,choices=ORGANIZATION_CHOICES)
+    role = models.CharField(_("Role"), maxlength=30,choices=ORGANIZATION_ROLE_CHOICES)
+    create_date = models.DateField(_("Creation Date"), auto_now_add=True)
+    notes = models.TextField(_("Notes"), maxlength=200, blank=True, null=True)
     
     def __str__(self):
         return self.name
@@ -44,21 +43,25 @@ class Organization(models.Model):
     class Admin:
         list_filter = ['type','role']
         list_display = ['name','type','role']
+    
+    class Meta:
+        verbose_name = _("Organization")
+        verbose_name_plural = _("Organizations")
         
 class Contact(models.Model):
     """
     A customer, supplier or any individual that a store owner might interact with.
     """
-    first_name = models.CharField(maxlength=30, core=True)
-    last_name = models.CharField(maxlength=30, core=True)
+    first_name = models.CharField(_("First Name"), maxlength=30, core=True)
+    last_name = models.CharField(_("Last Name"), maxlength=30, core=True)
     user = models.ForeignKey(User, unique=True, blank=True, null=True, edit_inline=models.TABULAR, 
                             num_in_admin=1,min_num_in_admin=1, max_num_in_admin=1,num_extra_on_change=0)
-    role = models.CharField(maxlength=20, blank=True, null=True, choices=CONTACT_CHOICES)
+    role = models.CharField(_("Role"), maxlength=20, blank=True, null=True, choices=CONTACT_CHOICES)
     organization = models.ForeignKey(Organization, blank=True, null=True)
-    dob = models.DateField(blank=True, null=True)   
-    email = models.EmailField(blank=True)
-    notes = models.TextField("Notes",maxlength=500, blank=True)
-    create_date = models.DateField(auto_now_add=True)
+    dob = models.DateField(_("Date of Birth"), blank=True, null=True)   
+    email = models.EmailField(_("Email"), blank=True)
+    notes = models.TextField(_("Notes"),maxlength=500, blank=True)
+    create_date = models.DateField(_("Creation Date"), auto_now_add=True)
     
     def _get_full_name(self):
         "Returns the person's full name."
@@ -93,18 +96,22 @@ class Contact(models.Model):
         list_display = ('last_name','first_name','organization','role')
         list_filter = ['create_date', 'role', 'organization']
         ordering = ['last_name']
+    
+    class Meta:
+        verbose_name = _("Contact")
+        verbose_name_plural = _("Contacts")
 
 PHONE_CHOICES = (
-    ('Work', 'Work'),
-    ('Home', 'Home'),
-    ('Fax', 'Fax'),
-    ('Mobile','Mobile'),
+    (_('Work'), _('Work')),
+    (_('Home'), _('Home')),
+    (_('Fax'), _('Fax')),
+    (_('Mobile'),_('Mobile')),
 )
 
 INTERACTION_CHOICES = (
-    ('Email','Email'),
-    ('Phone','Phone'),
-    ('In-person','In-person'),
+    (_('Email'),_('Email')),
+    (_('Phone'),_('Phone')),
+    (_('In-person'),_('In-person')),
 )
 
 class Interaction(models.Model):
@@ -113,24 +120,28 @@ class Interaction(models.Model):
     in-person interactions.
     """
     contact = models.ForeignKey(Contact)
-    type = models.CharField(maxlength=30,choices=INTERACTION_CHOICES)
-    date_time = models.DateTimeField(core=True)
-    description = models.TextField(maxlength=200)
+    type = models.CharField(_("Type"), maxlength=30,choices=INTERACTION_CHOICES)
+    date_time = models.DateTimeField(_("Date and Time"), core=True)
+    description = models.TextField(_("Description"), maxlength=200)
     
     def __str__(self):
         return ("%s - %s" % (self.contact.full_name, self.type))
     
     class Admin:
         list_filter = ['type', 'date_time']
+        
+    class Meta:
+        verbose_name = _("Interaction")
+        verbose_name_plural = _("Interactions")
      
 class PhoneNumber(models.Model):
     """
     Multiple phone numbers can be associated with a contact.  Cell, Home, Business etc.
     """
     contact = models.ForeignKey(Contact,edit_inline=models.TABULAR, num_in_admin=1)
-    type = models.CharField("Description", choices=PHONE_CHOICES, maxlength=20)
-    phone = models.CharField(blank=True, maxlength=12, core=True)
-    primary = models.BooleanField(default=False)
+    type = models.CharField(_("Description"), choices=PHONE_CHOICES, maxlength=20)
+    phone = models.CharField(_("Phone Number"), blank=True, maxlength=12, core=True)
+    primary = models.BooleanField(_("Primary"), default=False)
     
     def __str__(self):
         return ("%s - %s" % (self.type, self.phone))
@@ -138,21 +149,23 @@ class PhoneNumber(models.Model):
     class Meta:
         unique_together = (("contact", "primary"),)
         ordering = ['-primary']
+        verbose_name = _("Phone Number")
+        verbose_name_plural = _("Phone Numbers")
         
 class AddressBook(models.Model):
     """
     Address information associated with a contact.
     """
     contact=models.ForeignKey(Contact,edit_inline=models.STACKED, num_in_admin=1)
-    description=models.CharField("Description", maxlength=20,help_text='Description of address - Home,Relative, Office, Warehouse ,etc.',)
-    street1=models.CharField("Street",core=True, maxlength=50)
-    street2=models.CharField("Street", maxlength=50, blank=True)
-    city=models.CharField("City", maxlength=50)
-    state=models.CharField("State", maxlength=10)
-    postalCode=models.CharField("Zip Code", maxlength=10)
-    country=models.CharField("Country", maxlength=50, blank=True)
-    is_default_shipping=models.BooleanField("Default Shipping Address", default=False)
-    is_default_billing=models.BooleanField("Default Billing Address", default=False)
+    description=models.CharField(_("Description"), maxlength=20,help_text=_('Description of address - Home,Relative, Office, Warehouse ,etc.',))
+    street1=models.CharField(_("Street"),core=True, maxlength=50)
+    street2=models.CharField(_("Street"), maxlength=50, blank=True)
+    city=models.CharField(_("City"), maxlength=50)
+    state=models.CharField(_("State"), maxlength=10)
+    postalCode=models.CharField(_("Zip Code"), maxlength=10)
+    country=models.CharField(_("Country"), maxlength=50, blank=True)
+    is_default_shipping=models.BooleanField(_("Default Shipping Address"), default=False)
+    is_default_billing=models.BooleanField(_("Default Billing Address"), default=False)
 
     def __str__(self):
        return ("%s - %s" % (self.contact.full_name, self.description))
@@ -186,27 +199,28 @@ class AddressBook(models.Model):
             self.is_default_shipping = True
         super(AddressBook, self).save()
         
+        class Meta:
+            verbose_name = _("Address Book")
+            verbose_name_plural = _("Address Books")
 
-
-# Create your models here.
 
 ORDER_CHOICES = (
-    ('Online', 'Online'),
-    ('In Person', 'In Person'),
-    ('Show', 'Show'),
+    (_('Online'), _('Online')),
+    (_('In Person'), _('In Person')),
+    (_('Show'), _('Show')),
 )
 
 ORDER_STATUS = (
-    ('Temp', 'Temp'),
-    ('Pending', 'Pending'),
-    ('In Process', 'In Process'),
-    ('Shipped', 'Shipped'),
+    (_('Temp'), _('Temp')),
+    (_('Pending'), _('Pending')),
+    (_('In Process'), _('In Process')),
+    (_('Shipped'), _('Shipped')),
 )
 
 PAYMENT_CHOICES = (
-    ('Cash','Cash'),
-    ('Credit Card','Credit Card'),
-    ('Check','Check'),
+    (_('Cash'),_('Cash')),
+    (_('Credit Card'),_('Credit Card')),
+    (_('Check'),_('Check')),
 )
 
 class Order(models.Model):
@@ -215,30 +229,30 @@ class Order(models.Model):
     A user's address or other info could change over time.
     """
     contact = models.ForeignKey(Contact)
-    shipStreet1=models.CharField("Street",maxlength=50, blank=True)
-    shipStreet2=models.CharField("Street", maxlength=50, blank=True)
-    shipCity=models.CharField("City", maxlength=50, blank=True)
-    shipState=models.CharField("State", maxlength=10, blank=True)
-    shipPostalCode=models.CharField("Zip Code", maxlength=10, blank=True)
-    shipCountry=models.CharField("Country", maxlength=50, blank=True)
-    billStreet1=models.CharField("Street",maxlength=50, blank=True)
-    billStreet2=models.CharField("Street", maxlength=50, blank=True)
-    billCity=models.CharField("City", maxlength=50, blank=True)
-    billState=models.CharField("State", maxlength=10, blank=True)
-    billPostalCode=models.CharField("Zip Code", maxlength=10, blank=True)
-    billCountry=models.CharField("Country", maxlength=50, blank=True)
-    sub_total = models.FloatField(max_digits=6, decimal_places=2, blank=True, null=True)
-    total = models.FloatField(max_digits=6,decimal_places=2, blank=True, null=True)
-    discount = models.FloatField(max_digits=6, decimal_places=2, blank=True, null=True)
-    payment= models.CharField(choices=PAYMENT_CHOICES, maxlength=25, blank=True)
-    method = models.CharField(choices=ORDER_CHOICES, maxlength=50, blank=True)
-    shippingDescription = models.CharField(maxlength=50, blank=True, null=True)
-    shippingMethod = models.CharField(maxlength=50, blank=True, null=True)
-    shippingModel = models.CharField(choices=activeModules, maxlength=30, blank=True, null=True)
-    shippingCost = models.FloatField(max_digits=6, decimal_places=2, blank=True, null=True)
-    tax = models.FloatField(max_digits=6, decimal_places=2, blank=True, null=True)
-    timeStamp = models.DateTimeField(blank=True, null=True, auto_now_add=True)
-    status = models.CharField(maxlength=20, choices=ORDER_STATUS, core=True, blank=True, help_text="This is automatically set")
+    shipStreet1=models.CharField(_("Street"),maxlength=50, blank=True)
+    shipStreet2=models.CharField(_("Street"), maxlength=50, blank=True)
+    shipCity=models.CharField(_("City"), maxlength=50, blank=True)
+    shipState=models.CharField(_("State"), maxlength=10, blank=True)
+    shipPostalCode=models.CharField(_("Zip Code"), maxlength=10, blank=True)
+    shipCountry=models.CharField(_("Country"), maxlength=50, blank=True)
+    billStreet1=models.CharField(_("Street"),maxlength=50, blank=True)
+    billStreet2=models.CharField(_("Street"), maxlength=50, blank=True)
+    billCity=models.CharField(_("City"), maxlength=50, blank=True)
+    billState=models.CharField(_("State"), maxlength=10, blank=True)
+    billPostalCode=models.CharField(_("Zip Code"), maxlength=10, blank=True)
+    billCountry=models.CharField(_("Country"), maxlength=50, blank=True)
+    sub_total = models.FloatField(_("Sub total"), max_digits=6, decimal_places=2, blank=True, null=True)
+    total = models.FloatField(_("Total"), max_digits=6,decimal_places=2, blank=True, null=True)
+    discount = models.FloatField(_("Discount"), max_digits=6, decimal_places=2, blank=True, null=True)
+    payment= models.CharField(_("Payment"), choices=PAYMENT_CHOICES, maxlength=25, blank=True)
+    method = models.CharField(_("Payment method"), choices=ORDER_CHOICES, maxlength=50, blank=True)
+    shippingDescription = models.CharField(_("Shipping Description"), maxlength=50, blank=True, null=True)
+    shippingMethod = models.CharField(_("Shipping Method"), maxlength=50, blank=True, null=True)
+    shippingModel = models.CharField(_("Shipping Models"), choices=activeModules, maxlength=30, blank=True, null=True)
+    shippingCost = models.FloatField(_("Shipping Cost"), max_digits=6, decimal_places=2, blank=True, null=True)
+    tax = models.FloatField(_("Tax"), max_digits=6, decimal_places=2, blank=True, null=True)
+    timeStamp = models.DateTimeField(_("Time Stamp"), blank=True, null=True, auto_now_add=True)
+    status = models.CharField(_("Status"), maxlength=20, choices=ORDER_STATUS, core=True, blank=True, help_text=_("This is automatically set"))
     
     def __str__(self):
         return self.contact.full_name
@@ -318,8 +332,10 @@ class Order(models.Model):
         list_display = ('contact', 'timeStamp', 'total','status', 'invoice', 'packingslip', 'shippinglabel')
         list_filter = ['timeStamp','contact']
         date_hierarchy = 'timeStamp'
+    
     class Meta:
-        verbose_name = "Product Order"
+        verbose_name = _("Product Order")
+        verbose_name_plural = _("Product Orders")
         
 class OrderItem(models.Model):
     """
@@ -327,21 +343,25 @@ class OrderItem(models.Model):
     """
     order = models.ForeignKey(Order, edit_inline=models.TABULAR, num_in_admin=3)
     item = models.ForeignKey(SubItem)
-    quantity = models.IntegerField(core=True)
-    unitPrice = models.FloatField(max_digits=6,decimal_places=2)
-    lineItemPrice = models.FloatField(max_digits=6,decimal_places=2)
+    quantity = models.IntegerField(_("Quantity"), core=True)
+    unitPrice = models.FloatField(_("Unit price"), max_digits=6,decimal_places=2)
+    lineItemPrice = models.FloatField(_("Line item price"), max_digits=6,decimal_places=2)
     
     def __str__(self):
         return self.item.full_name
+    
+    class Meta:
+        verbose_name = _("Order Line Item")
+        verbose_name_plural = _("Order Line Items")
 
 class OrderStatus(models.Model):
     """
     An order will have multiple statuses as it moves its way through processing.
     """
     order = models.ForeignKey(Order, edit_inline=models.STACKED, num_in_admin=1)
-    status = models.CharField(maxlength=20, choices=ORDER_STATUS, core=True, blank=True)
-    notes = models.CharField(maxlength=100, blank=True)
-    timeStamp = models.DateTimeField()
+    status = models.CharField(_("Status"), maxlength=20, choices=ORDER_STATUS, core=True, blank=True)
+    notes = models.CharField(_("Notes"), maxlength=100, blank=True)
+    timeStamp = models.DateTimeField(_("Time Stamp"))
     
     def __str__(self):
         return self.status
@@ -350,3 +370,7 @@ class OrderStatus(models.Model):
         super(OrderStatus, self).save()
         self.order.status = self.status
         self.order.save()
+    
+    class Meta:
+        verbose_name = _("Order Status")
+        verbose_name_plural = _("Order statuses")        

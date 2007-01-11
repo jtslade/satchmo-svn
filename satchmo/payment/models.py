@@ -8,16 +8,17 @@ from satchmo.contact.models import Order
 import base64
 from Crypto.Cipher import Blowfish
 from django.conf import settings
+from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 PAYMENTCHOICES = (
- ('CreditCard','CreditCard'),
+ (_('CreditCard'),_('CreditCard')),
 )
 
 CREDITCHOICES = (
-                ('Visa','Visa'),
-                ('Mastercard','Mastercard'),
-                ('Discover','Discover'),
+                (_('Visa'),_('Visa')),
+                (_('Mastercard'),_('Mastercard')),
+                (_('Discover'),_('Discover')),
                 )
 
 
@@ -26,26 +27,30 @@ class PaymentOption(models.Model):
     If there are multiple options - CC, Cash, COD, etc this class allows
     configuration.
     """
-    description = models.CharField(maxlength=20)
-    active = models.BooleanField(help_text="Should this be displayed as an option for the user?")
-    optionName = models.CharField(maxlength=20, choices=PAYMENTCHOICES, unique=True, help_text="The class name as defined in payment.py")
-    sortOrder = models.IntegerField()
+    description = models.CharField(_("Description"), maxlength=20)
+    active = models.BooleanField(_("Active"), help_text=_("Should this be displayed as an option for the user?"))
+    optionName = models.CharField(_("Option Name"), maxlength=20, choices=PAYMENTCHOICES, unique=True, help_text=_("The class name as defined in payment.py"))
+    sortOrder = models.IntegerField(_("Sort Order"))
     
     class Admin:
         list_display = ['optionName','description','active']
         ordering = ['sortOrder']
+    
+    class Meta:
+        verbose_name = "Payment Option"
+        verbose_name_plural = "Payment Options"
         
 class CreditCardDetail(models.Model):
     """
     Stores and encrypted CC number and info as well as a displayable number
     """
     order = models.ForeignKey(Order, edit_inline=True, num_in_admin=1, max_num_in_admin=1)
-    creditType = models.CharField(maxlength=16, choices=CREDITCHOICES)
-    displayCC = models.CharField(maxlength=4, core=True)
-    encryptedCC = models.CharField(maxlength=30, blank=True, null=True)
-    expireMonth = models.IntegerField()
-    expireYear = models.IntegerField()
-    ccv = models.IntegerField(blank=True, null=True)
+    creditType = models.CharField(_("Credit Card Type"), maxlength=16, choices=CREDITCHOICES)
+    displayCC = models.CharField(_("Credit Card Number"), maxlength=4, core=True)
+    encryptedCC = models.CharField(_("Encrypted Credit Card"), maxlength=30, blank=True, null=True)
+    expireMonth = models.IntegerField(_("Expiration Month"))
+    expireYear = models.IntegerField(_("Expiration Year"))
+    ccv = models.IntegerField(_("CCV"), blank=True, null=True)
     
     
     def storeCC(self, ccnum):
@@ -65,3 +70,7 @@ class CreditCardDetail(models.Model):
     def _expireDate(self):
         return(str(self.expireMonth) + "/" + str(self.expireYear))
     expirationDate = property(_expireDate)
+    
+    class Meta:
+        verbose_name = _("Credit Card")
+        verbose_name_plural = _("Credit Cards")

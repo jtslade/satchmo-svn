@@ -12,6 +12,7 @@ from django.conf import settings
 from satchmo.tax.models import TaxClass
 import os
 from decimal import Decimal
+from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 
@@ -19,11 +20,11 @@ class Category(models.Model):
     """
     Basic hierarchical category model for storing products
     """
-    name = models.CharField(core=True, maxlength=200)
-    slug = models.SlugField(prepopulate_from=('name',),help_text="Used for URLs",)
+    name = models.CharField(_("Name"), core=True, maxlength=200)
+    slug = models.SlugField(prepopulate_from=('name',),help_text=_("Used for URLs"))
     parent = models.ForeignKey('self', blank=True, null=True, related_name='child')
-    meta = models.TextField(blank=True, null=True, help_text="Meta description for this category")
-    description = models.TextField(blank=True,help_text="Optional")
+    meta = models.TextField(_("Meta Description"), blank=True, null=True, help_text=_("Meta description for this category"))
+    description = models.TextField(_("Description"), blank=True,help_text="Optional")
         
     def _recurse_for_parents_slug(self, cat_obj):
         #This is used for the urls
@@ -94,7 +95,7 @@ class Category(models.Model):
     def save(self):
         p_list = self._recurse_for_parents_name(self)
         if self.name in p_list:
-            raise validators.ValidationError("You must not save a category in itself!")
+            raise validators.ValidationError(_("You must not save a category in itself!"))
         super(Category, self).save()
         
     def _flatten(self, L):
@@ -126,17 +127,17 @@ class Category(models.Model):
         ordering = ['name']
         
     class Meta:
-        verbose_name = "Category"
-        verbose_name_plural = "Categories"
+        verbose_name = _("Category")
+        verbose_name_plural = _("Categories")
 
 class OptionGroup(models.Model):
     """
     A set of options that can be applied to an item.
     Examples - Size, Color, Shape, etc
     """
-    name = models.CharField("Name of Option Group",maxlength = 50, core=True, help_text='This will be the text displayed on the product page',)
-    description = models.CharField("Detailed Description",maxlength = 100, blank=True, help_text='Further description of this group i.e. shirt size vs shoe size',)
-    sort_order = models.IntegerField(help_text="The order they will be displayed on the screen")
+    name = models.CharField(_("Name of Option Group"),maxlength = 50, core=True, help_text=_('This will be the text displayed on the product page'),)
+    description = models.CharField(_("Detailed Description"),maxlength = 100, blank=True, help_text=_('Further description of this group i.e. shirt size vs shoe size'),)
+    sort_order = models.IntegerField(_("Sort Order"), help_text=_("The order they will be displayed on the screen"))
     
     def __str__(self):
         if self.description:
@@ -149,30 +150,32 @@ class OptionGroup(models.Model):
         
     class Meta:
         ordering = ['sort_order']
+        verbose_name = _("Option Group")
+        verbose_name_plural = _("Option Groups")
         
 class Item(models.Model):
     """
     The basic product being sold in the store.  This is what the customer sees.
     """
     category = models.ManyToManyField(Category, filter_interface=True)
-    verbose_name = models.CharField("Full Name", maxlength=255)
-    short_name = models.SlugField("Slug Name", prepopulate_from=("verbose_name",), unique=True, help_text="This is a short, descriptive name of the shirt that will be used in the URL link to this item")
-    description = models.TextField("Description of product", help_text="This field can contain HTML and should be a few paragraphs explaining the background of the product, and anything that would help the potential customer make their purchase.")
-    meta = models.TextField(maxlength=200, blank=True, null=True, help_text="Meta description for this item")
+    verbose_name = models.CharField(_("Full Name"), maxlength=255)
+    short_name = models.SlugField(_("Slug Name"), prepopulate_from=("verbose_name",), unique=True, help_text=_("This is a short, descriptive name of the shirt that will be used in the URL link to this item"))
+    description = models.TextField(_("Description of product"), help_text=_("This field can contain HTML and should be a few paragraphs explaining the background of the product, and anything that would help the potential customer make their purchase."))
+    meta = models.TextField(maxlength=200, blank=True, null=True, help_text=_("Meta description for this item"))
     date_added = models.DateField(null=True, blank=True, auto_now_add=True)
-    active = models.BooleanField("Is product active?", default=True, help_text="This will determine whether or not this product will appear on the site")
-    featured = models.BooleanField("Featured Item", default=False, help_text="Featured items will show on the front page")
+    active = models.BooleanField(_("Is product active?"), default=True, help_text=_("This will determine whether or not this product will appear on the site"))
+    featured = models.BooleanField(_("Featured Item"), default=False, help_text=_("Featured items will show on the front page"))
     option_group = models.ManyToManyField(OptionGroup, filter_interface=True, blank=True)
-    base_price = models.FloatField(max_digits=6, decimal_places=2, help_text="Base price for this item")
-    weight = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True, )
-    length = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
-    width = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
-    height = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
-    create_subs = models.BooleanField("Create Sub Items", default=False, help_text ="Create new sub-items")
+    base_price = models.FloatField(_("Base Price"), max_digits=6, decimal_places=2)
+    weight = models.FloatField(_("Weight"), max_digits=6, decimal_places=2, null=True, blank=True)
+    length = models.FloatField(_("Length"), max_digits=6, decimal_places=2, null=True, blank=True)
+    width = models.FloatField(_("Width"), max_digits=6, decimal_places=2, null=True, blank=True)
+    height = models.FloatField(_("Height"), max_digits=6, decimal_places=2, null=True, blank=True)
+    create_subs = models.BooleanField(_("Create Sub Items"), default=False, help_text =_("Create new sub-items"))
     relatedItems = models.ManyToManyField('self', blank=True, null=True, related_name='related')
     alsoPurchased = models.ManyToManyField('self', blank=True, null=True, related_name='previouslyPurchased')
     taxable = models.BooleanField(default=False)
-    taxClass = models.ForeignKey(TaxClass, blank=True, null=True, help_text="If it is taxable, what kind of tax?")    
+    taxClass = models.ForeignKey(TaxClass, blank=True, null=True, help_text=_("If it is taxable, what kind of tax?"))    
     
     def __str__(self):
         return self.short_name 
@@ -270,7 +273,8 @@ class Item(models.Model):
         list_filter = ('category',)
         
     class Meta:
-        verbose_name = "Master Product"
+        verbose_name = _("Master Product")
+        verbose_name_plural = _("Master Products")
         
 class ItemImage(models.Model):
     """
@@ -279,14 +283,16 @@ class ItemImage(models.Model):
     """
     item = models.ForeignKey(Item, edit_inline=models.TABULAR, num_in_admin=3)
     picture = ImageWithThumbnailField(upload_to="./images") #Media root is automatically appended
-    caption = models.CharField("Optional caption",maxlength=100,null=True, blank=True)
-    sort = models.IntegerField("Sort Order", help_text="Leave blank to delete", core=True)
+    caption = models.CharField(_("Optional caption"),maxlength=100,null=True, blank=True)
+    sort = models.IntegerField(_("Sort Order"), help_text=_("Leave blank to delete"), core=True)
     
     def __str__(self):
         return "Picture of %s" % self.item.short_name
         
     class Meta:
         ordering = ['sort']
+        verbose_name = _("Product Image")
+        verbose_name_plural = _("Product Images")
         
 class OptionItem(models.Model):
     """
@@ -294,17 +300,19 @@ class OptionItem(models.Model):
     would be Small.
     """
     optionGroup = models.ForeignKey(OptionGroup, edit_inline=models.TABULAR, num_in_admin=5)
-    name = models.CharField("Display value", maxlength = 50, core=True)
-    value = models.CharField("Stored value", prepopulate_from=("name",), maxlength = 50)
-    price_change = models.FloatField("Price Change", null=True, blank=True, 
-                                    help_text="This is the price differential for this option", max_digits=4, decimal_places=2)
-    displayOrder = models.IntegerField("Display Order")
+    name = models.CharField(_("Display value"), maxlength = 50, core=True)
+    value = models.CharField(_("Stored value"), prepopulate_from=("name",), maxlength = 50)
+    price_change = models.FloatField(_("Price Change"), null=True, blank=True, 
+                                    help_text=_("This is the price differential for this option"), max_digits=4, decimal_places=2)
+    displayOrder = models.IntegerField(_("Display Order"))
   
     def __str__(self):
         return self.name
         
     class Meta:
         ordering = ['displayOrder']
+        verbose_name = _("Option Item")
+        verbose_name_plural = _("Option Items")
         
 class SubItem(models.Model):
     """
@@ -312,11 +320,11 @@ class SubItem(models.Model):
     only 1 SubItem would have Size=Small and Color=Black
     """
     item = models.ForeignKey(Item)
-    items_in_stock = models.IntegerField("Number in stock", core=True)
-    weight = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
-    length = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
-    width = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
-    height = models.FloatField(max_digits=6, decimal_places=2, null=True, blank=True)
+    items_in_stock = models.IntegerField(_("Number in stock"), core=True)
+    weight = models.FloatField(_("Weight"), max_digits=6, decimal_places=2, null=True, blank=True)
+    length = models.FloatField(_("Length"), max_digits=6, decimal_places=2, null=True, blank=True)
+    width = models.FloatField(_("Width"), max_digits=6, decimal_places=2, null=True, blank=True)
+    height = models.FloatField(_("Height"), max_digits=6, decimal_places=2, null=True, blank=True)
     options = models.ManyToManyField(OptionItem, filter_interface=True, null=True, blank=True)
     
     def _get_optionName(self):
@@ -377,7 +385,7 @@ class SubItem(models.Model):
         return self.full_name
     
     def isValidOption(self, field_data, all_data):
-        raise validators.ValidationError, "Two options from the same option group can not be applied to an item."
+        raise validators.ValidationError, _("Two options from the same option group can not be applied to an item.")
     
     #def save(self):
     #    super(Sub_Item, self).save()
@@ -397,4 +405,5 @@ class SubItem(models.Model):
         )
 
     class Meta:
-        verbose_name = "Individual Product"
+        verbose_name = _("Individual Product")
+        verbose_name_plural = _("Individual Products")
