@@ -7,8 +7,9 @@ from satchmo.contact.models import ORDER_STATUS
 from django.utils.translation import gettext_lazy as _
 
 def home(request):
+    title = _("Site Administration")
     if request.GET.get('legacy', False):
-        return render_to_response('admin/index.html', {'title': _('Site administration')}, context_instance=RequestContext(request))
+        return render_to_response('admin/index.html', {'title': title}, context_instance=RequestContext(request))
     else:
         pending = str(ORDER_STATUS[1][1])
         inProcess = str(ORDER_STATUS[2][1])
@@ -17,6 +18,6 @@ def home(request):
         return render_to_response('admin/portal.html', 
                                     {'pendings': pendings,
                                      'in_process': in_process,
-                                     'title': 'Site Administration'},
+                                     'title': title},
                                  RequestContext(request))
 home = staff_member_required(never_cache(home))
