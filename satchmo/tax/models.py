@@ -6,6 +6,7 @@ from django.db import models
 from satchmo.i18n.models import Area, Country
 from satchmo.shop.utils.validators import MutuallyExclusiveWithField
 from django.utils.translation import gettext_lazy as _
+from django.core import validators
 
 class TaxClass(models.Model):
     """
@@ -52,6 +53,13 @@ class TaxRate(models.Model):
         return ("%s - %s" % (self.taxClass,
                              self.taxZone and self.taxZone or self.taxCountry))
     
+    def save(self):
+        if self.taxZone and not self.taxCountry or \
+            not self.taxZone and self.taxCountry:
+            super(TaxRate, self).save()
+        else:
+            raise validators.ValidationError(_("You must choose a zone or a country"))
+          
     class Admin:
         list_display = ("taxClass", "taxZone", "taxCountry", "percentage")
 
