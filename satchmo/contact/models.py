@@ -241,6 +241,7 @@ class Order(models.Model):
     billState=models.CharField(_("State"), maxlength=10, blank=True)
     billPostalCode=models.CharField(_("Zip Code"), maxlength=10, blank=True)
     billCountry=models.CharField(_("Country"), maxlength=50, blank=True)
+    notes = models.TextField(_("Notes"), maxlength=100, blank=True, null=True)
     sub_total = models.FloatField(_("Sub total"), max_digits=6, decimal_places=2, blank=True, null=True)
     total = models.FloatField(_("Total"), max_digits=6,decimal_places=2, blank=True, null=True)
     discount = models.FloatField(_("Discount"), max_digits=6, decimal_places=2, blank=True, null=True)
@@ -324,11 +325,11 @@ class Order(models.Model):
     
     class Admin:
         fields = (
-        (None, {'fields': ('contact','method','status')}),
+        (None, {'fields': ('contact','method','status', 'notes')}),
         (_('Shipping Method'), {'fields': ('shippingMethod', 'shippingDescription')}),
         (_('Shipping Address'), {'fields': ('shipStreet1','shipStreet2', 'shipCity','shipState', 'shipPostalCode','shipCountry',), 'classes': 'collapse'}),
         (_('Billing Address'), {'fields': ('billStreet1','billStreet2', 'billCity','billState', 'billPostalCode','billCountry',), 'classes': 'collapse'}),
-        (_('Totals'), {'fields': ( 'shippingCost', 'tax','total','timeStamp','payment',),}),       
+        (_('Totals'), {'fields': ( 'sub_total','shippingCost', 'tax', 'total','timeStamp','payment',),}),       
         )
         list_display = ('contact', 'timeStamp', 'total','status', 'invoice', 'packingslip', 'shippinglabel')
         list_filter = ['timeStamp','contact']

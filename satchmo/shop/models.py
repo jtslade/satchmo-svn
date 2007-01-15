@@ -26,7 +26,7 @@ class Config(models.Model):
     state=models.USStateField(_("State"), blank=True, null=True)
     postalCode=models.CharField(_("Zip Code"), blank=True, null=True,maxlength=9)
     country=models.ForeignKey(Country, blank=True, null=True)
-    phone = models.PhoneNumberField(blank=True, null=True)
+    phone = models.CharField(_("Phone Number"), blank=True, null=True, maxlength=12)
     noStockCheckout = models.BooleanField(_("Purchase item not in stock?"))
     
     def __str__(self):
