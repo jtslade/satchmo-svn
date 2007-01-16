@@ -17,7 +17,7 @@
 
         <a href=".?legacy=True">{% trans "Switch to Legacy View" %}</a>
         <div class="module">
-        <table summary={% trans "Store Configuration" %}>
+        <table summary="{% trans 'Store Configuration' %}">
         <caption>{% trans "Store Configuration" %}</caption>
             <tr>
                 <th scope="row"><a href="/admin/shop/config">{% trans 'Store Details' %}</a></th>
@@ -25,7 +25,7 @@
                 <td><a href="/admin/shop/config/" class="changelink">{% trans 'Change' %}</a></td>
             </tr>
             <tr>
-                <th scope="row"><a href="/admin/sites/site">Store Web Site</a></th>
+                <th scope="row"><a href="/admin/sites/site">{% trans "Store Web Site" %}</a></th>
                 <td><a href="/admin/sites/site/add/" class="addlink">{% trans 'Add' %}</a></td>
                 <td><a href="/admin/sites/site" class="changelink">{% trans 'Change' %}</a></td>
             </tr>
@@ -33,7 +33,7 @@
         </div>
    
        <div class="module">
-            <table summary="{% trans "Product Configuration" %}">
+            <table summary="{% trans 'Product Configuration' %}">
             <caption>{% trans "Product Configuration" %}</caption>
                 <tr>
                     <th scope="row"><a href="/admin/product/category">{% trans "Product Categories" %}</a></th>
@@ -90,7 +90,7 @@
         </div>
         
         <div class="module">
-            <table summary="{% trans "International Information" %}">
+            <table summary="{% trans 'International Information' %}">
             <caption>{% trans "International Information" %}</caption>
                 <tr>
                     <th scope="row"><a href="/admin/i18n/area">{% trans "Areas" %}</a></th>
@@ -106,7 +106,7 @@
         </div>
 
         <div class="module">
-            <table summary="{% trans "Taxes" %}">
+            <table summary="{% trans 'Taxes' %}">
             <caption>{% trans "Tax Information" %}</caption>
                 <tr>
                     <th scope="row"><a href="/admin/tax/taxclass">{% trans "Tax Classes" %}</a></th>
