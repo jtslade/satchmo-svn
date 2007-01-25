@@ -9,8 +9,8 @@ import shutil
 sys.path.insert(0, "django-src-here")
 sys.path.insert(0, "satchmo-src-here")
 
-
-os.environ["DJANGO_SETTINGS_MODULE"]="satchmo.settings"
+if not os.environ.has_key("DJANGO_SETTINGS_MODULE"):
+    os.environ["DJANGO_SETTINGS_MODULE"]="satchmo.settings"
 
 import django.core.management, django.core
 from django.conf import settings
@@ -77,13 +77,14 @@ def load_data():
     from satchmo.product.models import Item, Category, OptionGroup, OptionItem, ItemImage 
     from satchmo.supplier.models import Organization
     from satchmo.shop.models import Config
+    from django.conf import settings
     #Load basic configuration information
     print "Creating site..."
     site = Site.objects.get(id=settings.SITE_ID)
-    site.domain = "192.168.1.9:8000"  #Change this to match your server
-    site.name = "Home server"
+    site.domain = settings.SITE_DOMAIN  
+    site.name = settings.SITE_NAME
     site.save()
-    config = Config(site=site, storeName = "My Nifty Store", noStockCheckout=False)
+    config = Config(site=site, storeName = settings.SITE_NAME, noStockCheckout=False)
     config.save()
     print "Creating Customers..."
     # Import some customers

@@ -118,39 +118,54 @@ dependencies mentioned in the `Requirements`_ section.
 1. Get the latest Satchmo source::
 
         svn co http://svn.satchmo.python-hosting.com/trunk/
-    
-2.  Create a local_settings.py file::
+        
+The next two steps depend on whether or not Satchmo is a standalone project or just an app that
+is part of another Django project.
 
+If Satchmo is a standalone app (follow steps 2 and 3):
+
+2.  Modify Satchmo's default settings-customize.py file::
+    cp settings-customize.py settings.py
+    
+3.  Modify settings.py to reflect your setup.
+
+If Satchmo is part of another Django app (follow step 4):
+
+4. Modify you project settings.py file so that it has the following line at the end::
+
+        from local_settings import *
+    
+5.  Create your customized local_settings.py file::
+    
         cp local_settings-customize.py local_settings.py
 
-3.  Edit your existing local_settings.py file or copy and customize the settings-customize.py file.  The 
-following values need to be changed::
-
-	cp settings-customize.py settings.py
+6.  Edit this local_settings.py file for your setup. The following values need to be changed::
 
         DATABASE_NAME = 'Your DB Name Here'
         DATABASE_PASSWORD = 'Your DB Password Here'
         DATABASE_USER = 'Your DB User Here'
-        SECRET_KEY = 'Your secret key her'
+        SECRET_KEY = 'Your secret key here'
+        
+        Any other values that are applicable to your setup
 
 .. warning::
     The next step can erase data in the satchmo database. Be sure to have a backup of any critical data
 
-4.  Load the sample data::
+7.  Load the sample data::
 
         python load_data.py
     
-5.  When prompted, enter Yes to all the questions.  This script will also install the i18n data.
+8.  When prompted, enter Yes to all the questions.  This script will also install the i18n data.
 
-6.  Start up the sample webserver to see your store::
+9.  Start up the sample webserver to see your store::
 
         python manage.py startserver
         
-7.  In order to see your sample store, point your browser to::
+10.  In order to see your sample store, point your browser to::
     
         http://localhost/store to see your store
 
-8.  If you want to see the admin interface, point your browser to::
+11.  If you want to see the admin interface, point your browser to::
 
         http://localhost/admin
 
@@ -163,7 +178,7 @@ Basic Configuration
 If you followed the steps above, you should have a basic store to start playing with.  There are a
 number of places you might want to configure.
 
-1. In the settings.py file, there are a number of general Django settings.  However, there are a
+1. In the settings.py (or local_settings.py) file, there are a number of general Django settings.  However, there are a
    few that are specific to Satchmo.
 
     - SHOP_BASE is used as the prefix for your store.  In the default setting, your store is 
@@ -183,11 +198,11 @@ number of places you might want to configure.
 2. The local_settings.py file also includes information for configuring `Authorize.net`_.  Make changes
    here if you are planning to use this service.
 
-3. The load_data.py script is helpful during testing.  You'll probably want to change 2 lines in this
-   script for maximum usefulness.  Change the following 2 assignments near line 60:
-    
-    - site.domain = "Put your IP or url here"
-    - site.name = "Put your name here"
+3. The load_data.py script is helpful during testing. Make sure the following values are set in your
+local_settings.py file:
+
+    - SITE_DOMAIN = "example.com"
+    - SITE_NAME = "My Site"
 
 Module Configurations
 ~~~~~~~~~~~~~~~~~~~~~

@@ -1,4 +1,6 @@
 # Django settings for satchmo project.
+# If you have an existing project, then ensure that you modify local_settings-customize.py
+# and import it from your main settings file. (from local_settings import *)
 import os
 import logging as LOGGING
 DIRNAME = os.path.dirname(__file__)
@@ -97,12 +99,6 @@ INSTALLED_APPS = (
     'satchmo.tax'
 )
 
-#This is the base url for the shop.  Only include a leading slash
-#examples: '/shop' or '/mystore'
-SHOP_BASE = '/shop'
-
-# Currency symbol to use
-CURRENCY = '$'
 
 # Load the local settings
 from local_settings import *
