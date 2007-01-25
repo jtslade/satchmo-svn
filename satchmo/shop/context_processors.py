@@ -10,11 +10,12 @@ def settings(request):
     from django.conf import settings
     from satchmo.shop.models import Config, Cart
     from satchmo.product.models import Category
+    from django.core.exceptions import ObjectDoesNotExist
     if Config.objects.count() > 0:
         try:
             shop_config = Config.objects.get(site=settings.SITE_ID)
             shop_name = shop_config.storeName
-        except DoesNotExist:
+        except ObjectDoesNotExist:
             shop_name = "Test Store (No Site id)"
     else:
         shop_name = "Test Store"
