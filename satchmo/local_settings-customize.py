@@ -11,6 +11,7 @@
 # you MUST make sure these settings are imported from your project settings file!
 
 import os
+import logging
 DIRNAME = os.path.dirname(__file__)
 
 # This is useful, since satchmo is not the "current directory" like load_data expects.
@@ -53,3 +54,23 @@ CURRENCY = '$'
 #These are used when loading the test data
 SITE_DOMAIN = "example.com"
 SITE_NAME = "My Site"
+
+#Configure logging
+LOGDIR = "/path/to/log"
+LOGFILE = "satchmo.log"
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                    datefmt='%a, %d %b %Y %H:%M:%S',
+                    filename=os.path.join(LOGDIR, LOGFILE),
+                    filemode='w')
+
+# define a Handler which writes INFO messages or higher to the sys.stderr
+fileLog = logging.FileHandler(os.path.join(LOGDIR, LOGFILE), 'w')
+fileLog.setLevel(logging.DEBUG)
+# set a format which is simpler for console use
+formatter = logging.Formatter('%(asctime)s %(name)-12s: %(levelname)-8s %(message)s')
+# tell the handler to use this format
+fileLog.setFormatter(formatter)
+# add the handler to the root logger
+logging.getLogger('').addHandler(fileLog)
+logging.info("Satchmo Started")

@@ -2,7 +2,7 @@
 # If you have an existing project, then ensure that you modify local_settings-customize.py
 # and import it from your main settings file. (from local_settings import *)
 import os
-import logging as LOGGING
+
 DIRNAME = os.path.dirname(__file__)
 
 DJANGO_PROJECT = 'satchmo'
