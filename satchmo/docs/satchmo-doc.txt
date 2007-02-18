@@ -117,7 +117,7 @@ dependencies mentioned in the `Requirements`_ section.
 
 1. Get the latest Satchmo source::
 
-        svn co http://svn.satchmo.python-hosting.com/trunk/
+        svn co svn://satchmoproject.com/satchmo/trunk/
         
 The next two steps depend on whether or not Satchmo is a standalone project or just an app that
 is part of another Django project.
