@@ -6,7 +6,7 @@ from satchmo.shop.templatetags.currency_filter import moneyfmt
 
 from sets import Set
 
-def get_json(request, slug):
+def get_price(request, slug):
     chosenOptions = Set()
 
     quantity = 1

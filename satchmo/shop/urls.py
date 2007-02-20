@@ -24,7 +24,7 @@ urlpatterns = patterns('satchmo.shop.views',
 #is that we ignore all but the child and parent category.  In practice this should be ok
 
 urlpatterns += patterns('satchmo.product.views',
-    (r'^product/(?P<slug>[-\w]+)/prices/$','get_json'),
+    (r'^product/(?P<slug>[-\w]+)/prices/$','get_price'),
 )
 
 
