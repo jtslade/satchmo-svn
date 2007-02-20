@@ -19,7 +19,7 @@ function getPrice(){
     }
     opts["quantity"] = $("input#quantity")[0].value;
     setPrice("loading");
-    $.post("prices/", opts, setPrice);
+    $.post("{{shop_base}}/product/{{item.short_name}}/prices/", opts, setPrice);
 }
 
 $(document).ready( function(){ getPrice();});
