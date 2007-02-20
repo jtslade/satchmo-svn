@@ -482,7 +482,6 @@ class Price(models.Model):
     The current price should be the one with the earliest expires date, and the highest quantity
     that's still below the user specified (IE: ordered) quantity, that matches a given subitem.
     """
-    #TODO: make sure that the combination of quantity/expires is unique for a given subitem.
     subitem = models.ForeignKey(SubItem, edit_inline=models.TABULAR, num_in_admin=2)
     price = models.FloatField(_("Price"), max_digits=6, decimal_places=2, core=True)
     quantity = models.IntegerField(_("Discount Quantity"), default=1, help_text=_("Use this price only for this quantity or higher"))
@@ -490,6 +489,19 @@ class Price(models.Model):
 
     def __str__(self):
         return str(self.price)
+
+    def save(self):
+        #make sure that the combination of quantity/expires is unique for a given subitem.
+        prices = Price.objects.filter(subitem=self.subitem, quantity=self.quantity)
+        ## Jump through some extra hoops to check expires - if there's a better way to handle this field I can't think of it. Expires needs to be able to be set to None in cases where there is no expiration date.
+        if self.expires:
+            prices = prices.filter(expires=self.expires)
+        else:
+            prices = prices.filter(expires__isnull=True)
+        if prices.exclude(id=self.id).count():
+            return
+
+        super(Price, self).save()
 
     class Meta:
         ordering = ['expires', '-quantity']
