@@ -44,8 +44,8 @@
                 <a href="{{shop_base}}/account/login">Login</a> <br/>
             {% endif %}
             
-
-            <a href="{{shop_base}}/cart">Cart({{cart_count}})</a>
+            {% load satchmo.currency_filter %}
+            <a href="{{shop_base}}/cart">Cart({{cart_count}}{%if cart.total%} - {{cart.total|currency}}{%endif%})</a>
             
             {% if cart_count %}
             <br/><a href="{{shop_base}}/checkout">Check out</a>

@@ -22,11 +22,14 @@ def settings(request):
     if request.session.get('cart',False):
         tempCart = Cart.objects.get(id=request.session['cart'])
         cart_count = tempCart.numItems
+        cart = tempCart
     else:
         cart_count = 0
+        cart = ''
     all_categories = Category.objects.all()
     return {'shop_base': settings.SHOP_BASE,
              'shop_name': shop_name,
              'media_url': settings.MEDIA_URL,
              'cart_count': cart_count,
+             'cart': cart,
              'categories': all_categories}
