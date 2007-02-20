@@ -25,6 +25,7 @@ urlpatterns = patterns('satchmo.shop.views',
 
 urlpatterns += patterns('satchmo.product.views',
     (r'^product/(?P<slug>[-\w]+)/prices/$','get_price'),
+    (r'^search/$','do_search'),
 )
 
 

@@ -21,7 +21,12 @@
     {% endblock %}
     </div>
     
-        <div id="leftnav">
+    <div id="leftnav">
+        Search<br/>
+        <form id="search" action="{{shop_base}}/search/" method="post">
+            <input type="text" size="20" name="keywords" id="search_keywords" /><br/>
+             <input type="submit" value="Search" />
+         </form>
             {% block sidebar %}
             Shop Categories<br/>
             <div id="menu_container">

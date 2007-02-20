@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+<a href="{{shop_base}}">Home</a>
+{% endblock %}
+
+{% block content %}
+
+{% if not results %}
+<h4>Nothing found</h4>
+{% else %}
+    {% for result in results %}
+        <div><a href="{{ result.2 }}">{{ result.0 }}: {{ result.1 }}</a></div>
+    {% endfor %}
+{% endif %}
+{% endblock %}
