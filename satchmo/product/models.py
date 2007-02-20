@@ -13,6 +13,8 @@ from satchmo.tax.models import TaxClass
 import os
 from decimal import Decimal
 from django.utils.translation import gettext_lazy as _
+import datetime
+
 
 # Create your models here.
 
@@ -166,7 +168,7 @@ class Item(models.Model):
     active = models.BooleanField(_("Is product active?"), default=True, help_text=_("This will determine whether or not this product will appear on the site"))
     featured = models.BooleanField(_("Featured Item"), default=False, help_text=_("Featured items will show on the front page"))
     option_group = models.ManyToManyField(OptionGroup, filter_interface=True, blank=True)
-    base_price = models.FloatField(_("Base Price"), max_digits=6, decimal_places=2)
+    base_price = models.FloatField(_("Default Price"), max_digits=6, decimal_places=2)
     weight = models.FloatField(_("Weight"), max_digits=6, decimal_places=2, null=True, blank=True)
     length = models.FloatField(_("Length"), max_digits=6, decimal_places=2, null=True, blank=True)
     width = models.FloatField(_("Width"), max_digits=6, decimal_places=2, null=True, blank=True)
@@ -182,7 +184,11 @@ class Item(models.Model):
     
     def _get_price(self):
         # On some systems, the price was not getting set as a decimal type.  This ensures that it does.
-        return Decimal(self.base_price)
+        try:
+            return Decimal(self.base_price)
+        except TypeError:
+            # This is in case of "Can't return float to Decimal" exceptions
+            return Decimal(str(self.base_price))
     price = property(_get_price)
     
     def _get_mainImage(self):
@@ -217,9 +223,12 @@ class Item(models.Model):
             sublist = []
         combinedlist = self._cross_list(masterlist)
         #Create new sub_items for each combo
+        num = 0 #used to make subitem_id unique
         for options in combinedlist:
+            num += 1
             price_delta = 0
             sub = SubItem(item=self, items_in_stock=0)
+            sub.subitem_id = '%s-%i' % (self.short_name, num) #TODO: there must be a better way to do this
             sub.save()
             s1 = Set()
             for option in options:
@@ -296,7 +305,7 @@ class ItemImage(models.Model):
         
 class OptionItem(models.Model):
     """
-    These are the actual items in and OptionGroup.  If the OptionGroup is Size, then an OptionItem
+    These are the actual items in an OptionGroup.  If the OptionGroup is Size, then an OptionItem
     would be Small.
     """
     optionGroup = models.ForeignKey(OptionGroup, edit_inline=models.TABULAR, num_in_admin=5)
@@ -320,12 +329,13 @@ class SubItem(models.Model):
     only 1 SubItem would have Size=Small and Color=Black
     """
     item = models.ForeignKey(Item)
+    subitem_id = models.SlugField(_("Slug Name"), unique=True, core=True)
     items_in_stock = models.IntegerField(_("Number in stock"), core=True)
     weight = models.FloatField(_("Weight"), max_digits=6, decimal_places=2, null=True, blank=True)
     length = models.FloatField(_("Length"), max_digits=6, decimal_places=2, null=True, blank=True)
     width = models.FloatField(_("Width"), max_digits=6, decimal_places=2, null=True, blank=True)
     height = models.FloatField(_("Height"), max_digits=6, decimal_places=2, null=True, blank=True)
-    options = models.ManyToManyField(OptionItem, filter_interface=True, null=True, blank=True)
+    options = models.ManyToManyField(OptionItem, filter_interface=True, null=True, blank=True, core=True)
     
     def _get_optionName(self):
         "Returns the options in a human readable form"
@@ -346,12 +356,41 @@ class SubItem(models.Model):
     full_name = property(_get_optionName)
     
     def _get_fullPrice(self):
-        price_delta = Decimal("0.0")
+        """
+        returns price as a Decimal
+        """
+        qty_price = self._get_qty_price(1) #get unit price for subitem if available
+        if qty_price:
+            return qty_price
+        price_delta = Decimal("0.0") #otherwise fallback on item.price - option.price_change
         for option in self.options.all():
             if option.price_change:
                 price_delta += Decimal(option.price_change)
         return(self.item.price + price_delta)
     unit_price = property(_get_fullPrice)
+    
+    def get_qty_price(self, qty):
+        """
+        If QTY_DISCOUNT prices are specified, then return the appropriate discount price for
+        the specified qty.  Otherwise, return the unit_price
+        returns price as a Decimal
+        """
+        qty_price = self._get_qty_price(qty)
+        if qty_price:
+            return qty_price
+        else:
+            return self.unit_price
+
+    def _get_qty_price(self, qty):
+        """
+        returns price as a Decimal
+        """
+        qty_discounts = self.price_set.exclude(expires__isnull=False, expires__lt=datetime.date.today()).filter(quantity__lte=qty)
+        if qty_discounts.count() > 0:
+            # Get the price with the quantity closest to the one specified without going over
+            return qty_discounts.order_by('-quantity')[0].price
+        else:
+            return None
     
     def _get_optionValues(self):
         """
@@ -399,7 +438,7 @@ class SubItem(models.Model):
         list_display = ('full_name', 'unit_price', 'items_in_stock')
         list_filter = ('item',)
         fields = (
-        (None, {'fields': ('item','items_in_stock',)}),
+        (None, {'fields': ('item','subitem_id','items_in_stock',)}),
         ('Item Dimensions', {'fields': (('length', 'width','height',),'weight'), 'classes': 'collapse'}),
         ('Options', {'fields': ('options',),}),       
         )
@@ -407,3 +446,28 @@ class SubItem(models.Model):
     class Meta:
         verbose_name = _("Individual Product")
         verbose_name_plural = _("Individual Products")
+
+class Price(models.Model):
+    """
+    A Price!
+    Separating it out lets us have different prices for the same product for different purposes.
+    For example for quantity discounts.
+    The current price should be the one with the earliest expires date, and the highest quantity
+    that's still below the user specified (IE: ordered) quantity, that matches a given subitem.
+    """
+    #TODO: make sure that the combination of quantity/expires is unique for a given subitem.
+    subitem = models.ForeignKey(SubItem, edit_inline=models.TABULAR, num_in_admin=2)
+    price = models.FloatField(_("Price"), max_digits=6, decimal_places=2, core=True)
+    quantity = models.IntegerField(_("Discount Quantity"), default=1, help_text=_("Use this price only for this quantity or higher"))
+    expires = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return str(self.price)
+
+    class Meta:
+        ordering = ['expires', '-quantity']
+        verbose_name = _("Price")
+        verbose_name_plural = _("Prices")
+
+    class Admin:
+        pass

@@ -4,6 +4,26 @@
 {% if item.meta %}
     <meta name="description" content="{{item.meta}}">
 {% endif %}
+
+<script type="text/javascript" src="{{media_url}}/jquery-1.1.1.pack.js"></script>
+<script type="text/javascript">
+function setPrice(price){
+    $("*#price").text(price);
+}
+
+function getPrice(){
+    opts = {};
+    options = $("form#options").find("select");
+    for (a=0; a<options.length; a++){
+        opts[options[a].name] = options[a].value;
+    }
+    opts["quantity"] = $("input#quantity")[0].value;
+    setPrice("loading");
+    $.post("prices/", opts, setPrice);
+}
+
+$(document).ready( function(){ getPrice();});
+</script>
 {% endblock %}
 
 {% load satchmo.thumbnail %}
@@ -22,17 +42,20 @@
 {% block content %}
 <h4>{{ item.verbose_name }}</h4>
 <p>{{ item.description }}</p>
-<h3>{{ item.price|currency }}</h3>
+Price: <h3 id="price">unknown</h3>
 {% for pic in item.itemimage_set.all %}
     <img src="{{media_url}}{{ pic.get_picture_url|thumbnail:"width=280" }}" width="280" />
 {% endfor %}
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-<form action="{{shop_base}}/cart/{{ item.id }}/add/" method="post">
+<form id="options" action="{{shop_base}}/cart/{{ item.id }}/add/" method="post">
+{% if item.option_group.count %}
 <p>Please choose your options:</p>
+{% endif %}
+
 {% for option in item.option_group.all %}
  {{ option.name }}
-    <select name="{{ option.id }}" id="{{option.id}}">
+    <select name="{{ option.id }}" id="{{option.id}}" onchange="getPrice()">
     {% for choice in option.optionitem_set.all %}
      <option value="{{ choice.value }}">{{ choice }}
         {% if choice.price_change %}
@@ -42,7 +65,7 @@
     {% endfor %}
     </select>
 {% endfor %}
-Quantity <input type="text", size="2", name="quantity" id="quantity" value=1 />
+Quantity <input type="text", size="2", name="quantity" id="quantity" value=1 onchange="getPrice()" />
 <input type="submit" value="Add to cart" />
 </form>
 {% endblock %}

@@ -59,7 +59,7 @@ class Cart(models.Model):
     def _get_total(self):
         total = Decimal("0")
         for item in self.cartitem_set.all():
-            total += item.subItem.unit_price * item.quantity
+            total += item.subItem.get_qty_price(item.quantity) * item.quantity
         return(total)
     total = property(_get_total)
     
@@ -102,7 +102,7 @@ class CartItem(models.Model):
     quantity = models.IntegerField(_("Quantity"), core=True)
     
     def _get_line_total(self):
-        return self.subItem.unit_price * self.quantity
+        return self.subItem.get_qty_price(self.quantity) * self.quantity
     line_total = property(_get_line_total)
     
     def _get_description(self):

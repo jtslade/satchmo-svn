@@ -23,6 +23,11 @@ urlpatterns = patterns('satchmo.shop.views',
 #Note with the last category url - this allows category depth to be as deep as we want but the downside
 #is that we ignore all but the child and parent category.  In practice this should be ok
 
+urlpatterns += patterns('satchmo.product.views',
+    (r'^product/(?P<slug>[-\w]+)/prices/$','get_json'),
+)
+
+
 #Dictionaries for generic views used in Satchmo
 
 index_dict = {
