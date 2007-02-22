@@ -1,4 +1,3 @@
-===================
 Basic Configuration
 ===================
 
@@ -29,7 +28,7 @@ number of places you might want to configure.
    here if you are planning to use this service.
 
 3. The load_data.py script is helpful during testing. Make sure the following values are set in your
-local_settings.py file:
+   local_settings.py file:
 
     - SITE_DOMAIN = "example.com"
     - SITE_NAME = "My Site"
@@ -61,3 +60,5 @@ in this document.
 Satchmo has support for selling taxable products.  Since tax calculations include many different 
 calculations, you can modify the tax calculations using the objects in /satchmo/tax/modules.py.  The
 API will be covered in more detail later in this document.
+
+.. _Authorize.net: http://www.authorize.net/

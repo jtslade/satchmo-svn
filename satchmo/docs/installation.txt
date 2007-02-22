@@ -3,7 +3,7 @@ Installation
 ============
 
 This guide assumes that Django is properly installed and that you have installed the
-dependencies mentioned in the `Requirements`_ section.
+dependencies mentioned in the requirements section.
 
 1. Get the latest Satchmo source::
 
