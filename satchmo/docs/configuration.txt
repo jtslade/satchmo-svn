@@ -1,0 +1,63 @@
+===================
+Basic Configuration
+===================
+
+Store Settings
+--------------
+
+If you followed the steps above, you should have a basic store to start playing with.  There are a
+number of places you might want to configure.
+
+1. In the settings.py (or local_settings.py) file, there are a number of general Django settings.  However, there are a
+   few that are specific to Satchmo.
+
+    - SHOP_BASE is used as the prefix for your store.  In the default setting, your store is 
+      located at www.yourname.com/shop.  If you would like to change this setting, this is the 
+      place to do it.
+    - LOCAL_DEV is used to make sure static files are served properly when developing.  This must
+      be set to FALSE when you deploy your site.
+    - CURRENCY is the currency symbol to use within the store.
+    - Make sure that your DATABASE_ENGINE variable is also set correctly.
+    - You should ensure that all of your paths are setup correctly.  Key ones to look at are:
+        
+        + MEDIA_ROOT (this is where images will be stored)
+        + MEDIA_URL
+        + ADMIN_MEDIA_PREFIX
+        + TEMPLATE_DIRS
+        
+2. The local_settings.py file also includes information for configuring `Authorize.net`_.  Make changes
+   here if you are planning to use this service.
+
+3. The load_data.py script is helpful during testing. Make sure the following values are set in your
+local_settings.py file:
+
+    - SITE_DOMAIN = "example.com"
+    - SITE_NAME = "My Site"
+
+Module Configurations
+---------------------
+
+There are a number of additional places where you can customize Satchmo for your needs.
+
+One setting that will need to be modified is the payment processor you need to use for processing
+credit cards.  A module for `Authorize.net`_ is included but not installed by default.  A dummy module
+is installed that does nothing but return a true value.  To change to authorize.net, change the import
+statement in satchmo/shop/views/checkout-step3 from::
+    
+    #from satchmo.payment.modules.authorizenet import PaymentProcessor
+    # Change this to your appropriate payment processor
+    from satchmo.payment.modules.dummy import PaymentProcessor
+    
+to::
+
+    from satchmo.payment.modules.authorizenet import PaymentProcessor
+    # Change this to your appropriate payment processor
+    #from satchmo.payment.modules.dummy import PaymentProcessor
+    
+Satchmo allows very flexible shipping calculations.  You will want to tailor the default ones stored
+in /satchmo/shipping/modules.py.  The API is fairly simple but will be covered in more detail later
+in this document.
+
+Satchmo has support for selling taxable products.  Since tax calculations include many different 
+calculations, you can modify the tax calculations using the objects in /satchmo/tax/modules.py.  The
+API will be covered in more detail later in this document.

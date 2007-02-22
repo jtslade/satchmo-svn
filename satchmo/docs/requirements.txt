@@ -1,0 +1,37 @@
+============
+Requirements
+============
+
+Satchmo is based on the Django framework, therefore you do need a fully functioning 
+Django instance to use Satchmo.  The `Django installation guide`_ will step you 
+through the process. 
+
+There are a number of other Python packages that are required for usage of all the 
+features in Satchmo.
+
+- `Python Imaging Library`_
+- `Elementtree`_ (included in Python 2.5+)
+- `Python cryptography toolkit`_ ('Python cryptography toolkit(windows)'_)
+- `ReportLab`_
+- `Tiny RML2PDF`_ (`download link`_)
+
+The following packages are optional but encouraged:
+
+- `DocUtils`_
+
+The following Internationalization data can be automatically installed by the
+Satchmo scripts.
+
+- `Webda`_
+
+.. _Django installation guide: http://www.djangoproject.com/documentation/install/
+.. _Python Imaging Library: http://www.pythonware.com/products/pil/
+.. _Elementtree: http://effbot.org/zone/element-index.htm
+.. _Python cryptography toolkit: http://www.amk.ca/python/code/crypto
+.. _Python cryptography toolkit(windows): http://www.voidspace.org.uk/python/modules.shtml#pycrypto
+.. _ReportLab: http://www.reportlab.org/
+.. _DocUtils: http://docutils.sourceforge.net/
+.. _Webda: http://webda.python-hosting.com/
+.. _Authorize.net: http://www.authorize.net/
+.. _Tiny RML2PDF: http://www.openreport.org/index.py/static/page/trml2pdf
+.. _download link: http://tinyforge.org/frs/download.php/1/trml2pdf.tar.gz

@@ -1,0 +1,64 @@
+============
+Installation
+============
+
+This guide assumes that Django is properly installed and that you have installed the
+dependencies mentioned in the `Requirements`_ section.
+
+1. Get the latest Satchmo source::
+
+        svn co svn://satchmoproject.com/satchmo/trunk/
+        
+The next two steps depend on whether or not Satchmo is a standalone project or just an app that
+is part of another Django project.
+
+If Satchmo is a standalone app (follow steps 2 and 3):
+
+2.  Modify Satchmo's default settings-customize.py file::
+    cp settings-customize.py settings.py
+    
+3.  Modify settings.py to reflect your setup.
+
+If Satchmo is part of another Django app (follow step 4):
+
+4. Modify you project settings.py file so that it has the following line at the end::
+
+        from local_settings import *
+    
+5.  Create your customized local_settings.py file::
+    
+        cp local_settings-customize.py local_settings.py
+
+6.  Edit this local_settings.py file for your setup. The following values need to be changed::
+
+        DATABASE_NAME = 'Your DB Name Here'
+        DATABASE_PASSWORD = 'Your DB Password Here'
+        DATABASE_USER = 'Your DB User Here'
+        SECRET_KEY = 'Your secret key here'
+        
+        Any other values that are applicable to your setup
+
+.. warning::
+    The next step can erase data in the satchmo database. Be sure to have a backup of any critical data
+
+7.  Load the sample data::
+
+        python load_data.py
+    
+8.  When prompted, enter Yes to all the questions.  This script will also install the i18n data.
+
+9.  Start up the sample webserver to see your store::
+
+        python manage.py startserver
+        
+10.  In order to see your sample store, point your browser to::
+    
+        http://localhost/store to see your store
+
+11.  If you want to see the admin interface, point your browser to::
+
+        http://localhost/admin
+
+.. note::
+    The above urls will be dependent on your Django setup.  If you're running the webserver on the
+    same machine you're developing on, the above urls should work.  If not, use the appropriate url.
