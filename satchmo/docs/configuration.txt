@@ -4,7 +4,7 @@ Basic Configuration
 Store Settings
 --------------
 
-If you followed the steps above, you should have a basic store to start playing with.  There are a
+If you followed the installation steps, you should have a basic store to start playing with.  There are a
 number of places you might want to configure.
 
 1. In the settings.py (or local_settings.py) file, there are a number of general Django settings.  However, there are a
@@ -60,5 +60,24 @@ in this document.
 Satchmo has support for selling taxable products.  Since tax calculations include many different 
 calculations, you can modify the tax calculations using the objects in /satchmo/tax/modules.py.  The
 API will be covered in more detail later in this document.
+
+SSL Security can be set on any url in your store.  In order for SSL to work,
+make sure that it is enabled in the middleware section of your settings.py::
+
+    MIDDLEWARE_CLASSES = (
+        "django.middleware.common.CommonMiddleware",
+	"django.contrib.sessions.middleware.SessionMiddleware",
+	"django.middleware.locale.LocaleMiddleware",
+        "django.contrib.auth.middleware.AuthenticationMiddleware",
+        "django.middleware.doc.XViewMiddleware",
+        "satchmo.shop.SSLMiddleware.SSLRedirect"
+			    )
+
+Then, enable it for the specific urls you would like to be protected by adding
+{'SSL': True} to each url.  Here's and example in /shop/urls.py::
+
+         (r'^checkout/$','checkout-step1.contact_info', {'SSL':True}),
+         (r'^checkout/pay/$','checkout-step2.pay_ship_info', {'SSL':True}),  
+         (r'^checkout/confirm/$','checkout-step3.confirm_info', {'SSL':True}), 
 
 .. _Authorize.net: http://www.authorize.net/

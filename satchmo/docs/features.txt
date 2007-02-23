@@ -32,7 +32,7 @@ of advantages for building an online shopping site.  Some of them include:
     tailor your site to different countries and languages.
 
 Django clearly sets Satchmo up to be a robust framework for your store.  The 
-Satchmo framework is still in it's early stages but already provides a number 
+Satchmo framework is still in development but already provides a number 
 of very sophisticated features.  Some highlights include:
 
 -   A robust customer model that allows you to maintain unlimited addresses for 
@@ -57,6 +57,9 @@ of very sophisticated features.  Some highlights include:
     and is automatically cached for maximum performance.
 -   Support for Authorize.net credit card processing.
 -   Support for invoice, packing slip and shipping label creation and printing.
+-   Fine grained ssl support to secure certain urls in your store.
+-   Store product search functionality.
+-   Tax calculations based on your unique requirements.
 
 Models are currently in place to allow additional shipping and payment options 
 as well as flexible discount options.
@@ -67,3 +70,6 @@ Features in Development
 
 Features under Consideration
 ----------------------------
+-   Support for virtual products
+-   Additional payment modules
+
