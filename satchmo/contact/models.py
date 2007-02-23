@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from satchmo.product.models import SubItem
 from satchmo.shipping.modules import activeModules
 from django.utils.translation import gettext_lazy as _
+from satchmo.shop.templatetags.currency_filter import moneyfmt
 
 CONTACT_CHOICES = (
     (_('Customer'), _('Customer')),
@@ -323,6 +324,11 @@ class Order(models.Model):
         return('<a href="/admin/print/shippinglabel/%s/">View</a>' % self.id)
     shippinglabel.allow_tags = True
     
+    def _order_total(self):
+        #Needed for the admin list display
+        return (moneyfmt(self.total))
+    order_total = property(_order_total)
+    
     class Admin:
         fields = (
         (None, {'fields': ('contact','method','status', 'notes')}),
@@ -331,7 +337,7 @@ class Order(models.Model):
         (_('Billing Address'), {'fields': ('billStreet1','billStreet2', 'billCity','billState', 'billPostalCode','billCountry',), 'classes': 'collapse'}),
         (_('Totals'), {'fields': ( 'sub_total','shippingCost', 'tax', 'total','timeStamp','payment',),}),       
         )
-        list_display = ('contact', 'timeStamp', 'total','status', 'invoice', 'packingslip', 'shippinglabel')
+        list_display = ('contact', 'timeStamp', 'order_total','status', 'invoice', 'packingslip', 'shippinglabel')
         list_filter = ['timeStamp','contact']
         date_hierarchy = 'timeStamp'
     
