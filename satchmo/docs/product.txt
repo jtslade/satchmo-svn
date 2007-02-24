@@ -1,1 +1,5 @@
-Placeholder for documents about the product model.
+=======
+Product
+=======
+
+Satchmo's product models are meant to allow you easily setup a simple store but allow you to create more complex configurations if your needs require.
