@@ -21,8 +21,8 @@ Out of the box, Satchmo supports the traditional hierarchical method for categor
 
  * Books
 
-    - Fiction
-    - Non-fiction
+   - Fiction
+   - Non-fiction
     
 Some things to keep in mind with Satchmo's implementation:
 
