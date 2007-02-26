@@ -46,5 +46,56 @@ Meta
 Description
     This is a free form field that describes this category.  You can use this to help guide users in your site.  It's also helpful for search engines.
     
+Item
+----
 
+An Item is the main focus of your store.  It is the "thing" that a person going to your store would see.  There are many fields you can use to configure your Items.
+
+Category
+    See the description above.  This is where you choose one or more categories where a person could find this product.
+    
+Verbose_name
+    This is the full name of an item.  Think of it as the title of the item.
+    
+Short_name
+    This is similar to the slug field in category.  It is a brief description of the item that will show up in the url and uniquely identify this product.
+    
+Description
+    Free form text fields that tell a potential customer about this item and why they may want to purchase it.
+
+Meta
+    This meta field is similar to the one described above in the category.  It's basically some additional descriptive language you might want to include in your HTML that does not already show up in the description.
+    
+Date_added
+    The date you added this product to your store.  It could be useful for showing a list of new products.
+    
+Active
+    A flag to identify which items are still valid in the store.  If you decide you don't want to show an item for purchase, I recommend making it Active=False instead of trying to delete it.
+    
+Featured
+    Another flag which can be used to identify special items that you may want to highlight in your site.
+    
+Option group
+    This is a collection of descriptions that identify this item.  See more details below.
+    
+Base_price
+    An item has multiple ways to determine a price.  In the absence of any of the more advanced methods, this is the price that will be shown to the customer.  When using some of the other methods to calculate price, this value sets the baseline which can be increased or decreased depending on your rules.
+    
+Weight, Length and Height
+    These dimensions are for your use in displaying the item's info. It can also be used for shipping calculations.
+
+Create_subs
+    This is a special option that allows you to create sub_items.  You can learn more about sub_items below.
+    
+Related_items
+    Certain products may naturally be grouped together.  If you were to purchase a movie, you might want to include links to the book based on the movie or maybe a movie poster.  This would be the place to record those linkages.
+    
+Also_purchased
+    Another field to show relationships between products.  This can be useful if you want to try to increase sales by showing what others have purchased when they bought this product.
+    
+Taxable
+    A flag to tell whether or not tax should be calculated for this product.  More information on taxes can be found ...
+    
+Tax_class
+    Allows you to set the rate at which tax is calculated.
 
