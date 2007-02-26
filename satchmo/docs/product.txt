@@ -19,7 +19,7 @@ Out of the box, Satchmo supports the traditional hierarchical method for categor
      + English
      + Silent
 
-  * Books
+ * Books
 
     - Fiction
     - Non-fiction
