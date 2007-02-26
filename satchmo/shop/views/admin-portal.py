@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 def home(request):
     title = _("Site Administration")
-    if request.GET.get('legacy', False):
+    if request.GET.get('legacy', False) or not request.user.is_superuser:
         return render_to_response('admin/index.html', {'title': title}, context_instance=RequestContext(request))
     else:
         pending = str(ORDER_STATUS[1][1])
