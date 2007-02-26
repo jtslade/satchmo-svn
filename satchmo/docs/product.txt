@@ -1,5 +1,45 @@
-=======
-Product
-=======
+Products
+========
 
-Satchmo's product models are meant to allow you easily setup a simple store but allow you to create more complex configurations if your needs require.
+The core of any online store is the product or item you are selling.  Some people may have very simple needs for categorizing and describing their products, while others may have much more complex needs.  Satchmo's product framework tries to strike a balance, enabling easy product configuration but supporting complex products if your needs demand.
+
+Categories
+----------
+
+Out of the box, Satchmo supports the traditional hierarchical method for categorizing products.  In other words, you can create category trees like this:
+
+ * Movies
+   - Action
+   - Western
+   - Comedy
+   - Black and White
+     + Foreign
+     + English
+     + Silent
+  * Books
+    - Fiction
+    - Non-fiction
+    
+Some things to keep in mind with Satchmo's implementation:
+ * You are not limited to the number of categories or the depth of categories.
+ * You are allowed to add products to 1 or more products
+ 
+When entering a category in the admin interface, you will have several fields to fill in.  Below is a description of each field and how it is used:
+
+Name
+    The name of this specific category.  It is the text seen by the user to describe this category.  In the example above, Movies, Action, etc. are all names.
+    
+Slug
+    This is a prepopulated field that is used in the url to identify the category.  One aspect that Django encourages is well designed urls.  The slug field is commonly used so that a url "makes sense" when you look at it.  The nice side effect of this is that in some cases, search engines will give higher ranking for sites with cleaner urls.
+    
+Parent
+    If a category is at the top of the tree, then there is no parent.  In our example above, Movies and Books have no parents.  While Action, Comedy, Black and White would all have Movies as a parent.
+    
+Meta
+    When an HTML page is constructed, certain meta information can be added to the page which makes it easier for search engines to classify your pages and your products.  This field is used to enter information about your category that may not be readily seen by just looking at a description.
+    
+Description
+    This is a free form field that describes this category.  You can use this to help guide users in your site.  It's also helpful for search engines.
+    
+
+
