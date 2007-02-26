@@ -9,18 +9,22 @@ Categories
 Out of the box, Satchmo supports the traditional hierarchical method for categorizing products.  In other words, you can create category trees like this:
 
  * Movies
+
    - Action
    - Western
    - Comedy
    - Black and White
+
      + Foreign
      + English
      + Silent
   * Books
+
     - Fiction
     - Non-fiction
     
 Some things to keep in mind with Satchmo's implementation:
+
  * You are not limited to the number of categories or the depth of categories.
  * You are allowed to add products to 1 or more products
  
