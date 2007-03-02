@@ -24,9 +24,6 @@ Create Account
 
     <tr><td><label for="id_contents">Last Name:</label></td><td> {{ form.last_name }}</td></tr>
     <tr><td></td><td>{% if form.last_name.errors %}*** {{ form.last_name.errors|join:", " }}{% endif %}</td></tr>
-    
-    <tr><td><label for="id_contents">Your user name:</label></td><td> {{ form.user_name }}</td></tr>
-    <tr><td></td><td>{% if form.user_name.errors %}*** {{ form.user_name.errors|join:", " }}{% endif %}</td></tr>
 
     <tr><td><label for="id_password">Your password:</label></td><td> {{ form.password }}</td></tr>
     <tr><td></td><td>{% if form.password.errors %}*** {{ form.password.errors|join:", " }}{% endif %}</td></tr>

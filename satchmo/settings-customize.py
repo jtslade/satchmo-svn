@@ -100,6 +100,10 @@ INSTALLED_APPS = (
     'satchmo.tax'
 )
 
+AUTHENTICATION_BACKENDS = (
+    'satchmo.shop.email-auth.EmailBackend',
+)
+
 
 # Load the local settings
 from local_settings import *
