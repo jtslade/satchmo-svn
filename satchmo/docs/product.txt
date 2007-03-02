@@ -98,4 +98,82 @@ Taxable
     
 Tax_class
     Allows you to set the rate at which tax is calculated.
+    
+Images
+++++++
 
+In addition to the information discussed above, you can add as many images as you would like to your item.  One of the nice things about the way Satchmo handles these images is that they are automatically converted to thumbnails and are cached so that the conversion process does not slow down your web site.
+
+Images only have a couple of fields:
+
+Picture
+    This is the image of your item that you upload to the web server.  The actual thumbnail size is set in your templates.
+    
+Caption
+    A description of this image.  This field may be used to describe the different angles that images show.
+    
+Sort
+    If you would like control of the order in which the images are displayed, this field can be used.  This field is also special in that it must be filled in!  If you want to delete an image from your item, you must delete the value in the sort field and save the image!
+
+Item Options
+------------
+
+As discussed above, an item is the central focus of your store.  For many cases, the items in your store may have several options.  For instance, if you sell t-shirts, a visitor to your store should be able to choose the size of the shirt while looking at the main item.  You may also want them to choose a color, style and/or a bunch of other different options.  The challenge with this much flexibility is building something that is easy for the user to understnad and easy for the store administrator to maintain.  Satchmo has designed option groups, options and sub_items to provide maximum flexibility and maintainability.
+
+Option Groups
++++++++++++++
+
+Continuing on with the shirt example, you will probably end up with some similar options that you want to apply to a large number of products.  For instance, all of your shirts are going to have sizes of Small, Medium and Large.  Instead of adding all three of these to each item, you can create an option group and add that grouping to the item.  Maintenance is much easier this way.
+
+Here are the fields in the option groups:
+
+Name
+    A description of the group.  This is displayed in the product page to describe the choices available to the user.  In our shirt instance, "size" would be appropriate.
+    
+Description
+    This field is used for administrative purposes.  Size may make sense when looking at a product but what if you have shirts, shoes and hats?  How do you know which group these sizes apply to?  Use this field to write details about the size.  For instance, you could have an option group with the description "Shirt Sizes", "Hat Sizes" and "Shoe Sizes."
+    
+Sort Order
+    This helps you order the options in the way you would like them displayed.  For instance, you may want colors to show before sizes.
+
+Option Items
+++++++++++++
+
+In our example, if an option group is size, then the option items would be "small", "medium" or "large."  The nice thing about these option items is that you can configure these to change the price of your product.  If a large shirt costs more than a small shirt, then you can assign the incremental cost to the "large" option item and the correct price will be shown in the users cart and order.
+
+Name
+    This is the displayed value of the option.  You may want to show people "Small" but only store "S" in the database.  
+    
+Value
+    Corresponds with the Name above.  In this example, the value would be "S."
+    
+Price Change
+    If you would like this option to modify the Item's price, enter a positive or negative number here.
+    
+Sub Item
+++++++++
+
+A sub item can be thought of as the actual product you maintain in inventory and sell to a customer.  It is an item with all of the options applied.  In our example case, it might be a Large, White Shirt.
+
+subitem id
+    This could be a sku for the product.  It's basically a short id to use to identify your product.
+    
+items in stock
+    The inventory of this specific item.
+
+Weight, Length and Height
+    Descriptive information about this item that can be used in shipping calculations or other places in your site.
+    
+Price
++++++
+
+The final choice you have with your products is if there is additional pricing you would like to apply for bulk or special discounts.  For instance, you may want to charge someone $10 for 1-5 shirts but only $7 if they order 6 or more.  This model allows you to do such configuration.
+
+Price
+    Override the price for this sub item if it meets one of the other criteria identified below.
+    
+Quantity
+    The number of items needed to qualify for the price change.
+    
+Expires
+    Date when this offer is no longer valid.  This can be used for various promotions.
