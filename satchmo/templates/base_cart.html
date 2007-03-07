@@ -19,7 +19,7 @@
     {% for item in all_items %}
         <tr><td> <a href="{{shop_base}}/cart/{{item.id}}/remove">Remove</a> </td>
             <td align="center">{{item.quantity}} </td>
-            <td>{{ item.description }}</td>
+            <td><a href="{{item.subItem.get_absolute_url}}">{{ item.description }}</a></td>
         <td align="center">{{ item.line_total|currency }}</td>
         </tr>
     {% endfor %}

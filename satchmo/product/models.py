@@ -182,33 +182,6 @@ class Item(models.Model):
     def __str__(self):
         return self.short_name 
 
-    def _get_available_options(self):
-        """
-        Return a list of optiongroups and options for display to the customer.
-        Only returns options that are used by subitems of this item.
-
-        Return Value:
-        [
-        [OptionGroup, [OptionValue, ..,]],
-        [OptionGroup..],
-        ]
-
-        Note: This doesn't handle the case where you have multiple options and
-        some combinations aren't available. For example, you have option_groups
-        color and size, and you have a yellow/large, a yellow/small, and a
-        white/small, but you have no white/large - the customer will still see
-        the options white and large.
-        """
-        d = {}
-        for subitem in self.subitem_set.all():
-            for option in subitem.options.all():
-                if not d.has_key(option.optionGroup_id):
-                    d[option.optionGroup_id] = [option.optionGroup,[]]
-                if not option in d[option.optionGroup_id][1]:
-                    d[option.optionGroup_id][1] += [option]
-        return d.values()
-    available_options = property(_get_available_options)
-
     def _get_price(self):
         # On some systems, the price was not getting set as a decimal type.  This ensures that it does.
         try:
@@ -341,7 +314,12 @@ class OptionItem(models.Model):
     price_change = models.FloatField(_("Price Change"), null=True, blank=True, 
                                     help_text=_("This is the price differential for this option"), max_digits=4, decimal_places=2)
     displayOrder = models.IntegerField(_("Display Order"))
-  
+
+    def _get_combined_id(self):
+        return '%s-%s' % (str(self.optionGroup.id), str(self.value),)
+    # optionGroup.id-value
+    combined_id = property(_get_combined_id)
+
     def __str__(self):
         return self.name
         
@@ -461,6 +439,9 @@ class SubItem(models.Model):
     #    else:
     #        super(Sub_Item, self).save()
     
+    def get_absolute_url(self):
+        return "%s/product/%s/%s/" % (settings.SHOP_BASE,self.item.short_name,self.id)
+
     class Admin:
         list_display = ('full_name', 'unit_price', 'items_in_stock')
         list_filter = ('item',)

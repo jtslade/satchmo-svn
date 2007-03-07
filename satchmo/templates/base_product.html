@@ -53,11 +53,11 @@ Price: <h3 id="price">unknown</h3>
 <p>Please choose your options:</p>
 {% endif %}
 
-{% for option_group in item.available_options %}
- {{ option_group.0.name }}
-    <select name="{{ option_group.0.id }}" id="{{option_group.0.id}}" onchange="getPrice()">
-    {% for choice in option_group.1 %}
-     <option value="{{ choice.value }}">{{ choice }}
+{% for option_group in options %}
+ {{ option_group.name }}
+    <select name="{{ option_group.id }}" id="{{option_group.id}}" onchange="getPrice()">
+    {% for choice in option_group.items %}
+     <option value="{{ choice.value }}" {% if choice.selected %}selected="selected"{% endif %}>{{ choice.name }}
         {% if choice.price_change %}
             {% option_price choice %}
         {% endif %}

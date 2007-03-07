@@ -26,6 +26,8 @@ urlpatterns = patterns('satchmo.shop.views',
 urlpatterns += patterns('satchmo.product.views',
     (r'^product/(?P<slug>[-\w]+)/prices/$','get_price'),
     (r'^search/$','do_search'),
+    (r'^product/(?P<slug>[-\w]+)/$','get_item'),
+    (r'^product/(?P<slug>[-\w]+)/(?P<subitemId>[\d]+)/$','get_item'),
 )
 
 
@@ -39,17 +41,8 @@ index_dict = {
     'paginate_by' : 10,        
 }
 
-product_dict = {
-    'queryset': Item.objects.filter(active="1"),
-    'slug_field' : 'short_name',
-    'template_object_name' : 'item', 
-    'template_name': 'base_product.html',
-}
-
-
 urlpatterns += patterns('django.views.generic',
                         (r'^$','list_detail.object_list',index_dict),
-                        (r'^product/(?P<slug>[-\w]+)/$','list_detail.object_detail',product_dict),
                         (r'^contact/thankyou/$','simple.direct_to_template',{'template':'thanks.html'}),
                         (r'^account/thankyou/$','simple.direct_to_template',{'template':'account_thanks.html'}),
                         (r'^checkout/success/$','simple.direct_to_template',{'template':'checkout_success.html'}),                            
