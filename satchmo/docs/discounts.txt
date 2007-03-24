@@ -1,7 +1,7 @@
 Discounts
 =========
 
-Satchmo allows you to setup multipe types of discount codes:
+Satchmo allows you to setup multiple types of discount codes:
 
  * Straight dollar amounts
  * Percentage off
