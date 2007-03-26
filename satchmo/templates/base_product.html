@@ -32,7 +32,7 @@ $(document).ready( function(){ getPrice();});
 
 {% block navbar %}
 
-<a href="{{shop_base}}">Home</a> 
+<a href="{{shop_base}}/">Home</a> 
 {% for urls in item.category.all.0.get_url_name %}
     ::<a href="{{urls.1}}">{{ urls.0 }}</a>
 {% endfor %}
