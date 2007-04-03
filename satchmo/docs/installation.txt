@@ -15,6 +15,7 @@ is part of another Django project.
 If Satchmo is a standalone app (follow steps 2 and 3):
 
 2.  Modify Satchmo's default settings-customize.py file::
+
     cp settings-customize.py settings.py
     
 3.  Modify settings.py to reflect your setup.
@@ -49,11 +50,11 @@ If Satchmo is part of another Django app (follow step 4):
 
 9.  Start up the sample webserver to see your store::
 
-        python manage.py startserver
+        python manage.py runserver
         
 10.  In order to see your sample store, point your browser to::
     
-        http://localhost/store to see your store
+        http://localhost/shop to see your store
 
 11.  If you want to see the admin interface, point your browser to::
 
