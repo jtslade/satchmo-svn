@@ -46,6 +46,7 @@ SECRET_KEY = ''
 #### Satchmo unique variables ####
 #This is the base url for the shop.  Only include a leading slash
 #examples: '/shop' or '/mystore'
+#If you want the shop at the root directory, set SHOP_BASE = ''
 SHOP_BASE = '/shop'
 
 # Currency symbol to use
