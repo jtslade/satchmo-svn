@@ -16,7 +16,7 @@ If Satchmo is a standalone app (follow steps 2 and 3):
 
 2.  Modify Satchmo's default settings-customize.py file::
 
-    cp settings-customize.py settings.py
+        cp settings-customize.py settings.py
     
 3.  Modify settings.py to reflect your setup.
 
