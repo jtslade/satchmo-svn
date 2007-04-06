@@ -255,17 +255,12 @@ def load_webda():
     """Load internationalization data"""
     baseURL = "http://svn.webda.python-hosting.com/branches"
     dataFile = "Webda-0.9.1.tar.gz"
-    modelFile = "Webda-Django-0.9.1.tar.gz"
     loaderFile = "webda.py"
     print "Retrieving data files..."
     if os.path.isfile(dataFile):
         print "%s - already exists.  Skipping download" % dataFile
     else:
         urllib.urlretrieve(baseURL+"/"+dataFile, dataFile)
-    if os.path.isfile(modelFile):
-        print "%s - already exists.  Skipping download" % dataFile
-    else:
-        urllib.urlretrieve(baseURL+"/"+modelFile, modelFile) 
     if os.path.isfile(loaderFile):
         print "%s - already exists. Skipping download" % loaderFile
     else:
@@ -276,9 +271,6 @@ def load_webda():
     #Extract all is in newer python versions.  Drop back to system
     #calls if this doesn't work
     try:
-        tar = tarfile.open(modelFile, 'r:gz')
-        tar.extractall()
-        tar.close()
         tar = tarfile.open(dataFile, 'r:gz')
         tar.extractall()
         tar.close()
@@ -286,7 +278,6 @@ def load_webda():
             shutil.rmtree("./i18n/data")
         shutil.move("./data","./i18n/data")
     except AttributeError:
-        os.system('tar -xvzf %s' % modelFile)
         os.system('tar -xvzf %s -C ./i18n' % dataFile)
 
 def load_US_tax_table():
