@@ -165,11 +165,8 @@ def save(data, contact=None):
             setattr(address, field, data[field])
     address.contact = customer
     address.is_default_billing = True
-    address.save()
-    customer.save()
     if data['copy_address']:
         address.is_default_shipping = True
-        address.save()
     else:
         ship_address = AddressBook()
         for field in address.__dict__.keys():
@@ -178,6 +175,7 @@ def save(data, contact=None):
         ship_address.is_default_shipping = True
         ship_address.contact = customer
         ship_address.save()
+    address.save()
     if not customer.primary_phone:
         phone = PhoneNumber()
         phone.primary = True
