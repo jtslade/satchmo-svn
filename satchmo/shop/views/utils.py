@@ -30,9 +30,8 @@ ccInfo = (
 
 class CreditCard(object):
         
-    def __init__(self, number, ccv, cardtype):
+    def __init__(self, number, cardtype):
         self.card_number = number
-        self.card_CCV = ccv
         self.card_type = cardtype
     
     def _verifyMod10(self, number):

@@ -16,9 +16,9 @@ PAYMENTCHOICES = (
 )
 
 CREDITCHOICES = (
-                (_('Visa'),_('Visa')),
-                (_('Mastercard'),_('Mastercard')),
-                (_('Discover'),_('Discover')),
+                (('Visa','Visa')),
+                (('Mastercard','Mastercard')),
+                (('Discover','Discover')),
                 )
 
 

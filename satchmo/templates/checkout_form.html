@@ -15,24 +15,23 @@ Checkout
 </ul>
 </div>
 <h4>Please complete the following information in order to submit your order.</h4>
-{% if form.has_errors %}
-<h2>Please correct the following error{{ form.error_dict|pluralize }}:</h2>
+{% if form.non_field_errors %}
+<h2>Please correct the following error:</h2>
+{{ form.non_field_errors }}
 {% endif %}
 
 <table>
 <form method="post" action=".">
-
-
-    <tr><td><label for="id_email">Email Address:</label></td> <td>{{ form.email }}</td></tr>
+    <tr><td><label for="id_email">Email address</label></td> <td>{{ form.email }}</td></tr>
     <tr><td></td><td>{% if form.email.errors %}*** {{ form.email.errors|join:", " }}{% endif %}</td></tr>
 
-    <tr><td><label for="id_first_name">First Name:</label></td><td> {{ form.first_name }}</td></tr>
+    <tr><td><label for="id_first_name">First name</label></td><td> {{ form.first_name }}</td></tr>
     <tr><td></td><td>{% if form.first_name.errors %}*** {{ form.first_name.errors|join:", " }}{% endif %}</td></tr>
 
-    <tr><td><label for="id_last_name">Last Name:</label></td><td> {{ form.last_name }}</td></tr>
+    <tr><td><label for="id_last_name">Last name</label></td><td> {{ form.last_name }}</td></tr>
     <tr><td></td><td>{% if form.last_name.errors %}*** {{ form.last_name.errors|join:", " }}{% endif %}</td></tr>
     
-    <tr><td><label for="id_phone">Phone Number</label></td><td> {{ form.phone }}</td></tr>
+    <tr><td><label for="id_phone">Phone number</label></td><td> {{ form.phone }}</td></tr>
     <tr><td></td><td>{% if form.phone.errors %}*** {{ form.phone.errors|join:", " }}{% endif %}</td></tr>
     
     <tr><td><h4>Billing Information</h4></td></tr>
@@ -49,7 +48,7 @@ Checkout
     <tr><td><label for="id_state">{{country.get_adm_area_display}}</label></td><td> {{ form.state }}</td></tr>
     <tr><td></td><td>{% if form.state.errors %}*** {{ form.state.errors|join:", " }}{% endif %}</td></tr>
     
-    <tr><td><label for="id_zip_code">Zip Code</label></td><td> {{ form.postalCode }}</td></tr>
+    <tr><td><label for="id_postalCode">Zip code</label></td><td> {{ form.postalCode }}</td></tr>
     <tr><td></td><td>{% if form.postalCode.errors %}*** {{ form.postalCode.errors|join:", " }}{% endif %}</td></tr>
     
     <tr><td><label for="id_country">Country</label></td><td> {{ form.country }}</td></tr>
@@ -57,8 +56,8 @@ Checkout
     
     <tr><td><h4>Shipping Information</h4></td></tr>
     
-    <tr><td><label for="id_copyaddress">Shipping same as billing?</label></td><td> {{ form.copyaddress }}</td></tr>
-    <tr><td></td><td>{% if form.copyaddress.errors %}*** {{ form.copyaddress.errors|join:", " }}{% endif %}</td></tr>
+    <tr><td><label for="id_copy_address">Shipping same as billing?</label></td><td> {{ form.copy_address }}</td></tr>
+    <tr><td></td><td>{% if form.copy_address.errors %}*** {{ form.copy_address.errors|join:", " }}{% endif %}</td></tr>
     
     <tr><td><label for="id_ship_street1">Street</label></td><td> {{ form.ship_street1 }}</td></tr>
     <tr><td></td><td>{% if form.ship_street1.errors %}*** {{ form.ship_street1.errors|join:", " }}{% endif %}</td></tr>
@@ -72,9 +71,8 @@ Checkout
     <tr><td><label for="id_ship_state">{{country.get_adm_area_display}}</label></td><td> {{ form.ship_state }}</td></tr>
     <tr><td></td><td>{% if form.ship_state.errors %}*** {{ form.ship_state.errors|join:", " }}{% endif %}</td></tr>
     
-    <tr><td><label for="id_zip">Zip code</label></td><td> {{ form.ship_PostalCode }}</td></tr>
-    <tr><td></td><td>{% if form.ship_PostalCode.errors %}*** {{ form.ship_PostalCode.errors|join:", " }}{% endif %}</td></tr>
-    
+    <tr><td><label for="id_ship_postalCode">Zip code</label></td><td> {{ form.ship_postalCode }}</td></tr>
+    <tr><td></td><td>{% if form.ship_postalCode.errors %}*** {{ form.ship_postalCode.errors|join:", " }}{% endif %}</td></tr>
 
 <tr><td></td><td><input type="submit" value="Continue Checkout"/></td></tr>
 </form>
