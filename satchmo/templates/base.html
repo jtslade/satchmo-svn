@@ -23,7 +23,7 @@
     
     <div id="leftnav">
         Search<br/>
-        <form id="search" action="{{shop_base}}/search/" method="post">
+        <form id="search" action="{% url product.views.do_search %}" method="post">
             <input type="text" size="20" name="keywords" id="search_keywords" /><br/>
              <input type="submit" value="Search" />
          </form>
@@ -38,20 +38,20 @@
         <div id="rightnav">
             Account Information<br/>
             {% if user.is_authenticated %}
-                <a href="{{shop_base}}/account/info">Account Details</a> <br/>
-                <a href="{{shop_base}}/account/logout">Logout</a><br/>
+                <a href="{% url shop.views.account.info %}">Account Details</a> <br/>
+                <a href="{% url shop.views.account.shop_logout %}">Logout</a><br/>
             {% else %}
-                <a href="{{shop_base}}/account/login">Login</a> <br/>
+                <a href="{% url django.contrib.auth.views.login %}">Login</a> <br/>
             {% endif %}
             
             {% load satchmo.currency_filter %}
-            <a href="{{shop_base}}/cart">Cart({{cart_count}}{%if cart.total%} - {{cart.total|currency}}{%endif%})</a>
+            <a href="{% url shop.views.cart.display %}">Cart({{cart_count}}{%if cart.total%} - {{cart.total|currency}}{%endif%})</a>
             
             {% if cart_count %}
-            <br/><a href="{{shop_base}}/checkout">Check out</a>
+            <br/><a href="{% url shop.views.checkout-step1.contact_info %}">Check out</a>
             {%endif %}
             
-            <p><a href="{{shop_base}}/contact/">Contact Us</a></p>
+            <p><a href="{% url shop.views.contact.form %}">Contact Us</a></p>
             
         </div>
         
@@ -60,7 +60,7 @@
         </div>
     
         <div id="footer">
-            Powered by Satchmo
+            Powered by <a href="http://www.satchmoproject.com">Satchmo</a>
         </div>
         
     </div>

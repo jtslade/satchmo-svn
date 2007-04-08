@@ -25,7 +25,7 @@
 {% endif %}
 </form>
 
-<p>If you do not have an account, please <a href="{{shop_base}}/account/create/">click here.</a></p>
+<p>If you do not have an account, please <a href="{% url shop.views.account.create %}">click here.</a></p>
 <p>If you do not remember your password, please <a href="{{shop_base}}/account/password_reset/">click here</a> to have it reset.</p>
 
 {% endblock %}

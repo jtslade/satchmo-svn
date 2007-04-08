@@ -9,6 +9,6 @@
 <p>Welcome, {{ user_data.full_name }}.</p> 
 Account options:
 <ul>
-<li><a href="{{shop_base}}/account/password_change/">Change your password</a></li>
+<li><a href="{% url django.contrib.auth.views.pw_reset %}">Change your password</a></li>
 </ul>
 {% endblock %}

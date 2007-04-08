@@ -10,8 +10,8 @@ Checkout
 <h3>Checkout</h3>
 <div id="checkoutprogress">
 <ul>
-    <li class="first"><a href="{{shop_base}}/checkout">Ship/Bill</a></li>
-    <li><a href="{{shop_base}}/checkout/pay">Payment</a></li>
+    <li class="first"><a href="{% url shop.views.checkout-step1.contact_info %}">Ship/Bill</a></li>
+    <li><a href="{% url shop.views.checkout-step2.pay_ship_info %}">Payment</a></li>
     <li class="active">Confirmation</li>
 </ul>
 </div>
@@ -68,5 +68,4 @@ Your {{ order.CC.creditType }} card ending in
 <input type="submit" value="Purchase Items"/>
 </form>
 
-</div>
 {% endblock %}
