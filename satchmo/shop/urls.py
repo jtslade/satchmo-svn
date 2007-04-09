@@ -1,6 +1,6 @@
-from django.conf.urls.defaults import *
 import os
 from django.conf import settings
+from django.conf.urls.defaults import *
 from satchmo.product.models import Item
 
 #The following views are custom to Satchmo
@@ -16,9 +16,9 @@ urlpatterns = patterns('satchmo.shop.views',
      (r'^account/info/$','account.info'),
      (r'^account/logout/$','account.shop_logout'),
      (r'^contact/$','contact.form'),
-     (r'^checkout/$','checkout-step1.contact_info', {'SSL':False}),
-     (r'^checkout/pay/$','checkout-step2.pay_ship_info', {'SSL':False}),  
-     (r'^checkout/confirm/$','checkout-step3.confirm_info', {'SSL':False}),     
+     (r'^checkout/$','checkout-step1.contact_info', {'SSL':False}, 'checkout-step1'),
+     (r'^checkout/pay/$','checkout-step2.pay_ship_info', {'SSL':False}, 'checkout-step2'),  
+     (r'^checkout/confirm/$','checkout-step3.confirm_info', {'SSL':False}, 'checkout-step3'),     
 )
 #Note with the last category url - this allows category depth to be as deep as we want but the downside
 #is that we ignore all but the child and parent category.  In practice this should be ok
