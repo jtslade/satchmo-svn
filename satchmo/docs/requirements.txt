@@ -5,12 +5,19 @@ Satchmo is based on the Django framework, therefore you do need a fully function
 Django instance to use Satchmo.  The `Django installation guide`_ will step you 
 through the process. 
 
+As of now, it is recommended that you use a Django version from the current trunk.
+Some of the most recent features in Satchmo require a recent (0.97 pre) checkout 
+from svn.
+
+Obviously python and a supported database are required.  Python 2.4 and up are recommended.  
+Python 2.3 is untested.
+
 There are a number of other Python packages that are required for usage of all the 
 features in Satchmo.
 
 - `Python Imaging Library`_
 - `Elementtree`_ (included in Python 2.5+)
-- `Python cryptography toolkit`_ ('Windows binary'_)
+- `Python cryptography toolkit`_ (`Windows binary`_)
 - `ReportLab`_
 - `Tiny RML2PDF`_ (`download link`_)
 
