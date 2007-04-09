@@ -43,6 +43,14 @@ SECRET_KEY = ''
 #AUTHORIZE_NET_LOGIN = ''
 #AUTHORIZE_NET_TRANKEY = ''
 
+#### For PayPal Web Payments Standard #### 
+#PAYPAL_POST_URL = 'https://www.paypal.com/cgi-bin/webscr' # Production 
+#PAYPAL_POST_URL = 'https://www.sandbox.paypal.com/cgi-bin/webscr' # Testing 
+#PAYPAL_BUSINESS = '' # The email address for your PayPal account. 
+#PAYPAL_CURRENCY_CODE = '' # If this is empty or invalid, PayPal assumes USD. 
+#PAYPAL_RETURN_ADDRESS = '' # This is the URL that PayPal sends the user to after payment. 
+
+
 #### Satchmo unique variables ####
 #This is the base url for the shop.  Only include a leading slash
 #examples: '/shop' or '/mystore'
