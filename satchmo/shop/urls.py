@@ -16,9 +16,9 @@ urlpatterns = patterns('satchmo.shop.views',
      (r'^account/info/$','account.info'),
      (r'^account/logout/$','account.shop_logout'),
      (r'^contact/$','contact.form'),
-     (r'^checkout/$', 'credit_card.checkout_step1.contact_info', {'SSL':False}, 'checkout_step1'),
-     (r'^checkout/pay/$', 'credit_card.checkout_step2.pay_ship_info', {'SSL':False}, 'checkout_step2'),
-     (r'^checkout/confirm/$', 'credit_card.checkout_step3.confirm_info', {'SSL':False}, 'checkout_step3'),
+     (r'^checkout/$', 'credit_card.checkout_step1.contact_info', {'SSL':False}, 'checkout-step1'),
+     (r'^checkout/pay/$', 'credit_card.checkout_step2.pay_ship_info', {'SSL':False}, 'checkout-step2'),
+     (r'^checkout/confirm/$', 'credit_card.checkout_step3.confirm_info', {'SSL':False}, 'checkout-step3'),
 )
 #Note with the last category url - this allows category depth to be as deep as we want but the downside
 #is that we ignore all but the child and parent category.  In practice this should be ok
