@@ -18,6 +18,17 @@ import datetime
 
 # Create your models here.
 
+def force_decimal(data):
+    """
+    Helper function to turn a number into a decimal if it's a string or a float
+    """
+    # On some systems, the price was not getting set as a decimal type.  This ensures that it does.
+    try:
+        return Decimal(data)
+    except TypeError:
+        # This is in case of "Can't return float to Decimal" exceptions
+        return Decimal(str(data))
+
 class Category(models.Model):
     """
     Basic hierarchical category model for storing products
@@ -183,12 +194,8 @@ class Item(models.Model):
         return self.short_name 
 
     def _get_price(self):
-        # On some systems, the price was not getting set as a decimal type.  This ensures that it does.
-        try:
-            return Decimal(self.base_price)
-        except TypeError:
-            # This is in case of "Can't return float to Decimal" exceptions
-            return Decimal(str(self.base_price))
+        return (force_decimal(self.base_price))
+        
     price = property(_get_price)
     
     def _get_mainImage(self):
@@ -320,6 +327,10 @@ class OptionItem(models.Model):
     # optionGroup.id-value
     combined_id = property(_get_combined_id)
 
+    def _get_price_change(self):
+        return(force_decimal(self.price_change))
+    get_price_change = property(_get_price_change)
+
     def __str__(self):
         return self.name
         
@@ -370,7 +381,7 @@ class SubItem(models.Model):
         price_delta = Decimal("0.0") #otherwise fallback on item.price - option.price_change
         for option in self.options.all():
             if option.price_change:
-                price_delta += Decimal(option.price_change)
+                price_delta += option.get_price_change
         return(self.item.price + price_delta)
     unit_price = property(_get_fullPrice)
     
