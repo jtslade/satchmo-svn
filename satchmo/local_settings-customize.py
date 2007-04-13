@@ -64,6 +64,9 @@ CURRENCY = '$'
 SITE_DOMAIN = "example.com"
 SITE_NAME = "My Site"
 
+#Shipping Modules to enable
+SHIPPING_MODULES = ['satchmo.shipping.modules.per', 'satchmo.shipping.modules.flat']
+
 #Configure logging
 LOGDIR = "/path/to/log"
 LOGFILE = "satchmo.log"

@@ -5,9 +5,18 @@ Stores Customer and Order information
 from django.db import models
 from django.contrib.auth.models import User 
 from satchmo.product.models import SubItem
-from satchmo.shipping.modules import activeModules
 from django.utils.translation import gettext_lazy as _
 from satchmo.shop.templatetags.currency_filter import moneyfmt
+from django.conf import settings
+import sys
+activeShippingModules = []
+
+#Load the shipping modules to populate the choices
+#None is passed in, since all we need is the id
+for module in settings.SHIPPING_MODULES:
+    __import__(module)
+    shipping_module = sys.modules[module]
+    activeShippingModules.append((shipping_module.Calc(None,None).id,shipping_module.Calc(None,None).id))
 
 CONTACT_CHOICES = (
     (_('Customer'), _('Customer')),
@@ -250,7 +259,7 @@ class Order(models.Model):
     method = models.CharField(_("Payment method"), choices=ORDER_CHOICES, maxlength=50, blank=True)
     shippingDescription = models.CharField(_("Shipping Description"), maxlength=50, blank=True, null=True)
     shippingMethod = models.CharField(_("Shipping Method"), maxlength=50, blank=True, null=True)
-    shippingModel = models.CharField(_("Shipping Models"), choices=activeModules, maxlength=30, blank=True, null=True)
+    shippingModel = models.CharField(_("Shipping Models"), choices=activeShippingModules, maxlength=30, blank=True, null=True)
     shippingCost = models.FloatField(_("Shipping Cost"), max_digits=6, decimal_places=2, blank=True, null=True)
     tax = models.FloatField(_("Tax"), max_digits=6, decimal_places=2, blank=True, null=True)
     timeStamp = models.DateTimeField(_("Time Stamp"), blank=True, null=True, auto_now_add=True)
