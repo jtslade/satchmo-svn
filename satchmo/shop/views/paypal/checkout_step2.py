@@ -4,11 +4,11 @@
 
 import datetime
 import calendar
+import sys
 from decimal import Decimal
 from django import http
 from django import newforms as forms
 from django.conf import settings
-from django.core import validators
 from django.shortcuts import render_to_response
 from django.template import loader
 from django.template import RequestContext, Context
@@ -17,11 +17,11 @@ from satchmo.contact.models import Contact
 from satchmo.discount.models import Discount
 from satchmo.contact.models import Order, OrderItem
 from satchmo.payment.models import CREDITCHOICES, CreditCardDetail
-from satchmo.payment.models import CreditCardDetail
 from satchmo.shop.views.utils import CreditCard
-from satchmo.shipping.modules import *
 from satchmo.tax.modules import simpleTax
 
+for module in settings.SHIPPING_MODULES:
+    __import__(module)
 
 selection = "Please Select"
 
@@ -35,10 +35,10 @@ class PayShipForm(forms.Form):
         shipping_options = []
         tempCart = Cart.objects.get(id=request.session['cart'])
         tempContact = Contact.objects.get(id=request.session['custID'])
-        for module in activeModules:
+        for module in settings.SHIPPING_MODULES:
             #Create the list of information the user will see
-            shipping_module = eval(module[0])
-            shipping_instance = shipping_module(tempCart, tempContact)
+            shipping_module = sys.modules[module]
+            shipping_instance = shipping_module.Calc(tempCart, tempContact)
             if shipping_instance.valid():
                 t = loader.get_template('shipping_options.html')
                 c = Context({
@@ -99,12 +99,14 @@ def pay_ship_info(request):
 
 def save(newOrder, new_data, cart, contact):
     # Save the shipping info
-    shipping_module = eval(new_data['shipping'])
-    shipping_instance = shipping_module(cart, contact)
-    newOrder.shippingDescription = shipping_instance.description()
-    newOrder.shippingMethod = shipping_instance.method()
-    newOrder.shippingCost = shipping_instance.cost()
-    newOrder.shippingModel = new_data['shipping']
+    for module in settings.SHIPPING_MODULES:
+        shipping_module = sys.modules[module]
+        shipping_instance = shipping_module.Calc(cart, contact)
+        if shipping_instance.id == new_data['shipping']:
+            newOrder.shippingDescription = shipping_instance.description()
+            newOrder.shippingMethod = shipping_instance.method()
+            newOrder.shippingCost = shipping_instance.cost()
+            newOrder.shippingModel = new_data['shipping']
     
     #Process any discounts
     if new_data.get('discount', False):
