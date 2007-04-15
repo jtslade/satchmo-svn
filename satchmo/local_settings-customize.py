@@ -37,6 +37,12 @@ DATABASE_PASSWORD = ''
 DATABASE_USER = ''
 SECRET_KEY = ''
 
+### Credit Card Module ###
+# If you are processing credit cards, this is where you should set the appropriate modules
+# to be called during the checkout process.
+# Right now dummy and authorize.net are the only ones included
+CREDIT_PROCESSOR = 'satchmo.payment.modules.dummy'
+
 #### For Authorize.net ######
 #AUTHORIZE_NET_CONNECTION = 'https://test.authorize.net/gateway/transact.dll'
 #AUTHORIZE_NET_TEST = 'TRUE'

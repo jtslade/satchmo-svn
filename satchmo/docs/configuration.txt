@@ -45,18 +45,14 @@ Payment Processing
 
 If you are processing credit cards, you will need to modif the payment processor you use for processing
 credit cards.  A module for `Authorize.net`_ is included but not installed by default.  A dummy module
-is installed that does nothing but return a true value.  To change to authorize.net, change the import
-statement in satchmo/shop/views/credit_card/checkout_step3 from::
+is installed that does nothing but return a true value.  To change to authorize.net, modify your 
+local_settings file to point to the new module::
     
-    #from satchmo.payment.modules.authorizenet import PaymentProcessor
-    # Change this to your appropriate payment processor
-    from satchmo.payment.modules.dummy import PaymentProcessor
-    
-to::
-
-    from satchmo.payment.modules.authorizenet import PaymentProcessor
-    # Change this to your appropriate payment processor
-    #from satchmo.payment.modules.dummy import PaymentProcessor
+    ### Credit Card Module ###
+    # If you are processing credit cards, this is where you should set the appropriate modules
+    # to be called during the checkout process.
+    # Right now dummy and authorize.net are the only ones included
+    CREDIT_PROCESSOR = 'satchmo.payment.modules.authorizenet'
 
 Shipping Calculations
 +++++++++++++++++++++

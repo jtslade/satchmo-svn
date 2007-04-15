@@ -10,7 +10,6 @@ from django.template import RequestContext
 from django.template import loader
 from satchmo.shop.models import Cart, CartItem, Config
 from satchmo.contact.models import Order, OrderItem, OrderStatus
-from satchmo.payment.modules.dummy import PaymentProcessor
 
 def confirm_info(request):
     if not request.session.get('orderID', False):

@@ -10,9 +10,11 @@ from satchmo.shop.models import Cart, CartItem, Config
 from django.conf import settings
 from satchmo.contact.models import Order, OrderItem, OrderStatus
 import datetime
-#from satchmo.payment.modules.authorizenet import PaymentProcessor
-# Change this to your appropriate payment processor
-from satchmo.payment.modules.dummy import PaymentProcessor
+import sys
+
+#Import the appropriate credit card processing back end
+__import__(settings.CREDIT_PROCESSOR)
+credit_processor = sys.modules[settings.CREDIT_PROCESSOR]
 
 def confirm_info(request):
     if not request.session.get('orderID', False):
@@ -26,7 +28,7 @@ def confirm_info(request):
     orderToProcess = Order.objects.get(id=request.session['orderID'])
     if request.POST:
         #Do the credit card processing here & if successful, empty the cart and update the status
-        processor = PaymentProcessor()
+        processor = credit_processor.PaymentProcessor()
         processor.prepareData(orderToProcess)
         results, reason_code, msg = processor.process()
         if results:
