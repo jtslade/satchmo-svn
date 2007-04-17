@@ -154,28 +154,34 @@ def save(data, contact=None):
         customer = Contact()
     else:
         customer = contact
-    for field in customer.__dict__.keys():
-        if data.has_key(field):
+    for field in customer.__dict__.iterkeys():
+        try:
             setattr(customer, field, data[field])
+        except KeyError:
+            pass
     customer.role = "Customer"
     customer.save()
     address = AddressBook()
-    for field in address.__dict__.keys():
-        if data.has_key(field):
+    address_keys = address.__dict__.iterkeys()
+    for field in address_keys:
+        try:
             setattr(address, field, data[field])
+        except KeyError:
+            pass
     address.contact = customer
     address.is_default_billing = True
-    if data['copy_address']:
-        address.is_default_shipping = True
-    else:
+    address.is_default_shipping = data['copy_address']
+    address.save()
+    if not data['copy_address']:
         ship_address = AddressBook()
-        for field in address.__dict__.keys():
-            if data.has_key('ship_' + field):
+        for field in address_keys:
+            try:
                 setattr(ship_address, field, data['ship_' + field])
+            except KeyError:
+                pass
         ship_address.is_default_shipping = True
         ship_address.contact = customer
         ship_address.save()
-    address.save()
     if not customer.primary_phone:
         phone = PhoneNumber()
         phone.primary = True

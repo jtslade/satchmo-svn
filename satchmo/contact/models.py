@@ -179,7 +179,7 @@ class AddressBook(models.Model):
 
     def __str__(self):
        return ("%s - %s" % (self.contact.full_name, self.description))
-       
+         
     def save(self):
         """
         If the new address is the default and there already was a default billing or shipping address
@@ -192,26 +192,25 @@ class AddressBook(models.Model):
         except:
             existingBilling = None
             existingShipping = None
-        
         #If we're setting shipping & one already exists remove previous default
         if self.is_default_shipping and existingShipping:
             #existingShipping.delete()
             existingShipping.is_default_shipping = False
-            existingShipping.save()
+            super(AddressBook,existingShipping).save()
         #If we're setting billing & one already exists remove previous default
         if self.is_default_billing and existingBilling:
             #existingBilling.delete()
             existingBilling.is_default_billing = False
-            existingBilling.save()
+            super(AddressBook, existingBilling).save()
         if not existingBilling:
             self.is_default_billing = True
         if not existingShipping:
             self.is_default_shipping = True
         super(AddressBook, self).save()
-        
-        class Meta:
-            verbose_name = _("Address Book")
-            verbose_name_plural = _("Address Books")
+ 
+    class Meta:
+        verbose_name = _("Address Book")
+        verbose_name_plural = _("Address Books")
 
 
 ORDER_CHOICES = (
