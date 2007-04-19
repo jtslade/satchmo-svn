@@ -255,16 +255,11 @@ def load_webda():
     """Load internationalization data"""
     baseURL = "http://svn.webda.python-hosting.com/branches"
     dataFile = "Webda-0.9.1.tar.gz"
-    loaderFile = "webda.py"
     print "Retrieving data files..."
     if os.path.isfile(dataFile):
         print "%s - already exists.  Skipping download" % dataFile
     else:
         urllib.urlretrieve(baseURL+"/"+dataFile, dataFile)
-    if os.path.isfile(loaderFile):
-        print "%s - already exists. Skipping download" % loaderFile
-    else:
-    	urllib.urlretrieve(baseURL+"/"+loaderFile, loaderFile)
     print "Extracting files..."
     #Use tarfile so it's easier on Windows boxes
     #File moves are required for windows but work fine in unix
