@@ -11,6 +11,8 @@ from django.conf import settings
 from satchmo.i18n.models import Country
 from satchmo.shop.views.common import save_contact_info, ContactInfoForm
 
+selection = "Please Select"
+
 def contact_info(request):
     #First verify that the cart exists and has items
     if request.session.get('cart', False):
