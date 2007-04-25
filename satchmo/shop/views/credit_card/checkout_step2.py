@@ -9,6 +9,7 @@ from decimal import Decimal
 from django import http
 from django import newforms as forms
 from django.conf import settings
+from django.core import urlresolvers
 from django.shortcuts import render_to_response
 from django.template import loader
 from django.template import RequestContext, Context
@@ -90,7 +91,7 @@ class PayShipForm(forms.Form):
 def pay_ship_info(request):
     #First verify that the customer exists
     if not request.session.get('custID', False):
-        return http.HttpResponseRedirect('%s/checkout' % (settings.SHOP_BASE))
+        return http.HttpResponseRedirect(urlresolvers.reverse('checkout-step1'))
     #Verify we still have items in the cart
     if request.session.get('cart', False):
         tempCart = Cart.objects.get(id=request.session['cart'])
@@ -115,7 +116,7 @@ def pay_ship_info(request):
             #copy data over to the order
             save(newOrder, new_data, tempCart, contact)
             request.session['orderID'] = newOrder.id
-            return http.HttpResponseRedirect('%s/checkout/confirm' % settings.SHOP_BASE)
+            return http.HttpResponseRedirect(urlresolvers.reverse('checkout-step3'))
     else:
         form = PayShipForm(request)
     return render_to_response('checkout_pay_ship.html', {'form': form},

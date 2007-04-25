@@ -4,10 +4,11 @@
 
 from django.shortcuts import render_to_response
 from django import http
+from django.conf import settings
+from django.core import urlresolvers
 from django.template import RequestContext, Context
 from django.template import loader
 from satchmo.shop.models import Cart, CartItem
-from django.conf import settings
 from satchmo.i18n.models import Country
 from satchmo.shop.views.common import save_contact_info, ContactInfoForm
 from satchmo.contact.models import Contact
@@ -58,7 +59,7 @@ def contact_info(request):
             else:
                 custID = save_contact_info(form.clean_data, contact)
             #TODO - Create an order here and associate it with a session
-            return http.HttpResponseRedirect('%s/checkout/pay/' % (settings.SHOP_BASE))
+            return http.HttpResponseRedirect(urlresolvers.reverse('checkout-step2'))
     else:
         if contact:
             #If a person has their contact info, make sure we populate it in the form
