@@ -10,6 +10,7 @@ from satchmo.shop.models import Cart, CartItem
 from django.conf import settings
 from satchmo.i18n.models import Country
 from satchmo.shop.views.common import save_contact_info, ContactInfoForm
+from satchmo.contact.models import Contact
 
 selection = "Please Select"
 
