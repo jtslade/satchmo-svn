@@ -1,6 +1,6 @@
-========
-Logging
-========
+==========
+Analytics
+==========
 
 One very important capability that's needed in order to run any kind
 of eCommerce solution effectively is quality analytic capabilities.  Satchmo
