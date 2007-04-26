@@ -56,6 +56,8 @@ of very sophisticated features.  Some highlights include:
     them.  Each image is automatically scaled to a thumbnail size of your choosing 
     and is automatically cached for maximum performance.
 -   Support for Authorize.net credit card processing.
+-   Support for accepting paypal.
+-   Google analytics support.
 -   Support for invoice, packing slip and shipping label creation and printing.
 -   Fine grained ssl support to secure certain urls in your store.
 -   Store product search functionality.

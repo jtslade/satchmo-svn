@@ -10,10 +10,9 @@ from django.template import RequestContext, Context
 from django.template import loader
 from satchmo.shop.models import Cart, CartItem
 from satchmo.i18n.models import Country
-from satchmo.shop.views.common import save_contact_info, ContactInfoForm
+from satchmo.shop.views.common import save_contact_info, ContactInfoForm, selection
 from satchmo.contact.models import Contact
-
-selection = "Please Select"
+from satchmo.contact.models import Contact
 
 def contact_info(request):
     #First verify that the cart exists and has items

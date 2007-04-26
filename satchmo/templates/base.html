@@ -2,6 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+{% load satchmo.google %}
 <head>
     {% block extra-head %}
     {% endblock %}
@@ -49,7 +50,7 @@
             
             {% if cart_count %}
             <br/><a href="{% url checkout-step1 %}">Check out</a>
-            {%endif %}
+            {% endif %}
             
             <p><a href="{% url shop.views.contact.form %}">Contact Us</a></p>
             
@@ -64,4 +65,9 @@
         </div>
         
     </div>
+    {% block google-tracker %}
+    {% if enable_google %}
+        {% show_tracker %}
+    {% endif %}
+    {% endblock %}
 </body>

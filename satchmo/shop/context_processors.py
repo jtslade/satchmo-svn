@@ -32,4 +32,5 @@ def settings(request):
              'media_url': settings.MEDIA_URL,
              'cart_count': cart_count,
              'cart': cart,
-             'categories': all_categories}
+             'categories': all_categories,
+             'enable_google': settings.GOOGLE_ANALYTICS}

@@ -2,7 +2,9 @@
 Common code used for the checkout process
 """
 from django import newforms as forms
-from satchmo.contact.models import Contact, AddressBook, PhoneNumber
+from satchmo.contact.models import Contact, AddressBook, PhoneNumber, Order
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 
 selection = "Please Select"
 
@@ -114,6 +116,7 @@ def save_contact_info(data, contact=None):
         ship_address.is_default_shipping = True
         ship_address.is_default_billing = False
         ship_address.contact = customer
+        ship_address.country = address.country
         ship_address.save()
     if not customer.primary_phone:
         phone = PhoneNumber()
@@ -124,3 +127,11 @@ def save_contact_info(data, contact=None):
     phone.contact = customer
     phone.save()        
     return customer.id
+
+def checkout_success(request):
+    """
+    The order has been succesfully processed.  This can be used to generate a receipt or some other confirmation
+    """
+    order = Order.objects.get(id=request.session['orderID'])
+    del request.session['orderID']
+    return render_to_response('checkout_success.html', {'order': order}, RequestContext(request))

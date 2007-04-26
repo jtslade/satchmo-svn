@@ -56,6 +56,13 @@ CREDIT_PROCESSOR = 'satchmo.payment.modules.dummy'
 #PAYPAL_CURRENCY_CODE = '' # If this is empty or invalid, PayPal assumes USD. 
 #PAYPAL_RETURN_ADDRESS = '' # This is the URL that PayPal sends the user to after payment. 
 
+# Google Analytics
+# Set this to True if you wish to enable Google Analytics.  You must have
+# a google ID in order for this to work
+GOOGLE_ANALYTICS = False
+# If google is enabled, enter the full google code here - Example "UA-abcd-1"
+GOOGLE_ANALYTICS_CODE = "UA-xxxx-x"
+
 
 #### Satchmo unique variables ####
 #This is the base url for the shop.  Only include a leading slash

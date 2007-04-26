@@ -365,6 +365,10 @@ class OrderItem(models.Model):
     
     def __str__(self):
         return self.item.full_name
+        
+    def _get_category(self):
+        return(self.item.item.category.all()[0].name)
+    category = property(_get_category)
     
     class Meta:
         verbose_name = _("Order Line Item")

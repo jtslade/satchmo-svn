@@ -40,7 +40,7 @@ def confirm_info(request):
             status.timeStamp = datetime.datetime.now()
             status.order = orderToProcess #For some reason auto_now_add wasn't working right in admin
             status.save()
-            del request.session['orderID']
+            #del request.session['orderID']
             #Redirect to the success page
             return http.HttpResponseRedirect('%s/checkout/success' % (settings.SHOP_BASE))
         #Since we're not successful, let the user know via the confirmation page

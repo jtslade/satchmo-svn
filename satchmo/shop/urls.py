@@ -19,6 +19,7 @@ urlpatterns = patterns('satchmo.shop.views',
      (r'^checkout/$', 'credit_card.checkout_step1.contact_info', {'SSL':False}, 'checkout-step1'),
      (r'^checkout/pay/$', 'credit_card.checkout_step2.pay_ship_info', {'SSL':False}, 'checkout-step2'),
      (r'^checkout/confirm/$', 'credit_card.checkout_step3.confirm_info', {'SSL':False}, 'checkout-step3'),
+     (r'^checkout/success/$', 'common.checkout_success',{'SSL':False}, 'checkout-success')
 )
 #Note with the last category url - this allows category depth to be as deep as we want but the downside
 #is that we ignore all but the child and parent category.  In practice this should be ok
@@ -44,8 +45,7 @@ index_dict = {
 urlpatterns += patterns('django.views.generic',
                         (r'^$','list_detail.object_list',index_dict),
                         (r'^contact/thankyou/$','simple.direct_to_template',{'template':'thanks.html'}),
-                        (r'^account/thankyou/$','simple.direct_to_template',{'template':'account_thanks.html'}),
-                        (r'^checkout/success/$','simple.direct_to_template',{'template':'checkout_success.html'}),                            
+                        (r'^account/thankyou/$','simple.direct_to_template',{'template':'account_thanks.html'}),                           
                         )
 
 #Dictionary for authentication views
