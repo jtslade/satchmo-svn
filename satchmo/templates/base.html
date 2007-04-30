@@ -46,10 +46,11 @@
             {% endif %}
             
             {% load satchmo.currency_filter %}
-            <a href="{% url shop.views.cart.display %}">Cart({{cart_count}}{%if cart.total%} - {{cart.total|currency}}{%endif%})</a>
+            <a href="{% url shop.views.cart.display %}">Cart
             
             {% if cart_count %}
-            <br/><a href="{% url checkout-step1 %}">Check out</a>
+                ({{cart_count}} - {{cart.total|currency}})</a>
+                <br/><a href="{% url checkout-step1 %}">Check out</a>
             {% endif %}
             
             <p><a href="{% url shop.views.contact.form %}">Contact Us</a></p>
