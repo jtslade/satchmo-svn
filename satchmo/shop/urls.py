@@ -56,7 +56,7 @@ password_reset_dict = {
                         
 urlpatterns += patterns('django.contrib.auth.views',
                         (r'^account/login/$', 'login', {'template_name': 'login.html'}),
-                        (r'^account/password_reset/$','password_reset', password_reset_dict),
+                        (r'^account/password_reset/$','password_reset', password_reset_dict, 'password_reset'),
                         (r'^account/password_reset/done/$', 'password_reset_done', {'template_name':'password_reset_done.html'}),
                         (r'^account/password_change/$', 'password_change', {'template_name':'password_change_form.html'}),
                         (r'^account/password_change/done/$', 'password_change_done', {'template_name':'password_change_done.html'}),

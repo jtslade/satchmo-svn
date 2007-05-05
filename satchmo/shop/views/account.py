@@ -1,93 +1,107 @@
-from django.shortcuts import render_to_response
-from django.contrib.auth.decorators import user_passes_test
 from django import http
-from django import oldforms as forms
-from django.template import RequestContext, Context
-from django.template import loader
-from django.core import validators
-from django.contrib.auth.forms import AuthenticationForm
-from satchmo.shop.models import Config
+from django import newforms as forms
 from django.conf import settings
-from satchmo.shop.views.utils import bad_or_missing
 from django.contrib.auth import logout, login, authenticate
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
-from satchmo.contact.models import Contact
 from django.core.mail import send_mail
+from django.shortcuts import render_to_response
+from django.template import loader
+from django.template import RequestContext, Context
+from django.utils.translation import gettext_lazy as _
+from satchmo.contact.models import Contact
+from satchmo.shop.models import Config
 from satchmo.shop.utils.unique_id import generate_id
+from satchmo.shop.views.utils import bad_or_missing
 
-class AccountManipulator(AuthenticationForm):
-    def __init__(self, request):
-        AuthenticationForm.__init__(self, request)
-        self.fields = (
-            forms.EmailField(field_name="email", length=30, is_required=True, validator_list=[self.isUniqueEmail]),
-            forms.PasswordField(field_name="password", length=30, is_required=True),
-            forms.PasswordField(field_name="password2", length=30, is_required=True,
-                                validator_list=[validators.AlwaysMatchesOtherField('password', "The two password fields didn't match.")]),
-            forms.TextField(field_name="first_name",length=30, is_required=True),
-            forms.TextField(field_name="last_name",length=30, is_required=True),
-            #forms.TextField(field_name="user_name",length=30, is_required=True, validator_list=[self.isUniqueUsername]),
-        )
+class AccountForm(forms.Form):
+    """The basic account form."""
+    # user_name = forms.CharField(label=_('User Name'), max_length=30, required=True)
+    email = forms.EmailField(label=_('Email'), max_length=30, required=True)
+    password2 = forms.CharField(label=_('Password (again)'), max_length=30, widget=forms.PasswordInput(), required=True)
+    password = forms.CharField(label=_('Password'), max_length=30, widget=forms.PasswordInput(), required=True)
+    first_name = forms.CharField(label=_('First Name'), max_length=30, required=True)
+    last_name = forms.CharField(label=_('Last Name'), max_length=30, required=True)
+
+    
+    def clean_password(self):
+        """Enforce that password and password2 are the same."""
+        p1 = self.clean_data.get('password', None)
+        p2 = self.clean_data.get('password2', None)
+        if not(p1 and p2 and p1 == p2):
+            raise forms.ValidationError("The two passwords do not match." )
+
+        # note, here is where we'd put some kind of custom validator to enforce "hard" passwords.
+        return p1    
+
+    def clean_email(self):
+        """Prevent account hijacking by disallowing duplicate emails."""
+        email = self.clean_data.get('email', None)
+        if email and User.objects.filter(email=email).count() > 0:
+            raise forms.ValidationError("That email address is already in use.")
         
-    def isValidPassword(self, field_data, all_data):
-        if not (field_data == all_data['password']):
-            raise validators.ValidationError("Your passwords do not match.")
+        return email
     
-    def isUniqueEmail(self, field_data, all_data):
-        if User.objects.filter(email=field_data).count() > 0:
-            raise validators.ValidationError("That email address is already in use.")
+    #### Not currently used.  Preserved during conversion to newforms.    
+    # def test_unique_username(self):
+    #     """Test to ensure that the username is not already used."""
+    #     username = self.clean_data.get('user_name', None)
+    #     if username and User.objects.filter(username=username).count() > 0:
+    #         raise forms.ValidationError("That username already exists.")
     
-    def isUniqueUsername(self, field_data, all_data):
-        try:
-            User.objects.get(username=field_data)
-        except User.DoesNotExist:
-            pass
-        else:
-            raise validators.ValidationError("That username already exists.")
-            
-    def save(self, data):
-        user_name = generate_id(data['first_name'], data['last_name'])
-        password = data['password']
-        email = data['email']
-        first_name = data['first_name']
-        last_name = data['last_name']
-        u = User.objects.create_user(user_name, email, password)
-        u.first_name = first_name
-        u.last_name = last_name
-        u.save()
-        contact = Contact(first_name=first_name, last_name=last_name, email=email, role="Customer", user=u)
-        contact.save()
-        t = loader.get_template('email/welcome.txt')
-        c = Context({
-            'first_name': data['first_name'],
-            'last_name' : data['last_name'],  
-            'user_name': user_name })
-        shop_config = Config.objects.get(site=settings.SITE_ID)
-        shop_email = shop_config.storeEmail
-        subject = "Welcome to %s" % (shop_config.storeName)
-        c['company_name'] = shop_config.storeName
-        c['login_url'] = "http://%s%s/account/login" % (shop_config.site.domain, settings.SHOP_BASE)
-        send_mail(subject, t.render(c), shop_email,
-                     [email], fail_silently=False)
+    def save(self):
+        """Save the user object, returning it."""
+        
+        user = None
+        if self.is_valid():
+            data = self.clean_data
+
+            user_name = generate_id(data['first_name'], data['last_name'])
+            password = data['password']
+            email = data['email']
+            first_name = data['first_name']
+            last_name = data['last_name']
+            u = User.objects.create_user(user_name, email, password)
+            u.first_name = first_name
+            u.last_name = last_name
+            u.save()
+            contact = Contact(first_name=first_name, last_name=last_name, email=email, role="Customer", user=u)
+            contact.save()
+            t = loader.get_template('email/welcome.txt')
+            c = Context({
+                'first_name': data['first_name'],
+                'last_name' : data['last_name'],  
+                'user_name': user_name })
+            shop_config = Config.objects.get(site=settings.SITE_ID)
+            shop_email = shop_config.storeEmail
+            subject = "Welcome to %s" % (shop_config.storeName)
+            c['company_name'] = shop_config.storeName
+            c['login_url'] = "http://%s%s/account/login" % (shop_config.site.domain, settings.SHOP_BASE)
+            send_mail(subject, t.render(c), shop_email,
+                         [email], fail_silently=False)
+                         
+        return u    
     
     
 def create(request):
-    manipulator = AccountManipulator(request)
-    if request.POST:
-        new_data = request.POST.copy()
-        errors = manipulator.get_validation_errors(new_data)
-        if not errors:
-            data = request.POST.copy()
-            manipulator.save(data)
-            user = authenticate(username=data['email'], password=data['password'])
+    if request.method == "POST":
+        form = AccountForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            data = form.clean_data
+            user = authenticate(username=user.username, password=data['password'])
             login(request, user)
             contact = Contact.objects.get(user=user.id)
             request.session['custID'] = contact.id
+            
             return http.HttpResponseRedirect('%s/account/thankyou' % (settings.SHOP_BASE))
+
     else:
-        errors = new_data = {}
-    form = forms.FormWrapper(manipulator, new_data, errors)
-    return render_to_response('account_create_form.html', {'form': form},
-                                RequestContext(request))
+        form = AccountForm()
+            
+    ctx = RequestContext(request, {'form': form})
+    return render_to_response('account_create_form.html', ctx)
+
 
 def info(request):
     try:
