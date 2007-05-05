@@ -63,6 +63,14 @@ GOOGLE_ANALYTICS = False
 # If google is enabled, enter the full google code here - Example "UA-abcd-1"
 GOOGLE_ANALYTICS_CODE = "UA-xxxx-x"
 
+##### For Email ########
+# If this isn't set in your settings file, you can set these here
+#EMAIL_HOST = 'host here'
+#EMAIL_PORT = 587
+#EMAIL_HOST_USER = 'your user here'
+#EMAIL_HOST_PASSWORD = 'your password'
+#EMAIL_USE_TLS = True
+
 
 #### Satchmo unique variables ####
 #This is the base url for the shop.  Only include a leading slash
