@@ -2,13 +2,15 @@
 Stores Customer and Order information
 """
 
-from django.db import models
-from django.contrib.auth.models import User 
-from satchmo.product.models import SubItem
-from django.utils.translation import gettext_lazy as _
-from satchmo.shop.templatetags.currency_filter import moneyfmt
 from django.conf import settings
+from django.contrib.auth.models import User 
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+from satchmo.product.models import SubItem
+from satchmo.shop.templatetags.currency_filter import moneyfmt
+import datetime
 import sys
+
 activeShippingModules = []
 
 #Load the shipping modules to populate the choices
@@ -44,12 +46,18 @@ class Organization(models.Model):
     name = models.CharField(_("Name"), maxlength=50, core=True)
     type = models.CharField(_("Type"), maxlength=30,choices=ORGANIZATION_CHOICES)
     role = models.CharField(_("Role"), maxlength=30,choices=ORGANIZATION_ROLE_CHOICES)
-    create_date = models.DateField(_("Creation Date"), auto_now_add=True)
+    create_date = models.DateField(_("Creation Date"))
     notes = models.TextField(_("Notes"), maxlength=200, blank=True, null=True)
     
     def __str__(self):
         return self.name
-    
+        
+    def save(self):
+        """Ensure we have a create_date before saving the first time."""
+        if not self.id:
+            self.create_date = datetime.date.today()
+        super(Organization, self).save()
+        
     class Admin:
         list_filter = ['type','role']
         list_display = ['name','type','role']
@@ -57,6 +65,7 @@ class Organization(models.Model):
     class Meta:
         verbose_name = _("Organization")
         verbose_name_plural = _("Organizations")
+        
         
 class Contact(models.Model):
     """
@@ -71,7 +80,7 @@ class Contact(models.Model):
     dob = models.DateField(_("Date of Birth"), blank=True, null=True)   
     email = models.EmailField(_("Email"), blank=True)
     notes = models.TextField(_("Notes"),maxlength=500, blank=True)
-    create_date = models.DateField(_("Creation Date"), auto_now_add=True)
+    create_date = models.DateField(_("Creation Date"))
     
     def _get_full_name(self):
         "Returns the person's full name."
@@ -102,6 +111,12 @@ class Contact(models.Model):
     def __str__(self):
         return (self.full_name)
         
+    def save(self):
+        """Ensure we have a create_date before saving the first time."""
+        if not self.id:
+            self.create_date = datetime.date.today()
+        super(Contact, self).save()
+
     class Admin:
         list_display = ('last_name','first_name','organization','role')
         list_filter = ['create_date', 'role', 'organization']
@@ -261,7 +276,7 @@ class Order(models.Model):
     shippingModel = models.CharField(_("Shipping Models"), choices=activeShippingModules, maxlength=30, blank=True, null=True)
     shippingCost = models.FloatField(_("Shipping Cost"), max_digits=6, decimal_places=2, blank=True, null=True)
     tax = models.FloatField(_("Tax"), max_digits=6, decimal_places=2, blank=True, null=True)
-    timeStamp = models.DateTimeField(_("Time Stamp"), blank=True, null=True, auto_now_add=True)
+    timeStamp = models.DateTimeField(_("Time Stamp"), blank=True, null=True)
     status = models.CharField(_("Status"), maxlength=20, choices=ORDER_STATUS, core=True, blank=True, help_text=_("This is automatically set"))
     
     def __str__(self):
@@ -317,6 +332,10 @@ class Order(models.Model):
     fullShipStreet = property(_fullShipStreet)
     
     def save(self):
+        """Copy addresses each time and ensure we have a create_date before saving the first time."""
+        if not self.id:
+            self.timeStamp = datetime.datetime.now()
+
         self.copyAddresses()
         super(Order, self).save() # Call the "real" save() method.
     

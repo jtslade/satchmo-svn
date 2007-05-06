@@ -4,19 +4,16 @@ as well as individual product level information which includes
 options.
 """
 
-from django.db import models
-from django.core import validators
-from sets import Set
-from satchmo.thumbnail.field import ImageWithThumbnailField
-from django.conf import settings
-from satchmo.tax.models import TaxClass
-import os
 from decimal import Decimal
+from django.conf import settings
+from django.core import validators
+from django.db import models
 from django.utils.translation import gettext_lazy as _
+from satchmo.tax.models import TaxClass
+from satchmo.thumbnail.field import ImageWithThumbnailField
+from sets import Set
 import datetime
-
-
-# Create your models here.
+import os
 
 def force_decimal(data):
     """
@@ -175,7 +172,7 @@ class Item(models.Model):
     short_name = models.SlugField(_("Slug Name"), prepopulate_from=("verbose_name",), unique=True, help_text=_("This is a short, descriptive name of the shirt that will be used in the URL link to this item"))
     description = models.TextField(_("Description of product"), help_text=_("This field can contain HTML and should be a few paragraphs explaining the background of the product, and anything that would help the potential customer make their purchase."))
     meta = models.TextField(maxlength=200, blank=True, null=True, help_text=_("Meta description for this item"))
-    date_added = models.DateField(null=True, blank=True, auto_now_add=True)
+    date_added = models.DateField(null=True, blank=True)
     active = models.BooleanField(_("Is product active?"), default=True, help_text=_("This will determine whether or not this product will appear on the site"))
     featured = models.BooleanField(_("Featured Item"), default=False, help_text=_("Featured items will show on the front page"))
     option_group = models.ManyToManyField(OptionGroup, filter_interface=True, blank=True)
@@ -262,15 +259,18 @@ class Item(models.Model):
                 count+=1
         return count
     
+    
     def save(self):
-        '''
-        Right now this only works if you save the suboptions, then go back and choose to create the subitems
-        '''
-        #super(Item,self).save()
+        """Right now this only works if you save the suboptions, then go back and choose to create the subitems.
+        Also ensure that we have a date_added on the first save."""
+        if not self.id:
+            self.date_added = datetime.date.today()
+
         if self.create_subs:
             self.create_subitems()
             self.create_subs = False
         super(Item, self).save()
+    
     
     def get_absolute_url(self):
         return "%s/product/%s" % (settings.SHOP_BASE,self.short_name)

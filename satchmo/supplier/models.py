@@ -4,8 +4,9 @@ under heavy development.
 """
 
 from django.db import models
-from satchmo.contact.models import Contact, Organization
 from django.utils.translation import gettext_lazy as _
+from satchmo.contact.models import Contact, Organization
+import datetime
 
 class RawItem(models.Model):
     """
@@ -34,7 +35,7 @@ class SupplierOrder(models.Model):
     An order the store owner places to a supplier for a raw good.
     """
     supplier = models.ForeignKey(Organization)
-    date_created = models.DateField(_("Date Created"), auto_now_add=True)
+    date_created = models.DateField(_("Date Created"))
     order_subtotal = models.FloatField(_("Subtotal"), max_digits=6, decimal_places=2)
     order_shipping = models.FloatField(_("Shipping"), max_digits=6, decimal_places=2)
     order_tax = models.FloatField(_("Tax"), max_digits=6, decimal_places=2)
@@ -47,6 +48,13 @@ class SupplierOrder(models.Model):
     def _status(self):
         return(self.supplierorderstatus_set.latest('date').status)
     status = property(_status)  
+    
+    def save(self):
+        """Ensure we have a date_created before saving the first time."""
+        if not self.id:
+            self.date_created = datetime.date.today()
+        super(SupplierOrder, self).save()
+    
     
     class Admin:
         list_display = ('supplier','date_created', 'order_total','status')

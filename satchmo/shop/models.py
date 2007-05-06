@@ -3,13 +3,14 @@ Configuration items for the shop.
 Also contains shopping cart and related classes.
 """
 
-from django.db import models
-from satchmo.product.models import Item, SubItem
+from decimal import Decimal
 from django.contrib.sites.models import Site
+from django.db import models
+from django.utils.translation import gettext_lazy as _
 from satchmo.contact.models import Contact
 from satchmo.i18n.models import Country
-from decimal import Decimal
-from django.utils.translation import gettext_lazy as _
+from satchmo.product.models import Item, SubItem
+import datetime
 
 class Config(models.Model):
     """
@@ -46,7 +47,7 @@ class Cart(models.Model):
     Could be used for debugging
     """
     desc = models.CharField(_("Description"), blank=True, null=True, maxlength=10)
-    date_time_created = models.DateTimeField(auto_now_add=True)
+    date_time_created = models.DateTimeField(_("Creation Date"))
     customer = models.ForeignKey(Contact, blank=True, null=True)
     
     def _get_count(self):
@@ -85,6 +86,12 @@ class Cart(models.Model):
         for item in self.cartitem_set.all():
             item.delete()
         self.save()
+    
+    def save(self):
+        """Ensure we have a date_time_created before saving the first time."""
+        if not self.id:
+            self.date_time_created = datetime.datetime.now()
+        super(Cart, self).save()
     
     class Admin:
         list_display = ('date_time_created','numItems','total')
