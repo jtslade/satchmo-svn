@@ -49,6 +49,10 @@ class TaxRate(models.Model):
             return self.taxCountry.name
     country = property(_country)
     
+    def _display_percentage(self):
+        return "%#2.2f%%" % (100*self.percentage)
+    display_percentage = property(_display_percentage) 
+    
     def __str__(self):
         return ("%s - %s" % (self.taxClass,
                              self.taxZone and self.taxZone or self.taxCountry))
@@ -61,7 +65,7 @@ class TaxRate(models.Model):
             raise validators.ValidationError(_("You must choose a zone or a country"))
           
     class Admin:
-        list_display = ("taxClass", "taxZone", "taxCountry", "percentage")
+        list_display = ("taxClass", "taxZone", "taxCountry", "display_percentage")
 
     class Meta:
         verbose_name = _("Tax Rate")
