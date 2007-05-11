@@ -48,7 +48,7 @@ Price: <h3 id="price">unknown</h3>
 {% endfor %}
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-<form id="options" action="{{shop_base}}/cart/{{ item.id }}/add/" method="post">
+<form id="options" action="{% url satchmo_cart_add item.id %}" method="post">
 {% if item.option_group.count %}
 <p>Please choose your options:</p>
 {% endif %}

@@ -17,7 +17,7 @@
     <tr><th></th><th>Quantity</th><th>Item</th><th align="center">Total</th></tr>
 
     {% for item in all_items %}
-        <tr><td> <a href="{% url shop.views.cart.remove item.id %}">Remove</a> </td>
+        <tr><td> <a href="{% url satchmo_cart_remove item.id %}">Remove</a> </td>
             <td align="center">{{item.quantity}} </td>
             <td><a href="{{item.subItem.get_absolute_url}}">{{ item.description }}</a></td>
         <td align="center">{{ item.line_total|currency }}</td>
@@ -27,6 +27,6 @@
         <td>{{total|currency}}</td></tr>
     </table>
     
-    <a href="{% url checkout-step1 %}">Checkout</a>
+    <a href="{% url satchmo_checkout-step1 %}">Checkout</a>
 {% endif %}
 {% endblock %}

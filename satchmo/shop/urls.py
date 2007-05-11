@@ -9,24 +9,24 @@ urlpatterns = patterns('satchmo.shop.views',
      (r'^category/(?P<slug>[-\w]+)/$','category.root'),
      (r'^category/(?P<slug_parent>[-\w]+)/(?P<slug>[-\w]+)/$','category.children'),
      (r'^category/([-\w]+/)+(?P<slug_parent>[-\w]+)/(?P<slug>[-\w]+)/$','category.children'),
-     (r'^cart/(?P<id>\d+)/add/$','cart.add'),
-     (r'^cart/(?P<id>\d+)/remove/$','cart.remove'),
-     (r'^cart/$','cart.display'),
-     (r'^account/create/$','account.create'),
-     (r'^account/info/$','account.info'),
-     (r'^account/logout/$','account.shop_logout'),
-     (r'^contact/$','contact.form'),
-     (r'^checkout/$', 'credit_card.checkout_step1.contact_info', {'SSL':False}, 'checkout-step1'),
-     (r'^checkout/pay/$', 'credit_card.checkout_step2.pay_ship_info', {'SSL':False}, 'checkout-step2'),
-     (r'^checkout/confirm/$', 'credit_card.checkout_step3.confirm_info', {'SSL':False}, 'checkout-step3'),
-     (r'^checkout/success/$', 'common.checkout_success',{'SSL':False}, 'checkout-success')
+     (r'^cart/(?P<id>\d+)/add/$', 'cart.add', {}, 'satchmo_cart_add'),
+     (r'^cart/(?P<id>\d+)/remove/$', 'cart.remove', {}, 'satchmo_cart_remove'),
+     (r'^cart/$', 'cart.display', {}, 'satchmo_cart'),
+     (r'^account/create/$', 'account.create', {}, 'satchmo_account_create'),
+     (r'^account/info/$', 'account.info', {}, 'satchmo_account_info'),
+     (r'^account/logout/$', 'account.shop_logout', {}, 'satchmo_logout'),
+     (r'^contact/$', 'contact.form', {}, 'satchmo_contact'),
+     (r'^checkout/$', 'credit_card.checkout_step1.contact_info', {'SSL':False}, 'satchmo_checkout-step1'),
+     (r'^checkout/pay/$', 'credit_card.checkout_step2.pay_ship_info', {'SSL':False}, 'satchmo_checkout-step2'),
+     (r'^checkout/confirm/$', 'credit_card.checkout_step3.confirm_info', {'SSL':False}, 'satchmo_checkout-step3'),
+     (r'^checkout/success/$', 'common.checkout_success', {'SSL':False}, 'satchmo_checkout-success')
 )
 #Note with the last category url - this allows category depth to be as deep as we want but the downside
 #is that we ignore all but the child and parent category.  In practice this should be ok
 
 urlpatterns += patterns('satchmo.product.views',
     (r'^product/(?P<slug>[-\w]+)/prices/$','get_price'),
-    (r'^search/$','do_search'),
+    (r'^search/$', 'do_search', {}, 'satchmo_search'),
     (r'^product/(?P<slug>[-\w]+)/$','get_item'),
     (r'^product/(?P<slug>[-\w]+)/(?P<subitemId>[\d]+)/$','get_item'),
 )
@@ -35,11 +35,11 @@ urlpatterns += patterns('satchmo.product.views',
 #Dictionaries for generic views used in Satchmo
 
 index_dict = {
-    'queryset': Item.objects.filter(active="1").filter(featured="1"),
-    'template_object_name': 'all_items', 
-    'template_name' : 'base_index.html',
-    'allow_empty': True,      
-    'paginate_by' : 10,        
+    'queryset': Item.objects.filter(active='1').filter(featured='1'),
+    'template_object_name': 'all_items',
+    'template_name': 'base_index.html',
+    'allow_empty': True,
+    'paginate_by': 10,
 }
 
 urlpatterns += patterns('django.views.generic',

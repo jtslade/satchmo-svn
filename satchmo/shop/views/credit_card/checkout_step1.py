@@ -58,7 +58,7 @@ def contact_info(request):
             else:
                 custID = save_contact_info(form.clean_data, contact)
             #TODO - Create an order here and associate it with a session
-            return http.HttpResponseRedirect(urlresolvers.reverse('checkout-step2'))
+            return http.HttpResponseRedirect(urlresolvers.reverse('satchmo_checkout-step2'))
     else:
         if contact:
             #If a person has their contact info, make sure we populate it in the form
