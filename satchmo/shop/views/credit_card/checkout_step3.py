@@ -2,15 +2,16 @@
 # Last step in the order process - confirm the info and process it
 #####################################################################
 
-from django.shortcuts import render_to_response
+import datetime
+import sys
 from django import http
+from django.conf import settings
+from django.core import urlresolvers
+from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.template import loader
 from satchmo.shop.models import Cart, CartItem, Config
-from django.conf import settings
 from satchmo.contact.models import Order, OrderItem, OrderStatus
-import datetime
-import sys
 
 #Import the appropriate credit card processing back end
 __import__(settings.CREDIT_PROCESSOR)
@@ -42,7 +43,7 @@ def confirm_info(request):
             status.save()
             #del request.session['orderID']
             #Redirect to the success page
-            return http.HttpResponseRedirect('%s/checkout/success' % (settings.SHOP_BASE))
+            return http.HttpResponseRedirect(urlresolvers.reverse('satchmo_checkout-success')
         #Since we're not successful, let the user know via the confirmation page
         else:
             errors = msg
