@@ -5,7 +5,11 @@ from satchmo.product.models import Item
 
 #The following views are custom to Satchmo
 
-urlpatterns = patterns('satchmo.shop.views',
+urlpatterns = []
+if hasattr(settings, 'SHOP_URLS'):
+    urlpatterns += settings.SHOP_URLS
+
+urlpatterns += patterns('satchmo.shop.views',
      (r'^category/(?P<slug>[-\w]+)/$','category.root'),
      (r'^category/(?P<slug_parent>[-\w]+)/(?P<slug>[-\w]+)/$','category.children'),
      (r'^category/([-\w]+/)+(?P<slug_parent>[-\w]+)/(?P<slug>[-\w]+)/$','category.children'),

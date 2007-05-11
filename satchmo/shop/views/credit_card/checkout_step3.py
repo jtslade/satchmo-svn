@@ -43,7 +43,7 @@ def confirm_info(request):
             status.save()
             #del request.session['orderID']
             #Redirect to the success page
-            return http.HttpResponseRedirect(urlresolvers.reverse('satchmo_checkout-success')
+            return http.HttpResponseRedirect(urlresolvers.reverse('satchmo_checkout-success'))
         #Since we're not successful, let the user know via the confirmation page
         else:
             errors = msg

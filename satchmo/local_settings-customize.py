@@ -88,6 +88,15 @@ SITE_NAME = "My Site"
 #Shipping Modules to enable
 SHIPPING_MODULES = ['satchmo.shipping.modules.per', 'satchmo.shipping.modules.flat']
 
+# These can override or add to the default URLs
+from django.conf.urls.defaults import *
+URLS = patterns('',
+)
+SHOP_URLS = patterns('satchmo.shop.views',
+#    (r'^checkout/pay/$', 'paypal.checkout_step2.pay_ship_info', {'SSL': False}, 'satchmo_checkout-step2'),
+#    (r'^checkout/confirm/$', 'paypal.checkout_step3.confirm_info', {'SSL': False}, 'satchmo_checkout-step3'),
+)
+
 #Configure logging
 LOGDIR = "/path/to/log"
 LOGFILE = "satchmo.log"

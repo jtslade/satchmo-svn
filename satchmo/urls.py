@@ -1,5 +1,4 @@
 from django.conf.urls.defaults import *
-import os
 from django.conf import settings
 
 if settings.SHOP_BASE == '':
@@ -7,7 +6,11 @@ if settings.SHOP_BASE == '':
 else:
     shopregex = '^' + settings.SHOP_BASE[1:] + '/'
 
-urlpatterns = patterns('',
+urlpatterns = []
+if hasattr(settings, 'URLS'):
+    urlpatterns += settings.URLS
+
+urlpatterns += patterns('',
     (r'^admin/print/(?P<doc>[-\w]+)/(?P<id>\d+)', 'satchmo.shipping.views.displayDoc'),
     (r'^admin/$', 'satchmo.shop.views.admin-portal.home'),
     (r'^admin/', include('django.contrib.admin.urls')),
@@ -21,3 +24,18 @@ if settings.LOCAL_DEV:
         (baseurlregex, 'django.views.static.serve',
         {'document_root':  settings.MEDIA_ROOT}),
     )
+
+# Remove any URLs whose names have been used already.
+names = []
+q = [urlpatterns]
+while q:
+    urls = q.pop()
+    for pattern in urls[:]:
+        if hasattr(pattern, 'url_patterns'):
+            q.append(pattern.url_patterns)
+        else:
+            if pattern.name:
+                if pattern.name in names:
+                    urls.remove(pattern)
+                else:
+                    names.append(pattern.name)
