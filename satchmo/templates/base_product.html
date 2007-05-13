@@ -13,9 +13,9 @@ function setPrice(price){
 
 function getPrice(){
     opts = {};
-    options = $("form#options").find("select");
-    for (a=0; a<options.length; a++){
-        opts[options[a].name] = options[a].value;
+    price_options = $("form#options").find("select");
+    for (a=0; a<price_options.length; a++){
+        opts[price_options[a].name] = price_options[a].value;
     }
     opts["quantity"] = $("input#quantity")[0].value;
     setPrice("loading");
@@ -42,7 +42,7 @@ $(document).ready( function(){ getPrice();});
 {% block content %}
 <h4>{{ item.verbose_name }}</h4>
 <p>{{ item.description }}</p>
-Price: <h3 id="price">unknown</h3>
+Price: <h3 id="price">{{item.price}}</h3>
 {% for pic in item.itemimage_set.all %}
     <img src="{{media_url}}{{ pic.get_picture_url|thumbnail:"width=280" }}" width="280" />
 {% endfor %}
