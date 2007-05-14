@@ -25,7 +25,7 @@ def form(request):
     if request.method == "POST":
         form = ContactForm(request.POST)
         if form.is_valid():
-            new_data = form.clean_data
+            new_data = form.cleaned_data
             t = loader.get_template('email/contact_us.txt')
             c = Context({
                 'request_type': new_data['inquiry'],

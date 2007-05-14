@@ -62,22 +62,22 @@ class PayShipForm(forms.Form):
 
     def clean_credit_number(self):
         """ Check if credit card is valid. """
-        card = CreditCard(self.clean_data['credit_number'], self.clean_data['credit_type'])
+        card = CreditCard(self.cleaned_data['credit_number'], self.cleaned_data['credit_type'])
         results, msg = card.verifyCardTypeandNumber()
         if not results:
             raise forms.ValidationError(msg)
 
     def clean_year_expires(self):
         """ Check if credit card has expired. """
-        month = int(self.clean_data['month_expires'])
-        year = int(self.clean_data['year_expires'])
+        month = int(self.cleaned_data['month_expires'])
+        year = int(self.cleaned_data['year_expires'])
         max_day = calendar.monthrange(year, month)[1]
         if datetime.date.today() > datetime.date(year=year, month=month, day=max_day):
             raise forms.ValidationError('Your card has expired.')
             
     def clean_discount(self):
         """ Check if discount exists. """
-        data = self.clean_data['discount']
+        data = self.cleaned_data['discount']
         if data:
             discount = Discount.objects.filter(code=data).filter(active=True)
             if discount.count() == 0:

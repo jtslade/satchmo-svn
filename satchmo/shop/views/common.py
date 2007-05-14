@@ -34,43 +34,43 @@ class ContactInfoForm(forms.Form):
     
     """
     clean_* methods are called in same order as the form's fields.
-    self.clean_data will have data for each of the previous fields and the
+    self.cleaned_data will have data for each of the previous fields and the
     field currently being cleaned.
     For details, see django.newforms.BaseForm.full_clean()
     """
     
     def clean_state(self):
-        data = self.clean_data['state']
+        data = self.cleaned_data['state']
         if data == selection:
             raise forms.ValidationError('This field is required.')
         return data
 
     def clean_ship_state(self):
-        if self.clean_data['copy_address']:
-            if 'state' in self.clean_data:
-                self.clean_data['ship_state'] = self.clean_data['state']
-            return self.clean_data['ship_state']
-        data = self.clean_data['ship_state']
+        if self.cleaned_data['copy_address']:
+            if 'state' in self.cleaned_data:
+                self.cleaned_data['ship_state'] = self.cleaned_data['state']
+            return self.cleaned_data['ship_state']
+        data = self.cleaned_data['ship_state']
         if data == selection:
             raise forms.ValidationError('This field is required.')
         return data
     
     def ship_charfield_clean(self, field_name):
-        if self.clean_data['copy_address']:
-            if field_name in self.clean_data:
-                self.clean_data['ship_' + field_name] = self.clean_data[field_name]
-            return self.clean_data['ship_' + field_name]
+        if self.cleaned_data['copy_address']:
+            if field_name in self.cleaned_data:
+                self.cleaned_data['ship_' + field_name] = self.cleaned_data[field_name]
+            return self.cleaned_data['ship_' + field_name]
         field = forms.CharField(max_length=30)
-        return field.clean(self.clean_data['ship_' + field_name])
+        return field.clean(self.cleaned_data['ship_' + field_name])
     
     def clean_ship_street1(self):
         return self.ship_charfield_clean('street1')
     
     def clean_ship_street2(self):
-        if self.clean_data['copy_address']:
-            if 'street2' in self.clean_data:
-                self.clean_data['ship_street2'] = self.clean_data['street2']
-        return self.clean_data['ship_street2']
+        if self.cleaned_data['copy_address']:
+            if 'street2' in self.cleaned_data:
+                self.cleaned_data['ship_street2'] = self.cleaned_data['street2']
+        return self.cleaned_data['ship_street2']
     
     def clean_ship_city(self):
         return self.ship_charfield_clean('city')

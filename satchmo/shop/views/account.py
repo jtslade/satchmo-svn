@@ -26,8 +26,8 @@ class AccountForm(forms.Form):
     
     def clean_password(self):
         """Enforce that password and password2 are the same."""
-        p1 = self.clean_data.get('password', None)
-        p2 = self.clean_data.get('password2', None)
+        p1 = self.cleaned_data.get('password', None)
+        p2 = self.cleaned_data.get('password2', None)
         if not(p1 and p2 and p1 == p2):
             raise forms.ValidationError("The two passwords do not match." )
 
@@ -36,7 +36,7 @@ class AccountForm(forms.Form):
 
     def clean_email(self):
         """Prevent account hijacking by disallowing duplicate emails."""
-        email = self.clean_data.get('email', None)
+        email = self.cleaned_data.get('email', None)
         if email and User.objects.filter(email=email).count() > 0:
             raise forms.ValidationError("That email address is already in use.")
         
@@ -45,7 +45,7 @@ class AccountForm(forms.Form):
     #### Not currently used.  Preserved during conversion to newforms.    
     # def test_unique_username(self):
     #     """Test to ensure that the username is not already used."""
-    #     username = self.clean_data.get('user_name', None)
+    #     username = self.cleaned_data.get('user_name', None)
     #     if username and User.objects.filter(username=username).count() > 0:
     #         raise forms.ValidationError("That username already exists.")
     
@@ -54,7 +54,7 @@ class AccountForm(forms.Form):
         
         user = None
         if self.is_valid():
-            data = self.clean_data
+            data = self.cleaned_data
 
             user_name = generate_id(data['first_name'], data['last_name'])
             password = data['password']
@@ -88,7 +88,7 @@ def create(request):
         form = AccountForm(request.POST)
         if form.is_valid():
             user = form.save()
-            data = form.clean_data
+            data = form.cleaned_data
             user = authenticate(username=user.username, password=data['password'])
             login(request, user)
             contact = Contact.objects.get(user=user.id)

@@ -53,10 +53,10 @@ def contact_info(request):
         
         if form.is_valid():
             if not contact:
-                custID = save_contact_info(form.clean_data)
+                custID = save_contact_info(form.cleaned_data)
                 request.session['custID'] = custID
             else:
-                custID = save_contact_info(form.clean_data, contact)
+                custID = save_contact_info(form.cleaned_data, contact)
             #TODO - Create an order here and associate it with a session
             return http.HttpResponseRedirect(urlresolvers.reverse('satchmo_checkout-step2'))
     else:

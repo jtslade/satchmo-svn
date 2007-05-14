@@ -52,7 +52,7 @@ class PayShipForm(forms.Form):
 
     def clean_discount(self):
         """ Check if discount exists. """
-        data = self.clean_data['discount']
+        data = self.cleaned_data['discount']
         if data:
             discount = Discount.objects.filter(code=data).filter(active=True)
             if discount.count() == 0:
