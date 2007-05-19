@@ -11,7 +11,7 @@ r"""
 (True, 'Valid')
 
 #Change start date to the future
->>> start = datetime.date(2007, 5, 1)                                           
+>>> start = datetime.date(5000, 1, 1)
 >>> disc1.startDate = start
 >>> disc1.save()
 >>> disc1.isValid()
