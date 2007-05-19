@@ -33,9 +33,8 @@ while q:
     for pattern in urls[:]:
         if hasattr(pattern, 'url_patterns'):
             q.append(pattern.url_patterns)
-        else:
-            if pattern.name:
-                if pattern.name in names:
-                    urls.remove(pattern)
-                else:
-                    names.append(pattern.name)
+        elif pattern.name:
+            if pattern.name in names:
+                urls.remove(pattern)
+            else:
+                names.append(pattern.name)
