@@ -21,6 +21,7 @@ r"""
 # Make sure we can only have one primary phone number
 >>> try:
 ...     phone2 = PhoneNumber.objects.create(contact=contact1, type='Work', phone="800-111-9901", primary=True)
+...     raise AssertionError, "Previous line should raise an IntegrityError."
 ... except IntegrityError:
 ...     transaction.rollback()
 
