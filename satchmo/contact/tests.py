@@ -1,5 +1,7 @@
 r"""
 >>> import datetime
+>>> from django.db import transaction
+>>> from django.db import IntegrityError
 >>> from satchmo.contact.models import *
 
 # Create a contact
@@ -12,18 +14,17 @@ r"""
 <Contact: Jim Tester>
 
 # Add a phone number for this person
->>> phone1 = PhoneNumber.objects.create(contact=contact1,type='Home', phone="800-111-9900", primary=True)
+>>> phone1 = PhoneNumber.objects.create(contact=contact1, type='Home', phone="800-111-9900", primary=True)
 >>> contact1.primary_phone
 <PhoneNumber: Home - 800-111-9900>
 
 # Make sure we can only have one primary phone number
->>> phone2 = PhoneNumber.objects.create(contact=contact1,type='Work', phone="800-111-9901", primary=True)
-Traceback (most recent call last):
-    ...
-IntegrityError: (1062, "Duplicate entry '1-1' for key 2")
+>>> try:
+...     phone2 = PhoneNumber.objects.create(contact=contact1, type='Work', phone="800-111-9901", primary=True)
+... except IntegrityError:
+...     transaction.rollback()
 
 #Add an address & make sure it is default billing and shipping
-
 >>> add1 = AddressBook.objects.create(contact=contact1, description="Home Address",
 ... street1="56 Cool Lane", city="Niftyville", state="IA", postalCode="12344",
 ... country="USA")
