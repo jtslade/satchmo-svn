@@ -37,7 +37,7 @@ def form(request):
             shop_email = shop_config.storeEmail
             send_mail(subject, t.render(c), shop_email,
                      [shop_email], fail_silently=False)
-            return http.HttpResponseRedirect('%s/contact/thankyou' % (settings.SHOP_BASE))
+            return http.HttpResponseRedirect('%s/contact/thankyou/' % (settings.SHOP_BASE))
     else: #Not a post so create an empty form
         initialData = {}
         if request.user.is_authenticated():
