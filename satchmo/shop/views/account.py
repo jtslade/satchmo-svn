@@ -76,7 +76,7 @@ class AccountForm(forms.Form):
             shop_email = shop_config.storeEmail
             subject = "Welcome to %s" % (shop_config.storeName)
             c['company_name'] = shop_config.storeName
-            c['login_url'] = "http://%s%s/account/login" % (shop_config.site.domain, settings.SHOP_BASE)
+            c['login_url'] = "http://%s%s/account/login/" % (shop_config.site.domain, settings.SHOP_BASE)
             send_mail(subject, t.render(c), shop_email,
                          [email], fail_silently=False)
                          
@@ -94,7 +94,7 @@ def create(request):
             contact = Contact.objects.get(user=user.id)
             request.session['custID'] = contact.id
             
-            return http.HttpResponseRedirect('%s/account/thankyou' % (settings.SHOP_BASE))
+            return http.HttpResponseRedirect('%s/account/thankyou/' % (settings.SHOP_BASE))
 
     else:
         form = AccountForm()

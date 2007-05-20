@@ -61,10 +61,10 @@ def add(request, id):
     tempCart.add_item(chosenItem, number_added=quantity)
     request.session['cart'] = tempCart.id
 
-    return http.HttpResponseRedirect('%s/cart' % (settings.SHOP_BASE))
+    return http.HttpResponseRedirect('%s/cart/' % (settings.SHOP_BASE))
 
 def remove(request, id):
     tempCart = Cart.objects.get(id=request.session['cart'])
     quantity = int(request.POST.get('quantity','999999'))
     tempCart.remove_item(id, quantity)
-    return http.HttpResponseRedirect('%s/cart' % (settings.SHOP_BASE))
+    return http.HttpResponseRedirect('%s/cart/' % (settings.SHOP_BASE))
