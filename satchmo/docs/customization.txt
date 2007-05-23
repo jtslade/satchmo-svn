@@ -87,4 +87,4 @@ Payment Module Customization
 
 In progress
 
-.._ Django Template Author Guide: http://www.djangoproject.com/documentation/templates/
+.. _Django Template Author Guide: http://www.djangoproject.com/documentation/templates/
