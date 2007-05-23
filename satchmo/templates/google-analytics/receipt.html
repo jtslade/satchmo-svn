@@ -1,6 +1,6 @@
 <form style="display:none;" name="utmform">
 <textarea id="utmtrans">
-UTM:T|{{order.id}}|{{Store}}|{{order.total}}|{{order.tax}}|{{order.shippingDescription}}|{{order.shipCity}}|{{order.shipState}}|{{order.shipCountry}}
+UTM:T|{{order.id}}|{{Store}}|{{order.total}}|{{order.tax}}|{{order.shippingCost}}|{{order.shipCity}}|{{order.shipState}}|{{order.shipCountry}}
 {% for item in order.orderitem_set.all %}
 UTM:I|{{order.id}}|{{item.item.subitem_id }}|{{ item }}|{{ item.category }}|{{item.unitPrice}}|{{item.quantity}}
 {% endfor %}
