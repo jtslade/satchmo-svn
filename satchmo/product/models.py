@@ -4,6 +4,9 @@ as well as individual product level information which includes
 options.
 """
 
+import datetime
+import os
+from sets import Set
 from decimal import Decimal
 from django.conf import settings
 from django.core import validators
@@ -11,20 +14,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from satchmo.tax.models import TaxClass
 from satchmo.thumbnail.field import ImageWithThumbnailField
-from sets import Set
-import datetime
-import os
-
-def force_decimal(data):
-    """
-    Helper function to turn a number into a decimal if it's a string or a float
-    """
-    # On some systems, the price was not getting set as a decimal type.  This ensures that it does.
-    try:
-        return Decimal(data)
-    except TypeError:
-        # This is in case of "Can't return float to Decimal" exceptions
-        return Decimal(str(data))
 
 class Category(models.Model):
     """
@@ -189,10 +178,9 @@ class Item(models.Model):
     
     def __str__(self):
         return self.short_name 
-
+    
     def _get_price(self):
-        return (force_decimal(self.base_price))
-        
+        return self.base_price
     price = property(_get_price)
     
     def _get_mainImage(self):
@@ -326,9 +314,9 @@ class OptionItem(models.Model):
         return '%s-%s' % (str(self.optionGroup.id), str(self.value),)
     # optionGroup.id-value
     combined_id = property(_get_combined_id)
-
+    
     def _get_price_change(self):
-        return(force_decimal(self.price_change))
+        return self.price_change
     get_price_change = property(_get_price_change)
 
     def __str__(self):
@@ -378,11 +366,11 @@ class SubItem(models.Model):
         qty_price = self._get_qty_price(1) #get unit price for subitem if available
         if qty_price:
             return qty_price
-        price_delta = Decimal("0.0") #otherwise fallback on item.price - option.price_change
+        price_delta = Decimal('0.00') #otherwise fallback on item.price - option.price_change
         for option in self.options.all():
             if option.price_change:
                 price_delta += option.get_price_change
-        return(self.item.price + price_delta)
+        return self.item.price + price_delta
     unit_price = property(_get_fullPrice)
     
     def get_qty_price(self, qty):
