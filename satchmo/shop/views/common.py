@@ -106,7 +106,6 @@ def save_contact_info(data, contact=None):
     address.is_default_shipping = data['copy_address']
     address.save()
     if not data['copy_address']:
-        print "Entering"
         ship_address = AddressBook()
         for field in address_keys:
             try:

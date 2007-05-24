@@ -27,16 +27,16 @@
     user: null}
   model: contact.contact
   pk: '3'
-- fields: {contact: !!python/long '1', phone: 601-555-5511, primary: 1, type: Home}
+- fields: {contact: !!python/long '1', phone: 601-555-5511, primary: true, type: Home}
   model: contact.phonenumber
   pk: '1'
-- fields: {contact: !!python/long '2', phone: 999-555-5111, primary: 1, type: Work}
+- fields: {contact: !!python/long '2', phone: 999-555-5111, primary: true, type: Work}
   model: contact.phonenumber
   pk: '2'
-- fields: {contact: !!python/long '3', phone: 800-188-7611, primary: 1, type: Work}
+- fields: {contact: !!python/long '3', phone: 800-188-7611, primary: true, type: Work}
   model: contact.phonenumber
   pk: '3'
-- fields: {contact: !!python/long '3', phone: 755-555-1111, primary: 0, type: Fax}
+- fields: {contact: !!python/long '3', phone: 755-555-1111, primary: false, type: Fax}
   model: contact.phonenumber
   pk: '4'
 - fields: {create_date: 2007-05-19, name: Rhinestone Ronny, notes: null, role: Supplier,
@@ -114,14 +114,14 @@
   model: product.optionitem
   pk: '9'
 - fields:
-    active: 1
+    active: true
     alsoPurchased: []
     base_price: !!python/object/apply:decimal.Decimal ['20.00']
     category: [!!python/long '1']
-    create_subs: 0
+    create_subs: false
     date_added: 2007-05-19
     description: Really cool shirt
-    featured: 1
+    featured: true
     height: null
     length: null
     meta: null
@@ -129,21 +129,21 @@
     relatedItems: []
     short_name: DJ-Rocks
     taxClass: null
-    taxable: 0
+    taxable: false
     verbose_name: Django Rocks shirt
     weight: null
     width: null
   model: product.item
   pk: '1'
 - fields:
-    active: 1
+    active: true
     alsoPurchased: []
     base_price: !!python/object/apply:decimal.Decimal ['19.50']
     category: [!!python/long '2']
-    create_subs: 0
+    create_subs: false
     date_added: 2007-05-19
     description: Really cool python shirt
-    featured: 1
+    featured: true
     height: null
     length: null
     meta: null
@@ -151,21 +151,21 @@
     relatedItems: []
     short_name: PY-Rocks
     taxClass: null
-    taxable: 0
+    taxable: false
     verbose_name: Python Rocks shirt
     weight: null
     width: null
   model: product.item
   pk: '2'
 - fields:
-    active: 1
+    active: true
     alsoPurchased: []
     base_price: !!python/object/apply:decimal.Decimal ['5.00']
     category: [!!python/long '4']
-    create_subs: 0
+    create_subs: false
     date_added: 2007-05-19
     description: A neat book.  You should buy it.
-    featured: 1
+    featured: true
     height: null
     length: null
     meta: null
@@ -173,21 +173,21 @@
     relatedItems: []
     short_name: neat-book
     taxClass: null
-    taxable: 0
+    taxable: false
     verbose_name: A really neat book
     weight: null
     width: null
   model: product.item
   pk: '3'
 - fields:
-    active: 1
+    active: true
     alsoPurchased: []
     base_price: !!python/object/apply:decimal.Decimal ['7.99']
     category: [!!python/long '5']
-    create_subs: 0
+    create_subs: false
     date_added: 2007-05-19
     description: Robots try to take over the world.
-    featured: 1
+    featured: true
     height: null
     length: null
     meta: null
@@ -195,7 +195,7 @@
     relatedItems: []
     short_name: robot-attack
     taxClass: null
-    taxable: 0
+    taxable: false
     verbose_name: Robots Attack!
     weight: null
     width: null
@@ -408,7 +408,7 @@
 - fields: {description: '', name: colors, sort_order: !!python/long '2'}
   model: product.optiongroup
   pk: '2'
-- fields: {city: null, country: null, noStockCheckout: 0, phone: null, postalCode: null,
+- fields: {city: null, country: null, noStockCheckout: false, phone: null, postalCode: null,
     state: null, storeDescription: null, storeEmail: null, storeName: My Site, street1: null,
     street2: null}
   model: shop.config

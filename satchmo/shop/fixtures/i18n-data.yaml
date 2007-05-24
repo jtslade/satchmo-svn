@@ -1,4 +1,4 @@
-- fields: {display: 1, iso2_code: en, name: English, synonym: ''}
+- fields: {display: true, iso2_code: en, name: English, synonym: ''}
   model: i18n.language
   pk: eng
 - fields: {abbrev: WY, alt_name: '', country: USA, name: Wyoming, reg_area: ''}
@@ -154,7 +154,7 @@
 - fields: {abbrev: AL, alt_name: '', country: USA, name: Alabama, reg_area: ''}
   model: i18n.area
   pk: US-AL
-- fields: {adm_area: st, display: 1, iso2_code: US, name: United States, region: am.n,
+- fields: {adm_area: st, display: true, iso2_code: US, name: United States, region: am.n,
     territory_of: ''}
   model: i18n.country
   pk: USA

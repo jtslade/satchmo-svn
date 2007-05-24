@@ -67,4 +67,3 @@ class ShopTest(TestCase):
         self.assertRedirects(response, '/cart/', status_code=302, target_status_code=200)
         response = self.client.get('/cart/')
         self.assertContains(response, "Django Rocks shirt ( Large/Blue )", count=1, status_code=200)
-        
