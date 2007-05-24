@@ -40,7 +40,7 @@ class TaxRate(models.Model):
                                 validator_list=[taxrate_zoneandcountry_zone_validator])
     taxCountry = models.ForeignKey(Country, blank=True, null=True,
                                    validator_list=[taxrate_zoneandcountry_country_validator])
-    percentage = models.FloatField(_("Percentage"), max_digits=7, decimal_places=6, help_text=_("% tax for this area and type"))
+    percentage = models.DecimalField(_("Percentage"), max_digits=7, decimal_places=6, help_text=_("% tax for this area and type"))
     
     def _country(self):
         if self.taxZone:

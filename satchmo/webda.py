@@ -57,7 +57,7 @@ def get_data_models(models_file):
                 field_name = line.split('=')[0].strip()
                 model.append(field_name)
 
-                if 'models.FloatField' in line or 'IntegerField' in line:
+                if 'models.DecimalField' in line or 'models.IntegerField' in line:
                     pos_numeric.append(len(model)-2)  # Discard model name.
                 elif 'models.ForeignKey' in line:
                     key_name = line.split('(')[-1].strip().strip(')')

@@ -176,12 +176,12 @@ class Item(models.Model):
     active = models.BooleanField(_("Is product active?"), default=True, help_text=_("This will determine whether or not this product will appear on the site"))
     featured = models.BooleanField(_("Featured Item"), default=False, help_text=_("Featured items will show on the front page"))
     option_group = models.ManyToManyField(OptionGroup, filter_interface=True, blank=True)
-    base_price = models.FloatField(_("Default Price"), max_digits=6, decimal_places=2)
-    weight = models.FloatField(_("Weight"), max_digits=6, decimal_places=2, null=True, blank=True)
-    length = models.FloatField(_("Length"), max_digits=6, decimal_places=2, null=True, blank=True)
-    width = models.FloatField(_("Width"), max_digits=6, decimal_places=2, null=True, blank=True)
-    height = models.FloatField(_("Height"), max_digits=6, decimal_places=2, null=True, blank=True)
-    create_subs = models.BooleanField(_("Create Sub Items"), default=False, help_text =_("Create new sub-items"))
+    base_price = models.DecimalField(_("Default Price"), max_digits=6, decimal_places=2)
+    weight = models.DecimalField(_("Weight"), max_digits=6, decimal_places=2, null=True, blank=True)
+    length = models.DecimalField(_("Length"), max_digits=6, decimal_places=2, null=True, blank=True)
+    width = models.DecimalField(_("Width"), max_digits=6, decimal_places=2, null=True, blank=True)
+    height = models.DecimalField(_("Height"), max_digits=6, decimal_places=2, null=True, blank=True)
+    create_subs = models.BooleanField(_("Create Sub Items"), default=False, help_text=_("Create new sub-items"))
     relatedItems = models.ManyToManyField('self', blank=True, null=True, related_name='related')
     alsoPurchased = models.ManyToManyField('self', blank=True, null=True, related_name='previouslyPurchased')
     taxable = models.BooleanField(default=False)
@@ -318,7 +318,7 @@ class OptionItem(models.Model):
     optionGroup = models.ForeignKey(OptionGroup, edit_inline=models.TABULAR, num_in_admin=5)
     name = models.CharField(_("Display value"), maxlength = 50, core=True)
     value = models.CharField(_("Stored value"), prepopulate_from=("name",), maxlength = 50)
-    price_change = models.FloatField(_("Price Change"), null=True, blank=True, 
+    price_change = models.DecimalField(_("Price Change"), null=True, blank=True, 
                                     help_text=_("This is the price differential for this option"), max_digits=4, decimal_places=2)
     displayOrder = models.IntegerField(_("Display Order"))
 
@@ -347,10 +347,10 @@ class SubItem(models.Model):
     item = models.ForeignKey(Item)
     subitem_id = models.SlugField(_("Slug Name"), unique=True, core=True)
     items_in_stock = models.IntegerField(_("Number in stock"), core=True)
-    weight = models.FloatField(_("Weight"), max_digits=6, decimal_places=2, null=True, blank=True)
-    length = models.FloatField(_("Length"), max_digits=6, decimal_places=2, null=True, blank=True)
-    width = models.FloatField(_("Width"), max_digits=6, decimal_places=2, null=True, blank=True)
-    height = models.FloatField(_("Height"), max_digits=6, decimal_places=2, null=True, blank=True)
+    weight = models.DecimalField(_("Weight"), max_digits=6, decimal_places=2, null=True, blank=True)
+    length = models.DecimalField(_("Length"), max_digits=6, decimal_places=2, null=True, blank=True)
+    width = models.DecimalField(_("Width"), max_digits=6, decimal_places=2, null=True, blank=True)
+    height = models.DecimalField(_("Height"), max_digits=6, decimal_places=2, null=True, blank=True)
     options = models.ManyToManyField(OptionItem, filter_interface=True, null=True, blank=True, core=True)
     
     def _get_optionName(self):
@@ -475,7 +475,7 @@ class Price(models.Model):
     that's still below the user specified (IE: ordered) quantity, that matches a given subitem.
     """
     subitem = models.ForeignKey(SubItem, edit_inline=models.TABULAR, num_in_admin=2)
-    price = models.FloatField(_("Price"), max_digits=6, decimal_places=2, core=True)
+    price = models.DecimalField(_("Price"), max_digits=6, decimal_places=2, core=True)
     quantity = models.IntegerField(_("Discount Quantity"), default=1, help_text=_("Use this price only for this quantity or higher"))
     expires = models.DateField(null=True, blank=True)
 

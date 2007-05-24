@@ -16,7 +16,7 @@ class RawItem(models.Model):
     supplier = models.ForeignKey(Organization)
     supplier_num = models.CharField(_("Supplier ID"), maxlength=50)
     description = models.CharField(_("Description"), maxlength=200)
-    unit_cost = models.FloatField(_("Unit Cost"), max_digits=6, decimal_places=2)
+    unit_cost = models.DecimalField(_("Unit Cost"), max_digits=6, decimal_places=2)
     inventory = models.IntegerField(_("Inventory"))
     
     def __str__(self):
@@ -36,11 +36,11 @@ class SupplierOrder(models.Model):
     """
     supplier = models.ForeignKey(Organization)
     date_created = models.DateField(_("Date Created"))
-    order_subtotal = models.FloatField(_("Subtotal"), max_digits=6, decimal_places=2)
-    order_shipping = models.FloatField(_("Shipping"), max_digits=6, decimal_places=2)
-    order_tax = models.FloatField(_("Tax"), max_digits=6, decimal_places=2)
+    order_subtotal = models.DecimalField(_("Subtotal"), max_digits=6, decimal_places=2)
+    order_shipping = models.DecimalField(_("Shipping"), max_digits=6, decimal_places=2)
+    order_tax = models.DecimalField(_("Tax"), max_digits=6, decimal_places=2)
     order_notes = models.CharField(_("Notes"), maxlength=200, blank=True)
-    order_total = models.FloatField(_("Total"), max_digits=6, decimal_places=2)
+    order_total = models.DecimalField(_("Total"), max_digits=6, decimal_places=2)
     
     def __str__(self):
         return str(self.date_created)
@@ -72,7 +72,7 @@ class SupplierOrderItem(models.Model):
     order = models.ForeignKey(SupplierOrder,edit_inline=models.TABULAR, num_in_admin=3)
     line_item = models.ForeignKey(RawItem, core=True)
     line_item_quantity = models.IntegerField(_("Line Item Quantity"), core=True)
-    line_item_total = models.FloatField(_("Line Item Total"), max_digits=6,decimal_places=2)
+    line_item_total = models.DecimalField(_("Line Item Total"), max_digits=6,decimal_places=2)
     
     def __str__(self):
         return str(self.line_item_total) 

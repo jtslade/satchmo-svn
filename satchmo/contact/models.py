@@ -266,16 +266,16 @@ class Order(models.Model):
     billPostalCode=models.CharField(_("Zip Code"), maxlength=10, blank=True)
     billCountry=models.CharField(_("Country"), maxlength=50, blank=True)
     notes = models.TextField(_("Notes"), maxlength=100, blank=True, null=True)
-    sub_total = models.FloatField(_("Sub total"), max_digits=6, decimal_places=2, blank=True, null=True)
-    total = models.FloatField(_("Total"), max_digits=6,decimal_places=2, blank=True, null=True)
-    discount = models.FloatField(_("Discount"), max_digits=6, decimal_places=2, blank=True, null=True)
+    sub_total = models.DecimalField(_("Sub total"), max_digits=6, decimal_places=2, blank=True, null=True)
+    total = models.DecimalField(_("Total"), max_digits=6,decimal_places=2, blank=True, null=True)
+    discount = models.DecimalField(_("Discount"), max_digits=6, decimal_places=2, blank=True, null=True)
     payment= models.CharField(_("Payment"), choices=PAYMENT_CHOICES, maxlength=25, blank=True)
     method = models.CharField(_("Payment method"), choices=ORDER_CHOICES, maxlength=50, blank=True)
     shippingDescription = models.CharField(_("Shipping Description"), maxlength=50, blank=True, null=True)
     shippingMethod = models.CharField(_("Shipping Method"), maxlength=50, blank=True, null=True)
     shippingModel = models.CharField(_("Shipping Models"), choices=activeShippingModules, maxlength=30, blank=True, null=True)
-    shippingCost = models.FloatField(_("Shipping Cost"), max_digits=6, decimal_places=2, blank=True, null=True)
-    tax = models.FloatField(_("Tax"), max_digits=6, decimal_places=2, blank=True, null=True)
+    shippingCost = models.DecimalField(_("Shipping Cost"), max_digits=6, decimal_places=2, blank=True, null=True)
+    tax = models.DecimalField(_("Tax"), max_digits=6, decimal_places=2, blank=True, null=True)
     timeStamp = models.DateTimeField(_("Time Stamp"), blank=True, null=True)
     status = models.CharField(_("Status"), maxlength=20, choices=ORDER_STATUS, core=True, blank=True, help_text=_("This is automatically set"))
     
@@ -379,8 +379,8 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, edit_inline=models.TABULAR, num_in_admin=3)
     item = models.ForeignKey(SubItem)
     quantity = models.IntegerField(_("Quantity"), core=True)
-    unitPrice = models.FloatField(_("Unit price"), max_digits=6,decimal_places=2)
-    lineItemPrice = models.FloatField(_("Line item price"), max_digits=6,decimal_places=2)
+    unitPrice = models.DecimalField(_("Unit price"), max_digits=6,decimal_places=2)
+    lineItemPrice = models.DecimalField(_("Line item price"), max_digits=6,decimal_places=2)
     
     def __str__(self):
         return self.item.full_name
