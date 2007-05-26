@@ -44,7 +44,7 @@ Satchmo can handle multiple ways of accepting payment.  By default, you have a d
 nothing but accept payments.  Obviously, you'll want to enable one of the other modules before going live.
 
 Payments are configured using *Satchmo Payment Modules*.  These modules are found at
-``satchmo/payment/modules/``::
+``satchmo/payment/modules/``:
 
 	- ``authorizenet`` is used to process credit cards.  
 	- ``dummy`` is used to test payments during development.
