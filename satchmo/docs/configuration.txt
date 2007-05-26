@@ -46,10 +46,11 @@ nothing but accept payments.  Obviously, you'll want to enable one of the other 
 Payments are configured using *Satchmo Payment Modules*.  These modules are found at
 ``satchmo/payment/modules/``::
 
-    - **authorizenet** is used to process credit cards.  
-	- **dummy** is used to test payments during development.
-	- **paypal** is used to handle PayPal IPN payments.  (Incomplete, in testing)
-	- **google** is used to handle Google Checkout payments. (Incomplete, in testing) 
+	- ``authorizenet`` is used to process credit cards.  
+	- ``dummy`` is used to test payments during development.
+	- ``paypal`` is used to handle PayPal IPN payments.  (Incomplete, in testing)
+	- ``google`` is used to handle Google Checkout payments. (Incomplete, in testing) 
+
 	
 To enable a payment module or modules, prepare a custom configuration file for that module, and modify your local_settings file to load
 it.  Example configuration files are found in each payment module directory.
