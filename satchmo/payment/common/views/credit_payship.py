@@ -2,82 +2,47 @@
 # Second step in the order process - capture the billing method and shipping type
 #####################################################################
 
-import datetime
-import calendar
-import sys
 from decimal import Decimal
 from django import http
 from django import newforms as forms
 from django.conf import settings
-from django.core import urlresolvers
 from django.shortcuts import render_to_response
-from django.template import loader
-from django.template import RequestContext, Context
-from satchmo.shop.models import Cart
+from django.template import RequestContext
+from django.utils.translation import gettext_lazy as _
 from satchmo.contact.models import Contact
-from satchmo.discount.models import Discount
 from satchmo.contact.models import Order, OrderItem
-from satchmo.payment.models import CREDITCHOICES, CreditCardDetail
+from satchmo.payment.common.forms import PayShipForm
+from satchmo.payment.models import CreditCardDetail
+from satchmo.payment.paymentsettings import PaymentSettings
+from satchmo.shop.models import Cart
 from satchmo.shop.views.utils import CreditCard
 from satchmo.tax.modules import simpleTax
+import sys
 
+#Import all of the shipping modules
 for module in settings.SHIPPING_MODULES:
     __import__(module)
 
-selection = "Please Select"
+selection = _("Please Select")
 
-class PayShipForm(forms.Form):
-    shipping = forms.ChoiceField(widget=forms.RadioSelect())
-    discount = forms.CharField(max_length=30, required=False)
-
-    def __init__(self, request, *args, **kwargs):
-        super(PayShipForm, self).__init__(*args, **kwargs)
-        
-        shipping_options = []
-        tempCart = Cart.objects.get(id=request.session['cart'])
-        tempContact = Contact.objects.get(id=request.session['custID'])
-        for module in settings.SHIPPING_MODULES:
-            #Create the list of information the user will see
-            shipping_module = sys.modules[module]
-            shipping_instance = shipping_module.Calc(tempCart, tempContact)
-            if shipping_instance.valid():
-                t = loader.get_template('shipping_options.html')
-                c = Context({
-                    'amount': shipping_instance.cost(),
-                    'description' : shipping_instance.description(),
-                    'method' : shipping_instance.method(),
-                    'expected_delivery' : shipping_instance.expectedDelivery() })
-                shipping_options.append((shipping_instance.id, t.render(c)))
-        self.fields['shipping'].choices = shipping_options        
-
-    def clean_discount(self):
-        """ Check if discount exists. """
-        data = self.cleaned_data['discount']
-        if data:
-            discount = Discount.objects.filter(code=data).filter(active=True)
-            if discount.count() == 0:
-                raise forms.ValidationError('Invalid discount.')
-            valid, msg = discount[0].isValid()
-            if not valid:
-                raise forms.ValidationError(msg)
-            # TODO: validate that it can work with these products
-
-
-def pay_ship_info(request):
+def pay_ship_info(request, paymentmodule):
     #First verify that the customer exists
     if not request.session.get('custID', False):
-        return http.HttpResponseRedirect(urlresolvers.reverse('satchmo_checkout-step1'))
+        url = paymentmodule.lookup_url('satchmo_checkout-step1')
+        return http.HttpResponseRedirect(url)
+
     #Verify we still have items in the cart
     if request.session.get('cart', False):
         tempCart = Cart.objects.get(id=request.session['cart'])
         if tempCart.numItems == 0:
-            return render_to_response('checkout_empty_cart.html', RequestContext(request))
+            template = paymentmodule.lookup_template('checkout/empty_cart.html')
+            return render_to_response(template, RequestContext(request))
     else:
-        return render_to_response('checkout_empty_cart.html', RequestContext(request))    
+        return render_to_response('checkout/empty_cart.html', RequestContext(request))    
     #Verify order info is here
     if request.POST:
         new_data = request.POST.copy()
-        form = PayShipForm(request, new_data)
+        form = PayShipForm(request, paymentmodule, new_data)
         if form.is_valid():
             contact = Contact.objects.get(id=request.session['custID'])
             if request.session.get('orderID', False):
@@ -89,16 +54,18 @@ def pay_ship_info(request):
                 #create a new order
                 newOrder = Order(contact=contact)
             #copy data over to the order
-            save(newOrder, new_data, tempCart, contact)
+            pay_ship_save(newOrder, new_data, tempCart, contact, paymentmodule)
             request.session['orderID'] = newOrder.id
-            return http.HttpResponseRedirect(urlresolvers.reverse('satchmo_checkout-step3'))
+            url = paymentmodule.lookup_url('satchmo_checkout-step3')
+            return http.HttpResponseRedirect(url)
     else:
-        form = PayShipForm(request)
-    return render_to_response('checkout_pay_ship-paypal.html', {'form': form},
+        form = PayShipForm(request, paymentmodule)
+    template = paymentmodule.lookup_template('checkout/pay_ship.html')
+    return render_to_response(template, {'form': form},
                                 RequestContext(request))
 
 
-def save(newOrder, new_data, cart, contact):
+def pay_ship_save(newOrder, new_data, cart, contact, paymentmodule):
     # Save the shipping info
     for module in settings.SHIPPING_MODULES:
         shipping_module = sys.modules[module]
@@ -121,6 +88,8 @@ def save(newOrder, new_data, cart, contact):
     newOrder.total = Decimal("0")
     newOrder.tax = Decimal("0")
     newOrder.sub_total = cart.total
+    if newOrder.notes == None:
+        newOrder.notes = ""
     newOrder.save()
     newOrder.copyAddresses()
     
@@ -137,7 +106,17 @@ def save(newOrder, new_data, cart, contact):
     #Calculate the totals
     newOrder.total = cart.total + shipping_instance.cost() - discount + newOrder.tax
     
+    # Save the credit card information
+    cc = CreditCardDetail()
+    cc.storeCC(new_data['credit_number'])
+    cc.order = newOrder
+    cc.expireMonth = new_data['month_expires']
+    cc.expireYear = new_data['year_expires']
+    cc.ccv = new_data['ccv']
+    cc.creditType = new_data['credit_type']
+    cc.save()
+    
     # Make final additions to the order info
     newOrder.method = "Online"
-    newOrder.payment = "PayPal"
+    newOrder.payment = paymentmodule.KEY
     newOrder.save()

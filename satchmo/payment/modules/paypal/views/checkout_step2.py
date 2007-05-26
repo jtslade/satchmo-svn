@@ -25,27 +25,17 @@ for module in settings.SHIPPING_MODULES:
     __import__(module)
 
 selection = "Please Select"
-#Import all of the shipping modules
-
 
 class PayShipForm(forms.Form):
-    credit_type = forms.ChoiceField(choices=CREDITCHOICES)
-    credit_number = forms.CharField(max_length=20)
-    month_expires = forms.ChoiceField(choices=[(month,month) for month in range(1,13)])
-    year_expires = forms.ChoiceField()
-    ccv = forms.IntegerField() # find min_length
     shipping = forms.ChoiceField(widget=forms.RadioSelect())
     discount = forms.CharField(max_length=30, required=False)
 
     def __init__(self, request, *args, **kwargs):
         super(PayShipForm, self).__init__(*args, **kwargs)
-        year_now = datetime.date.today().year
-        self.fields['year_expires'].choices = [(year, year) for year in range(year_now, year_now+5)]
         
         shipping_options = []
         tempCart = Cart.objects.get(id=request.session['cart'])
         tempContact = Contact.objects.get(id=request.session['custID'])
-
         for module in settings.SHIPPING_MODULES:
             #Create the list of information the user will see
             shipping_module = sys.modules[module]
@@ -60,21 +50,6 @@ class PayShipForm(forms.Form):
                 shipping_options.append((shipping_instance.id, t.render(c)))
         self.fields['shipping'].choices = shipping_options        
 
-    def clean_credit_number(self):
-        """ Check if credit card is valid. """
-        card = CreditCard(self.cleaned_data['credit_number'], self.cleaned_data['credit_type'])
-        results, msg = card.verifyCardTypeandNumber()
-        if not results:
-            raise forms.ValidationError(msg)
-
-    def clean_year_expires(self):
-        """ Check if credit card has expired. """
-        month = int(self.cleaned_data['month_expires'])
-        year = int(self.cleaned_data['year_expires'])
-        max_day = calendar.monthrange(year, month)[1]
-        if datetime.date.today() > datetime.date(year=year, month=month, day=max_day):
-            raise forms.ValidationError('Your card has expired.')
-            
     def clean_discount(self):
         """ Check if discount exists. """
         data = self.cleaned_data['discount']
@@ -96,9 +71,9 @@ def pay_ship_info(request):
     if request.session.get('cart', False):
         tempCart = Cart.objects.get(id=request.session['cart'])
         if tempCart.numItems == 0:
-            return render_to_response('checkout_empty_cart.html', RequestContext(request))
+            return render_to_response('checkout/empty_cart.html', RequestContext(request))
     else:
-        return render_to_response('checkout_empty_cart.html', RequestContext(request))    
+        return render_to_response('checkout/empty_cart.html', RequestContext(request))    
     #Verify order info is here
     if request.POST:
         new_data = request.POST.copy()
@@ -119,7 +94,7 @@ def pay_ship_info(request):
             return http.HttpResponseRedirect(urlresolvers.reverse('satchmo_checkout-step3'))
     else:
         form = PayShipForm(request)
-    return render_to_response('checkout_pay_ship.html', {'form': form},
+    return render_to_response('checkout/pay_ship-paypal.html', {'form': form},
                                 RequestContext(request))
 
 
@@ -162,17 +137,7 @@ def save(newOrder, new_data, cart, contact):
     #Calculate the totals
     newOrder.total = cart.total + shipping_instance.cost() - discount + newOrder.tax
     
-    # Save the credit card information
-    cc = CreditCardDetail()
-    cc.storeCC(new_data['credit_number'])
-    cc.order = newOrder
-    cc.expireMonth = new_data['month_expires']
-    cc.expireYear = new_data['year_expires']
-    cc.ccv = new_data['ccv']
-    cc.creditType = new_data['credit_type']
-    cc.save()
-    
     # Make final additions to the order info
     newOrder.method = "Online"
-    newOrder.payment = "Credit Card"
+    newOrder.payment = "PayPal"
     newOrder.save()

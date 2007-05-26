@@ -9,18 +9,10 @@ import base64
 from Crypto.Cipher import Blowfish
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from satchmo.payment.paymentsettings import PaymentSettings
 
-# Create your models here.
-PAYMENTCHOICES = (
- (_('CreditCard'),_('CreditCard')),
-)
-
-CREDITCHOICES = (
-                (('Visa','Visa')),
-                (('Mastercard','Mastercard')),
-                (('Discover','Discover')),
-                )
-
+CREDITCHOICES = PaymentSettings().all('CREDITCHOICES')
+PAYMENTCHOICES = PaymentSettings().as_selectpairs()
 
 class PaymentOption(models.Model):
     """
@@ -28,8 +20,11 @@ class PaymentOption(models.Model):
     configuration.
     """
     description = models.CharField(_("Description"), maxlength=20)
-    active = models.BooleanField(_("Active"), help_text=_("Should this be displayed as an option for the user?"))
-    optionName = models.CharField(_("Option Name"), maxlength=20, choices=PAYMENTCHOICES, unique=True, help_text=_("The class name as defined in payment.py"))
+    active = models.BooleanField(_("Active"), 
+        help_text=_("Should this be displayed as an option for the user?"))
+    optionName = models.CharField(_("Option Name"), maxlength=20, 
+        choices = PAYMENTCHOICES, unique=True, 
+        help_text=_("The class name as defined in payment.py"))
     sortOrder = models.IntegerField(_("Sort Order"))
     
     class Admin:
@@ -42,12 +37,15 @@ class PaymentOption(models.Model):
         
 class CreditCardDetail(models.Model):
     """
-    Stores and encrypted CC number and info as well as a displayable number
+    Stores an encrypted CC number and info as well as a displayable number
     """
-    order = models.ForeignKey(Order, edit_inline=True, num_in_admin=1, max_num_in_admin=1)
-    creditType = models.CharField(_("Credit Card Type"), maxlength=16, choices=CREDITCHOICES)
+    order = models.ForeignKey(Order, edit_inline=True, num_in_admin=1,
+        max_num_in_admin=1)
+    creditType = models.CharField(_("Credit Card Type"), maxlength=16,
+        choices=CREDITCHOICES)
     displayCC = models.CharField(_("CC Number(Last 4 digits)"), maxlength=4, core=True)
-    encryptedCC = models.CharField(_("Encrypted Credit Card"), maxlength=30, blank=True, null=True, editable=False)
+    encryptedCC = models.CharField(_("Encrypted Credit Card"), maxlength=30, blank=True, 
+        null=True, editable=False)
     expireMonth = models.IntegerField(_("Expiration Month"))
     expireYear = models.IntegerField(_("Expiration Year"))
     ccv = models.IntegerField(_("CCV"), blank=True, null=True)

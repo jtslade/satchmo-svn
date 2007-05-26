@@ -9,7 +9,8 @@ from django.utils.translation import gettext_lazy as _
 
 class PaymentProcessor(object):
     
-    def __init__(self):
+    def __init__(self, settings):
+        self.settings = settings
         pass
         
     def prepareData(self, data):

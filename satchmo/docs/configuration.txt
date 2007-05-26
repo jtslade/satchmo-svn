@@ -25,10 +25,7 @@ number of places you might want to configure.
         + ADMIN_MEDIA_PREFIX
         + TEMPLATE_DIRS
         
-2. The local_settings.py file also includes information for configuring `Authorize.net`_.  Make changes
-   here if you are planning to use this service.
-
-3. The load_data.py script is helpful during testing. Make sure the following values are set in your
+2. The load_data.py script is helpful during testing. Make sure the following values are set in your
    local_settings.py file:
 
     - SITE_DOMAIN = "example.com"
@@ -43,16 +40,41 @@ are simple, others might require more python knowledge to implement.
 Payment Processing
 ++++++++++++++++++
 
-If you are processing credit cards, you will need to modif the payment processor you use for processing
-credit cards.  A module for `Authorize.net`_ is included but not installed by default.  A dummy module
-is installed that does nothing but return a true value.  To change to authorize.net, modify your 
-local_settings file to point to the new module::
-    
-    ### Credit Card Module ###
-    # If you are processing credit cards, this is where you should set the appropriate modules
-    # to be called during the checkout process.
-    # Right now dummy and authorize.net are the only ones included
-    CREDIT_PROCESSOR = 'satchmo.payment.modules.authorizenet'
+Satchmo can handle multiple ways of accepting payment.  By default, you have a dummy processor that does 
+nothing but accept payments.  Obviously, you'll want to enable one of the other modules before going live.
+
+Payments are configured using *Satchmo Payment Modules*.  These modules are found at
+``satchmo/payment/modules/``::
+
+    - **authorizenet** is used to process credit cards.  
+	- **dummy** is used to test payments during development.
+	- **paypal** is used to handle PayPal IPN payments.  (Incomplete, in testing)
+	- **google** is used to handle Google Checkout payments. (Incomplete, in testing) 
+	
+To enable a payment module or modules, prepare a custom configuration file for that module, and modify your local_settings file to load
+it.  Example configuration files are found in each payment module directory.
+
+For example, to enable authorize.net, first copy the file 
+``satchmo/payment/modules/authorizenet/authorizenet_settings_customize.py`` to the root of your store.  
+The critical part of that file will look something like this::
+
+	CONNECTION = 'https://test.authorize.net/gateway/transact.dll'
+	TEST = 'TRUE'
+	LOGIN = ''
+	TRANKEY = ''
+	
+Modify the file, putting in the proper settings for your account with Authorize.net, and then enable it in your
+settings.py or local_settings.py by adding it to the PAYMENT_MODULES like so::
+
+	PAYMENT_MODULES = (
+	    'satchmo.payment.modules.dummy.dummy_settings',
+ 	    'authorizenet_settings',
+	#    'paypal_settings',	
+	#    'google_settings'
+	)
+	
+In the example above, we would now have two payment systems set up:  Dummy and Authorize.net.  Each of the payment modules works
+the same, with important settings for that module stored in their own settings file.
 
 Shipping Calculations
 +++++++++++++++++++++
@@ -84,10 +106,19 @@ make sure that it is enabled in the middleware section of your settings.py::
 			    )
 
 Then, enable it for the specific urls you would like to be protected by adding
-{'SSL': True} to each url.  Here's and example in /shop/urls.py::
+{'SSL': True} to each url.  Here's an example which would enable SSL for login::
 
-         (r'^checkout/$','checkout-step1.contact_info', {'SSL':True}),
-         (r'^checkout/pay/$','checkout-step2.pay_ship_info', {'SSL':True}),  
-         (r'^checkout/confirm/$','checkout-step3.confirm_info', {'SSL':True}), 
+	(r'^account/login/$', 'login', {'SSL': True', 'template_name': 'login.html'}, 'satchmo_login'),
+
+SSL for Payments works slightly differently.  Since the urls for Payments are configured automatically, you can 
+have SSL applied automatically as well.  To have all checkout pages enabled for SSL, just set 
+``CHECKOUT_SSL=True`` in your local_settings file.
+
+If you only want to enable SSL for some payment modules, set ``CHECKOUT_SSL=False`` in your local_settings file
+and then put ``SSL=True`` in the payment module configuration file for the module you want to have SSL enabled.
+This may be useful if you accept both PayPal and Authorize.net payments, for example.  PayPal wouldn't need
+to be SSL enabled, but Authorize.net should be.
+
+Note that SSL in the payment settings file will always overrule any CHECKOUT_SSL setting.
 
 .. _Authorize.net: http://www.authorize.net/

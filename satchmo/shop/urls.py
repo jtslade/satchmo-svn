@@ -2,6 +2,7 @@ import os
 from django.conf import settings
 from django.conf.urls.defaults import *
 from satchmo.product.models import Item
+from satchmo.payment.paymentsettings import PaymentSettings
 
 #The following views are custom to Satchmo
 
@@ -20,10 +21,6 @@ urlpatterns += patterns('satchmo.shop.views',
      (r'^account/info/$', 'account.info', {}, 'satchmo_account_info'),
      (r'^account/logout/$', 'account.shop_logout', {}, 'satchmo_logout'),
      (r'^contact/$', 'contact.form', {}, 'satchmo_contact'),
-     (r'^checkout/$', 'credit_card.checkout_step1.contact_info', {'SSL':False}, 'satchmo_checkout-step1'),
-     (r'^checkout/pay/$', 'credit_card.checkout_step2.pay_ship_info', {'SSL':False}, 'satchmo_checkout-step2'),
-     (r'^checkout/confirm/$', 'credit_card.checkout_step3.confirm_info', {'SSL':False}, 'satchmo_checkout-step3'),
-     (r'^checkout/success/$', 'common.checkout_success', {'SSL':False}, 'satchmo_checkout-success'),
 )
 #Note with the last category url - this allows category depth to be as deep as we want but the downside
 #is that we ignore all but the child and parent category.  In practice this should be ok
@@ -34,7 +31,6 @@ urlpatterns += patterns('satchmo.product.views',
     (r'^product/(?P<slug>[-\w]+)/$','get_item'),
     (r'^product/(?P<slug>[-\w]+)/(?P<subitemId>[\d]+)/$','get_item'),
 )
-
 
 #Dictionaries for generic views used in Satchmo
 
@@ -47,10 +43,10 @@ index_dict = {
 }
 
 urlpatterns += patterns('django.views.generic',
-                        (r'^$','list_detail.object_list',index_dict),
-                        (r'^contact/thankyou/$','simple.direct_to_template',{'template':'thanks.html'}),
-                        (r'^account/thankyou/$','simple.direct_to_template',{'template':'account_thanks.html'}),                           
-                        )
+    (r'^$','list_detail.object_list',index_dict),
+    (r'^contact/thankyou/$','simple.direct_to_template',{'template':'thanks.html'}),
+    (r'^account/thankyou/$','simple.direct_to_template',{'template':'account_thanks.html'}),                           
+)
 
 #Dictionary for authentication views
 password_reset_dict = {
@@ -59,13 +55,17 @@ password_reset_dict = {
 }
                         
 urlpatterns += patterns('django.contrib.auth.views',
-                        (r'^account/login/$', 'login', {'template_name': 'login.html'}, 'satchmo_login'),
-                        (r'^account/password_reset/$','password_reset', password_reset_dict, 'satchmo_password_reset'),
-                        (r'^account/password_reset/done/$', 'password_reset_done', {'template_name':'password_reset_done.html'}, 'satchmo_reset_done'),
-                        (r'^account/password_change/$', 'password_change', {'template_name':'password_change_form.html'}, 'satchmo_password_change'),
-                        (r'^account/password_change/done/$', 'password_change_done', {'template_name':'password_change_done.html'}, 'satchmo_change_done'),
-                        )
-  
+    (r'^account/login/$', 'login', {'template_name': 'login.html'}, 'satchmo_login'),
+    (r'^account/password_reset/$','password_reset', password_reset_dict, 'satchmo_password_reset'),
+    (r'^account/password_reset/done/$', 'password_reset_done', {'template_name':'password_reset_done.html'}, 'satchmo_reset_done'),
+    (r'^account/password_change/$', 'password_change', {'template_name':'password_change_form.html'}, 'satchmo_password_change'),
+    (r'^account/password_change/done/$', 'password_change_done', {'template_name':'password_change_done.html'}, 'satchmo_change_done'),
+)
+
+# add checkout urls
+urlpatterns += patterns('',
+    (r'^checkout/', include('satchmo.payment.urls'))
+)
 
 #Make sure thumbnails and images are served up properly when using the dev server
 if settings.LOCAL_DEV:

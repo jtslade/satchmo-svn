@@ -20,7 +20,7 @@ the additional ecommerce tracking codes so that purchases from your store can be
 tracked via analytics.
 
 The google analytics code is implemented using 2 template tags.  By default, they are
-included in the base.html and checkout_success.html pages.  If you wish to alter your
+included in the base.html and checkout/success.html pages.  If you wish to alter your
 templates, use {% show_tracker %} to implement the tracking code and {% show_receipt %} 
 to implement the purchase tracking capabilities.  The show_tracker code must be within
 the <body> tags and must be before the show_receipt tags.

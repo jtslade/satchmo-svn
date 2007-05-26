@@ -1,19 +1,19 @@
 from urllib import urlencode
 import urllib2
-from django.conf import settings
 
 class PaymentProcessor(object):
     #Authorize.NET payment processing module
     #You must have an account with authorize.net in order to use this module
-    def __init__(self):
-        self.connection = settings.AUTHORIZE_NET_CONNECTION
+    def __init__(self, settings):
+        self.settings = settings
+        self.connection = settings.CONNECTION
         self.contents = ''
         self.configuration = {
-            'x_login' : settings.AUTHORIZE_NET_LOGIN,
-            'x_tran_key' : settings.AUTHORIZE_NET_TRANKEY, 
+            'x_login' : settings.LOGIN,
+            'x_tran_key' : settings.TRANKEY, 
             'x_version' : '3.1',
             'x_relay_response' : 'FALSE',
-            'x_test_request' : settings.AUTHORIZE_NET_TEST,
+            'x_test_request' : settings.TEST,
             'x_delim_data' : 'TRUE',
             'x_delim_char' : '|',
             'x_type': 'AUTH_CAPTURE',
@@ -76,7 +76,9 @@ if __name__ == "__main__":
             self.contact = testContact()
             self.CC = testCC()
     import os
-    os.environ["DJANGO_SETTINGS_MODULE"]="satchmo.settings"
+    if not os.environ.has_key("DJANGO_SETTINGS_MODULE"):
+        os.environ["DJANGO_SETTINGS_MODULE"]="satchmo.settings"
+        
     settings_module = os.environ['DJANGO_SETTINGS_MODULE']
     settingsl = settings_module.split('.')
     settings = __import__(settings_module, {}, {}, settingsl[-1])
@@ -95,7 +97,7 @@ if __name__ == "__main__":
     sampleOrder.CC.expirationDate = "10/09"
     sampleOrder.CC.ccv = "144"
 
-    processor = PaymentProcessor()
+    processor = PaymentProcessor(PaymentSettings().AUTHORIZENET)
     processor.prepareData(sampleOrder)
     results, reason_code, msg = processor.process()
     print results,"::", msg

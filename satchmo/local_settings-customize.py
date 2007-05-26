@@ -37,24 +37,27 @@ DATABASE_PASSWORD = ''
 DATABASE_USER = ''
 SECRET_KEY = ''
 
-### Credit Card Module ###
-# If you are processing credit cards, this is where you should set the appropriate modules
-# to be called during the checkout process.
-# Right now dummy and authorize.net are the only ones included
-CREDIT_PROCESSOR = 'satchmo.payment.modules.dummy'
+# The default state for SSL in payment sections
+CHECKOUT_SSL=False
 
-#### For Authorize.net ######
-#AUTHORIZE_NET_CONNECTION = 'https://test.authorize.net/gateway/transact.dll'
-#AUTHORIZE_NET_TEST = 'TRUE'
-#AUTHORIZE_NET_LOGIN = ''
-#AUTHORIZE_NET_TRANKEY = ''
+# Your payment modules are configured in standalone settings files.
+#
+# No more putting AUTHORIZENET_URL=xxx or any such settings in this file
+# Just keep those settings in the appropriate with the payment settings standalone
+# file.
+#
+# To activate any of the modules, please copy the xxx_settings-customize.py
+# file from its module at satchmo.payment.modules.xxx, customize and save
+# wherever you like.  I suggest the root of the store, alongside the local_settings.py
+# file.  Dummy is safe to load from the module itself, since what would be the point
+# of customizing that one?
 
-#### For PayPal Web Payments Standard #### 
-#PAYPAL_POST_URL = 'https://www.paypal.com/cgi-bin/webscr' # Production 
-#PAYPAL_POST_URL = 'https://www.sandbox.paypal.com/cgi-bin/webscr' # Testing 
-#PAYPAL_BUSINESS = '' # The email address for your PayPal account. 
-#PAYPAL_CURRENCY_CODE = '' # If this is empty or invalid, PayPal assumes USD. 
-#PAYPAL_RETURN_ADDRESS = '' # This is the URL that PayPal sends the user to after payment. 
+PAYMENT_MODULES = (
+    'satchmo.payment.modules.dummy.dummy_settings',
+#    'paypal_settings',
+#    'authorizenet_settings',
+#    'google_settings'
+)
 
 # Google Analytics
 # Set this to True if you wish to enable Google Analytics.  You must have

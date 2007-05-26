@@ -17,12 +17,12 @@ def confirm_info(request):
     if request.session.get('cart', False):
         tempCart = Cart.objects.get(id=request.session['cart'])
         if tempCart.numItems == 0:
-            return render_to_response('checkout_empty_cart.html',RequestContext(request))
+            return render_to_response('checkout/empty_cart.html',RequestContext(request))
     else:
-        return render_to_response('checkout_empty_cart.html',RequestContext(request))
+        return render_to_response('checkout/empty_cart.html',RequestContext(request))
 
     orderToProcess = Order.objects.get(id=request.session['orderID'])
-    return render_to_response('checkout_confirm-paypal.html',
+    return render_to_response('checkout/confirm-paypal.html',
         {'order': orderToProcess,
          'post_url': settings.PAYPAL_POST_URL,
          'business': settings.PAYPAL_BUSINESS,

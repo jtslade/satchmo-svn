@@ -133,4 +133,4 @@ def checkout_success(request):
     """
     order = Order.objects.get(id=request.session['orderID'])
     del request.session['orderID']
-    return render_to_response('checkout_success.html', {'order': order}, RequestContext(request))
+    return render_to_response('checkout/success.html', {'order': order}, RequestContext(request))
