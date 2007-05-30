@@ -13,18 +13,22 @@ from django.core import urlresolvers
 from django.shortcuts import render_to_response
 from django.template import loader
 from django.template import RequestContext, Context
+from django.utils.translation import gettext_lazy as _
 from satchmo.shop.models import Cart
 from satchmo.contact.models import Contact
 from satchmo.discount.models import Discount
 from satchmo.contact.models import Order, OrderItem
 from satchmo.payment.models import CREDITCHOICES, CreditCardDetail
+from satchmo.payment.paymentsettings import PaymentSettings
 from satchmo.shop.views.utils import CreditCard
 from satchmo.tax.modules import simpleTax
 
 for module in settings.SHIPPING_MODULES:
     __import__(module)
 
-selection = "Please Select"
+payment_module = PaymentSettings().PAYPAL
+
+selection = _("Please Select")
 
 class PayShipForm(forms.Form):
     shipping = forms.ChoiceField(widget=forms.RadioSelect())
@@ -66,14 +70,18 @@ class PayShipForm(forms.Form):
 def pay_ship_info(request):
     #First verify that the customer exists
     if not request.session.get('custID', False):
-        return http.HttpResponseRedirect(urlresolvers.reverse('satchmo_checkout-step1'))
+        url = payment_module.lookup_url('satchmo_checkout-step1')
+        return http.HttpResponseRedirect(url)
     #Verify we still have items in the cart
     if request.session.get('cart', False):
         tempCart = Cart.objects.get(id=request.session['cart'])
         if tempCart.numItems == 0:
-            return render_to_response('checkout/empty_cart.html', RequestContext(request))
+            template = payment_module.lookup_template('checkout/empty_cart.html')
+            return render_to_response(template, RequestContext(request))
     else:
-        return render_to_response('checkout/empty_cart.html', RequestContext(request))    
+        template = payment_module.lookup_template('checkout/empty_cart.html')
+        return render_to_response(template, RequestContext(request))
+
     #Verify order info is here
     if request.POST:
         new_data = request.POST.copy()
@@ -91,11 +99,12 @@ def pay_ship_info(request):
             #copy data over to the order
             save(newOrder, new_data, tempCart, contact)
             request.session['orderID'] = newOrder.id
-            return http.HttpResponseRedirect(urlresolvers.reverse('satchmo_checkout-step3'))
+            url = payment_module.lookup_url('satchmo_checkout-step3')
+            return http.HttpResponseRedirect(url)
     else:
         form = PayShipForm(request)
-    return render_to_response('checkout/pay_ship-paypal.html', {'form': form},
-                                RequestContext(request))
+        template = payment_module.lookup_template('checkout/paypal/pay_ship.html')
+    return render_to_response(template, {'form': form}, RequestContext(request))
 
 
 def save(newOrder, new_data, cart, contact):
