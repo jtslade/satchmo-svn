@@ -7,7 +7,7 @@
 # You should copy the authorizenet_settings-customize.py file to the
 # root of your shop, and rename it authorizenet_settings.  Then you
 # can load it using something like this:
-# PAYMENT_MODULES = ('authorizenet_settings,)
+# PAYMENT_MODULES = ('authorizenet_settings',)
 
 gettext = lambda s:s
 PAYMENT_LIVE = False

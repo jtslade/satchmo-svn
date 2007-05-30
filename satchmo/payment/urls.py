@@ -9,7 +9,7 @@ paymentsettings = PaymentSettings()
 SSL = paymentsettings.SSL
 
 urlpatterns = patterns('satchmo.payment.views',
-     (r'^$', 'contact_info', {'SSL':SSL}, 'satchmo_checkout-step1'),
+     (r'^$', 'contact_info', {'SSL': SSL}, 'satchmo_checkout-step1'),
 )
 
 # now add all enabled module payment settings

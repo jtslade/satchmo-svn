@@ -14,25 +14,25 @@ from satchmo.shop.models import Cart, CartItem, Config
 import datetime
 import sys
 
-def confirm_info(request, paymentsettings):    
+def confirm_info(request, payment_module):    
     if not request.session.get('orderID', False):
         return http.HttpResponseRedirect(urlresolvers.reverse('satchmo_checkout-step1'))
         
     if request.session.get('cart',False):
         tempCart = Cart.objects.get(id=request.session['cart'])
         if tempCart.numItems == 0:
-            template = paymentsettings.lookup_template('checkout/empty_cart.html')
+            template = payment_module.lookup_template('checkout/empty_cart.html')
             return render_to_response(template, RequestContext(request))
     else:
-        template = paymentsettings.lookup_template('checkout/empty_cart.html')
+        template = payment_module.lookup_template('checkout/empty_cart.html')
         return render_to_response(template, RequestContext(request))    
         
     orderToProcess = Order.objects.get(id=request.session['orderID'])
     
     if request.POST:
         #Do the credit card processing here & if successful, empty the cart and update the status
-        credit_processor = paymentsettings.load_processor()
-        processor = credit_processor.PaymentProcessor(paymentsettings)
+        credit_processor = payment_module.load_processor()
+        processor = credit_processor.PaymentProcessor(payment_module)
         processor.prepareData(orderToProcess)
         results, reason_code, msg = processor.process()
         
@@ -47,13 +47,13 @@ def confirm_info(request, paymentsettings):
             status.save()
             #del request.session['orderID']
             #Redirect to the success page
-            redirectUrl = paymentsettings.lookup_url('satchmo_checkout-success')
+            redirectUrl = payment_module.lookup_url('satchmo_checkout-success')
             return http.HttpResponseRedirect(redirectUrl)
         #Since we're not successful, let the user know via the confirmation page
         else:
             errors = msg
-            template = paymentsettings.lookup_template('checkout/confirm.html')
+            template = payment_module.lookup_template('checkout/confirm.html')
             return render_to_response(template, {'order': orderToProcess, 'errors': errors}, RequestContext(request))
     else:
-        template = paymentsettings.lookup_template('checkout/confirm.html')
+        template = payment_module.lookup_template('checkout/confirm.html')
         return render_to_response(template, {'order': orderToProcess}, RequestContext(request))

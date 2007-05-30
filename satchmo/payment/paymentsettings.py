@@ -168,7 +168,7 @@ class _PaymentModule(object):
         Will return the equivalent of:
         
         pattern('',
-            self.URL_BASE, include(this.modul)
+            self.URL_BASE, include(this.module)
         )
         """
         try:
@@ -194,7 +194,7 @@ class _PaymentModule(object):
         """Return a template name, which may have been overridden in the settings."""
     
         try:
-            return self._module.TEMPLATE_OVERRIDES.get(template,template)
+            return self._module.TEMPLATE_OVERRIDES.get(template, template)
         except AttributeError:
             return template
 
