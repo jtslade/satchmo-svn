@@ -25,6 +25,8 @@ The following packages are optional but encouraged:
 
 - `DocUtils`_
 
+- `PyYaml`_ (For unit tests)
+
 The following Internationalization data can be automatically installed by the
 Satchmo scripts.
 
@@ -37,6 +39,7 @@ Satchmo scripts.
 .. _Windows binary: http://www.voidspace.org.uk/python/modules.shtml#pycrypto
 .. _ReportLab: http://www.reportlab.org/
 .. _DocUtils: http://docutils.sourceforge.net/
+.. _PyYaml: http://pyyaml.org/
 .. _Webda: http://webda.python-hosting.com/
 .. _Authorize.net: http://www.authorize.net/
 .. _Tiny RML2PDF: http://www.openreport.org/index.py/static/page/trml2pdf
