@@ -42,6 +42,9 @@ def _get_path_from_url(url, root=settings.MEDIA_ROOT, url_root=settings.MEDIA_UR
 
     if url.startswith(url_root):
         url = url[len(url_root):] # strip media root url
+            
+    if url.startswith('/'):
+        url = url[1:]
 
     return os.path.normpath(os.path.join(root, url))
 #
