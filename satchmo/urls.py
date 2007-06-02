@@ -33,7 +33,7 @@ while q:
     for pattern in urls[:]:
         if hasattr(pattern, 'url_patterns'):
             q.append(pattern.url_patterns)
-        elif pattern.name:
+        elif hasattr(pattern, 'name') and pattern.name:
             if pattern.name in names:
                 urls.remove(pattern)
             else:
