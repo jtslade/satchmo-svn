@@ -1,13 +1,13 @@
-from satchmo.product.models import Item, SubItem, Category
+from sets import Set
 from django import http
-
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.db.models import Q
-
+from django.utils.translation import gettext as _
 from satchmo.shop.templatetags.currency_filter import moneyfmt
+from satchmo.product.models import Item, SubItem, Category
+from satchmo.shop.views.utils import bad_or_missing
 
-from sets import Set
 
 def get_options(item, selected_options=Set()):
     """
@@ -50,7 +50,11 @@ def get_options(item, selected_options=Set()):
     return d.values()
 
 def get_item(request, slug, subitemId=None):
-    item = Item.objects.filter(active="1").filter(short_name=slug)[0]
+    try:
+        item = Item.objects.filter(active=True).filter(short_name=slug)[0]
+    except IndexError:
+        return bad_or_missing(request, _('The product you have requested does not exist.'))
+
     options = []
     if subitemId:
         subitem = SubItem.objects.filter(id=subitemId)[0]
@@ -61,10 +65,12 @@ def get_item(request, slug, subitemId=None):
 
 def get_price(request, slug):
     chosenOptions = Set()
-
     quantity = 1
-
-    item = Item.objects.filter(active='1', short_name=slug)[0]
+    
+    try:
+        item = Item.objects.filter(active=True, short_name=slug)[0]
+    except IndexError:
+        return http.HttpResponseNotFound(_('The product you have requested does not exist.'), mimetype='text/plain')
 
     for option in item.option_group.all():
         if request.POST.has_key(str(option.id)):
