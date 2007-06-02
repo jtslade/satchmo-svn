@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
+from satchmo.shop.views.sitemaps import sitemaps
 
 if settings.SHOP_BASE == '':
     shopregex = '^'
@@ -15,6 +16,7 @@ urlpatterns += patterns('',
     (r'^admin/$', 'satchmo.shop.views.admin-portal.home'),
     (r'^admin/', include('django.contrib.admin.urls')),
     (shopregex, include('satchmo.shop.urls')),
+    (r'sitemap.xml', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
 )
 
 #The following is used to serve up local media files like images
