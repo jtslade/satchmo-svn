@@ -40,9 +40,8 @@ class Category(models.Model):
     def get_absolute_url(self):
         p_list = self._recurse_for_parents_slug(self)
         p_list.append(self.slug)
-        baseurl = settings.SHOP_BASE + "/category/"
-        return baseurl + "/".join(p_list)        
-                
+        return u'%s/category/%s/' % (settings.SHOP_BASE, u'/'.join(p_list))
+
     def _recurse_for_parents_name(self, cat_obj):
         #This is used for the visual display & save validation
         p_list = []
@@ -246,8 +245,7 @@ class Item(models.Model):
             if sub.option_values == optionSet:
                 count+=1
         return count
-    
-    
+
     def save(self):
         """Right now this only works if you save the suboptions, then go back and choose to create the subitems.
         Also ensure that we have a date_added on the first save."""
@@ -258,12 +256,10 @@ class Item(models.Model):
             self.create_subitems()
             self.create_subs = False
         super(Item, self).save()
-    
-    
-    def get_absolute_url(self):
-        return "%s/product/%s" % (settings.SHOP_BASE,self.short_name)
 
-    
+    def get_absolute_url(self):
+        return u'%s/product/%s/' % (settings.SHOP_BASE, self.short_name)
+
     class Admin: 
         list_display = ('verbose_name', 'active')
         fields = (
