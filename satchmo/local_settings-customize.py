@@ -54,9 +54,9 @@ CHECKOUT_SSL=False
 
 PAYMENT_MODULES = (
     'satchmo.payment.modules.dummy.dummy_settings',
-#    'paypal_settings',
-#    'authorizenet_settings',
-#    'google_settings'
+#    'satchmo.paypal_settings',
+#    'satchmo.authorizenet_settings',
+#    'satchmo.google_settings'
 )
 
 # Google Analytics

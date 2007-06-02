@@ -69,9 +69,9 @@ settings.py or local_settings.py by adding it to the PAYMENT_MODULES like so::
 
 	PAYMENT_MODULES = (
 	    'satchmo.payment.modules.dummy.dummy_settings',
- 	    'authorizenet_settings',
-	#    'paypal_settings',	
-	#    'google_settings'
+ 	    'satchmo.authorizenet_settings',
+	#    'satchmo.paypal_settings',	
+	#    'satchmo.google_settings'
 	)
 	
 In the example above, we would now have two payment systems set up:  Dummy and Authorize.net.  Each of the payment modules works
