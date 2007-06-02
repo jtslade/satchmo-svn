@@ -2,14 +2,11 @@
 # Second step in the order process - capture the billing method and shipping type
 #####################################################################
 
-import datetime
-import calendar
 import sys
 from decimal import Decimal
 from django import http
 from django import newforms as forms
 from django.conf import settings
-from django.core import urlresolvers
 from django.shortcuts import render_to_response
 from django.template import loader
 from django.template import RequestContext, Context
