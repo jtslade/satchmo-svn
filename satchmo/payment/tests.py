@@ -1,11 +1,13 @@
 # -*- coding: UTF-8 -*-
 from django.test import TestCase
-from satchmo.payment.paymentsettings import PaymentSettings
 from django.core import urlresolvers
+from satchmo.payment.paymentsettings import PaymentSettings, _PaymentModule
 
 class TestModulesSettings(TestCase):
 
     def setUp(self):
+        module = 'satchmo.payment.modules.dummy.dummy_settings'
+        PaymentSettings().modules['DUMMY'] = _PaymentModule(module)
         self.dummy = PaymentSettings().DUMMY
     
     def testGetDummy(self):
