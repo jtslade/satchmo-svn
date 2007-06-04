@@ -5,7 +5,7 @@ from satchmo.shop.views.sitemaps import sitemaps
 if settings.SHOP_BASE == '':
     shopregex = '^'
 else:
-    shopregex = '^%/' % settings.SHOP_BASE.strip('/')
+    shopregex = '^' + settings.SHOP_BASE[1:] + '/'
 
 urlpatterns = []
 if hasattr(settings, 'URLS'):
