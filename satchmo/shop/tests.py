@@ -118,4 +118,5 @@ class ShopTest(TestCase):
         self.assertContains(response, "Tax + $3.50", count=1, status_code=200)
         response = self.client.post(prefix+"/checkout/dummy/confirm/", {'process' : 'True'})
         self.assertRedirects(response, prefix+'/checkout/dummy/success/', status_code=302, target_status_code=200)
-        #print response.content
+        self.assertEqual(len(mail.outbox), 1)
+       

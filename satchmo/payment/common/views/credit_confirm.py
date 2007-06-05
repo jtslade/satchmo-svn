@@ -7,12 +7,13 @@ from django.conf import settings
 from django.core import urlresolvers
 from django.shortcuts import render_to_response
 from django.template import loader
-from django.template import RequestContext
+from django.template import RequestContext, Context
 from django.utils.translation import gettext_lazy as _
 from satchmo.contact.models import Order, OrderItem, OrderStatus
 from satchmo.shop.models import Cart, CartItem, Config
 import datetime
-import sys
+from django.template import loader
+from django.core.mail import send_mail
 
 def confirm_info(request, payment_module):    
     if not request.session.get('orderID', False):
@@ -45,6 +46,16 @@ def confirm_info(request, payment_module):
             status.timeStamp = datetime.datetime.now()
             status.order = orderToProcess #For some reason auto_now_add wasn't working right in admin
             status.save()
+            #Now, send a confirmation email
+            shop_config = Config.objects.get(site=settings.SITE_ID)
+            shop_email = shop_config.storeEmail
+            shop_name = shop_config.storeName
+            t = loader.get_template('email/order_complete.txt')
+            c = Context({'order': orderToProcess,
+                          'shop_name': shop_name})
+            subject = "Thank you for your order from %s" % shop_name
+            send_mail(subject, t.render(c), shop_email,
+                     [orderToProcess.contact.email], fail_silently=False)
             #del request.session['orderID']
             #Redirect to the success page
             redirectUrl = payment_module.lookup_url('satchmo_checkout-success')
