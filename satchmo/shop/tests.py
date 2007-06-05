@@ -72,3 +72,50 @@ class ShopTest(TestCase):
         self.assertRedirects(response, prefix+'/cart/', status_code=302, target_status_code=200)
         response = self.client.get(prefix+'/cart/')
         self.assertContains(response, "Django Rocks shirt ( Large/Blue )", count=1, status_code=200)
+        
+    def test_cart_removing(self):
+        """
+        Validate we can remove an item
+        """
+        self.test_cart_adding()
+        response = self.client.get(prefix+'/cart/1/remove/')
+        self.assertRedirects(response, prefix+'/cart/', status_code=302, target_status_code=200)
+        response = self.client.get(prefix+'/cart/')
+        #print response.content
+        self.assertContains(response, "Your cart is currently empty.", count=1, status_code=200)
+        
+    def test_checkout(self):
+        """
+        Run through a full checkout process
+        """
+        self.test_cart_adding()
+        #response = self.client.get(prefix+"/checkout/")
+        response = self.client.post(prefix+"/checkout/", {'email': 'sometester@example.com',
+                                    'first_name': 'Teddy',
+                                    'last_name' : 'Tester',
+                                    'phone': '456-123-5555',
+                                    'street1': '8299 Some Street',
+                                    'city': 'Springfield',
+                                    'state': 'MO',
+                                    'postalCode': '81122',
+                                    'country': 'US',
+                                    'ship_street1': '1011 Some Other Street',
+                                    'ship_city': 'Springfield',
+                                    'ship_state': 'MO',
+                                    'ship_postalCode': '81123',
+                                    'paymentmethod': 'DUMMY'})
+        self.assertRedirects(response, prefix+'/checkout/dummy/', status_code=302, target_status_code=200)
+        response = self.client.post(prefix+"/checkout/dummy/", {'credit_type': 'Visa',
+                                    'credit_number': '4485079141095836',
+                                    'month_expires': '1',
+                                    'year_expires': '2009',
+                                    'ccv': '552',
+                                    'shipping': 'FlatRate'})
+        self.assertRedirects(response, prefix+'/checkout/dummy/confirm/', status_code=302, target_status_code=200)
+        response = self.client.get(prefix+'/checkout/dummy/confirm/')
+        self.assertContains(response, "Total = $54.50", count=1, status_code=200)
+        self.assertContains(response, "Shipping + $5.00", count=1, status_code=200)
+        self.assertContains(response, "Tax + $3.50", count=1, status_code=200)
+        response = self.client.post(prefix+"/checkout/dummy/confirm/", {'process' : 'True'})
+        self.assertRedirects(response, prefix+'/checkout/dummy/success/', status_code=302, target_status_code=200)
+        #print response.content
