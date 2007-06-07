@@ -48,7 +48,7 @@ Payments are configured using *Satchmo Payment Modules*.  These modules are foun
 
 	- ``authorizenet`` is used to process credit cards.  
 	- ``dummy`` is used to test payments during development.
-	- ``paypal`` is used to handle PayPal IPN payments.  (Incomplete, in testing)
+	- ``paypal`` is used to handle PayPal payments.  (Basic module works, IPN is not yet done.)
 	- ``google`` is used to handle Google Checkout payments. (Incomplete, in testing) 
 
 	
