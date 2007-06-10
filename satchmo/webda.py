@@ -22,6 +22,7 @@ import sys
 try:
     from django.conf import settings  # 'conf.settings' is passed to syncdb().
     from django.core.management import syncdb
+    from django.db import transaction
 except ImportError, err:
     sys.stderr.write("Error: %s. Are you sure Django is installed?\n" % err)
     sys.exit(1)
@@ -353,6 +354,7 @@ def load_data(model, i18n_model, i18n_dirname):
             	obj.save()
             except:
                 print "Problem loading %s.  This entry will not be loaded." % obj
+                transaction.rollback()
 
 def show_license(license):
     """Show the license and continues if the user is agree with it.
