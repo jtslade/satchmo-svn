@@ -6,9 +6,7 @@ from satchmo.payment.paymentsettings import PaymentSettings
 
 #The following views are custom to Satchmo
 
-urlpatterns = []
-if hasattr(settings, 'SHOP_URLS'):
-    urlpatterns += settings.SHOP_URLS
+urlpatterns = getattr(settings, 'SHOP_URLS', [])
 
 urlpatterns += patterns('satchmo.shop.views',
      (r'^category/(?P<slug>[-\w]+)/$','category.root'),

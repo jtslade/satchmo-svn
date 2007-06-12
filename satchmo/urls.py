@@ -7,9 +7,7 @@ if settings.SHOP_BASE == '':
 else:
     shopregex = '^' + settings.SHOP_BASE[1:] + '/'
 
-urlpatterns = []
-if hasattr(settings, 'URLS'):
-    urlpatterns += settings.URLS
+urlpatterns = getattr(settings, 'URLS', [])
 
 urlpatterns += patterns('',
     (r'^admin/print/(?P<doc>[-\w]+)/(?P<id>\d+)', 'satchmo.shipping.views.displayDoc'),
