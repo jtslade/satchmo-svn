@@ -9,8 +9,7 @@ As of now, it is recommended that you use a Django version from the current trun
 Some of the most recent features in Satchmo require a recent (0.97 pre) checkout 
 from svn.
 
-Obviously python and a supported database are required.  Python 2.4 and up are recommended.  
-Python 2.3 is untested.
+Satchmo requires Python 2.4 or later and a database supported by Django.
 
 There are a number of other Python packages that are required for usage of all the 
 features in Satchmo.
