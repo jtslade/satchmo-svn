@@ -428,6 +428,7 @@ def setup_environ(project_dir, i18n_dirname, set_file):
                 is_header = True
             elif is_header and ')' in line:
                 print "    '%s'," % i18n_app
+                is_header = False
             print line[:-1]
         write_f.close()
 
