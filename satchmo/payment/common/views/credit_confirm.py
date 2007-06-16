@@ -8,7 +8,7 @@ from django.core import urlresolvers
 from django.shortcuts import render_to_response
 from django.template import loader
 from django.template import RequestContext, Context
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext as _
 from satchmo.contact.models import Order, OrderItem, OrderStatus
 from satchmo.shop.models import Cart, CartItem, Config
 import datetime
@@ -41,7 +41,7 @@ def confirm_info(request, payment_module):
             tempCart.empty()
             #Update status
             status = OrderStatus()
-            status.status = "Pending"
+            status.status = _("Pending")
             status.notes = _("Order successfully submitted")
             status.timeStamp = datetime.datetime.now()
             status.order = orderToProcess #For some reason auto_now_add wasn't working right in admin
