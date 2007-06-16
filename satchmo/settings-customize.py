@@ -99,6 +99,7 @@ INSTALLED_APPS = (
     'satchmo.thumbnail',
     'satchmo.i18n',
     'satchmo.tax',
+    #'satchmo.newsletter',
 )
 
 AUTHENTICATION_BACKENDS = (

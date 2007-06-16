@@ -31,7 +31,8 @@ Create Account
     <tr><td><label for="id_password2">Confirm password:</label></td><td> {{ form.password2 }}</td></tr>
     <tr><td></td><td>{% if form.password2.errors %}*** {{ form.password2.errors|join:", " }}{% endif %}</td></tr>
 
-
+	<tr><td><label for="id_newsletter">Newsletter:</label></td><td> {{ form.newsletter }}</td></tr>
+	<tr><td></td><td>{% if form.newsletter.errors %}*** {{ form.newsletter.errors|join:", " }}{% endif %}</td></tr>
 
 <tr><td></td><td><input type="submit" value="Create Account"/></td></tr>
 </form>

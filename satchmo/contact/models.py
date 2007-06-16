@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from satchmo.product.models import SubItem
+from satchmo.newsletter import SubscriptionManager
 from satchmo.shop.templatetags.currency_filter import moneyfmt
 import datetime
 import sys
@@ -81,6 +82,7 @@ class Contact(models.Model):
     email = models.EmailField(_("Email"), blank=True)
     notes = models.TextField(_("Notes"),maxlength=500, blank=True)
     create_date = models.DateField(_("Creation Date"))
+    newsletter = models.BooleanField(_("Newsletter"), null=True, default=False);
     
     def _get_full_name(self):
         "Returns the person's full name."
@@ -116,6 +118,7 @@ class Contact(models.Model):
         if not self.id:
             self.create_date = datetime.date.today()
         super(Contact, self).save()
+        SubscriptionManager().update_contact(self)
 
     class Admin:
         list_display = ('last_name','first_name','organization','role')

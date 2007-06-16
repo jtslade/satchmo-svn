@@ -14,6 +14,11 @@ from satchmo.shop.models import Config
 from satchmo.shop.utils.unique_id import generate_id
 from satchmo.shop.views.utils import bad_or_missing
 
+YESNO = (
+    (1,_('Yes')), 
+    (0,_('No'))
+)
+
 class AccountForm(forms.Form):
     """The basic account form."""
     # user_name = forms.CharField(label=_('User Name'), max_length=30, required=True)
@@ -22,7 +27,7 @@ class AccountForm(forms.Form):
     password = forms.CharField(label=_('Password'), max_length=30, widget=forms.PasswordInput(), required=True)
     first_name = forms.CharField(label=_('First Name'), max_length=30, required=True)
     last_name = forms.CharField(label=_('Last Name'), max_length=30, required=True)
-
+    newsletter = forms.ChoiceField(label=_('Newsletter'), widget=forms.RadioSelect(), choices=YESNO)
     
     def clean_password(self):
         """Enforce that password and password2 are the same."""
@@ -61,11 +66,12 @@ class AccountForm(forms.Form):
             email = data['email']
             first_name = data['first_name']
             last_name = data['last_name']
+            newsletter = data['newsletter']
             u = User.objects.create_user(user_name, email, password)
             u.first_name = first_name
             u.last_name = last_name
             u.save()
-            contact = Contact(first_name=first_name, last_name=last_name, email=email, role="Customer", user=u)
+            contact = Contact(first_name=first_name, last_name=last_name, email=email, role="Customer", user=u, newsletter=newsletter)
             contact.save()
             t = loader.get_template('email/welcome.txt')
             c = Context({

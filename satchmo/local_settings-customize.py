@@ -100,6 +100,12 @@ SHOP_URLS = patterns('satchmo.shop.views',
 #    (r'^checkout/confirm/$', 'paypal.checkout_step3.confirm_info', {'SSL': False}, 'satchmo_checkout-step3'),
 )
 
+#### Newsletter Settings
+# This is optional.  Make sure to add satchmo.newsletter to your INSTALLED_APPS if you want to use it.
+#NEWSLETTER_MODULE = 'satchmo.newsletter.mailman'
+# required for mailman module
+#NEWSLETTER_NAME = 'ooh-ga-boo-ga'
+
 #Configure logging
 LOGDIR = "/path/to/log"
 LOGFILE = "satchmo.log"
