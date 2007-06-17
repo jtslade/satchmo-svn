@@ -52,7 +52,8 @@ class ShopTest(TestCase):
                                     'first_name': 'Paul',
                                     'last_name' : 'Test',
                                     'password' : 'pass1',
-                                    'password2' : 'pass1'})
+                                    'password2' : 'pass1',
+                                    'newsletter': '0'})
         self.assertRedirects(response, prefix+'/account/thankyou/', status_code=302, target_status_code=200)
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, 'Welcome to My Site')
