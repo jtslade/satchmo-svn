@@ -90,13 +90,14 @@ def get_price(request, slug):
 
 
 def do_search(request):
-    keywords = request.POST['keywords'].split(' ')
+    keywords = request.POST.get('keywords', '').split(' ')
+    keywords = filter(None, keywords)
+    if not keywords:
+        return render_to_response('search.html', RequestContext(request))
+
     categories = Category.objects
     items = Item.objects.filter(active=True)
     for keyword in keywords:
-        if not keyword:
-            continue
-
         categories = categories.filter(Q(name__icontains=keyword) | Q(meta__icontains=keyword) | Q(description__icontains=keyword))
         items = items.filter(Q(verbose_name__icontains=keyword) | Q(description__icontains=keyword) | Q(meta__icontains=keyword))
     list = []
