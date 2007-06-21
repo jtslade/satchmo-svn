@@ -13,7 +13,7 @@ dependencies mentioned in the requirements section.
 adding Satchmo to the path:
 	
 	- Add satchmo to the PYTHONPATH variable
-	- Create a .pth file in your site-packages directory. pth support_.
+	- Create a .pth file in your site-packages directory. pth_.
 	- Install Satchmo in the site-packages directory
 
 Either way, once it's done, you should be able to do this successfully::
@@ -84,4 +84,4 @@ If Satchmo is part of another Django app (follow step 5):
     The above urls will be dependent on your Django setup.  If you're running the webserver on the
     same machine you're developing on, the above urls should work.  If not, use the appropriate url.
 
-.. _pth support: http://bob.pythonmac.org/archives/2005/02/06/using-pth-files-for-python-development/
+.. _pth: http://bob.pythonmac.org/archives/2005/02/06/using-pth-files-for-python-development/
