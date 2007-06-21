@@ -9,28 +9,48 @@ dependencies mentioned in the requirements section.
 
         svn co svn://satchmoproject.com/satchmo/trunk/
         
-The next two steps depend on whether or not Satchmo is a standalone project or just an app that
-is part of another Django project.
+2. Ensure that satchmo is on your pythonpath.  There are several options for
+adding Satchmo to the path:
+	
+	- Add satchmo to the PYTHONPATH variable
+	- Create a .pth file in your site-packages directory. pth support_.
+	- Install Satchmo in the site-packages directory
 
-If Satchmo is a standalone app (follow steps 2 and 3):
+Either way, once it's done, you should be able to do this successfully::
 
-2.  Modify Satchmo's default settings-customize.py file::
+	$ python
+	Python 2.4.2 (#1, Feb  9 2006, 05:29:30)
+	[GCC 3.4.4 (Gentoo 3.4.4-r1, ssp-3.4.4-1.0, pie-8.7.8)] on linux2
+	Type "help", "copyright", "credits" or "license" for more information.
+	>>> import django
+	>>> import satchmo
+	>>>
+
+Do not attempt to progress any further on the install until the above imports
+work.
+
+The next two steps depend on whether or not Satchmo is a standalone project or
+just an app that is part of another Django project.
+
+If Satchmo is a standalone app (follow steps 3 and 4):
+
+3.  Modify Satchmo's default settings-customize.py file::
 
         cp settings-customize.py settings.py
     
-3.  Modify settings.py to reflect your setup.
+4.  Modify settings.py to reflect your setup.
 
-If Satchmo is part of another Django app (follow step 4):
+If Satchmo is part of another Django app (follow step 5):
 
-4. Modify you project settings.py file so that it has the following line at the end::
+5. Modify you project settings.py file so that it has the following line at the end::
 
         from local_settings import *
     
-5.  Create your customized local_settings.py file::
+6.  Create your customized local_settings.py file::
     
         cp local_settings-customize.py local_settings.py
 
-6.  Edit this local_settings.py file for your setup. The following values need to be changed::
+7.  Edit this local_settings.py file for your setup. The following values need to be changed::
 
         DATABASE_NAME = 'Your DB Name Here'
         DATABASE_PASSWORD = 'Your DB Password Here'
@@ -42,24 +62,26 @@ If Satchmo is part of another Django app (follow step 4):
 .. warning::
     The next step can erase data in the satchmo database. Be sure to have a backup of any critical data
 
-7.  Load the sample data::
+8.  Load the sample data::
 
         python load_data.py
     
-8.  When prompted, enter Yes to all the questions.  This script will also install the i18n data.
+9.  When prompted, enter Yes to all the questions.  This script will also install the i18n data.
 
-9.  Start up the sample webserver to see your store::
+10.  Start up the sample webserver to see your store::
 
         python manage.py runserver
         
-10.  In order to see your sample store, point your browser to::
+11.  In order to see your sample store, point your browser to::
     
         http://localhost/shop to see your store
 
-11.  If you want to see the admin interface, point your browser to::
+12.  If you want to see the admin interface, point your browser to::
 
         http://localhost/admin
 
 .. note::
     The above urls will be dependent on your Django setup.  If you're running the webserver on the
     same machine you're developing on, the above urls should work.  If not, use the appropriate url.
+
+.. _pth support: http://bob.pythonmac.org/archives/2005/02/06/using-pth-files-for-python-development/
