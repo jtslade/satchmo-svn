@@ -49,7 +49,7 @@ def delete_db(settings):
                     'create database %s']: 
             s.query(cmd % settings.DATABASE_NAME)
             
-    elif engine == 'postgresql':
+    elif engine in ('postgresql', 'postgresql_psycopg2'):
 
         if settings.DATABASE_NAME == '':
             raise AssertionError, "You must specified a value for DATABASE_NAME in local_settings.py."
