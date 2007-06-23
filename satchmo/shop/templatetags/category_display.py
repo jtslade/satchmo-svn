@@ -18,16 +18,11 @@ def recurse_for_children(current_node, parent_node, show_empty=True):
         children = current_node.child.all()
         for child in children:
             recurse_for_children(child, new_parent)
-    elif current_node.item_set.count() > 0:
+    elif show_empty or current_node.item_set.count() > 0:
         temp_parent = SubElement(parent_node,"li")
         attrs = { 'href' : current_node.get_absolute_url() }
         link = SubElement(temp_parent, "a", attrs)
         link.text = unicode(current_node.name,'utf-8') 
-    elif current_node.item_set.count() == 0 and show_empty:
-        temp_parent = SubElement(parent_node,"li")
-        attrs = { 'href' : current_node.get_absolute_url() }
-        link = SubElement(temp_parent, "a", attrs)
-        link.text = unicode(current_node.name,'utf-8')
 
 def category_tree():
     """
@@ -52,3 +47,4 @@ def category_tree():
     return tostring(root, 'utf-8')
 
 register.simple_tag(category_tree)
+
