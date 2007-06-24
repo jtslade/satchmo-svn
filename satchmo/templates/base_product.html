@@ -44,7 +44,7 @@ $(document).ready( function(){ getPrice();});
 <p>{{ item.description }}</p>
 Price: <h3 id="price">{{item.price}}</h3>
 {% for pic in item.itemimage_set.all %}
-    <img src="{{media_url}}{{ pic.get_picture_url|thumbnail:"width=280" }}" width="280" />
+    <img src="{{ pic.get_picture_url|thumbnail:"width=280" }}" width="280" />
 {% endfor %}
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}

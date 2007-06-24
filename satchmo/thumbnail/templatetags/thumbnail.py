@@ -66,11 +66,16 @@ or if only a width is requested (to be compatibile with admin interface)::
     if ('width' not in kwargs) and ('height' not in kwargs):
         raise template.TemplateSyntaxError, "thumbnail filter requires arguments (width and/or height)"
     
-    ret = make_thumbnail(url, **kwargs)
-    if ret is None:
-        return url
-    else:
+        ret = make_thumbnail(url, **kwargs)
+        settings.LOG.debug('[thumbnail] url: %s for %s', ret, url);
+        if ret is None:
+            ret = url
+
+        if not ret.startswith(settings.MEDIA_URL):
+            ret = settings.MEDIA_URL + ret
+
         return ret
+   
 #
 register.filter('thumbnail', thumbnail)
 
