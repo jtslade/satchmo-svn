@@ -9,20 +9,19 @@ except ImportError:
 register = Library()
 
 def recurse_for_children(current_node, parent_node, show_empty=True):
-    if current_node.child.count() > 0:
-        temp_parent = SubElement(parent_node,"li")
-        attrs = { 'href' : current_node.get_absolute_url() }
-        link = SubElement(temp_parent, "a", attrs)
-        link.text = unicode(current_node.name,'utf-8')
-        new_parent = SubElement(temp_parent,"ul")
-        children = current_node.child.all()
-        for child in children:
-            recurse_for_children(child, new_parent)
-    elif show_empty or current_node.item_set.count() > 0:
-        temp_parent = SubElement(parent_node,"li")
-        attrs = { 'href' : current_node.get_absolute_url() }
-        link = SubElement(temp_parent, "a", attrs)
-        link.text = unicode(current_node.name,'utf-8') 
+    child_count = current_node.child.count()
+
+    if show_empty or child_count > 0 or current_node.item_set.count() > 0:
+        temp_parent = SubElement(parent_node, 'li')
+        attrs = {'href': current_node.get_absolute_url()}
+        link = SubElement(temp_parent, 'a', attrs)
+        link.text = unicode(current_node.name, 'utf-8')
+
+        if child_count > 0:
+            new_parent = SubElement(temp_parent, 'ul')
+            children = current_node.child.all()
+            for child in children:
+                recurse_for_children(child, new_parent)
 
 def category_tree():
     """
