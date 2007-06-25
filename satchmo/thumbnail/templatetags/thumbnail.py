@@ -4,6 +4,7 @@
 ## DEPENDENCIES ##
 
 from django import template
+from django.conf import settings
 from django.template import TemplateSyntaxError
 from satchmo.thumbnail.utils import make_thumbnail, get_image_size
 register = template.Library()
@@ -66,15 +67,14 @@ or if only a width is requested (to be compatibile with admin interface)::
     if ('width' not in kwargs) and ('height' not in kwargs):
         raise template.TemplateSyntaxError, "thumbnail filter requires arguments (width and/or height)"
     
-        ret = make_thumbnail(url, **kwargs)
-        settings.LOG.debug('[thumbnail] url: %s for %s', ret, url);
-        if ret is None:
-            ret = url
+    ret = make_thumbnail(url, **kwargs)
+    if ret is None:
+        ret = url
 
-        if not ret.startswith(settings.MEDIA_URL):
-            ret = settings.MEDIA_URL + ret
+    if not ret.startswith(settings.MEDIA_URL):
+        ret = settings.MEDIA_URL + ret
 
-        return ret
+    return ret
    
 #
 register.filter('thumbnail', thumbnail)
