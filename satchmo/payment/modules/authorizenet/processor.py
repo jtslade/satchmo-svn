@@ -59,12 +59,16 @@ class PaymentProcessor(object):
             return(False, reason_code, response_text)
         else:
             return(False, reason_code, response_text)
-  
-        
+
+
 if __name__ == "__main__":
     #####
-    # This is for testing - enabling you to run from the command line & make sure everything is ok
+    # This is for testing - enabling you to run from the command line and make
+    # sure everything is ok
     #####
+
+    import os
+    from satchmo.payment.paymentsettings import PaymentSettings
     
     # Set up some dummy classes to mimic classes being passed through Satchmo
     class testContact(object):
@@ -75,7 +79,7 @@ if __name__ == "__main__":
         def __init__(self):
             self.contact = testContact()
             self.CC = testCC()
-    import os
+    
     if not os.environ.has_key("DJANGO_SETTINGS_MODULE"):
         os.environ["DJANGO_SETTINGS_MODULE"]="satchmo.settings"
         
@@ -101,4 +105,4 @@ if __name__ == "__main__":
     processor.prepareData(sampleOrder)
     results, reason_code, msg = processor.process()
     print results,"::", msg
-        
+
