@@ -12,7 +12,8 @@ sys.path.insert(0, "django-src-here")
 sys.path.insert(0, "satchmo-src-here")
 
 if not os.environ.has_key("DJANGO_SETTINGS_MODULE"):
-    os.environ["DJANGO_SETTINGS_MODULE"]="satchmo.settings"
+    from settings import DJANGO_SETTINGS_MODULE
+    os.environ["DJANGO_SETTINGS_MODUlE"]=DJANGO_SETTINGS_MODULE
 
 import django.core.management, django.core
 from django.conf import settings
