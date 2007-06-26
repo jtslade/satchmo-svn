@@ -302,7 +302,7 @@ if __name__ == '__main__':
     if response == 'yes':
         eraseDB()
     if responseWebda =='yes':
-        import webda
+        from satchmo import webda
         webda.main()
     response = string.lower(raw_input("Type 'yes' to load sample store data: "))
     if response == 'yes':
