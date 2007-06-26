@@ -18,7 +18,7 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'mysql'           # 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
+DATABASE_ENGINE = 'mysql'           # 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 # The following variables should be configured in your local_settings.py file
 #DATABASE_NAME = ''             # Or path to database file if using sqlite3.
 #DATABASE_USER = ''             # Not used with sqlite3.
