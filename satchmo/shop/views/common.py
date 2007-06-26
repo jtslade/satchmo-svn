@@ -24,7 +24,7 @@ class ContactInfoForm(forms.Form):
     ship_street2 = forms.CharField(max_length=30, required=False)
     ship_city = forms.CharField(max_length=30, required=False)
     ship_state = forms.ChoiceField(initial=selection, required=False)
-    ship_postalCode = forms.CharField(max_length=5, required=False)
+    ship_postalCode = forms.CharField(max_length=10, required=False)
     
     def __init__(self, countries, areas, *args, **kwargs):
         super(ContactInfoForm, self).__init__(*args, **kwargs)
