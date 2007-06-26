@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.core import urlresolvers
 from django.contrib.sitemaps import Sitemap
 from satchmo.product.models import Category, Item
 
@@ -36,18 +38,21 @@ class MainSitemap(Sitemap):
     def changefreq(self, obj):
         return obj['changefreq']
 
-main_urls = (
-    ('/', 1.0, 'hourly'),
-    ('/contact/', 1.0, 'monthly'),
-    ('/cart/', 0.5, 'monthly'),
-    ('/account/login/', 0.8, 'monthly'),
-    ('/account/create/', 0.8, 'monthly'),
-    ('/account/password_reset/', 0.8, 'monthly'),
-)
-
-satchmo_main = MainSitemap()
-for url in main_urls:
-    satchmo_main.add_url(*url)
+def satchmo_main():
+    base = settings.SHOP_BASE
+    rv = urlresolvers.reverse
+    urls = (
+        (base + '/', 1.0, 'hourly'),
+        (rv('satchmo_contact'), 1.0, 'monthly'),
+        (rv('satchmo_cart'), 0.5, 'monthly'),
+        (rv('satchmo_login'), 0.8, 'monthly'),
+        (rv('satchmo_account_create'), 0.8, 'monthly'),
+        (rv('satchmo_password_reset'), 0.8, 'monthly'),
+    )
+    sitemap = MainSitemap()
+    for url in urls:
+        sitemap.add_url(*url)
+    return sitemap
 
 sitemaps = {
     'satchmo_main': satchmo_main,
