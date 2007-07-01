@@ -5,8 +5,8 @@ from django.template import loader
 from django import http
 from django.shortcuts import render_to_response
 from django.core.mail import send_mail
-from satchmo.shop.models import Config
 from django.conf import settings
+from satchmo.shop.models import Config
 
 #Choices displayed to the user to categorize the type of contact request
 email_choices = (
@@ -44,7 +44,6 @@ def form(request):
             initialData['sender'] = request.user.email
             initialData['name'] = request.user.first_name + " " + request.user.last_name
         form = ContactForm(initial=initialData)
-        
 
     return render_to_response('contact_form.html', {'form': form},
                                 RequestContext(request))

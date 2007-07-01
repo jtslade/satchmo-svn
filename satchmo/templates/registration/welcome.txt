@@ -1,0 +1,9 @@
+Dear {{ first_name }} {{ last_name }},
+
+Thank you for signing up with {{ company_name }}.
+
+Your new username is this email address, and you can login at http://{{ site_url }}{% url auth_login %}
+
+Regards,
+
+Store Management

@@ -45,20 +45,20 @@ class ShopTest(TestCase):
         """
         Validate account creation process
         """
-        response = self.client.get(prefix+'/account/create/')
+        response = self.client.get('/accounts/register/')
         self.assertContains(response, "Please Enter Your Account Information", 
                             count=1, status_code=200)
-        response = self.client.post(prefix+'/account/create/', {'email': 'someone@test.com',
+        response = self.client.post('/accounts/register/', {'email': 'someone@test.com',
                                     'first_name': 'Paul',
                                     'last_name' : 'Test',
                                     'password' : 'pass1',
                                     'password2' : 'pass1',
                                     'newsletter': '0'})
-        self.assertRedirects(response, prefix+'/account/thankyou/', status_code=302, target_status_code=200)
+        self.assertRedirects(response, '/accounts/register/complete/', status_code=302, target_status_code=200)
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, 'Welcome to My Site')
         
-        response = self.client.get(prefix+'/account/info/')
+        response = self.client.get('/accounts/info/')
         self.assertContains(response, "Welcome, Paul Test.", count=1, status_code=200)
 
     def test_cart_adding(self):

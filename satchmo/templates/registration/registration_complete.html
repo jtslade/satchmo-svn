@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+
+{% block navbar %}
+<a href="{{shop_base}}/">Home</a> ::
+Account Creation
+{% endblock %}
+
+{% block content %}
+<h3>Account Creation</h3>
+<p>Thank you for signing up.
+{% if verify %}
+An activation link has been sent to the email address you supplied,
+along with instructions for activating your account.
+{% endif %}
+</p>
+
+{% endblock %}

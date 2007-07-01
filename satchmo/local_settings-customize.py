@@ -74,6 +74,10 @@ GOOGLE_ANALYTICS_CODE = "UA-xxxx-x"
 #EMAIL_HOST_PASSWORD = 'your password'
 #EMAIL_USE_TLS = True
 
+# Used by registration application.
+# Read docs/email-verification.txt before enabling.
+REQUIRE_EMAIL_VERIFICATION = False
+ACCOUNT_ACTIVATION_DAYS = 7 # Days until activation code expires.
 
 #### Satchmo unique variables ####
 #This is the base url for the shop.  Only include a leading slash

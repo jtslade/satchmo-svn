@@ -4,7 +4,7 @@ Analytics
 
 One very important capability that's needed in order to run any kind
 of eCommerce solution effectively is quality analytic capabilities.  Satchmo
-does not have a set of it's own analytical capabilities, but it does have
+does not have a set of its own analytical capabilities, but it does have
 support for using `Google Analytics`_.
 
 In order to use Google analytics, you must have an analytics id, which you can get
@@ -31,4 +31,4 @@ directory.  If you would like to host the google analytics javascript file on yo
 own server (make sure you know what this means for keeping it updated), you can
 just modify these templates.
 
-.. _Google Analytics: http://www.google.com/analytics
+.. _Google Analytics: http://www.google.com/analytics/

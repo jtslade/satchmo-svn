@@ -87,6 +87,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sitemaps',
     'django.contrib.sites',
+    #'registration',
     'satchmo.shop',
     'satchmo.contact',
     'satchmo.product',
@@ -101,7 +102,7 @@ INSTALLED_APPS = (
 )
 
 AUTHENTICATION_BACKENDS = (
-    'satchmo.shop.email-auth.EmailBackend',
+    'satchmo.accounts.email-auth.EmailBackend'
 )
 
 
