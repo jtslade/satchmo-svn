@@ -11,7 +11,7 @@ folder is on your pythonpath.
 
     - Set REQUIRE_EMAIL_VERIFICATION to True.
     - Set ACCOUNT_ACTIVATION_DAYS to an integer value. This setting determines
-    how long it takes for an activation code to expire.
+      how long it takes for an activation code to expire.
 
 3. Edit settings.py:
 
