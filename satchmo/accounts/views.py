@@ -77,7 +77,7 @@ def register(request):
             newsletter = data['newsletter']
             username = generate_id(first_name, last_name)
 
-            verify = getattr(settings, 'REQUIRE_EMAIL_VERIFICATION')
+            verify = getattr(settings, 'REQUIRE_EMAIL_VERIFICATION', False)
             if verify:
                 from registration.models import RegistrationProfile
                 user = RegistrationProfile.objects.create_inactive_user(
