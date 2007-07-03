@@ -18,7 +18,7 @@ class ContactInfoForm(forms.Form):
     city = forms.CharField(max_length=30)
     state = forms.ChoiceField(initial=selection)
     country = forms.ChoiceField()
-    postalCode = forms.CharField(max_length=5)
+    postalCode = forms.CharField(max_length=10)
     copy_address = forms.BooleanField(required=False)
     ship_street1 = forms.CharField(max_length=30, required=False)
     ship_street2 = forms.CharField(max_length=30, required=False)
