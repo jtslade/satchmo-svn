@@ -26,16 +26,16 @@ if settings.LOCAL_DEV:
         {'document_root':  settings.MEDIA_ROOT}),
     )
 
-# Remove any URLs whose names have been used already.
-names = []
-q = [urlpatterns]
-while q:
-    urls = q.pop()
-    for pattern in urls[:]:
+def remove_duplicate_urls(urls, names):
+    """Remove any URLs whose names are already in use."""
+    for pattern in urls:
         if hasattr(pattern, 'url_patterns'):
-            q.append(pattern.url_patterns)
+            remove_duplicate_urls(pattern.url_patterns, names)
         elif hasattr(pattern, 'name') and pattern.name:
             if pattern.name in names:
                 urls.remove(pattern)
             else:
                 names.append(pattern.name)
+
+remove_duplicate_urls(urlpatterns, [])
+
