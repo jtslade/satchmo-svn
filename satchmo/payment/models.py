@@ -44,7 +44,7 @@ class CreditCardDetail(models.Model):
     creditType = models.CharField(_("Credit Card Type"), maxlength=16,
         choices=CREDITCHOICES)
     displayCC = models.CharField(_("CC Number(Last 4 digits)"), maxlength=4, core=True)
-    encryptedCC = models.CharField(_("Encrypted Credit Card"), maxlength=30, blank=True, 
+    encryptedCC = models.CharField(_("Encrypted Credit Card"), maxlength=40, blank=True, 
         null=True, editable=False)
     expireMonth = models.IntegerField(_("Expiration Month"))
     expireYear = models.IntegerField(_("Expiration Year"))
@@ -56,13 +56,19 @@ class CreditCardDetail(models.Model):
         # Must remember to save it after calling!
         secret_key = settings.SECRET_KEY
         encryption_object = Blowfish.new(secret_key)
-        self.encryptedCC = base64.b64encode(encryption_object.encrypt(ccnum))
+        # block cipher length must be a multiple of 8
+        padding = ''
+        if (len(ccnum) % 8) <> 0:
+            padding = 'X' * (8 - (len(ccnum) % 8))
+        self.encryptedCC = base64.b64encode(encryption_object.encrypt(ccnum + padding))
         self.displayCC = ccnum[-4:]
     
     def _decryptCC(self):
         secret_key = settings.SECRET_KEY
         encryption_object = Blowfish.new(secret_key)
-        return(encryption_object.decrypt(base64.b64decode(self.encryptedCC)))
+        # strip padding from decrypted credit card number
+        ccnum = encryption_object.decrypt(base64.b64decode(self.encryptedCC)).rstrip('X')
+        return (ccnum)
     decryptedCC = property(_decryptCC) 
 
     def _expireDate(self):
