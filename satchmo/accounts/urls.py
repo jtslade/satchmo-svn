@@ -14,7 +14,7 @@ from django.conf.urls.defaults import *
 # [a-fA-F0-9]+ because a bad activation key should still get to the view;
 # that way it can return a sensible "invalid key" message instead of a
 # confusing 404.
-urlpatterns = patterns('accounts.views',
+urlpatterns = patterns('satchmo.accounts.views',
     (r'^activate/(?P<activation_key>\w+)/$', 'activate', {}, 'registration_activate'),
     (r'^logout/$', 'shop_logout', {}, 'auth_logout'),
     (r'^register/$', 'register', {}, 'registration_register'),
