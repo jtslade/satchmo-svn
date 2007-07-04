@@ -40,9 +40,13 @@ def settings(request):
             shop_name = "Test Store (No Site id)"
     else:
         shop_name = "Test Store"
-    if request.session.get('cart',False):
-        tempCart = Cart.objects.get(id=request.session['cart'])
-        cart = tempCart
+    if request.session.get('cart'):
+        try:
+            tempCart = Cart.objects.get(id=request.session['cart'])
+            cart = tempCart
+        except Cart.DoesNotExist:
+            del request.session['cart']
+            cart = NullCart()
     else:
         cart = NullCart()
     all_categories = Category.objects.all()
