@@ -3,7 +3,7 @@ from django import http
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.db.models import Q
-from django.utils.translation import gettext as _
+from django.utils.translation import ugettext as _
 from satchmo.shop.templatetags.currency_filter import moneyfmt
 from satchmo.product.models import Item, SubItem, Category
 from satchmo.shop.views.utils import bad_or_missing

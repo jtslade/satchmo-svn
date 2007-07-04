@@ -8,7 +8,7 @@ from django.core import urlresolvers
 from django.shortcuts import render_to_response
 from django.template import loader
 from django.template import RequestContext, Context
-from django.utils.translation import gettext as _
+from django.utils.translation import ugettext as _
 from satchmo.contact.models import Order, OrderItem, OrderStatus
 from satchmo.shop.models import Cart, CartItem, Config
 import datetime

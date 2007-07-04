@@ -8,7 +8,7 @@ NEWSLETTER_NAME='your-mailman-listname'
 
 from django.conf import settings
 from Mailman import MailList, Errors
-from models import *
+from satchmo.newsletter.models import Subscription
 import sys
 
 class UserDesc: pass

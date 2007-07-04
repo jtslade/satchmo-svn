@@ -34,13 +34,13 @@ r"""
 >>> contact1.shipping_address
 <AddressBook: Jim Tester - Home Address>
 >>> contact1.shipping_address.street1
-'56 Cool Lane'
+u'56 Cool Lane'
 >>> contact1.shipping_address.street2
-''
+u''
 >>> contact1.billing_address.street1
-'56 Cool Lane'
+u'56 Cool Lane'
 >>> contact1.billing_address.street2
-''
+u''
 
 #Add a new shipping address
 >>> add2 = AddressBook(description="Work Address", street1="56 Industry Way", city="Niftytown", 

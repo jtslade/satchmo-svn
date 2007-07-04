@@ -4,7 +4,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.cache import never_cache
 from satchmo.contact.models import Order
 from satchmo.contact.models import ORDER_STATUS
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
 
 def home(request):
     title = _("Site Administration")

@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.models import User 
 from django.db import models
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
 import datetime
 import sys
 
@@ -17,12 +17,12 @@ class Subscription(models.Model):
         super(Subscription, self).__init__(*args, **kwargs)
         self._newstate = self.subscribed
     
-    def __str__(self):
+    def __unicode__(self):
         if self.subscribed:
             flag="Y"
         else:
             flag="N"
-        return "[%s] %s" % (flag, self.email)
+        return u"[%s] %s" % (flag, self.email)
     
     def __repr__(self):
         return "<Subscription: %s>" % str(self)

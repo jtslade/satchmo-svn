@@ -11,7 +11,7 @@ from decimal import Decimal
 from django.conf import settings
 from django.core import validators
 from django.db import models
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
 from satchmo.tax.models import TaxClass
 from satchmo.thumbnail.field import ImageWithThumbnailField
 
@@ -85,7 +85,7 @@ class Category(models.Model):
         url_list.append(self.get_absolute_url())
         return zip(p_list, url_list)
     
-    def __str__(self):
+    def __unicode__(self):
         p_list = self._recurse_for_parents_name(self)
         p_list.append(self.name)
         return self.get_separator().join(p_list)
@@ -137,9 +137,9 @@ class OptionGroup(models.Model):
     description = models.CharField(_("Detailed Description"),maxlength = 100, blank=True, help_text=_('Further description of this group i.e. shirt size vs shoe size'),)
     sort_order = models.IntegerField(_("Sort Order"), help_text=_("The order they will be displayed on the screen"))
     
-    def __str__(self):
+    def __unicode__(self):
         if self.description:
-            return ("%s - %s" % (self.name, self.description))
+            return u"%s - %s" % (self.name, self.description)
         else:
             return self.name
     
@@ -150,7 +150,7 @@ class OptionGroup(models.Model):
         ordering = ['sort_order']
         verbose_name = _("Option Group")
         verbose_name_plural = _("Option Groups")
-        
+
 class Item(models.Model):
     """
     The basic product being sold in the store.  This is what the customer sees.
@@ -175,7 +175,7 @@ class Item(models.Model):
     taxable = models.BooleanField(default=False)
     taxClass = models.ForeignKey(TaxClass, blank=True, null=True, help_text=_("If it is taxable, what kind of tax?"))    
     
-    def __str__(self):
+    def __unicode__(self):
         return self.short_name 
     
     def _get_price(self):
@@ -275,7 +275,7 @@ class Item(models.Model):
     class Meta:
         verbose_name = _("Master Product")
         verbose_name_plural = _("Master Products")
-        
+
 class ItemImage(models.Model):
     """
     A picture of an item.  Can have many pictures associated with an item.
@@ -286,14 +286,14 @@ class ItemImage(models.Model):
     caption = models.CharField(_("Optional caption"),maxlength=100,null=True, blank=True)
     sort = models.IntegerField(_("Sort Order"), help_text=_("Leave blank to delete"), core=True)
     
-    def __str__(self):
-        return "Picture of %s" % self.item.short_name
+    def __unicode__(self):
+        return u"Picture of %s" % self.item.short_name
         
     class Meta:
         ordering = ['sort']
         verbose_name = _("Product Image")
         verbose_name_plural = _("Product Images")
-        
+
 class OptionItem(models.Model):
     """
     These are the actual items in an OptionGroup.  If the OptionGroup is Size, then an OptionItem
@@ -315,14 +315,14 @@ class OptionItem(models.Model):
         return self.price_change
     get_price_change = property(_get_price_change)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
         
     class Meta:
         ordering = ['displayOrder']
         verbose_name = _("Option Item")
         verbose_name_plural = _("Option Items")
-        
+
 class SubItem(models.Model):
     """
     The unique inventoriable item.  For instance, if a shirt has a size and color, then
@@ -412,7 +412,6 @@ class SubItem(models.Model):
             else:
                 groupList.append(option.optionGroup.id)
         return(False)
-            
     
     def in_stock(self):
         if self.items_in_stock > 0:
@@ -420,7 +419,7 @@ class SubItem(models.Model):
         else:
             return False;
 
-    def __str__(self):
+    def __unicode__(self):
         return self.full_name
     
     def isValidOption(self, field_data, all_data):
@@ -435,7 +434,8 @@ class SubItem(models.Model):
     #        super(Sub_Item, self).save()
     
     def get_absolute_url(self):
-        return "%s/product/%s/%s/" % (settings.SHOP_BASE,self.item.short_name,self.id)
+        return u'%s/product/%s/%s/' % (settings.SHOP_BASE,
+            self.item.short_name, self.id)
 
     class Admin:
         list_display = ('full_name', 'unit_price', 'items_in_stock')
@@ -463,8 +463,8 @@ class Price(models.Model):
     quantity = models.IntegerField(_("Discount Quantity"), default=1, help_text=_("Use this price only for this quantity or higher"))
     expires = models.DateField(null=True, blank=True)
 
-    def __str__(self):
-        return str(self.price)
+    def __unicode__(self):
+        return unicode(self.price)
 
     def save(self):
         #make sure that the combination of quantity/expires is unique for a given subitem.
@@ -486,3 +486,4 @@ class Price(models.Model):
 
     class Admin:
         pass
+

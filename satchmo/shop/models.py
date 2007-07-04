@@ -3,14 +3,15 @@ Configuration items for the shop.
 Also contains shopping cart and related classes.
 """
 
+import datetime
 from decimal import Decimal
 from django.contrib.sites.models import Site
+from django.conf import settings
 from django.db import models
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
 from satchmo.contact.models import Contact
 from satchmo.i18n.models import Country
 from satchmo.product.models import Item, SubItem
-import datetime
 
 class Config(models.Model):
     """
@@ -30,7 +31,7 @@ class Config(models.Model):
     phone = models.CharField(_("Phone Number"), blank=True, null=True, maxlength=12)
     noStockCheckout = models.BooleanField(_("Purchase item not in stock?"))
     
-    def __str__(self):
+    def __unicode__(self):
         return self.storeName
         
     class Admin:
@@ -64,8 +65,8 @@ class Cart(models.Model):
         return(total)
     total = property(_get_total)
     
-    def __str__(self):
-        return ("Shopping Cart (%s)" % self.date_time_created)
+    def __unicode__(self):
+        return u"Shopping Cart (%s)" % self.date_time_created
     
     def add_item(self, chosen_item, number_added):
         try:
@@ -116,9 +117,10 @@ class CartItem(models.Model):
         return(self.subItem.full_name)
     description = property(_get_description)
     
-    def __str__(self):
-        return("%s - %s $%s" % (self.quantity, self.subItem.full_name, self.line_total))
+    def __unicode__(self):
+        return u'%s - %s %s%s' % (self.quantity, self.subItem.full_name,
+            settings.CURRENCY, self.line_total)
 
     class Admin:
         pass
-        
+

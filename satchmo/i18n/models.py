@@ -100,13 +100,14 @@ another name too.
         verbose_name = _('language')
         verbose_name_plural = _('languages')
         ordering = ['name']
+
     class Admin:
         list_display = ('name', 'iso3_code', 'iso2_code', 'synonym',
                         'display')
         list_filter = ('display',)
         search_fields = ('name', 'synonym', 'iso3_code', 'iso2_code')
 
-    def __str__(self):
+    def __unicode__(self):
         return self.iso3_code
 
 
@@ -133,6 +134,7 @@ iso2_code and iso3_code are ISO 3166-1 codes.
         verbose_name = _('country')
         verbose_name_plural = _('countries')
         ordering = ['name']
+
     class Admin:
         """
         fields = (
@@ -146,7 +148,7 @@ iso2_code and iso3_code are ISO 3166-1 codes.
         list_filter = ('region', 'territory_of', 'display')
         search_fields = ('name', 'iso3_code', 'iso2_code')
 
-    def __str__(self):
+    def __unicode__(self):
         return self.iso3_code
 
     def _get_name(self):
@@ -174,8 +176,8 @@ class CountryLanguage(models.Model):
         list_filter = ('lang_type',)
         search_fields = ('country', 'language')
 
-    def __str__(self):
-        return "%s - %s" % (self.country, self.language)
+    def __unicode__(self):
+        return u"%s - %s" % (self.country, self.language)
 
 
 class Area(models.Model):
@@ -205,9 +207,9 @@ or needed in some cases but omitted in others.
         list_display = ('country', 'name', 'alt_name', 'abbrev', 'reg_area')
         search_fields = ('name')
 
-    def __str__(self):
+    def __unicode__(self):
         if self.abbrev:
-            return "%s (%s)" % (self.abbrev, self.name)
+            return u'%s (%s)' % (self.abbrev, self.name)
         else:
             return self.name
 
@@ -228,7 +230,7 @@ class TimeZone(models.Model):
         list_display = ('country', 'tz', 'comment')
         search_fields = ('country')
 
-    def __str__(self):
+    def __unicode__(self):
         return self.tz
 
 
@@ -255,6 +257,6 @@ class Phone(models.Model):
                         'nat_prefix', 'int_prefix')
         search_fields = ('country', 'code')
 
-    def __str__(self):
-        if self.code:
-            return "%s" % self.code
+    def __unicode__(self):
+        return self.code or u''
+

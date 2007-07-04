@@ -2,7 +2,7 @@ from django import newforms as forms
 from django.conf import settings
 from django.template import Context
 from django.template import loader
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
 from satchmo.contact.models import Contact
 from satchmo.discount.models import Discount
 from satchmo.payment.paymentsettings import PaymentSettings

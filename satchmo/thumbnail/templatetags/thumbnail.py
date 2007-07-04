@@ -55,14 +55,12 @@ or if only a width is requested (to be compatibile with admin interface)::
             arg = arg.strip()
             if arg == '': continue
             kw, val = arg.split('=', 1)
-            kw = kw.lower()
+            kw = kw.lower().encode('ascii')
             try:
                 val = int(val) # convert all ints
             except ValueError:
                 raise template.TemplateSyntaxError, "thumbnail filter: argument %r is invalid integer (%r)" % (kw, val)
             kwargs[kw] = val
-        # for
-    #
     
     if ('width' not in kwargs) and ('height' not in kwargs):
         raise template.TemplateSyntaxError, "thumbnail filter requires arguments (width and/or height)"

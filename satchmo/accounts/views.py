@@ -10,7 +10,7 @@ from django.core.mail import send_mail
 from django.shortcuts import render_to_response
 from django.template import loader
 from django.template import RequestContext, Context
-from django.utils.translation import gettext_lazy as _, gettext
+from django.utils.translation import ugettext_lazy as _, ugettext
 from satchmo.contact.models import Contact
 from satchmo.shop.models import Config
 from satchmo.shop.utils.unique_id import generate_id
@@ -52,7 +52,7 @@ def send_welcome_email(email, first_name, last_name):
     t = loader.get_template('registration/welcome.txt')
     shop_config = Config.objects.get(site=settings.SITE_ID)
     shop_email = shop_config.storeEmail
-    subject = gettext("Welcome to %s") % (shop_config.storeName)
+    subject = ugettext("Welcome to %s") % shop_config.storeName
     c = Context({
         'first_name': first_name,
         'last_name': last_name,

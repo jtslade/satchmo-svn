@@ -2,15 +2,15 @@
 Stores Customer and Order information
 """
 
+import datetime
+import sys
 from django.conf import settings
 from django.contrib.auth.models import User 
 from django.db import models
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
 from satchmo.product.models import SubItem
 from satchmo.newsletter import SubscriptionManager
 from satchmo.shop.templatetags.currency_filter import moneyfmt
-import datetime
-import sys
 
 activeShippingModules = []
 
@@ -50,7 +50,7 @@ class Organization(models.Model):
     create_date = models.DateField(_("Creation Date"))
     notes = models.TextField(_("Notes"), maxlength=200, blank=True, null=True)
     
-    def __str__(self):
+    def __unicode__(self):
         return self.name
         
     def save(self):
@@ -110,8 +110,8 @@ class Contact(models.Model):
         return(None)
     primary_phone = property(_primary_phone)
     
-    def __str__(self):
-        return (self.full_name)
+    def __unicode__(self):
+        return self.full_name
         
     def save(self):
         """Ensure we have a create_date before saving the first time."""
@@ -152,8 +152,8 @@ class Interaction(models.Model):
     date_time = models.DateTimeField(_("Date and Time"), core=True)
     description = models.TextField(_("Description"), maxlength=200)
     
-    def __str__(self):
-        return ("%s - %s" % (self.contact.full_name, self.type))
+    def __unicode__(self):
+        return u'%s - %s' % (self.contact.full_name, self.type)
     
     class Admin:
         list_filter = ['type', 'date_time']
@@ -166,13 +166,13 @@ class PhoneNumber(models.Model):
     """
     Multiple phone numbers can be associated with a contact.  Cell, Home, Business etc.
     """
-    contact = models.ForeignKey(Contact,edit_inline=models.TABULAR, num_in_admin=1)
+    contact = models.ForeignKey(Contact, edit_inline=models.TABULAR, num_in_admin=1)
     type = models.CharField(_("Description"), choices=PHONE_CHOICES, maxlength=20)
     phone = models.CharField(_("Phone Number"), blank=True, maxlength=12, core=True)
     primary = models.BooleanField(_("Primary"), default=False)
     
-    def __str__(self):
-        return ("%s - %s" % (self.type, self.phone))
+    def __unicode__(self):
+        return u'%s - %s' % (self.type, self.phone)
     
     class Meta:
         unique_together = (("contact", "primary"),)
@@ -195,8 +195,8 @@ class AddressBook(models.Model):
     is_default_shipping=models.BooleanField(_("Default Shipping Address"), default=False)
     is_default_billing=models.BooleanField(_("Default Billing Address"), default=False)
 
-    def __str__(self):
-       return ("%s - %s" % (self.contact.full_name, self.description))
+    def __unicode__(self):
+       return u'%s - %s' % (self.contact.full_name, self.description)
          
     def save(self):
         """
@@ -282,7 +282,7 @@ class Order(models.Model):
     timeStamp = models.DateTimeField(_("Time Stamp"), blank=True, null=True)
     status = models.CharField(_("Status"), maxlength=20, choices=ORDER_STATUS, core=True, blank=True, help_text=_("This is automatically set"))
     
-    def __str__(self):
+    def __unicode__(self):
         return self.contact.full_name
     
     def copyAddresses(self):
@@ -385,7 +385,7 @@ class OrderItem(models.Model):
     unitPrice = models.DecimalField(_("Unit price"), max_digits=6,decimal_places=2)
     lineItemPrice = models.DecimalField(_("Line item price"), max_digits=6,decimal_places=2)
     
-    def __str__(self):
+    def __unicode__(self):
         return self.item.full_name
         
     def _get_category(self):
@@ -405,7 +405,7 @@ class OrderStatus(models.Model):
     notes = models.CharField(_("Notes"), maxlength=100, blank=True)
     timeStamp = models.DateTimeField(_("Time Stamp"))
     
-    def __str__(self):
+    def __unicode__(self):
         return self.status
 
     def save(self):
@@ -415,4 +415,5 @@ class OrderStatus(models.Model):
     
     class Meta:
         verbose_name = _("Order Status")
-        verbose_name_plural = _("Order statuses")        
+        verbose_name_plural = _("Order statuses")
+

@@ -1,8 +1,8 @@
-from django.utils.translation import gettext_lazy
+from django.utils.translation import ugettext_lazy as _
 from django.core.validators import ValidationError
 
 class MutuallyExclusiveWithField(object):
-    def __init__(self, other_field_name, error_message=gettext_lazy("Please enter one and only one of those fields.")):
+    def __init__(self, other_field_name, error_message=_("Please enter one and only one of those fields.")):
         self.other, self.error_message = other_field_name, error_message
         self.always_test = True
 

@@ -1,15 +1,15 @@
 """
 Stores details about the available payment options.
-Also stores credit card info in an ecrypted format.
+Also stores credit card info in an encrypted format.
 """
 
-from django.db import models
-from satchmo.contact.models import Order
 import base64
 from Crypto.Cipher import Blowfish
+from django.db import models
 from django.conf import settings
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
 from satchmo.payment.paymentsettings import PaymentSettings
+from satchmo.contact.models import Order
 
 CREDITCHOICES = PaymentSettings().all('CREDITCHOICES')
 PAYMENTCHOICES = PaymentSettings().as_selectpairs()
@@ -34,7 +34,7 @@ class PaymentOption(models.Model):
     class Meta:
         verbose_name = "Payment Option"
         verbose_name_plural = "Payment Options"
-        
+
 class CreditCardDetail(models.Model):
     """
     Stores an encrypted CC number and info as well as a displayable number

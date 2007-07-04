@@ -4,7 +4,7 @@ under heavy development.
 """
 
 from django.db import models
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
 from satchmo.contact.models import Contact, Organization
 import datetime
 
@@ -19,7 +19,7 @@ class RawItem(models.Model):
     unit_cost = models.DecimalField(_("Unit Cost"), max_digits=6, decimal_places=2)
     inventory = models.IntegerField(_("Inventory"))
     
-    def __str__(self):
+    def __unicode__(self):
         return self.description
     
     class Admin:
@@ -29,7 +29,7 @@ class RawItem(models.Model):
     class Meta:
         verbose_name = _("Raw Item")
         verbose_name_plural = _("Raw Items")
-        
+
 class SupplierOrder(models.Model):
     """
     An order the store owner places to a supplier for a raw good.
@@ -42,8 +42,8 @@ class SupplierOrder(models.Model):
     order_notes = models.CharField(_("Notes"), maxlength=200, blank=True)
     order_total = models.DecimalField(_("Total"), max_digits=6, decimal_places=2)
     
-    def __str__(self):
-        return str(self.date_created)
+    def __unicode__(self):
+        return unicode(self.date_created)
     
     def _status(self):
         return(self.supplierorderstatus_set.latest('date').status)
@@ -74,16 +74,14 @@ class SupplierOrderItem(models.Model):
     line_item_quantity = models.IntegerField(_("Line Item Quantity"), core=True)
     line_item_total = models.DecimalField(_("Line Item Total"), max_digits=6,decimal_places=2)
     
-    def __str__(self):
-        return str(self.line_item_total) 
+    def __unicode__(self):
+        return unicode(self.line_item_total) 
 
 SUPPLIERORDER_STATUS = (
     (_('Sent in'), _('Sent in')),
     (_('Shipped'), _('Shipped')),
     (_('Received'), _('Received')),
 )
-
-
 
 class SupplierOrderStatus(models.Model):
     """
@@ -95,13 +93,10 @@ class SupplierOrderStatus(models.Model):
     notes = models.CharField(_("Notes"), maxlength=100, blank=True)
     date = models.DateTimeField(blank=True)
     
-    def __str__(self):
-        return str(self.status)
+    def __unicode__(self):
+        return self.status
         
     class Meta:
         verbose_name = _("Supplier Order Status")
         verbose_name_plural = _("Supplier Order Statuses")
-
-
-    
 

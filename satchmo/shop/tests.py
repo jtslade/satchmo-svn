@@ -1,7 +1,6 @@
 from django.test import TestCase
 from django.test.client import Client
 from django.core import mail
-from django.utils.translation import gettext
 from django.conf import settings
 
 prefix = settings.SHOP_BASE
@@ -12,7 +11,6 @@ class ShopTest(TestCase):
     def setUp(self):
         # Every test needs a client
         self.client = Client()
-        __builtins__['_'] = gettext
     
     def test_main_page(self):
         """

@@ -8,7 +8,7 @@ from django import newforms as forms
 from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
 from satchmo.contact.models import Contact
 from satchmo.contact.models import Order, OrderItem
 from satchmo.payment.common.forms import PayShipForm

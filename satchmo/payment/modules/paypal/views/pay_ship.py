@@ -10,7 +10,7 @@ from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template import loader
 from django.template import RequestContext, Context
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
 from satchmo.shop.models import Cart
 from satchmo.contact.models import Contact
 from satchmo.discount.models import Discount

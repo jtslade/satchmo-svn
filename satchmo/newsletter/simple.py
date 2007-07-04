@@ -1,6 +1,6 @@
 """ Just tracks subscriptions, nothing more. """
 
-from models import *
+from satchmo.newsletter.models import Subscription
 
 def update_contact(contact):
     sub, created = Subscription.objects.get_or_create(email=contact.email)
