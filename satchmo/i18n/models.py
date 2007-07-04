@@ -159,9 +159,8 @@ iso2_code and iso3_code are ISO 3166-1 codes.
 class CountryLanguage(models.Model):
     """Countries with its languages.
     """
-    country = models.ForeignKey(Country, edit_inline=models.TABULAR,
-        core=True)
-    language = models.ForeignKey(Language)
+    country = models.ForeignKey(Country, edit_inline=models.TABULAR)
+    language = models.ForeignKey(Language, core=True)
     lang_type = models.CharField(_('language type'), maxlength=1,
         choices=LANGUAGE_TYPES)
     identifier = models.CharField(_('identifier'), maxlength=6,
@@ -188,11 +187,10 @@ In some countries is necessary for the mail address.
 In others it is omitted, and in others it is either optional,
 or needed in some cases but omitted in others.
     """
-    country = models.ForeignKey(Country, edit_inline=models.TABULAR,
-        core=True)
+    country = models.ForeignKey(Country, edit_inline=models.TABULAR)
     name_id = models.CharField(_('name identifier'), maxlength=6,
         primary_key=True)
-    name = models.CharField(_('area name'), maxlength=40)
+    name = models.CharField(_('area name'), maxlength=40, core=True)
     alt_name = models.CharField(_('area alternate name'), maxlength=32)
     abbrev = models.CharField(_('postal abbreviation'), maxlength=3)
     reg_area = models.CharField(_('regional administrative area'), maxlength=1,
@@ -217,15 +215,15 @@ or needed in some cases but omitted in others.
 class TimeZone(models.Model):
     """The time zones for each country or territory.
     """
-    country = models.ForeignKey(Country, edit_inline=models.TABULAR,
-        core=True)
-    tz = models.CharField(_('time zone'), maxlength=32, unique=True)
+    country = models.ForeignKey(Country, edit_inline=models.TABULAR)
+    tz = models.CharField(_('time zone'), maxlength=32, core=True)
     comment = models.CharField(_('comment'), maxlength=88)
 
     class Meta:
         verbose_name = _('time zone')
         verbose_name_plural = _('time zones')
         ordering = ['country']
+
     class Admin:
         list_display = ('country', 'tz', 'comment')
         search_fields = ('country')
@@ -237,10 +235,9 @@ class TimeZone(models.Model):
 class Phone(models.Model):
     """Information related to phones as country code, lengths, and prefixes.
     """
-    country = models.ForeignKey(Country, edit_inline=models.TABULAR,
-        core=True)
+    country = models.ForeignKey(Country, edit_inline=models.TABULAR)
     code = models.PositiveSmallIntegerField(_('country code'), null=True)
-    ln_area = models.CharField(_('length of area code'), maxlength=10)
+    ln_area = models.CharField(_('length of area code'), maxlength=10, core=True)
     ln_sn = models.CharField(_('length of subscriber number (SN)'),
         maxlength=8)
     ln_area_sn = models.CharField(_('length of area code and SN'),
@@ -258,5 +255,5 @@ class Phone(models.Model):
         search_fields = ('country', 'code')
 
     def __unicode__(self):
-        return self.code or u''
+        return self.code and unicode(self.code) or u''
 
