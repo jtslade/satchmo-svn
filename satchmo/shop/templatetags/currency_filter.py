@@ -34,9 +34,7 @@ def moneyfmt(value, places=2, curr=settings.CURRENCY, sep=',', dp='.',
     '<.02>'
 
     """
-    if not value:
-        return ''
-    
+   
     value = Decimal(str(value))
 
     q = Decimal((0, (1,), -places))    # 2 places --> '0.01'
