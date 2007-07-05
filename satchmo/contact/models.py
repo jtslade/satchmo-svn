@@ -317,7 +317,10 @@ class Order(models.Model):
         self.save()
     
     def _CC(self):
-        return(self.creditcarddetail_set.all()[0])
+        try:
+            return self.creditcarddetail_set.all()[0]
+        except IndexError:
+            pass
     CC = property(_CC)
     
     def _fullBillStreet(self, delim="<br/>"):

@@ -146,7 +146,9 @@
 	</blockTable>
 	<spacer length="2cm" width="1mm"/>
 	<para style="payment">
-		{{order.total|currency}} was charged to your {{order.CC.creditType}} card (x{{order.CC.displayCC}}) on {{order.timeStamp|date:"F j, Y"}}.
+        {% if order.CC %}
+        {{order.total|currency}} was charged to your {{order.CC.creditType}} card (x{{order.CC.displayCC}}) on {{order.timeStamp|date:"F j, Y"}}.
+        {% endif %}
 	</para>
 	<spacer length="0.5cm" width="1mm"/>
 	<para style="payment">
