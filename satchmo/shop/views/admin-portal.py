@@ -11,8 +11,8 @@ def home(request):
     if request.GET.get('legacy', False) or not request.user.is_superuser:
         return render_to_response('admin/index.html', {'title': title}, context_instance=RequestContext(request))
     else:
-        pending = str(ORDER_STATUS[1][1])
-        inProcess = str(ORDER_STATUS[2][1])
+        pending = unicode(ORDER_STATUS[1][1])
+        inProcess = unicode(ORDER_STATUS[2][1])
         pendings =  Order.objects.filter(status=pending).order_by('timeStamp')
         in_process = Order.objects.filter(status=inProcess).order_by('timeStamp')
         return render_to_response('admin/portal.html', 
