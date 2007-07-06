@@ -102,7 +102,7 @@ INSTALLED_APPS = (
 )
 
 AUTHENTICATION_BACKENDS = (
-    'satchmo.accounts.email-auth.EmailBackend'
+    'satchmo.accounts.email-auth.EmailBackend',
 )
 
 
