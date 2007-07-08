@@ -9,6 +9,7 @@ from django.contrib.sites.models import Site
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import force_unicode
 from satchmo.contact.models import Contact
 from satchmo.i18n.models import Country
 from satchmo.product.models import Item, SubItem
@@ -119,7 +120,7 @@ class CartItem(models.Model):
     
     def __unicode__(self):
         return u'%s - %s %s%s' % (self.quantity, self.subItem.full_name,
-            settings.CURRENCY, self.line_total)
+            force_unicode(settings.CURRENCY), self.line_total)
 
     class Admin:
         pass
