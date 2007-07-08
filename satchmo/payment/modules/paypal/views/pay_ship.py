@@ -25,8 +25,6 @@ for module in settings.SHIPPING_MODULES:
 
 payment_module = PaymentSettings().PAYPAL
 
-selection = _("Please Select")
-
 class PayShipForm(forms.Form):
     shipping = forms.ChoiceField(widget=forms.RadioSelect())
     discount = forms.CharField(max_length=30, required=False)
@@ -100,7 +98,8 @@ def pay_ship_info(request):
             return http.HttpResponseRedirect(url)
     else:
         form = PayShipForm(request)
-        template = payment_module.lookup_template('checkout/paypal/pay_ship.html')
+
+    template = payment_module.lookup_template('checkout/paypal/pay_ship.html')
     return render_to_response(template, {'form': form}, RequestContext(request))
 
 
