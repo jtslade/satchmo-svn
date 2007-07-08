@@ -368,7 +368,7 @@ class Order(models.Model):
         (_('Shipping Method'), {'fields': ('shippingMethod', 'shippingDescription')}),
         (_('Shipping Address'), {'fields': ('shipStreet1','shipStreet2', 'shipCity','shipState', 'shipPostalCode','shipCountry',), 'classes': 'collapse'}),
         (_('Billing Address'), {'fields': ('billStreet1','billStreet2', 'billCity','billState', 'billPostalCode','billCountry',), 'classes': 'collapse'}),
-        (_('Totals'), {'fields': ( 'sub_total','shippingCost', 'tax', 'total','timeStamp','payment',),}),       
+        (_('Totals'), {'fields': ( 'sub_total','shippingCost', 'tax', 'discount', 'total','timeStamp','payment',),}),       
         )
         list_display = ('contact', 'timeStamp', 'order_total','status', 'invoice', 'packingslip', 'shippinglabel')
         list_filter = ['timeStamp','contact']

@@ -17,6 +17,7 @@ from satchmo.payment.paymentsettings import PaymentSettings
 from satchmo.shop.models import Cart
 from satchmo.shop.views.utils import CreditCard
 from satchmo.tax.modules import simpleTax
+from satchmo.discount.models import Discount
 import sys
 
 #Import all of the shipping modules
@@ -75,14 +76,6 @@ def pay_ship_save(newOrder, new_data, cart, contact, payment_module):
             newOrder.shippingCost = shipping_instance.cost()
             newOrder.shippingModel = new_data['shipping']
     
-    #Process any discounts
-    if new_data.get('discount', False):
-        discountObject = Discount.objects.filter(code=new_data['discount'])[0]
-        discount = discountObject.amount
-    else: 
-        discount = Decimal("0")
-    newOrder.discount = discount
-    
     # Temp setting of the tax and total so we can save it
     newOrder.total = Decimal("0")
     newOrder.tax = Decimal("0")
@@ -102,8 +95,19 @@ def pay_ship_save(newOrder, new_data, cart, contact, payment_module):
     # Create the appropriate tax model here
     taxProcessor = simpleTax(newOrder)
     newOrder.tax = taxProcessor.process()
+    
+     #Process any discounts
+    if new_data.get('discount', False):
+        discountObject = Discount.objects.filter(code=new_data['discount'])[0]
+        discount_amount = discountObject.calc(newOrder)
+        if discountObject.freeShipping:
+            newOrder.shippingCost = Decimal("0.00")
+    else: 
+        discount_amount = Decimal("0.00")
+    newOrder.discount = discount_amount
+    
     #Calculate the totals
-    newOrder.total = cart.total + shipping_instance.cost() - discount + newOrder.tax
+    newOrder.total = cart.total + newOrder.shippingCost - discount_amount + newOrder.tax
     
     # Save the credit card information
     cc = CreditCardDetail()
