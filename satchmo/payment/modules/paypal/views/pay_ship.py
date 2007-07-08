@@ -3,7 +3,6 @@
 #####################################################################
 
 import sys
-from decimal import Decimal
 from django import http
 from django import newforms as forms
 from django.conf import settings
@@ -14,11 +13,11 @@ from django.utils.translation import ugettext_lazy as _
 from satchmo.shop.models import Cart
 from satchmo.contact.models import Contact
 from satchmo.discount.models import Discount
-from satchmo.contact.models import Order, OrderItem
+from satchmo.contact.models import Order
 from satchmo.payment.models import CREDITCHOICES, CreditCardDetail
 from satchmo.payment.paymentsettings import PaymentSettings
+from satchmo.payment.common.pay_ship import pay_ship_save
 from satchmo.shop.views.utils import CreditCard
-from satchmo.tax.modules import simpleTax
 
 for module in settings.SHIPPING_MODULES:
     __import__(module)
@@ -83,16 +82,19 @@ def pay_ship_info(request):
         form = PayShipForm(request, new_data)
         if form.is_valid():
             contact = Contact.objects.get(id=request.session['custID'])
-            if request.session.get('orderID', False):
-                #order exists so get it
-                newOrder = Order.objects.get(id=request.session['orderID'])
-                newOrder.contact = contact
-                newOrder.removeAllItems() #Make sure any existing items are gone
+            if request.session.get('orderID'):
+                try:
+                    newOrder = Order.objects.get(id=request.session['orderID'])
+                    newOrder.contact = contact
+                    newOrder.removeAllItems()
+                except Order.DoesNotExist:
+                    newOrder = Order(contact=contact)
             else:
                 #create a new order
                 newOrder = Order(contact=contact)
             #copy data over to the order
-            save(newOrder, new_data, tempCart, contact)
+            newOrder.payment = 'PayPal'
+            pay_ship_save(newOrder, new_data, tempCart, contact)
             request.session['orderID'] = newOrder.id
             url = payment_module.lookup_url('satchmo_checkout-step3')
             return http.HttpResponseRedirect(url)
@@ -102,47 +104,3 @@ def pay_ship_info(request):
     template = payment_module.lookup_template('checkout/paypal/pay_ship.html')
     return render_to_response(template, {'form': form}, RequestContext(request))
 
-
-def save(newOrder, new_data, cart, contact):
-    # Save the shipping info
-    for module in settings.SHIPPING_MODULES:
-        shipping_module = sys.modules[module]
-        shipping_instance = shipping_module.Calc(cart, contact)
-        if shipping_instance.id == new_data['shipping']:
-            newOrder.shippingDescription = shipping_instance.description()
-            newOrder.shippingMethod = shipping_instance.method()
-            newOrder.shippingCost = shipping_instance.cost()
-            newOrder.shippingModel = new_data['shipping']
-    
-    #Process any discounts
-    if new_data.get('discount', False):
-        discountObject = Discount.objects.filter(code=new_data['discount'])[0]
-        discount = discountObject.amount
-    else: 
-        discount = Decimal("0")
-    newOrder.discount = discount
-    
-    # Temp setting of the tax and total so we can save it
-    newOrder.total = Decimal("0")
-    newOrder.tax = Decimal("0")
-    newOrder.sub_total = cart.total
-    newOrder.save()
-    newOrder.copyAddresses()
-    
-    #Add all the items in the cart to the order
-    for item in cart.cartitem_set.all():
-        newOrderItem = OrderItem(order=newOrder, item=item.subItem, quantity=item.quantity, 
-        unitPrice=item.subItem.unit_price, lineItemPrice=item.line_total)       
-        newOrderItem.save()
-    
-    #Now that we have everything, we can see if there's any sales tax to apply
-    # Create the appropriate tax model here
-    taxProcessor = simpleTax(newOrder)
-    newOrder.tax = taxProcessor.process()
-    #Calculate the totals
-    newOrder.total = cart.total + shipping_instance.cost() - discount + newOrder.tax
-    
-    # Make final additions to the order info
-    newOrder.method = "Online"
-    newOrder.payment = "PayPal"
-    newOrder.save()
