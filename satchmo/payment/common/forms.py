@@ -65,18 +65,24 @@ class PayShipForm(forms.Form):
 
     def clean_credit_number(self):
         """ Check if credit card is valid. """
-        card = CreditCard(self.cleaned_data['credit_number'], self.cleaned_data['credit_type'])
+        credit_number = self.cleaned_data['credit_number']
+        card = CreditCard(credit_number, self.cleaned_data['credit_type'])
         results, msg = card.verifyCardTypeandNumber()
         if not results:
             raise forms.ValidationError(msg)
+        return credit_number
+
+    def clean_month_expires(self):
+        return int(self.cleaned_data['month_expires'])
 
     def clean_year_expires(self):
         """ Check if credit card has expired. """
-        month = int(self.cleaned_data['month_expires'])
+        month = self.cleaned_data['month_expires']
         year = int(self.cleaned_data['year_expires'])
         max_day = calendar.monthrange(year, month)[1]
         if datetime.date.today() > datetime.date(year=year, month=month, day=max_day):
             raise forms.ValidationError('Your card has expired.')
+        return year
 
     def clean_discount(self):
         """ Check if discount exists. """
@@ -89,4 +95,5 @@ class PayShipForm(forms.Form):
             if not valid:
                 raise forms.ValidationError(msg)
             # TODO: validate that it can work with these products
+        return data
 

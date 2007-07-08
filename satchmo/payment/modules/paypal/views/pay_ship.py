@@ -59,6 +59,7 @@ class PayShipForm(forms.Form):
             if not valid:
                 raise forms.ValidationError(msg)
             # TODO: validate that it can work with these products
+        return data
 
 
 def pay_ship_info(request):
@@ -81,6 +82,7 @@ def pay_ship_info(request):
         new_data = request.POST.copy()
         form = PayShipForm(request, new_data)
         if form.is_valid():
+            data = form.cleaned_data
             contact = Contact.objects.get(id=request.session['custID'])
             if request.session.get('orderID'):
                 try:
@@ -95,8 +97,7 @@ def pay_ship_info(request):
             #copy data over to the order
             newOrder.payment = 'PayPal'
             pay_ship_save(newOrder, tempCart, contact,
-                shipping=new_data['shipping'],
-                discount=new_data['discount'])
+                shipping=data['shipping'], discount=data['discount'])
             request.session['orderID'] = newOrder.id
             url = payment_module.lookup_url('satchmo_checkout-step3')
             return http.HttpResponseRedirect(url)

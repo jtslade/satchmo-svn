@@ -42,6 +42,7 @@ def pay_ship_info(request, payment_module):
         new_data = request.POST.copy()
         form = PayShipForm(request, payment_module, new_data)
         if form.is_valid():
+            data = form.cleaned_data
             contact = Contact.objects.get(id=request.session['custID'])
             if request.session.get('orderID', False):
                 #order exists so get it
@@ -55,16 +56,15 @@ def pay_ship_info(request, payment_module):
             #copy data over to the order
             newOrder.payment = payment_module.KEY
             pay_ship_save(newOrder, tempCart, contact,
-                shipping=new_data['shipping'],
-                discount=new_data['discount'])
+                shipping=data['shipping'], discount=data['discount'])
             request.session['orderID'] = newOrder.id
 
             # Save the credit card information
-            cc = CreditCardDetail(order=newOrder, ccv=new_data['ccv'],
-                expireMonth=new_data['month_expires'],
-                expireYear=new_data['year_expires'],
-                creditType=new_data['credit_type'])
-            cc.storeCC(new_data['credit_number'])
+            cc = CreditCardDetail(order=newOrder, ccv=data['ccv'],
+                expireMonth=data['month_expires'],
+                expireYear=data['year_expires'],
+                creditType=data['credit_type'])
+            cc.storeCC(data['credit_number'])
             cc.save()
 
             url = payment_module.lookup_url('satchmo_checkout-step3')
