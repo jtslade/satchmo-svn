@@ -29,7 +29,7 @@ def confirm_info(request, payment_module):
         return render_to_response(template, RequestContext(request))    
         
     orderToProcess = Order.objects.get(id=request.session['orderID'])
-    
+
     if request.POST:
         #Do the credit card processing here & if successful, empty the cart and update the status
         credit_processor = payment_module.load_processor()
@@ -63,8 +63,12 @@ def confirm_info(request, payment_module):
         #Since we're not successful, let the user know via the confirmation page
         else:
             errors = msg
-            template = payment_module.lookup_template('checkout/confirm.html')
-            return render_to_response(template, {'order': orderToProcess, 'errors': errors}, RequestContext(request))
     else:
-        template = payment_module.lookup_template('checkout/confirm.html')
-        return render_to_response(template, {'order': orderToProcess}, RequestContext(request))
+        errors = ''
+
+    template = payment_module.lookup_template('checkout/confirm.html')
+    context = RequestContext(request, {
+        'order': orderToProcess,
+        'errors': errors,
+        'checkout_step2': payment_module.lookup_url('satchmo_checkout-step2')})
+    return render_to_response(template, context)
