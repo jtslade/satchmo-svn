@@ -94,7 +94,9 @@ def pay_ship_info(request):
                 newOrder = Order(contact=contact)
             #copy data over to the order
             newOrder.payment = 'PayPal'
-            pay_ship_save(newOrder, new_data, tempCart, contact)
+            pay_ship_save(newOrder, tempCart, contact,
+                shipping=new_data['shipping'],
+                discount=new_data['discount'])
             request.session['orderID'] = newOrder.id
             url = payment_module.lookup_url('satchmo_checkout-step3')
             return http.HttpResponseRedirect(url)

@@ -54,7 +54,9 @@ def pay_ship_info(request, payment_module):
             
             #copy data over to the order
             newOrder.payment = payment_module.KEY
-            pay_ship_save(newOrder, new_data, tempCart, contact)
+            pay_ship_save(newOrder, tempCart, contact,
+                shipping=new_data['shipping'],
+                discount=new_data['discount'])
             request.session['orderID'] = newOrder.id
 
             # Save the credit card information

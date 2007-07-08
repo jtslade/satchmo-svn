@@ -5,16 +5,16 @@ from satchmo.contact.models import OrderItem
 from satchmo.discount.models import Discount
 from satchmo.tax.modules import simpleTax
 
-def pay_ship_save(new_order, new_data, cart, contact):
+def pay_ship_save(new_order, cart, contact, shipping, discount):
     # Save the shipping info
     for module in settings.SHIPPING_MODULES:
         shipping_module = sys.modules[module]
         shipping_instance = shipping_module.Calc(cart, contact)
-        if shipping_instance.id == new_data['shipping']:
+        if shipping_instance.id == shipping:
             new_order.shippingDescription = shipping_instance.description()
             new_order.shippingMethod = shipping_instance.method()
             new_order.shippingCost = shipping_instance.cost()
-            new_order.shippingModel = new_data['shipping']
+            new_order.shippingModel = shipping
 
     # Temp setting of the tax and total so we can save it
     new_order.total = Decimal('0.00')
@@ -24,12 +24,12 @@ def pay_ship_save(new_order, new_data, cart, contact):
     new_order.method = 'Online'
 
     # Process any discounts
-    if new_data.get('discount'):
-        discountObject = Discount.objects.filter(code=new_data['discount'])[0]
+    if discount:
+        discountObject = Discount.objects.filter(code=discount)[0]
         if discountObject.freeShipping:
             new_order.shippingCost = Decimal("0.00")
         discount_amount = discountObject.calc(new_order)
-    else: 
+    else:
         discount_amount = Decimal("0.00")
     new_order.discount = discount_amount
 
