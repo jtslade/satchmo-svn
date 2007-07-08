@@ -353,7 +353,7 @@ def load_data(model, i18n_model, i18n_dirname):
             try:
             	obj.save()
             except:
-                print "Problem loading data.  This entry will not be loaded." % obj
+                print "Problem loading data.  Entry will not be loaded."
                 transaction.rollback()
 
 def show_license(license):
