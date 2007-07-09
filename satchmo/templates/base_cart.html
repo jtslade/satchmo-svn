@@ -1,32 +1,34 @@
 {% extends "base.html" %}
-{% load satchmo.thumbnail %}
+{% load i18n %}
 {% load satchmo.currency_filter %}
 
 {% block navbar %}
-<a href="{{shop_base}}/">Home</a>
+<a href="{{shop_base}}/">{% trans "Home" %}</a>
 {% endblock %}
 
 {% block content %}
 
 {% if not all_items %}
-<h4>Your cart is currently empty.</h4>
-
+    <h4>{% trans "Your cart is empty." %}</h4>
 {% else %}
-    <h4>Contents of your cart</h4>
-    <table>
-    <tr><th></th><th>Quantity</th><th>Item</th><th align="center">Total</th></tr>
+    <h4>{% trans "Your Cart" %}</h4>
+    <table><tr><th></th>
+    <th>{% trans "Quantity" %}</th>
+    <th>{% trans "Item" %}</th>
+    <th align="center">{% trans "Total" %}</th>
+    </tr>
 
     {% for item in all_items %}
-        <tr><td> <a href="{% url satchmo_cart_remove item.id %}">Remove</a> </td>
-            <td align="center">{{item.quantity}} </td>
+        <tr><td><a href="{% url satchmo_cart_remove item.id %}">{% trans "Remove" %}</a></td>
+            <td align="center">{{item.quantity}}</td>
             <td><a href="{{item.subItem.get_absolute_url}}">{{ item.description }}</a></td>
-        <td align="center">{{ item.line_total|currency }}</td>
+            <td align="center">{{ item.line_total|currency }}</td>
         </tr>
     {% endfor %}
-    <tr><td colspan="3" align="right">Cart Total: </td>
+    <tr><td colspan="3" align="right">{% trans "Cart Total" %}:</td>
         <td>{{total|currency}}</td></tr>
     </table>
     
-    <a href="{% url satchmo_checkout-step1 %}">Checkout</a>
+    <a href="{% url satchmo_checkout-step1 %}">{% trans "Check out" %}</a>
 {% endif %}
 {% endblock %}

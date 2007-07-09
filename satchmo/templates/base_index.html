@@ -1,10 +1,10 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load satchmo.thumbnail %}
 {% load satchmo.custom_filter %}
-{% block title %} {{shop_name}} {% endblock %}
 
 {% block navbar %}
-Home
+{% trans "Home" %}
 {% endblock %}
 
 {% block content %}
@@ -12,7 +12,7 @@ Welcome to the shop.
 
 
 {% if all_items_list %}
-    <h4>Featured Items</h4>
+    <h4>{% trans "Featured Items" %}</h4>
     {% for item in all_items_list %} 
             <div class = "productImage">    
            {% if item.main_image %}
@@ -29,9 +29,9 @@ Welcome to the shop.
     <div id = "pagination">
     <ul>
         {% if has_previous %}
-            <li> <a href="{{shop_base}}/?page={{previous}}">Prev</a></li>
+            <li> <a href="{{shop_base}}/?page={{previous}}">{% trans "Previous" %}</a> </li>
         {% else %}
-            <li> Prev </li>
+            <li> {% trans "Previous" %} </li>
         {% endif %}
         {% for page_number in pages|template_range %}
             {% ifequal page_number page %}
@@ -41,9 +41,9 @@ Welcome to the shop.
             {% endifequal %}
         {% endfor %}
         {% if has_next %}
-            <li> <a href="{{shop_base}}/?page={{next}}">Next</a></li>
+            <li> <a href="{{shop_base}}/?page={{next}}">{% trans "Next" %}</a></li>
         {% else %}
-            <li> Next </li>
+            <li> {% trans "Next" %} </li>
         {% endif %}
     </ul>
     </div>
