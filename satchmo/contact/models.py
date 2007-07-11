@@ -19,55 +19,57 @@ activeShippingModules = []
 for module in settings.SHIPPING_MODULES:
     __import__(module)
     shipping_module = sys.modules[module]
-    activeShippingModules.append((shipping_module.Calc(None,None).id,shipping_module.Calc(None,None).id))
+    activeShippingModules.append((shipping_module.Calc(None, None).id,
+        shipping_module.Calc(None, None).id))
 
 CONTACT_CHOICES = (
-    (_('Customer'), _('Customer')),
-    (_('Supplier'), _('Supplier')),
-    (_('Distributor'), _('Distributor')),
+    ('Customer', _('Customer')),
+    ('Supplier', _('Supplier')),
+    ('Distributor', _('Distributor')),
 )
 
 ORGANIZATION_CHOICES = (
-    (_('Company'), _('Company')),
-    (_('Government'),_('Government')),
-    (_('Non-profit'),_('Non-profit')),
+    ('Company', _('Company')),
+    ('Government', _('Government')),
+    ('Non-profit', _('Non-profit')),
 )
 
 ORGANIZATION_ROLE_CHOICES = (
-    (_('Supplier'),_('Supplier')),
-    (_('Distributor'),_('Distributor')),
-    (_('Manufacturer'),_('Manufacturer')),
-
+    ('Supplier', _('Supplier')),
+    ('Distributor', _('Distributor')),
+    ('Manufacturer', _('Manufacturer')),
 )
+
 class Organization(models.Model):
     """
     An organization can be a company, government or any kind of group to 
     collect contact info.
     """
     name = models.CharField(_("Name"), maxlength=50, core=True)
-    type = models.CharField(_("Type"), maxlength=30,choices=ORGANIZATION_CHOICES)
-    role = models.CharField(_("Role"), maxlength=30,choices=ORGANIZATION_ROLE_CHOICES)
+    type = models.CharField(_("Type"), maxlength=30,
+        choices=ORGANIZATION_CHOICES)
+    role = models.CharField(_("Role"), maxlength=30,
+        choices=ORGANIZATION_ROLE_CHOICES)
     create_date = models.DateField(_("Creation Date"))
     notes = models.TextField(_("Notes"), maxlength=200, blank=True, null=True)
-    
+
     def __unicode__(self):
         return self.name
-        
+
     def save(self):
         """Ensure we have a create_date before saving the first time."""
         if not self.id:
             self.create_date = datetime.date.today()
         super(Organization, self).save()
-        
+
     class Admin:
-        list_filter = ['type','role']
-        list_display = ['name','type','role']
-    
+        list_filter = ['type', 'role']
+        list_display = ['name', 'type', 'role']
+
     class Meta:
         verbose_name = _("Organization")
         verbose_name_plural = _("Organizations")
-        
-        
+
 class Contact(models.Model):
     """
     A customer, supplier or any individual that a store owner might interact with.
@@ -130,16 +132,16 @@ class Contact(models.Model):
         verbose_name_plural = _("Contacts")
 
 PHONE_CHOICES = (
-    (_('Work'), _('Work')),
-    (_('Home'), _('Home')),
-    (_('Fax'), _('Fax')),
-    (_('Mobile'),_('Mobile')),
+    ('Work', _('Work')),
+    ('Home', _('Home')),
+    ('Fax', _('Fax')),
+    ('Mobile', _('Mobile')),
 )
 
 INTERACTION_CHOICES = (
-    (_('Email'),_('Email')),
-    (_('Phone'),_('Phone')),
-    (_('In-person'),_('In-person')),
+    ('Email', _('Email')),
+    ('Phone', _('Phone')),
+    ('In-person', _('In-person')),
 )
 
 class Interaction(models.Model):
@@ -232,22 +234,22 @@ class AddressBook(models.Model):
 
 
 ORDER_CHOICES = (
-    (_('Online'), _('Online')),
-    (_('In Person'), _('In Person')),
-    (_('Show'), _('Show')),
+    ('Online', _('Online')),
+    ('In Person', _('In Person')),
+    ('Show', _('Show')),
 )
 
 ORDER_STATUS = (
-    (_('Temp'), _('Temp')),
-    (_('Pending'), _('Pending')),
-    (_('In Process'), _('In Process')),
-    (_('Shipped'), _('Shipped')),
+    ('Temp', _('Temp')),
+    ('Pending', _('Pending')),
+    ('In Process', _('In Process')),
+    ('Shipped', _('Shipped')),
 )
 
 PAYMENT_CHOICES = (
-    (_('Cash'),_('Cash')),
-    (_('Credit Card'),_('Credit Card')),
-    (_('Check'),_('Check')),
+    ('Cash', _('Cash')),
+    ('Credit Card', _('Credit Card')),
+    ('Check', _('Check')),
 )
 
 class Order(models.Model):
