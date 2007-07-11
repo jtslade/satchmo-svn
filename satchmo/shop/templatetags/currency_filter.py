@@ -34,6 +34,9 @@ def moneyfmt(value, places=2, curr=settings.CURRENCY, sep=',', dp='.',
     '<.02>'
 
     """
+
+    if value == '':
+        return value
    
     value = Decimal(str(value))
 
