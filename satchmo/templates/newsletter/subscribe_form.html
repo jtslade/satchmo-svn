@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block navbar %}
+<a href="{{shop_base}}/">Home</a> ::
+Newsletter Subscription
+{% endblock %}
+
+{% block content %}
+<h3>Newsletter Subscription</h3>
+
+{% if form.errors %}
+<h3>Please correct the following error{{ form.errors|pluralize }}:</h3>
+{% endif %}
+
+<table>
+<form method="post" action="{% url newsletter_subscribe %}">
+	<tr><td><label for="id_full_name">{% trans 'Your name' %}:</label></td><td>{{ form.full_name }}</td></tr>
+	{% if form.full_name.errors %}<tr><td>&nbsp;</td><td>*** {{ form.full_name.errors|join:", " }}</td></tr>{% endif %}
+	<tr><td><label for="id_email">{% trans 'Email address' %}:</label></td><td>{{ form.email }}</td></tr>
+	{% if form.email.errors %}<tr><td>&nbsp;</td><td>*** {{ form.email.errors|join:", " }}</td></tr>{% endif %}
+	<input type="hidden" value="on" name="subscribed"/>
+	<tr><td></td><td><input type="submit" value="Subscribe"/></td></tr>
+</form>
+</table>
+{% endblock %}

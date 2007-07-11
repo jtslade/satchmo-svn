@@ -5,6 +5,21 @@ from django.utils.translation import ugettext_lazy as _
 import datetime
 import sys
 
+class NullContact(object):
+    """Simple object emulating a Contact, so that we can add users who aren't Satchmo Contacts.
+    
+    Note, this is *not* a Django object, and is not saved to the DB, only to the subscription lists.
+    """
+    
+    def __init__(self, full_name, email, status):
+        if not full_name:
+            full_name = email.split('@')[0]
+            
+        self.full_name = full_name
+        self.email = email
+        self.newsletter = status
+
+
 class Subscription(models.Model):
     """A newsletter subscription."""
     

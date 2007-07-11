@@ -9,6 +9,7 @@ NEWSLETTER_NAME='your-mailman-listname'
 from django.conf import settings
 from Mailman import MailList, Errors
 from satchmo.newsletter.models import Subscription
+from django.utils.translation import ugettext_lazy as _
 import sys
 
 class UserDesc: pass
@@ -21,14 +22,24 @@ def update_contact(contact):
     sub, created = Subscription.objects.get_or_create(email=contact.email)
     changed = sub.update_subscription(contact.newsletter)
         
+    result = ""
+    
     if created or changed:
         sub.save()
+    else:
+        if sub.subscribed:
+            result = _("Already Subscribed")
+        else:
+            result = _("Already removed")
         
     if sub.subscribed:
         mailman_add(contact)
+        result = _("Subscribed: %(email)s") % { 'email' : contact.email }
     else:
         mailman_remove(contact)
+        result = _("Unsubscribed: %(email)s") % { 'email' : contact.email }
 
+    return result
 
 def mailman_add(contact, listname=None, send_welcome_msg=None, admin_notify=None):
     """Add a Satchmo contact to a mailman mailing list.
@@ -58,19 +69,19 @@ def mailman_add(contact, listname=None, send_welcome_msg=None, admin_notify=None
             mm.Lock()
             mm.ApprovedAddMember(userdesc, send_welcome_msg, admin_notify)
             mm.Save()
-            print >> sys.stderr, _('Subscribed: %s' % contact.email)    
+            print >> sys.stderr, _('Subscribed: %(email)s') % { 'email' : contact.email }
         
         except Errors.MMAlreadyAMember:
-            print >> sys.stderr, _('Already a member: %s' % contact.email)
+            print >> sys.stderr, _('Already a member: %(email)s') % { 'email' : contact.email }
         
         except Errors.MMBadEmailError:
             if userdesc.address == '':
                 print >> sys.stderr, _('Bad/Invalid email address: blank line')
             else:
-                print >> sys.stderr, _('Bad/Invalid email address: %s' % contact.email)
+                print >> sys.stderr, _('Bad/Invalid email address: %(email)s') % { 'email' : contact.email }
             
         except Errors.MMHostileAddress:
-            print >> sys.stderr, _('Hostile address (illegal characters): %s' % contact.email)
+            print >> sys.stderr, _('Hostile address (illegal characters): %(email)s') % { 'email' : contact.email }
 
         finally:
             mm.Unlock()
