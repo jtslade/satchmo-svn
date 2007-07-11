@@ -3,7 +3,7 @@
 # Licensed under New BSD. Read the file 'LICENSE_BSD'.
 
 from django.db import models
-
+from django.utils.translation import ugettext_lazy as _
 
 CONTINENT = (
     ('af', _('Africa')),
