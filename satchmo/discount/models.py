@@ -44,8 +44,11 @@ class Discount(models.Model):
     def __unicode__(self):
         return self.description
     
-    def isValid(self):
-        #Make sure this discount still has available uses and is in the current date range
+    def isValid(self, cart=None):
+        """
+        Make sure this discount still has available uses and is in the current date range.
+        If a cart has been populated, validate that it does apply to the products we have selected.
+        """
         if not self.active:
             return (False, ugettext('This coupon is disabled.'))
         if self.startDate > date.today():
@@ -55,7 +58,19 @@ class Discount(models.Model):
         if self.numUses > self.allowedUses:
             return (False, ugettext('This discount has exceeded the number of' +
                 ' allowed uses.'))
-        return (True, ugettext('Valid.'))
+        if not cart:
+            return (True, ugettext('Valid.'))
+        #Check to see if the cart items are included
+        validItems = False
+        validProducts = self.validProducts.all()
+        for cart_item in cart.cartitem_set.all():
+            if cart_item.subItem.item in validProducts:
+                validItems = True
+                break   #Once we have 1 valid item, we exit
+        if validItems:
+            return (True, ugettext('Valid.'))
+        else:
+            return (False, ugettext('This discount can not be applied to the products in your cart.'))
         
     def calc(self, order):
         # Use the order details and the discount specifics to calculate the actual discount

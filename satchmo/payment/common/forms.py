@@ -45,13 +45,13 @@ class PayShipForm(forms.Form):
         self.fields['year_expires'].choices = [(year, year) for year in range(year_now, year_now+5)]
 
         shipping_options = []
-        tempCart = Cart.objects.get(id=request.session['cart'])
-        tempContact = Contact.objects.get(id=request.session['custID'])
+        self.tempCart = Cart.objects.get(id=request.session['cart'])
+        self.tempContact = Contact.objects.get(id=request.session['custID'])
 
         for module in settings.SHIPPING_MODULES:
             #Create the list of information the user will see
             shipping_module = sys.modules[module]
-            shipping_instance = shipping_module.Calc(tempCart, tempContact)
+            shipping_instance = shipping_module.Calc(self.tempCart, self.tempContact)
             if shipping_instance.valid():
                 template = paymentmodule.lookup_template('shipping_options.html')
                 t = loader.get_template(template)
@@ -85,15 +85,14 @@ class PayShipForm(forms.Form):
         return year
 
     def clean_discount(self):
-        """ Check if discount exists. """
+        """ Check if discount exists and if it applies to these products """
         data = self.cleaned_data['discount']
         if data:
             discount = Discount.objects.filter(code=data).filter(active=True)
             if discount.count() == 0:
                 raise forms.ValidationError('Invalid discount.')
-            valid, msg = discount[0].isValid()
+            valid, msg = discount[0].isValid(self.tempCart)
             if not valid:
                 raise forms.ValidationError(msg)
-            # TODO: validate that it can work with these products
         return data
 
