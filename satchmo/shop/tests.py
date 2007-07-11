@@ -80,15 +80,13 @@ class ShopTest(TestCase):
         response = self.client.get(prefix+'/cart/1/remove/')
         self.assertRedirects(response, prefix+'/cart/', status_code=302, target_status_code=200)
         response = self.client.get(prefix+'/cart/')
-        #print response.content
-        self.assertContains(response, "Your cart is currently empty.", count=1, status_code=200)
+        self.assertContains(response, "Your cart is empty.", count=1, status_code=200)
         
     def test_checkout(self):
         """
         Run through a full checkout process
         """
         self.test_cart_adding()
-        #response = self.client.get(prefix+"/checkout/")
         response = self.client.post(prefix+"/checkout/", {'email': 'sometester@example.com',
                                     'first_name': 'Teddy',
                                     'last_name' : 'Tester',
