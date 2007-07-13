@@ -40,7 +40,8 @@ class Discount(models.Model):
         help_text=_("Should this discount remove all shipping costs?"))
     includeShipping = models.BooleanField(_("Include shipping"), blank=True, null=True,
         help_text=_("Should shipping be included in the discount calculation?"))
-    validProducts = models.ManyToManyField(Item, filter_interface=True)
+    validProducts = models.ManyToManyField(Item, filter_interface=True,
+        blank=True)
 
     def __unicode__(self):
         return self.description
@@ -62,12 +63,14 @@ class Discount(models.Model):
         if not cart:
             return (True, ugettext('Valid.'))
         #Check to see if the cart items are included
-        validItems = False
         validProducts = self.validProducts.all()
-        for cart_item in cart.cartitem_set.all():
-            if cart_item.subItem.item in validProducts:
-                validItems = True
-                break   #Once we have 1 valid item, we exit
+        # Skip validProducts check if validProducts is empty
+        validItems = not bool(validProducts)
+        if validProducts:
+            for cart_item in cart.cartitem_set.all():
+                if cart_item.subItem.item in validProducts:
+                    validItems = True
+                    break   #Once we have 1 valid item, we exit
         if validItems:
             return (True, ugettext('Valid.'))
         else:
@@ -84,7 +87,7 @@ class Discount(models.Model):
         
     class Admin:
         list_display=('description','active')
-    
+
     class Meta:
         verbose_name = _("Discount")
         verbose_name_plural = _("Discounts")
