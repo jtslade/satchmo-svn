@@ -18,7 +18,8 @@ class Discount(models.Model):
     Also allows finite number of uses.
     """
     description = models.CharField(_("Description"), maxlength=100)
-    code = models.CharField(_("Discount Code"), maxlength=20, help_text=_("Coupon Code"))
+    code = models.CharField(_("Discount Code"), maxlength=20, unique=True,
+        help_text=_("Coupon Code"))
     amount = models.DecimalField(_("Discount Amount"), decimal_places=2,
         max_digits=4, blank=True, null=True, validator_list=[amount_validator],
         help_text=_("Enter absolute discount amount OR percentage"))
@@ -27,11 +28,11 @@ class Discount(models.Model):
         validator_list=[percentage_validator],
         help_text=_("Enter absolute discount amount OR percentage.  Percentage example: 0.10"))
     allowedUses = models.IntegerField(_("Number of allowed uses"),
-        blank=True, null=True)
+        blank=True, null=True, help_text=_('Not implemented.'))
     numUses = models.IntegerField(_("Number of times already used"),
-        blank=True, null=True)
+        blank=True, null=True, help_text=_('Not implemented.'))
     minOrder = models.DecimalField(_("Minimum order value"),
-        decimal_places=2, max_digits=6, blank=True, null=True)
+        decimal_places=2, max_digits=6, blank=True, null=True, help_text=_('Not implemented.'))
     startDate = models.DateField(_("Start Date"))
     endDate = models.DateField(_("End Date"))
     active = models.BooleanField(_("Active"))
