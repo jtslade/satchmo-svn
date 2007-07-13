@@ -8,6 +8,7 @@ from datetime import date
 from satchmo.shop.utils.validators import MutuallyExclusiveWithField
 from django.utils.translation import ugettext, ugettext_lazy as _
 from decimal import Decimal
+from satchmo.shop.templatetags.currency_filter import moneyfmt
 
 percentage_validator = MutuallyExclusiveWithField('amount')
 amount_validator = MutuallyExclusiveWithField('percentage')
@@ -32,7 +33,7 @@ class Discount(models.Model):
     numUses = models.IntegerField(_("Number of times already used"),
         blank=True, null=True, help_text=_('Not implemented.'))
     minOrder = models.DecimalField(_("Minimum order value"),
-        decimal_places=2, max_digits=6, blank=True, null=True, help_text=_('Not implemented.'))
+        decimal_places=2, max_digits=6, blank=True, null=True)
     startDate = models.DateField(_("Start Date"))
     endDate = models.DateField(_("End Date"))
     active = models.BooleanField(_("Active"))
@@ -62,6 +63,12 @@ class Discount(models.Model):
                 ' allowed uses.'))
         if not cart:
             return (True, ugettext('Valid.'))
+
+        minOrder = self.minOrder or 0
+        if cart.total < minOrder:
+            return (False, ugettext('This discount only applies to orders of at'
+                + ' least %s.' % moneyfmt(minOrder)))
+
         #Check to see if the cart items are included
         validProducts = self.validProducts.all()
         # Skip validProducts check if validProducts is empty
