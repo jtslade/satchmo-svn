@@ -1,15 +1,15 @@
 - fields: {city: Anywhere Town, contact: !!python/long '1', country: US, description: Home,
-    is_default_billing: 1, is_default_shipping: 1, postalCode: '38138', state: TN,
+    is_default_billing: true, is_default_shipping: true, postalCode: '38138', state: TN,
     street1: 8235 Pike Street, street2: ''}
   model: contact.addressbook
   pk: '1'
 - fields: {city: Stillwater, contact: !!python/long '2', country: US, description: Work,
-    is_default_billing: 1, is_default_shipping: 1, postalCode: '55082', state: MN,
+    is_default_billing: true, is_default_shipping: true, postalCode: '55082', state: MN,
     street1: 1245 Main Street, street2: ''}
   model: contact.addressbook
   pk: '2'
 - fields: {city: Fishkill, contact: !!python/long '3', country: '', description: Mailing
-      address, is_default_billing: 1, is_default_shipping: 1, postalCode: '19010',
+      address, is_default_billing: true, is_default_shipping: true, postalCode: '19010',
     state: NJ, street1: Receiving Dept, street2: 918 Funky Town St}
   model: contact.addressbook
   pk: '3'
