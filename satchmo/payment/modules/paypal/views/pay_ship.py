@@ -85,21 +85,13 @@ def pay_ship_info(request):
         if form.is_valid():
             data = form.cleaned_data
             contact = Contact.objects.get(id=request.session['custID'])
-            if request.session.get('orderID'):
-                try:
-                    newOrder = Order.objects.get(id=request.session['orderID'])
-                    newOrder.contact = contact
-                    newOrder.removeAllItems()
-                except Order.DoesNotExist:
-                    newOrder = Order(contact=contact)
-            else:
-                #create a new order
-                newOrder = Order(contact=contact)
-            #copy data over to the order
-            newOrder.payment = 'PayPal'
+
+            # Create a new order
+            newOrder = Order(contact=contact, payment='PayPal')
             pay_ship_save(newOrder, tempCart, contact,
                 shipping=data['shipping'], discount=data['discount'])
             request.session['orderID'] = newOrder.id
+
             url = payment_module.lookup_url('satchmo_checkout-step3')
             return http.HttpResponseRedirect(url)
     else:

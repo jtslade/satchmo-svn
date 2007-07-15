@@ -44,17 +44,9 @@ def pay_ship_info(request, payment_module):
         if form.is_valid():
             data = form.cleaned_data
             contact = Contact.objects.get(id=request.session['custID'])
-            if request.session.get('orderID', False):
-                #order exists so get it
-                newOrder = Order.objects.get(id=request.session['orderID'])
-                newOrder.contact = contact
-                newOrder.removeAllItems() #Make sure any existing items are gone
-            else:
-                #create a new order
-                newOrder = Order(contact=contact)
-            
-            #copy data over to the order
-            newOrder.payment = payment_module.KEY
+
+            # Create a new order
+            newOrder = Order(contact=contact, payment=payment_module.KEY)
             pay_ship_save(newOrder, tempCart, contact,
                 shipping=data['shipping'], discount=data['discount'])
             request.session['orderID'] = newOrder.id
