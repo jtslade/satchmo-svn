@@ -347,9 +347,9 @@ class Order(models.Model):
     def _CC(self):
         """Return the credit card associated with this order."""
         try:
-            return self.creditcarddetail_set.all()[0]
-        except IndexError:
-            pass
+            return self.creditcarddetail_set.get()
+        except self.creditcarddetail_set.model.DoesNotExist:
+            return None
     CC = property(_CC)
 
     def _fullBillStreet(self, delim="<br/>"):

@@ -37,19 +37,20 @@ class PaymentOption(models.Model):
 
 class CreditCardDetail(models.Model):
     """
-    Stores an encrypted CC number and info as well as a displayable number
+    Stores an encrypted CC number, its information, and its
+    displayable number.
     """
-    order = models.ForeignKey(Order, edit_inline=True, num_in_admin=1,
-        max_num_in_admin=1)
+    order = models.ForeignKey(Order, unique=True, edit_inline=True,
+        num_in_admin=1, max_num_in_admin=1)
     creditType = models.CharField(_("Credit Card Type"), maxlength=16,
         choices=CREDITCHOICES)
-    displayCC = models.CharField(_("CC Number(Last 4 digits)"), maxlength=4, core=True)
-    encryptedCC = models.CharField(_("Encrypted Credit Card"), maxlength=40, blank=True, 
-        null=True, editable=False)
+    displayCC = models.CharField(_("CC Number (Last 4 digits)"),
+        maxlength=4, core=True)
+    encryptedCC = models.CharField(_("Encrypted Credit Card"),
+        maxlength=40, blank=True, null=True, editable=False)
     expireMonth = models.IntegerField(_("Expiration Month"))
     expireYear = models.IntegerField(_("Expiration Year"))
     ccv = models.IntegerField(_("CCV"), blank=True, null=True)
-    
     
     def storeCC(self, ccnum):
         # Take as input a valid cc, encrypt it and store the last 4 digits in a visible form
