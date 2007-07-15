@@ -9,21 +9,21 @@ r"""
 >>> contact1 = Contact.objects.create(first_name="Jim", last_name="Tester", 
 ... role="Customer", email="Jim@JimWorld.com")
 >>> contact1.full_name
-'Jim Tester'
+u'Jim Tester'
 >>> contact1
 <Contact: Jim Tester>
 
-# Add a phone number for this person
->>> phone1 = PhoneNumber.objects.create(contact=contact1, type='Home', phone="800-111-9900", primary=True)
+# Add a phone number for this person and make sure that it's the default
+>>> phone1 = PhoneNumber.objects.create(contact=contact1, type='Home', phone="800-111-9900")
 >>> contact1.primary_phone
 <PhoneNumber: Home - 800-111-9900>
 
-# Make sure we can only have one primary phone number
->>> try:
-...     phone2 = PhoneNumber.objects.create(contact=contact1, type='Work', phone="800-111-9901", primary=True)
-...     raise AssertionError, "Previous line should raise an IntegrityError."
-... except IntegrityError:
-...     transaction.rollback()
+# Make sure that new primary phones become the default, and that
+# non-primary phones don't become the default when a default already exists.
+>>> phone2 = PhoneNumber.objects.create(contact=contact1, type='Work', phone="800-222-9901", primary=True)
+>>> phone3 = PhoneNumber.objects.create(contact=contact1, type="Mobile", phone="800-333-9902")
+>>> contact1.primary_phone
+<PhoneNumber: Work - 800-222-9901>
 
 #Add an address & make sure it is default billing and shipping
 >>> add1 = AddressBook.objects.create(contact=contact1, description="Home Address",
