@@ -1,12 +1,22 @@
 {% extends "base.html" %}
 
 {% block extra-head %}
-{% if item.meta %}
-    <meta name="description" content="{{item.meta}}">
+{% if product.meta %}
+    <meta name="description" content="{{product.meta}}">
 {% endif %}
 
 <script type="text/javascript" src="{{media_url}}jquery-latest.pack.js"></script>
 <script type="text/javascript">
+function setNamePrice(json){
+    [name, price] = eval(json);
+    if (name){
+        setName(name);
+    }
+    setPrice(price);
+}
+function setName(name){
+    $("*#productname").attr('value', name);
+}
 function setPrice(price){
     $("*#price").text(price);
 }
@@ -19,7 +29,7 @@ function getPrice(){
     }
     opts["quantity"] = $("input#quantity")[0].value;
     setPrice("loading");
-    $.post("{{item.get_absolute_url}}prices/", opts, setPrice);
+    $.post("{% url satchmo_product_prices product_name=product.name %}", opts, setNamePrice);
 }
 
 $(document).ready( function(){ getPrice();});
@@ -33,23 +43,23 @@ $(document).ready( function(){ getPrice();});
 {% block navbar %}
 
 <a href="{{shop_base}}/">Home</a> 
-{% for urls in item.category.all.0.get_url_name %}
-    ::<a href="{{urls.1}}">{{ urls.0 }}</a>
+{% for name, url in product.category.all.0.get_url_name %}
+    ::<a href="{{ url }}">{{ name }}</a>
 {% endfor %}
 
 {% endblock %}
 
 {% block content %}
-<h4>{{ item.verbose_name }}</h4>
-<p>{{ item.description }}</p>
+<h4>{{ product.full_name }}</h4>
+<p>{{ product.description }}</p>
 Price: <h3 id="price">{{item.price}}</h3>
-{% for pic in item.itemimage_set.all %}
+{% for pic in product.productimage_set.all %}
     <img src="{{ pic.get_picture_url|thumbnail:"width=280" }}" width="280" />
 {% endfor %}
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-<form id="options" action="{% url satchmo_cart_add item.id %}" method="post">
-{% if item.option_group.count %}
+<form id="options" action="{% url satchmo_cart_add %}" method="post">
+{% if options %}
 <p>Please choose your options:</p>
 {% endif %}
 
@@ -63,9 +73,10 @@ Price: <h3 id="price">{{item.price}}</h3>
         {% endif %}
      </option>
     {% endfor %}
-    </select>
-{% endfor %}
-Quantity <input type="text", size="2", name="quantity" id="quantity" value=1 onchange="getPrice()" />
-<input type="submit" value="Add to cart" />
-</form>
-{% endblock %}
+      </select> 
+{% endfor %} 
+Quantity <input type="text", size="2", name="quantity" id="quantity" value=1 onchange="getPrice()" /> 
+<input type="hidden" name="productname" id="productname" value="{{product.name}}" />
+<input type="submit" value="Add to cart" /> 
+</form> 
+{% endblock %} 

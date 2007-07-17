@@ -11,7 +11,7 @@ register = Library()
 def recurse_for_children(current_node, parent_node, show_empty=True):
     child_count = current_node.child.count()
 
-    if show_empty or child_count > 0 or current_node.item_set.count() > 0:
+    if show_empty or child_count > 0 or current_node.product_set.count() > 0:
         temp_parent = SubElement(parent_node, 'li')
         attrs = {'href': current_node.get_absolute_url()}
         link = SubElement(temp_parent, 'a', attrs)

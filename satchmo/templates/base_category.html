@@ -21,20 +21,20 @@
 <div id="product_category">
 <h3>{{ category.name }}</h3>
     <ul>
-    {% for item in category.item_set.all %} 
+    {% for item in category.product_set.active %} 
             <li><a href="{{ item.get_absolute_url }}">
             <img src="{{ item.main_image.get_picture_url|thumbnail:"width=85" }}" width="85" /> </a>
-            <a href="{{ item.get_absolute_url }}">{{ item.verbose_name }}</a></li>
+            <a href="{{ item.get_absolute_url }}">{{ item.full_name }}</a></li>
     {% endfor %}
     </ul>
 {% if child_categories %}
         {% for cat in child_categories %}
-            <h4> {{cat.name}} </h4>
+            <h4>{{cat.name}}</h4>
             <ul>
-            {% for item in cat.item_set.all %}
+            {% for item in cat.product_set.active %}
                 <li><a href="{{ item.get_absolute_url }}">
                 <img src="{{ item.main_image.get_picture_url|thumbnail:"width=85" }}" width="85" /> </a>
-                <a href="{{ item.get_absolute_url }}">{{ item.verbose_name }}</a></li>
+                <a href="{{ item.get_absolute_url }}">{{ item.full_name }}</a></li>
             {% endfor %}
             </ul>
         {% endfor %}

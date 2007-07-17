@@ -1,7 +1,5 @@
 r"""
 >>> import datetime
->>> from django.db import transaction
->>> from django.db import IntegrityError
 >>> from satchmo.contact.models import *
 
 # Create a contact

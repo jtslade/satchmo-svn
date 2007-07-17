@@ -104,6 +104,13 @@ SHOP_URLS = patterns('satchmo.shop.views',
 #    (r'^checkout/confirm/$', 'paypal.checkout_step3.confirm_info', {'SSL': False}, 'satchmo_checkout-step3'),
 )
 
+PRODUCT_TYPES = (
+    ('product', 'ConfigurableProduct'),
+    ('product', 'ProductVariation'),
+#    ('product', 'DownloadableProduct'),
+#    ('product', 'BundledProduct'),
+)
+
 #### Newsletter Settings
 # This is optional.  Make sure to add satchmo.newsletter to your INSTALLED_APPS if you want to use it.
 #NEWSLETTER_MODULE = 'satchmo.newsletter.mailman'

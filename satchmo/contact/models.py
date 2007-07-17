@@ -8,7 +8,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from satchmo.product.models import SubItem
+from satchmo.product.models import Product
 from satchmo.newsletter import SubscriptionManager
 from satchmo.shop.templatetags.currency_filter import moneyfmt
 
@@ -424,7 +424,7 @@ class OrderItem(models.Model):
     A line item on an order.
     """
     order = models.ForeignKey(Order, edit_inline=models.TABULAR, num_in_admin=3)
-    item = models.ForeignKey(SubItem)
+    product = models.ForeignKey(Product)
     quantity = models.IntegerField(_("Quantity"), core=True)
     unitPrice = models.DecimalField(_("Unit price"),
         max_digits=6, decimal_places=2)
@@ -432,10 +432,10 @@ class OrderItem(models.Model):
         max_digits=6, decimal_places=2)
 
     def __unicode__(self):
-        return self.item.full_name
+        return self.product.full_name
 
     def _get_category(self):
-        return(self.item.item.category.all()[0].name)
+        return(self.product.category.all()[0].name)
     category = property(_get_category)
 
     class Meta:

@@ -16,9 +16,9 @@ from satchmo.payment.common.forms import PaymentContactInfoForm
 
 def contact_info(request):
     """View which collects demographic information from customer."""
-    
+
     #First verify that the cart exists and has items
-    if request.session.get('cart', False):
+    if request.session.get('cart'):
         tempCart = Cart.objects.get(id=request.session['cart'])
         if tempCart.numItems == 0:
             return render_to_response('checkout/empty_cart.html', RequestContext(request))
@@ -39,14 +39,14 @@ def contact_info(request):
         value_to_choose = (area.abbrev, area.name)
         areas.append(value_to_choose)
     countries = [(default_country.iso2_code, default_country.name)]
-    
+
     for country in Country.objects.filter(display=True):
         country_to_choose = (country.iso2_code, country.name)
         #Make sure the default only shows up once
         if country.iso2_code <> default_country.iso2_code:
             countries.append(country_to_choose)
 
-    contact = None    
+    contact = None
     if request.session.get('custID', False):
         try:
             contact = Contact.objects.get(id=request.session['custID'])
@@ -58,11 +58,14 @@ def contact_info(request):
             contact = Contact.objects.get(user=request.user.id)
         except Contact.DoesNotExist:
             pass
-    
+
     if request.POST:
         new_data = request.POST.copy()
-        form = PaymentContactInfoForm(countries, areas, new_data, initial=init_data)
-        
+        if not tempCart.is_shippable:
+            new_data['copy_address'] = True
+        form = PaymentContactInfoForm(countries, areas, new_data,
+            initial=init_data)
+
         if form.is_valid():
             if not contact:
                 custID = save_contact_info(form.cleaned_data)
@@ -87,5 +90,10 @@ def contact_info(request):
             if contact.primary_phone:
                 init_data['phone'] = contact.primary_phone.phone
         form = PaymentContactInfoForm(countries, areas, initial=init_data)
-    
-    return render_to_response('checkout/form.html', {'form': form, 'country': default_country, 'paymentmethod_ct' : len(PaymentSettings())}, RequestContext(request))
+
+    context = RequestContext(request, {
+        'form': form,
+        'country': default_country,
+        'paymentmethod_ct': len(PaymentSettings())})
+    return render_to_response('checkout/form.html', context)
+

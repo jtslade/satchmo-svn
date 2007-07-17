@@ -1,7 +1,7 @@
 import os
 from django.conf import settings
+from satchmo.product.models import Product
 from django.conf.urls.defaults import *
-from satchmo.product.models import Item
 from satchmo.payment.paymentsettings import PaymentSettings
 
 #The following views are custom to Satchmo
@@ -12,7 +12,8 @@ urlpatterns += patterns('satchmo.shop.views',
     (r'^category/(?P<slug>[-\w]+)/$', 'category.root'),
     (r'^category/(?P<slug_parent>[-\w]+)/(?P<slug>[-\w]+)/$', 'category.children'),
     (r'^category/([-\w]+/)+(?P<slug_parent>[-\w]+)/(?P<slug>[-\w]+)/$', 'category.children'),
-    (r'^cart/(?P<id>\d+)/add/$', 'cart.add', {}, 'satchmo_cart_add'),
+    (r'^cart/add/$', 'cart.add', {}, 'satchmo_cart_add'),
+    (r'^cart/add/ajax/$', 'cart.add_ajax', {}, 'satchmo_cart_add_ajax'),
     (r'^cart/(?P<id>\d+)/remove/$', 'cart.remove', {}, 'satchmo_cart_remove'),
     (r'^cart/$', 'cart.display', {}, 'satchmo_cart'),
     (r'^contact/$', 'contact.form', {}, 'satchmo_contact'),
@@ -21,16 +22,15 @@ urlpatterns += patterns('satchmo.shop.views',
 #is that we ignore all but the child and parent category.  In practice this should be ok
 
 urlpatterns += patterns('satchmo.product.views',
-    (r'^product/(?P<slug>[-\w]+)/prices/$','get_price'),
     (r'^search/$', 'do_search', {}, 'satchmo_search'),
-    (r'^product/(?P<slug>[-\w]+)/$','get_item'),
-    (r'^product/(?P<slug>[-\w]+)/(?P<subitemId>[\d]+)/$','get_item'),
+    (r'^product/(?P<product_name>[-\w]+)/prices/$', 'get_price', {}, 'satchmo_product_prices'),
+    (r'^product/(?P<product_name>[-\w]+)/$', 'get_product', {}, 'satchmo_product'),
 )
 
 #Dictionaries for generic views used in Satchmo
 
 index_dict = {
-    'queryset': Item.objects.filter(active='1').filter(featured='1'),
+    'queryset': Product.objects.filter(active="1").filter(featured="1"),
     'template_object_name': 'all_items',
     'template_name': 'base_index.html',
     'allow_empty': True,

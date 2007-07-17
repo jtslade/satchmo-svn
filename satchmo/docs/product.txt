@@ -1,7 +1,7 @@
 Products
 ========
 
-The core of any online store is the product or item you are selling.  Some people may have very simple needs for categorizing and describing their products, while others may have much more complex needs.  Satchmo's product framework tries to strike a balance, enabling easy product configuration but supporting complex products if your needs demand.
+The core of any online store is the product  you are selling.  Some people may have very simple needs for categorizing and describing their products, while others may have much more complex needs.  Satchmo's product framework tries to strike a balance, enabling easy product configuration but supporting complex products if your needs demand.
 
 Categories
 ----------
@@ -27,7 +27,7 @@ Out of the box, Satchmo supports the traditional hierarchical method for categor
 Some things to keep in mind with Satchmo's implementation:
 
  * You are not limited to the number of categories or the depth of categories.
- * You are allowed to add products to 1 or more products
+ * You are allowed to add products to 1 or more product categories
  
 When entering a category in the admin interface, you will have several fields to fill in.  Below is a description of each field and how it is used:
 
@@ -46,26 +46,26 @@ Meta
 Description
     This is a free form field that describes this category.  You can use this to help guide users in your site.  It's also helpful for search engines.
     
-Item
+Product
 ----
 
-An Item is the main focus of your store.  It is the "thing" that a person going to your store would see.  There are many fields you can use to configure your Items.
+A Product is the main focus of your store.  It is the "thing" that a person going to your store would see.  There are many fields you can use to configure your Items.
 
 Category
     See the description above.  This is where you choose one or more categories where a person could find this product.
     
-Verbose_name
-    This is the full name of an item.  Think of it as the title of the item.
+Full_name
+    This is the full name of an product.  Think of it as the title of the product.
     
-Short_name
+Slug_name (simply name in the model)
     This is similar to the slug field in category.  It is a brief description of the item that will show up in the url and uniquely identify this product.
     
 Description
     Free form text fields that tell a potential customer about this item and why they may want to purchase it.
 
-Meta
-    This meta field is similar to the one described above in the category.  It's basically some additional descriptive language you might want to include in your HTML that does not already show up in the description.
-    
+Short_description
+    This is meant for a brief 1 or 2 line description that can be shown by your templates on the product category pages and similar places.
+
 Date_added
     The date you added this product to your store.  It could be useful for showing a list of new products.
     
@@ -73,32 +73,52 @@ Active
     A flag to identify which items are still valid in the store.  If you decide you don't want to show an item for purchase, I recommend making it Active=False instead of trying to delete it.
     
 Featured
-    Another flag which can be used to identify special items that you may want to highlight in your site.
+    Another flag which can be used to identify special items that you may want to highlight in your site. In the default templates, featured items show-up on the front page of the store.
     
-Option group
-    This is a collection of descriptions that identify this item.  See more details below.
-    
-Base_price
-    An item has multiple ways to determine a price.  In the absence of any of the more advanced methods, this is the price that will be shown to the customer.  When using some of the other methods to calculate price, this value sets the baseline which can be increased or decreased depending on your rules.
+items in stock
+    The inventory of this specific item.
+
+Meta
+    This meta field is similar to the one described above in the category.  It's basically some additional descriptive language you might want to include in your HTML that does not already show up in the description.
     
 Weight, Length and Height
     These dimensions are for your use in displaying the item's info. It can also be used for shipping calculations.
 
-Create_subs
-    This is a special option that allows you to create sub_items.  You can learn more about sub_items below.
+Taxable
+    A flag to tell whether or not tax should be calculated for this product.  More information on taxes can be found ...
     
+Tax_class
+    Allows you to set the rate at which tax is calculated.
+
 Related_items
     Certain products may naturally be grouped together.  If you were to purchase a movie, you might want to include links to the book based on the movie or maybe a movie poster.  This would be the place to record those linkages.
     
 Also_purchased
     Another field to show relationships between products.  This can be useful if you want to try to increase sales by showing what others have purchased when they bought this product.
     
-Taxable
-    A flag to tell whether or not tax should be calculated for this product.  More information on taxes can be found ...
+Price
+    An item has multiple ways to determine a price.  For a simple single-price all the time item, just enter a price with a "Discount Quantity" of 1, and a blank "Expires" date.  More detailed options are spelled out in the Price and ConfigurableProduct sections below.
+
+Images
+    Add an image to your product, see Images section below.
+
+Product Subtypes
+    There's a variety of ways that the behavior of a product can be expanded. These additional, optional, features are shown as product SubTypes. The most commonly used of these will be ConfigurableProduct which allows you to have options on your product such as Sizes: Small/Medium/Large, Colors, etc. For more details on the Product SubTypes look in the applicable sections below.
+
+Price
++++++
+
+The final choice you have with your products is if there is additional pricing you would like to apply for bulk or special discounts.  For instance, you may want to charge someone $10 for 1-5 shirts but only $7 if they order 6 or more.  This model allows you to do such configuration.
+
+Price
+    Override the price for this sub item if it meets one of the other criteria identified below.
     
-Tax_class
-    Allows you to set the rate at which tax is calculated.
+Quantity
+    The number of items needed to qualify for the price change.
     
+Expires
+    Date when this offer is no longer valid.  This can be used for various promotions.
+
 Images
 ++++++
 
@@ -118,7 +138,7 @@ Sort
 Item Options
 ------------
 
-As discussed above, an item is the central focus of your store.  For many cases, the items in your store may have several options.  For instance, if you sell t-shirts, a visitor to your store should be able to choose the size of the shirt while looking at the main item.  You may also want them to choose a color, style and/or a bunch of other different options.  The challenge with this much flexibility is building something that is easy for the user to understnad and easy for the store administrator to maintain.  Satchmo has designed option groups, options and sub_items to provide maximum flexibility and maintainability.
+As discussed above, an item is the central focus of your store.  For many cases, the items in your store may have several options.  For instance, if you sell t-shirts, a visitor to your store should be able to choose the size of the shirt while looking at the main item.  You may also want them to choose a color, style and/or a bunch of other different options.  The challenge with this much flexibility is building something that is easy for the user to understnad and easy for the store administrator to maintain.  Satchmo has designed option groups, and options used with configurable products and product variants to provide maximum flexibility and maintainability.
 
 Option Groups
 +++++++++++++
@@ -149,31 +169,21 @@ Value
     
 Price Change
     If you would like this option to modify the Item's price, enter a positive or negative number here.
+
+
+Configurable Products
++++++++++++++++++++++
+ConfigurableProduct is a modifier for a product that allows you to associate an OptionGroup with a particular Product.
+
+Option group
+    This is a collection of descriptions that identify this item.  See more details below.
     
-Sub Item
+Create_Variations
+    This is a special option that allows you to create ProductVariations.
+
+Variations
+    Variations are all Products that are never displayed directly to a customer, but represent the actual product as you would have it on the shelf.  For example, if your ConfigurableProduct is a t-shirt, then you will probably have ProductVariations for "Large Green t-shirt", "Small Blue t-shirt", etc.  It's easiest to have these generated for you using the create_variations option above, but once their created then you can edit these individually to do things such as set a different price for the XL shirt, or whatever.
+    
+ProductVariation
 ++++++++
-
-A sub item can be thought of as the actual product you maintain in inventory and sell to a customer.  It is an item with all of the options applied.  In our example case, it might be a Large, White Shirt.
-
-subitem id
-    This could be a sku for the product.  It's basically a short id to use to identify your product.
-    
-items in stock
-    The inventory of this specific item.
-
-Weight, Length and Height
-    Descriptive information about this item that can be used in shipping calculations or other places in your site.
-    
-Price
-+++++
-
-The final choice you have with your products is if there is additional pricing you would like to apply for bulk or special discounts.  For instance, you may want to charge someone $10 for 1-5 shirts but only $7 if they order 6 or more.  This model allows you to do such configuration.
-
-Price
-    Override the price for this sub item if it meets one of the other criteria identified below.
-    
-Quantity
-    The number of items needed to qualify for the price change.
-    
-Expires
-    Date when this offer is no longer valid.  This can be used for various promotions.
+As described above a ProductVariation can be thought of as the actual product you maintain in inventory and sell to a customer.  It is an item with all of the options applied.  In our example case, it might be a Large, White Shirt. The ProductVariation object itself only has links between a ConfigurableProduct, a Product

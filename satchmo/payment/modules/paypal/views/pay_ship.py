@@ -2,14 +2,17 @@
 # Second step in the order process - capture the billing method and shipping type
 #####################################################################
 
+import datetime
+import calendar
 import sys
 from django import http
 from django import newforms as forms
 from django.conf import settings
+from django.core import urlresolvers
 from django.shortcuts import render_to_response
 from django.template import loader
 from django.template import RequestContext, Context
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from satchmo.shop.models import Cart
 from satchmo.contact.models import Contact
 from satchmo.discount.models import Discount
@@ -25,12 +28,12 @@ for module in settings.SHIPPING_MODULES:
 payment_module = PaymentSettings().PAYPAL
 
 class PayShipForm(forms.Form):
-    shipping = forms.ChoiceField(widget=forms.RadioSelect())
+    shipping = forms.ChoiceField(widget=forms.RadioSelect(), required=False)
     discount = forms.CharField(max_length=30, required=False)
 
     def __init__(self, request, *args, **kwargs):
         super(PayShipForm, self).__init__(*args, **kwargs)
-        
+
         shipping_options = []
         self.tempCart = Cart.objects.get(id=request.session['cart'])
         self.tempContact = Contact.objects.get(id=request.session['custID'])
@@ -44,9 +47,15 @@ class PayShipForm(forms.Form):
                     'amount': shipping_instance.cost(),
                     'description' : shipping_instance.description(),
                     'method' : shipping_instance.method(),
-                    'expected_delivery' : shipping_instance.expectedDelivery() })
+                    'expected_delivery': shipping_instance.expectedDelivery()})
                 shipping_options.append((shipping_instance.id, t.render(c)))
-        self.fields['shipping'].choices = shipping_options        
+        self.fields['shipping'].choices = shipping_options
+
+    def clean_shipping(self):
+        shipping = self.cleaned_data['shipping']
+        if not shipping and self.tempCart.is_shippable:
+            raise forms.ValidationError(_('This field is required.'))
+        return shipping
 
     def clean_discount(self):
         """ Check if discount exists and is valid. """
@@ -55,13 +64,12 @@ class PayShipForm(forms.Form):
             try:
                 discount = Discount.objects.get(code=data, active=True)
             except Discount.DoesNotExist:
-                raise forms.ValidationError('Invalid discount.')
+                raise forms.ValidationError(_('Invalid discount.'))
             valid, msg = discount.isValid(self.tempCart)
             if not valid:
                 raise forms.ValidationError(msg)
             # TODO: validate that it can work with these products
         return data
-
 
 def pay_ship_info(request):
     #First verify that the customer exists

@@ -25,13 +25,18 @@ Checkout
     <tr><td><h4>Discounts</h4></td></tr>
     <tr><td><label for="id_discount">Discount code</label></td><td> {{ form.discount }}</td></tr>
     <tr><td></td><td>{% if form.discount.errors %}*** {{ form.discount.errors|join:", " }}{% endif %}</td></tr>
-    
+
+{% if cart.is_shippable %}
     <tr><td><h4>Shipping Information</h4></td></tr>
     </table>
     <div id="shipping">
     <label for="id_shipping">Please choose your preferred shipping method</label>{{ form.shipping}}
     {% if form.shipping.errors %}*** {{ form.shipping.errors|join:", " }}{% endif %}
     </div>
+{% else %}
+    </table>
+{% endif %}
+
     <input type="submit" value="Confirm"/>
 </form>
 

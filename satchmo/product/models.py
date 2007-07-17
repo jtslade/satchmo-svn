@@ -9,7 +9,7 @@ import os
 from sets import Set
 from decimal import Decimal
 from django.conf import settings
-from django.core import validators
+from django.core import validators, urlresolvers
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from satchmo.tax.models import TaxClass
@@ -41,7 +41,7 @@ class Category(models.Model):
         p_list = self._recurse_for_parents_slug(self)
         p_list.append(self.slug)
         return u'%s/category/%s/' % (settings.SHOP_BASE, u'/'.join(p_list))
-
+                
     def _recurse_for_parents_name(self, cat_obj):
         #This is used for the visual display & save validation
         p_list = []
@@ -123,7 +123,7 @@ class Category(models.Model):
     class Admin:
         list_display = ('name', '_parents_repr')
         ordering = ['name']
-        
+
     class Meta:
         verbose_name = _("Category")
         verbose_name_plural = _("Categories")
@@ -151,223 +151,124 @@ class OptionGroup(models.Model):
         verbose_name = _("Option Group")
         verbose_name_plural = _("Option Groups")
 
-class Item(models.Model):
+class OptionManager(models.Manager):
+    def from_unique_id(self, str):
+        (og, opt) = str.split('-')
+        group = OptionGroup.objects.get(id=og)
+        return Option.objects.get(optionGroup=og, value=opt)
+
+class Option(models.Model):
     """
-    The basic product being sold in the store.  This is what the customer sees.
-    """
-    category = models.ManyToManyField(Category, filter_interface=True)
-    verbose_name = models.CharField(_("Full Name"), maxlength=255)
-    short_name = models.SlugField(_("Slug Name"), prepopulate_from=("verbose_name",), unique=True, help_text=_("This is a short, descriptive name of the shirt that will be used in the URL link to this item"))
-    description = models.TextField(_("Description of product"), help_text=_("This field can contain HTML and should be a few paragraphs explaining the background of the product, and anything that would help the potential customer make their purchase."))
-    meta = models.TextField(maxlength=200, blank=True, null=True, help_text=_("Meta description for this item"))
-    date_added = models.DateField(null=True, blank=True)
-    active = models.BooleanField(_("Is product active?"), default=True, help_text=_("This will determine whether or not this product will appear on the site"))
-    featured = models.BooleanField(_("Featured Item"), default=False, help_text=_("Featured items will show on the front page"))
-    option_group = models.ManyToManyField(OptionGroup, filter_interface=True, blank=True)
-    base_price = models.DecimalField(_("Default Price"), max_digits=6, decimal_places=2)
-    weight = models.DecimalField(_("Weight"), max_digits=6, decimal_places=2, null=True, blank=True)
-    length = models.DecimalField(_("Length"), max_digits=6, decimal_places=2, null=True, blank=True)
-    width = models.DecimalField(_("Width"), max_digits=6, decimal_places=2, null=True, blank=True)
-    height = models.DecimalField(_("Height"), max_digits=6, decimal_places=2, null=True, blank=True)
-    create_subs = models.BooleanField(_("Create Sub Items"), default=False, help_text=_("Create new sub-items"))
-    relatedItems = models.ManyToManyField('self', blank=True, null=True, related_name='related')
-    alsoPurchased = models.ManyToManyField('self', blank=True, null=True, related_name='previouslyPurchased')
-    taxable = models.BooleanField(default=False)
-    taxClass = models.ForeignKey(TaxClass, blank=True, null=True, help_text=_("If it is taxable, what kind of tax?"))    
-    
-    def __unicode__(self):
-        return self.short_name 
-    
-    def _get_price(self):
-        return self.base_price
-    price = property(_get_price)
-    
-    def _get_mainImage(self):
-        if self.itemimage_set.count() > 0:
-            return(self.itemimage_set.order_by('sort')[0])
-        else:
-            return(False)
-    main_image = property(_get_mainImage)
-    
-    def _cross_list(self, sequences):
-        """
-        Code taken from the Python cookbook v.2 (19.9 - Looping through the cross-product of multiple iterators)
-        This is used to create all the sub items associated with an item
-        """
-        result =[[]]
-        for seq in sequences:
-            result = [sublist+[item] for sublist in result for item in seq]
-        return result
-    
-    def create_subitems(self):
-        """
-        Get a list of all the optiongroups applied to this object
-        Create all combinations of the options and create subitems
-        """
-        sublist = []
-        masterlist = []
-        #Create a list of all the options & create all combos of the options
-        for opt in self.option_group.all():
-            for value in opt.optionitem_set.all():
-                sublist.append(value)
-            masterlist.append(sublist)
-            sublist = []
-        combinedlist = self._cross_list(masterlist)
-        #Create new sub_items for each combo
-        num = 0 #used to make subitem_id unique
-        for options in combinedlist:
-            num += 1
-            price_delta = 0
-            sub = SubItem(item=self, items_in_stock=0)
-            sub.subitem_id = '%s-%i' % (self.short_name, num) #TODO: there must be a better way to do this
-            sub.save()
-            s1 = Set()
-            for option in options:
-                sub.options.add(option)
-                optionValue = "%s-%s" % (option.optionGroup.id, option.value)
-                s1.add(optionValue)
-                sub.save()
-            #If the option already exists, lets make sure there are no dupes
-            #TODO: Check before we create the item
-            if self.get_sub_item_count(s1) > 1:              
-                sub.delete()
-        return(True)
-    
-    def get_sub_item(self, optionSet):
-        for sub in self.subitem_set.all():
-            if sub.option_values == optionSet:
-                return(sub)
-        return(None)
-    
-    def get_sub_item_count(self, optionSet):
-        count = 0
-        for sub in self.subitem_set.all():
-            if sub.option_values == optionSet:
-                count+=1
-        return count
-
-    def save(self):
-        """Right now this only works if you save the suboptions, then go back and choose to create the subitems.
-        Also ensure that we have a date_added on the first save."""
-        if not self.id:
-            self.date_added = datetime.date.today()
-
-        if self.create_subs:
-            self.create_subitems()
-            self.create_subs = False
-        super(Item, self).save()
-
-    def get_absolute_url(self):
-        return u'%s/product/%s/' % (settings.SHOP_BASE, self.short_name)
-
-    class Admin: 
-        list_display = ('verbose_name', 'active')
-        fields = (
-        (None, {'fields': ('category','verbose_name','short_name','description','date_added','active','featured','base_price',)}),
-        ('Meta Data', {'fields': ('meta',), 'classes': 'collapse'}),
-        ('Item Dimensions', {'fields': (('length', 'width','height',),'weight'), 'classes': 'collapse'}),
-        ('Options', {'fields': ('option_group','create_subs',),}), 
-        ('Tax', {'fields':('taxable', 'taxClass'), 'classes': 'collapse'}),
-        ('Related Products', {'fields':('relatedItems','alsoPurchased'),'classes':'collapse'}), 
-        )
-        list_filter = ('category',)
-        
-    class Meta:
-        verbose_name = _("Master Product")
-        verbose_name_plural = _("Master Products")
-
-class ItemImage(models.Model):
-    """
-    A picture of an item.  Can have many pictures associated with an item.
-    Thumbnails are automatically created.
-    """
-    item = models.ForeignKey(Item, edit_inline=models.TABULAR, num_in_admin=3)
-    picture = ImageWithThumbnailField(upload_to="./images") #Media root is automatically appended
-    caption = models.CharField(_("Optional caption"),maxlength=100,null=True, blank=True)
-    sort = models.IntegerField(_("Sort Order"), help_text=_("Leave blank to delete"), core=True)
-    
-    def __unicode__(self):
-        return u"Picture of %s" % self.item.short_name
-        
-    class Meta:
-        ordering = ['sort']
-        verbose_name = _("Product Image")
-        verbose_name_plural = _("Product Images")
-
-class OptionItem(models.Model):
-    """
-    These are the actual items in an OptionGroup.  If the OptionGroup is Size, then an OptionItem
+    These are the actual items in an OptionGroup.  If the OptionGroup is Size, then an Option
     would be Small.
     """
     optionGroup = models.ForeignKey(OptionGroup, edit_inline=models.TABULAR, num_in_admin=5)
     name = models.CharField(_("Display value"), maxlength = 50, core=True)
-    value = models.CharField(_("Stored value"), prepopulate_from=("name",), maxlength = 50)
+    value = models.SlugField(_("Stored value"), prepopulate_from=("name",), maxlength = 50)
     price_change = models.DecimalField(_("Price Change"), null=True, blank=True, 
                                     help_text=_("This is the price differential for this option"), max_digits=4, decimal_places=2)
     displayOrder = models.IntegerField(_("Display Order"))
 
-    def _get_combined_id(self):
+    objects = OptionManager()
+
+    def _get_unique_id(self):
         return '%s-%s' % (str(self.optionGroup.id), str(self.value),)
     # optionGroup.id-value
-    combined_id = property(_get_combined_id)
-    
-    def _get_price_change(self):
-        return self.price_change
-    get_price_change = property(_get_price_change)
+    unique_id = property(_get_unique_id)
+
+    def __repr__(self):
+        return '<Option: %s>'%self.name
 
     def __unicode__(self):
-        return self.name
+        return u'%s: %s' % (self.optionGroup.name, self.name)
         
     class Meta:
-        ordering = ['displayOrder']
+        ordering = ['optionGroup','displayOrder']
         verbose_name = _("Option Item")
         verbose_name_plural = _("Option Items")
 
-class SubItem(models.Model):
+    def save(self):
+        #Combination of optionGroup and value must be unique
+        if Option.objects.filter(optionGroup=self.optionGroup, value=self.value).count():
+            return
+
+        super(Option, self).save()
+
+class ProductManager(models.Manager):
+    def active(self):
+        return self.filter(active=True)
+
+class Product(models.Model):
     """
-    The unique inventoriable item.  For instance, if a shirt has a size and color, then
-    only 1 SubItem would have Size=Small and Color=Black
+    Root class for all Products
     """
-    item = models.ForeignKey(Item)
-    subitem_id = models.SlugField(_("Slug Name"), unique=True, core=True)
-    items_in_stock = models.IntegerField(_("Number in stock"), core=True)
-    weight = models.DecimalField(_("Weight"), max_digits=6, decimal_places=2, null=True, blank=True)
+    name = models.SlugField(_("Slug Name"), unique=True, prepopulate_from=('full_name',), core=True, blank=False)
+    full_name = models.CharField(_("Full Name"), maxlength=255)
+    short_description = models.TextField(_("Short description of product"), help_text=_("This should be a 1 or 2 line description for use in product listing screens"), maxlength=200, default='', blank=True)
+    description = models.TextField(_("Description of product"), help_text=_("This field can contain HTML and should be a few paragraphs explaining the background of the product, and anything that would help the potential customer make their purchase."), default='', blank=True)
+    category = models.ManyToManyField(Category, filter_interface=True, blank=True)
+    items_in_stock = models.IntegerField(_("Number in stock"), default=0)
+    #TODO: Add this, useful for things like DownloadableProducts that wont have stock
+    #require_stock = models.BooleanField(default=True)
+    meta = models.TextField(maxlength=200, blank=True, null=True, help_text=_("Meta description for this item"))
+    date_added = models.DateField(null=True, blank=True)
+    active = models.BooleanField(_("Is product active?"), default=True, help_text=_("This will determine whether or not this product will appear on the site"))
+    featured = models.BooleanField(_("Featured Item"), default=False, help_text=_("Featured items will show on the front page"))
+    weight = models.DecimalField(_("Weight"), max_digits=8, decimal_places=2, null=True, blank=True)
     length = models.DecimalField(_("Length"), max_digits=6, decimal_places=2, null=True, blank=True)
     width = models.DecimalField(_("Width"), max_digits=6, decimal_places=2, null=True, blank=True)
     height = models.DecimalField(_("Height"), max_digits=6, decimal_places=2, null=True, blank=True)
-    options = models.ManyToManyField(OptionItem, filter_interface=True, null=True, blank=True, core=True)
-    
-    def _get_optionName(self):
-        "Returns the options in a human readable form"
-        if self.options.count() == 0:
-            return self.item.verbose_name
-        output = self.item.verbose_name + " ( "
-        numProcessed = 0
-        # We want the options to be sorted in a consistent manner
-        optionDict = dict([(sub.optionGroup.sort_order, sub) for sub in self.options.all()])
-        for optionNum in sorted(optionDict.keys()):
-            numProcessed += 1
-            if numProcessed == self.options.count():
-                output += optionDict[optionNum].name
-            else:
-                output += optionDict[optionNum].name + "/"
-        output += " )"
-        return output
-    full_name = property(_get_optionName)
+    relatedItems = models.ManyToManyField('self', blank=True, null=True, related_name='related')
+    alsoPurchased = models.ManyToManyField('self', blank=True, null=True, related_name='previouslyPurchased')
+    taxable = models.BooleanField(default=False)
+    taxClass = models.ForeignKey(TaxClass, blank=True, null=True, help_text=_("If it is taxable, what kind of tax?"))
+
+    objects = ProductManager()
+
+    def _get_mainImage(self):
+        if self.productimage_set.count() > 0:
+            return(self.productimage_set.order_by('sort')[0])
+        else:
+            #This should be a "Image Not Found" placeholder image
+            try:
+                return(ProductImage.objects.filter(product__isnull=True).order_by('sort')[0])
+            except IndexError:
+                import sys
+                print >>sys.stderr, 'Warning: default product image not found - try syncdb'
+                return(False)
+    main_image = property(_get_mainImage)
     
     def _get_fullPrice(self):
         """
         returns price as a Decimal
         """
-        qty_price = self._get_qty_price(1) #get unit price for subitem if available
-        if qty_price:
+        #First try to get a price from price_set
+        qty_price = self._get_qty_price(1)
+        if qty_price is not None:
             return qty_price
-        price_delta = Decimal('0.00') #otherwise fallback on item.price - option.price_change
-        for option in self.options.all():
-            if option.price_change:
-                price_delta += option.get_price_change
-        return self.item.price + price_delta
+        
+        #if that didn't work, and this is a "ProductVariation" then calculate the price from the options
+        try:
+            return self.productvariation.unit_price
+        except models.ObjectDoesNotExist:
+            pass
+
+        #No Price found
+        return None
+
     unit_price = property(_get_fullPrice)
+
+    def _get_shippable(self):
+        """
+        If this Product has any subtypes associated with it that are not
+        shippable, then consider the product not shippable.
+        """
+        for type in self.get_subtypes():
+            subtype = getattr(self, type.lower())
+            if hasattr(subtype, 'is_shippable') and not subtype.is_shippable:
+                return False
+        return True
+    is_shippable = property(_get_shippable)
     
     def get_qty_price(self, qty):
         """
@@ -379,7 +280,7 @@ class SubItem(models.Model):
         if qty_price:
             return qty_price
         else:
-            return self.unit_price
+            return self._get_fullPrice()
 
     def _get_qty_price(self, qty):
         """
@@ -392,27 +293,7 @@ class SubItem(models.Model):
         else:
             return None
     
-    def _get_optionValues(self):
-        """
-        Return a set of all the valid options for this sub item.  
-        A set makes sure we don't have to worry about ordering
-        """
-        output = Set()
-        for option in self.options.all():
-            outvalue = "%s-%s" % (option.optionGroup.id,option.value)
-            output.add(outvalue)
-        return(output)
-    option_values = property(_get_optionValues)
-    
-    def _check_optionParents(self):
-        groupList = []
-        for option in self.options.all():
-            if option.optionGroup.id in groupList:
-                return(True)
-            else:
-                groupList.append(option.optionGroup.id)
-        return(False)
-    
+  
     def in_stock(self):
         if self.items_in_stock > 0:
             return True
@@ -421,34 +302,294 @@ class SubItem(models.Model):
 
     def __unicode__(self):
         return self.full_name
-    
-    def isValidOption(self, field_data, all_data):
-        raise validators.ValidationError, _("Two options from the same option group can not be applied to an item.")
-    
-    #def save(self):
-    #    super(Sub_Item, self).save()
-    #    if self._check_optionParents():
-    #        super(Sub_Item, self).delete()
-    #        raise validators.ValidationError, "Two options from the same option group can not be applied to an item."
-    #    else:
-    #        super(Sub_Item, self).save()
-    
+  
     def get_absolute_url(self):
-        return u'%s/product/%s/%s/' % (settings.SHOP_BASE,
-            self.item.short_name, self.id)
+        return urlresolvers.reverse('satchmo_product',
+            kwargs={'product_name': self.name})
 
     class Admin:
-        list_display = ('full_name', 'unit_price', 'items_in_stock')
-        list_filter = ('item',)
+        list_display = ('name', 'full_name', 'unit_price', 'items_in_stock', 'get_subtypes',)
+        list_filter = ('category',)
         fields = (
-        (None, {'fields': ('item','subitem_id','items_in_stock',)}),
+        (None, {'fields': ('category', 'full_name', 'name', 'description', 'short_description', 'date_added', 'active', 'featured', 'items_in_stock',)}),
+        ('Meta Data', {'fields': ('meta',), 'classes': 'collapse'}),
         ('Item Dimensions', {'fields': (('length', 'width','height',),'weight'), 'classes': 'collapse'}),
-        ('Options', {'fields': ('options',),}),       
+        ('Tax', {'fields':('taxable', 'taxClass'), 'classes': 'collapse'}),
+        ('Related Products', {'fields':('relatedItems','alsoPurchased'),'classes':'collapse'}),
         )
 
     class Meta:
-        verbose_name = _("Individual Product")
-        verbose_name_plural = _("Individual Products")
+        ordering = ('name',)
+        verbose_name = _("Product")
+        verbose_name_plural = _("Products")
+
+    def save(self):
+        if not self.id:
+            self.date_added = datetime.date.today()
+
+        super(Product, self).save()
+
+    def get_subtypes(self):
+        types = []
+        for type in settings.PRODUCT_TYPES:
+            type = type[1]
+            try:
+                if getattr(self, type.lower()):
+                    types += [type]
+            except models.ObjectDoesNotExist:
+                pass
+        return tuple(types)
+    get_subtypes.short_description = "Product SubTypes"
+
+class ConfigurableProduct(models.Model):
+    """
+    Product with selectable options.
+    This is a sort of virtual product that is visible to the customer, but isn't actually stocked on a shelf,
+    the specific "shelf" product is determined by the selected options.
+    """
+    product = models.OneToOneField(Product)
+    option_group = models.ManyToManyField(OptionGroup, blank=True,)
+    create_subs = models.BooleanField(_("Create Variations"), default=False, help_text =_("Create ProductVariations for all this product's options"))
+ 
+    def _cross_list(self, sequences):
+        """
+        Code taken from the Python cookbook v.2 (19.9 - Looping through the cross-product of multiple iterators)
+        This is used to create all the variations associated with an product
+        """
+        result =[[]]
+        for seq in sequences:
+            result = [sublist+[item] for sublist in result for item in seq]
+        return result
+ 
+    def get_all_options(self):
+        """
+        Returns all possible combinations of options for this products OptionGroups as a List of Lists.
+        Ex:
+        For OptionGroups Color and Size with Options (Blue, Green) and (Large, Small) you'll get
+        [['Blue', 'Small'], ['Blue', 'Large'], ['Green', 'Small'], ['Green', 'Large']]
+        Note: the actual values will be instances of Option instead of strings
+        """
+        sublist = []
+        masterlist = []
+        #Create a list of all the options & create all combos of the options
+        for opt in self.option_group.all():
+            for value in opt.option_set.all():
+                sublist.append(value)
+            masterlist.append(sublist)
+            sublist = []
+        return self._cross_list(masterlist)
+
+    def get_valid_options(self):
+        """
+        Returns the same output as get_all_options(), but filters out Options that this 
+        ConfigurableProduct doesn't have a ProductVariation for.
+        """
+        opts = self.get_all_options()
+        newopts = []
+        for a in opts:
+            if self.get_product_count(a):
+                newopts.append(a)
+        return newopts
+
+    def create_products(self):
+        """
+        Get a list of all the optiongroups applied to this object
+        Create all combinations of the options and create variations 
+        """
+        combinedlist = self.get_all_options()
+        #Create new ConfigurableProduct/ProductVariation for each combo
+        for options in combinedlist:
+            price_delta = 0
+            variant = Product(items_in_stock=0)
+            optnames = [opt.value for opt in options] #build an array of strings containing the names of the options
+            variant.name = '%s_%s' % (self.product.name, '_'.join(optnames))
+            variant.save()
+            pv = ProductVariation(product=variant, parent=self)
+            s1 = Set()
+            for option in options:
+                pv.options.add(option)
+                s1.add(option.unique_id)
+            pv.save()
+            #No longer need to check for dups, done in pv.save()
+        return(True)
+    
+    def _ensure_option_set(self, options):
+        """
+        Takes an iterable of Options (or str(Option)) and outputs a Set of
+        str(Option) suitable for comparing to a productvariation.option_values
+        """
+        if not isinstance(options, Set):
+            optionSet = Set()
+            for opt in options:
+                optionSet.add(opt.unique_id)
+            return optionSet
+        else:
+            return options
+
+    def get_product_from_options(self, options):
+        """
+        Accepts an iterable of either Option object or str(Option) objects
+        Returns the product that matches or None
+        """
+        options = self._ensure_option_set(options)
+        for member in self.productvariation_set.all():
+            if member.option_values == options:
+                return member.product
+        return None
+    
+    def get_product_count(self, options):
+        options = self._ensure_option_set(options)
+        count = 0
+        for variant in self.productvariation_set.filter(product__active='1'):
+            if variant.option_values == options:
+                count+=1
+        return count
+    
+    def save(self):
+        """
+        Right now this only works if you save the suboptions, then go back and choose to create the variations.
+        """
+        super(ConfigurableProduct, self).save()
+
+        #Doesn't work with admin - the manipulator doesn't add the option_group until after save() is called.
+        if self.create_subs and self.option_group.count():
+            self.create_products()
+            self.create_subs = False
+            super(ConfigurableProduct, self).save()
+    
+    def get_absolute_url(self):
+        return self.product.get_absolute_url()
+
+    class Admin:
+        pass
+
+    def __unicode__(self):
+        return u"<ConfigurableProduct for: %s>" % self.product.name
+
+# The following 2 classes are examples of how to implement the models for these requested features. 
+#
+#class DownloadableProduct(models.Model):
+#    """
+#    This type of Product is a file to be downloaded
+#    NOTE: This doesn't do anything yet - it's just an example
+#    """
+#    product = models.OneToOneField(Product)
+#    is_shippable = False
+#    file = None # TODO
+#
+#    class Admin:
+#        pass
+#
+#class BundledProduct(models.Model):
+#    """
+#    This type of Product is a group of products that are sold as a set
+#    NOTE: This doesn't do anything yet - it's just an example
+#    """
+#    product = models.OneToOneField(Product)
+#    members = models.ManyToManyField(Product, related_name='parent_productgroup_set')
+#
+#    class Admin:
+#        pass
+
+class ProductVariation(models.Model):
+    """
+    This is the real Product that is ordered when a customer orders a 
+    ConfigurableProduct with the matching Options selected
+
+    """
+    product = models.OneToOneField(Product)
+    options = models.ManyToManyField(Option, filter_interface=True, core=True)
+    parent = models.ForeignKey(ConfigurableProduct, core=True)
+
+    def _get_fullPrice(self):
+        """ Get price based on parent ConfigurableProduct """
+        if not self.parent.product.unit_price:
+            return None
+
+        price_delta = Decimal("0.00")
+        for option in self.options.all():
+            if option.price_change:
+                price_delta += option.price_change
+        return self.parent.product.unit_price + price_delta
+    unit_price = property(_get_fullPrice)
+
+    def _get_optionName(self):
+        "Returns the options in a human readable form"
+        if self.options.count() == 0:
+            return self.parent.verbose_name
+        output = self.parent.verbose_name + " ( "
+        numProcessed = 0
+        # We want the options to be sorted in a consistent manner
+        optionDict = dict([(sub.optionGroup.sort_order, sub) for sub in self.options.all()])
+        for optionNum in sorted(optionDict.keys()):
+            numProcessed += 1
+            if numProcessed == self.options.count():
+                output += optionDict[optionNum].name
+            else:
+                output += optionDict[optionNum].name + "/"
+        output += " )"
+        return output
+    full_name = property(_get_optionName)
+
+    def _get_optionValues(self):
+        """
+        Return a set of all the valid options for this variant.  
+        A set makes sure we don't have to worry about ordering
+        """
+        output = Set()
+        for option in self.options.all():
+            output.add(option.unique_id)
+        return(output)
+    option_values = property(_get_optionValues)
+
+    def _check_optionParents(self):
+        groupList = []
+        for option in self.options.all():
+            if option.optionGroup.id in groupList:
+                return(True)
+            else:
+                groupList.append(option.optionGroup.id)
+        return(False)
+
+    def isValidOption(self, field_data, all_data):
+        raise validators.ValidationError, _("Two options from the same option group can not be applied to an item.")
+    
+    def save(self):
+        pvs = ProductVariation.objects.filter(parent=self.parent)
+        for pv in pvs:
+            if pv.option_values == self.option_values:
+                return # Don't allow duplicates
+
+        #Ensure associated Product has a reasonable display name
+        if not self.product.full_name:
+           options = []
+           for option in self.options.order_by("optionGroup"):
+               options += [option.name]
+
+           self.product.full_name = '%s (%s)'% (self.parent.product.full_name, '/'.join(options))
+           self.product.save()
+
+        super(ProductVariation, self).save()
+
+    def get_absolute_url(self):
+        return self.product.get_absolute_url()
+  
+    class Admin:
+        pass
+
+    def __unicode__(self):
+        return u"<ProductVariation for: %s>" % self.product.name
+
+class ProductAttribute(models.Model):
+    """
+    Allows arbitrary name/value pairs (as strings) to be attached to a product.
+    This is a very quick and dirty way to add extra info to a product.
+    If you want more structure then this, create your own subtype to add 
+    whatever you want to your Products.
+    """
+    product = models.ForeignKey(Product, edit_inline=models.TABULAR, num_in_admin=1)
+    name = models.SlugField(_("Attribute Name"), maxlength=100, core=True)
+    value = models.CharField(_("Value"), maxlength=255)
 
 class Price(models.Model):
     """
@@ -456,26 +597,26 @@ class Price(models.Model):
     Separating it out lets us have different prices for the same product for different purposes.
     For example for quantity discounts.
     The current price should be the one with the earliest expires date, and the highest quantity
-    that's still below the user specified (IE: ordered) quantity, that matches a given subitem.
+    that's still below the user specified (IE: ordered) quantity, that matches a given product.
     """
-    subitem = models.ForeignKey(SubItem, edit_inline=models.TABULAR, num_in_admin=2)
-    price = models.DecimalField(_("Price"), max_digits=6, decimal_places=2, core=True)
+    product = models.ForeignKey(Product, edit_inline=models.TABULAR, num_in_admin=2)
+    price = models.DecimalField(_("Price"), max_digits=10, decimal_places=2, core=True)
     quantity = models.IntegerField(_("Discount Quantity"), default=1, help_text=_("Use this price only for this quantity or higher"))
     expires = models.DateField(null=True, blank=True)
+    #TODO: add fields here for locale/currency specific pricing
 
     def __unicode__(self):
         return unicode(self.price)
 
     def save(self):
-        #make sure that the combination of quantity/expires is unique for a given subitem.
-        prices = Price.objects.filter(subitem=self.subitem, quantity=self.quantity)
+        prices = Price.objects.filter(product=self.product, quantity=self.quantity)
         ## Jump through some extra hoops to check expires - if there's a better way to handle this field I can't think of it. Expires needs to be able to be set to None in cases where there is no expiration date.
         if self.expires:
             prices = prices.filter(expires=self.expires)
         else:
             prices = prices.filter(expires__isnull=True)
         if prices.exclude(id=self.id).count():
-            return
+            return #Duplicate Price
 
         super(Price, self).save()
 
@@ -483,6 +624,37 @@ class Price(models.Model):
         ordering = ['expires', '-quantity']
         verbose_name = _("Price")
         verbose_name_plural = _("Prices")
+        unique_together = (("product", "quantity", "expires"),)
+
+class ProductImage(models.Model):
+    """
+    A picture of an item.  Can have many pictures associated with an item.
+    Thumbnails are automatically created.
+    """
+    product = models.ForeignKey(Product, edit_inline=models.TABULAR, num_in_admin=3, null=True, blank=True)
+    picture = ImageWithThumbnailField(upload_to="./images", name_field="_filename") #Media root is automatically prepended
+    caption = models.CharField(_("Optional caption"),maxlength=100,null=True, blank=True)
+    sort = models.IntegerField(_("Sort Order"), help_text=_("Leave blank to delete"), core=True)
+
+    def _get_filename(self):
+        if self.product:
+            return self.product.name
+        else:
+            return 'default'
+    _filename = property(_get_filename)
+
+    def __unicode__(self):
+        if self.product:
+            return u"Image of Product %s" % self.product.name
+        elif self.caption:
+            return u"Image with caption \"%s\"" % self.caption
+        else:
+            return u"%s" % self.picture
+        
+    class Meta:
+        ordering = ['sort']
+        verbose_name = _("Product Image")
+        verbose_name_plural = _("Product Images")
 
     class Admin:
         pass

@@ -3,7 +3,7 @@ Sets up a discount that can be applied to a product
 """
 
 from django.db import models
-from satchmo.product.models import Item
+from satchmo.product.models import Product
 from datetime import date
 from satchmo.shop.utils.validators import MutuallyExclusiveWithField
 from django.utils.translation import ugettext, ugettext_lazy as _
@@ -41,8 +41,7 @@ class Discount(models.Model):
         help_text=_("Should this discount remove all shipping costs?"))
     includeShipping = models.BooleanField(_("Include shipping"), blank=True, null=True,
         help_text=_("Should shipping be included in the discount calculation?"))
-    validProducts = models.ManyToManyField(Item, filter_interface=True,
-        blank=True)
+    validProducts = models.ManyToManyField(Product, filter_interface=True, blank=True, null=True)
 
     def __unicode__(self):
         return self.description
@@ -75,7 +74,7 @@ class Discount(models.Model):
         validItems = not bool(validProducts)
         if validProducts:
             for cart_item in cart.cartitem_set.all():
-                if cart_item.subItem.item in validProducts:
+                if cart_item.product in validProducts:
                     validItems = True
                     break   #Once we have 1 valid item, we exit
         if validItems:

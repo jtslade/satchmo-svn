@@ -6,7 +6,7 @@ from django.conf import settings
 prefix = settings.SHOP_BASE
 
 class ShopTest(TestCase):
-    fixtures = ['i18n-data.yaml', 'sample-store-data.yaml']
+    fixtures = ['i18n-data.yaml', 'sample-store-data.yaml', 'products.yaml']
     
     def setUp(self):
         # Every test needs a client
@@ -65,12 +65,51 @@ class ShopTest(TestCase):
         """
         response = self.client.get(prefix+'/product/DJ-Rocks/')
         self.assertContains(response, "Django Rocks shirt", count=1, status_code=200)
-        response = self.client.post(prefix+'/cart/1/add/', {"1" : "L",
+        response = self.client.post(prefix+'/cart/add/', { "productname" : "DJ-Rocks",
+                                                      "1" : "L",
                                                       "2" : "BL",
                                                       "quantity" : 2})
         self.assertRedirects(response, prefix+'/cart/', status_code=302, target_status_code=200)
         response = self.client.get(prefix+'/cart/')
-        self.assertContains(response, "Django Rocks shirt ( Large/Blue )", count=1, status_code=200)
+        self.assertContains(response, "Django Rocks shirt (Large/Blue)", count=1, status_code=200)
+
+    def test_get_price(self):
+        """
+        Get a price/productname for a ProductVariation
+        """
+        response = self.client.get(prefix+'/product/DJ-Rocks/')
+        self.assertContains(response, "Django Rocks shirt", count=1, status_code=200)
+
+        # this tests the umolested price from the ConfigurableProduct, and makes sure we get 
+        # a good productname back for the ProductVariation
+        response = self.client.post(prefix+'/product/DJ-Rocks/prices/', {"1" : "S",
+                                                      "2" : "B",
+                                                      "quantity" : 1})
+        self.assertContains(response, "DJ-Rocks_S_B", count=1, status_code=200)
+        self.assertContains(response, "$20.00", count=1, status_code=200)
+
+        # This tests the option price_change feature, and again the productname
+        response = self.client.post(prefix+'/product/DJ-Rocks/prices/', {"1" : "L",
+                                                      "2" : "BL",
+                                                      "quantity" : 2})
+        self.assertContains(response, "DJ-Rocks_L_BL", count=1, status_code=200)
+        self.assertContains(response, "$23.00", count=1, status_code=200)
+
+#        response = self.client.get(prefix+'/product/neat-software/')
+#        self.assertContains(response, "Neat Software", count=1, status_code=200)
+
+        # The following 2 test using the ProductVariation Price
+#        response = self.client.post(prefix+'/product/neat-software/prices/', {"4" : "full",
+#                                                      "quantity" : 1})
+#        self.assertContains(response, "$5.00", count=1, status_code=200)
+#        response = self.client.post(prefix+'/product/neat-software/prices/', {"4" : "upgrade",
+#                                                      "quantity" : 1})
+#        self.assertContains(response, "$1.00", count=1, status_code=200)
+
+        # This tests quantity discounts
+#        response = self.client.post(prefix+'/product/neat-software/prices/', {"4" : "full",
+#                                                      "quantity" : 50})
+#        self.assertContains(response, "$2.00", count=1, status_code=200)
         
     def test_cart_removing(self):
         """

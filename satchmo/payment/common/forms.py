@@ -2,7 +2,7 @@ from django import newforms as forms
 from django.conf import settings
 from django.template import Context
 from django.template import loader
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from satchmo.contact.models import Contact
 from satchmo.discount.models import Discount
 from satchmo.payment.paymentsettings import PaymentSettings
@@ -14,14 +14,13 @@ import datetime
 import sys
 
 class PaymentContactInfoForm(ContactInfoForm):
-    
     _choices = PaymentSettings().as_selectpairs()
     if len(_choices) > 1:
         _paymentwidget = forms.RadioSelect
     else:
         _paymentwidget = forms.HiddenInput(attrs={'value' : _choices[0][0]})
 
-    paymentmethod = forms.ChoiceField(label=_('Payment Method'), 
+    paymentmethod = forms.ChoiceField(label=_('Payment Method'),
                                     choices=_choices,
                                     widget=_paymentwidget,
                                     required=True)
@@ -32,7 +31,7 @@ class PayShipForm(forms.Form):
     month_expires = forms.ChoiceField(choices=[(month,month) for month in range(1,13)])
     year_expires = forms.ChoiceField()
     ccv = forms.IntegerField() # find min_length
-    shipping = forms.ChoiceField(widget=forms.RadioSelect())
+    shipping = forms.ChoiceField(widget=forms.RadioSelect(), required=False)
     discount = forms.CharField(max_length=30, required=False)
 
     def __init__(self, request, paymentmodule, *args, **kwargs):
@@ -61,7 +60,7 @@ class PayShipForm(forms.Form):
                     'method' : shipping_instance.method(),
                     'expected_delivery' : shipping_instance.expectedDelivery() })
                 shipping_options.append((shipping_instance.id, t.render(c)))
-        self.fields['shipping'].choices = shipping_options        
+        self.fields['shipping'].choices = shipping_options
 
     def clean_credit_number(self):
         """ Check if credit card is valid. """
@@ -81,8 +80,14 @@ class PayShipForm(forms.Form):
         year = int(self.cleaned_data['year_expires'])
         max_day = calendar.monthrange(year, month)[1]
         if datetime.date.today() > datetime.date(year=year, month=month, day=max_day):
-            raise forms.ValidationError('Your card has expired.')
+            raise forms.ValidationError(_('Your card has expired.'))
         return year
+
+    def clean_shipping(self):
+        shipping = self.cleaned_data['shipping']
+        if not shipping and self.tempCart.is_shippable:
+            raise forms.ValidationError(_('This field is required.'))
+        return shipping
 
     def clean_discount(self):
         """ Check if discount exists and if it applies to these products """
@@ -90,7 +95,7 @@ class PayShipForm(forms.Form):
         if data:
             discount = Discount.objects.filter(code=data).filter(active=True)
             if discount.count() == 0:
-                raise forms.ValidationError('Invalid discount.')
+                raise forms.ValidationError(_('Invalid discount.'))
             valid, msg = discount[0].isValid(self.tempCart)
             if not valid:
                 raise forms.ValidationError(msg)

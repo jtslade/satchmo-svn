@@ -1,0 +1,13 @@
+{% extends "admin/change_form.html" %}
+
+{% load satchmo.product_admin %}
+
+{% block after_related_objects %}
+{% if original %}
+<fieldset class="module"><h2>Product SubTypes</h2>
+    {%edit_subtypes original%}
+</fieldset>
+{% endif %}
+{{block.super}}
+{% endblock %}
+

@@ -18,11 +18,11 @@
     <th align="center">{% trans "Total" %}</th>
     </tr>
 
-    {% for item in all_items %}
-        <tr><td><a href="{% url satchmo_cart_remove item.id %}">{% trans "Remove" %}</a></td>
-            <td align="center">{{item.quantity}}</td>
-            <td><a href="{{item.subItem.get_absolute_url}}">{{ item.description }}</a></td>
-            <td align="center">{{ item.line_total|currency }}</td>
+    {% for cartitem in all_items %}
+        <tr><td><a href="{% url satchmo_cart_remove cartitem.id %}">{% trans "Remove" %}</a></td>
+            <td align="center">{{cartitem.quantity}}</td>
+            <td><a href="{{cartitem.product.get_absolute_url}}">{{ cartitem.description }}</a></td>
+            <td align="center">{{ cartitem.line_total|currency }}</td>
         </tr>
     {% endfor %}
     <tr><td colspan="3" align="right">{% trans "Cart Total" %}:</td>

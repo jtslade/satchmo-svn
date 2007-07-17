@@ -17,11 +17,12 @@ class ImageWithThumbnailField(ImageField):
 
     def __init__(self, verbose_name=None, name=None,
                  width_field=None, height_field=None,
-                 auto_rename=True, **kwargs):
+                 auto_rename=True, name_field=None, **kwargs):
         self.width_field, self.height_field = width_field, height_field
         super(ImageWithThumbnailField, self).__init__(verbose_name, name,
                                                       width_field, height_field,
                                                       **kwargs)
+        self.name_field = name_field
         self.auto_rename = auto_rename
 
     def _save(self, instance=None):
@@ -32,19 +33,14 @@ class ImageWithThumbnailField(ImageField):
             dispatcher.connect(self._save_new, signals.post_save, sender=instance)
             return
         image = getattr(instance, self.attname)
-        # XXX this needs testing, maybe it can generate too long image names (max is 100)
-        image = rename_by_field(image, '%s-%s-%s' \
-                                % (instance.__class__.__name__,
-                                   self.name,
-                                   instance._get_pk_val()
-                                   )
-                                )
-        setattr(instance, self.attname, image)
-
-    def _save_new(self, instance):
-        if not self.auto_rename: return
-        try:
-            image = getattr(instance, self.attname)
+        if self.name_field:
+            image = rename_by_field(image, '%s-%s-%s' \
+                                    % (instance.__class__.__name__,
+                                       self.name,
+                                       getattr(instance, self.name_field)
+                                       )
+                                    )
+        else:
             # XXX this needs testing, maybe it can generate too long image names (max is 100)
             image = rename_by_field(image, '%s-%s-%s' \
                                     % (instance.__class__.__name__,
@@ -52,6 +48,27 @@ class ImageWithThumbnailField(ImageField):
                                        instance._get_pk_val()
                                        )
                                     )
+        setattr(instance, self.attname, image)
+
+    def _save_new(self, instance):
+        if not self.auto_rename: return
+        try:
+            image = getattr(instance, self.attname)
+            if self.name_field:
+                image = rename_by_field(image, '%s-%s-%s' \
+                                        % (instance.__class__.__name__,
+                                           self.name,
+                                           getattr(instance, self.name_field)
+                                           )
+                                        )
+            else:
+                # XXX this needs testing, maybe it can generate too long image names (max is 100)
+                image = rename_by_field(image, '%s-%s-%s' \
+                                        % (instance.__class__.__name__,
+                                           self.name,
+                                           instance._get_pk_val()
+                                           )
+                                        )
             setattr(instance, self.attname, image)
             instance.save()
         finally:
