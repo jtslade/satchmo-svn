@@ -220,6 +220,9 @@ class _PaymentModule(object):
             pass
         
         except AttributeError:
+            pass
+            
+        if not url:
             try:
                 url = urlresolvers.reverse(self.key + "_" + name)
             except urlresolvers.NoReverseMatch:
