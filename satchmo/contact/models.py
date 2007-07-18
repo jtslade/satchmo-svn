@@ -176,7 +176,7 @@ class PhoneNumber(models.Model):
     contact = models.ForeignKey(Contact, edit_inline=models.TABULAR,
         num_in_admin=1)
     type = models.CharField(_("Description"), choices=PHONE_CHOICES,
-        maxlength=20)
+        maxlength=20, blank=True)
     phone = models.CharField(_("Phone Number"), blank=True, maxlength=12,
         core=True)
     primary = models.BooleanField(_("Primary"), default=False)
@@ -210,7 +210,7 @@ class AddressBook(models.Model):
     """
     contact = models.ForeignKey(Contact,
         edit_inline=models.STACKED, num_in_admin=1)
-    description = models.CharField(_("Description"), maxlength=20,
+    description = models.CharField(_("Description"), maxlength=20, blank=True,
         help_text=_('Description of address - Home, Office, Warehouse, etc.',))
     street1 = models.CharField(_("Street"), core=True, maxlength=50)
     street2 = models.CharField(_("Street"), maxlength=50, blank=True)
