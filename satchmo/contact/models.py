@@ -398,7 +398,7 @@ class Order(models.Model):
 
     def order_success(self):
         """Run each item's order_success method."""
-        for orderitem in self.order.orderitem_set.all():
+        for orderitem in self.orderitem_set.all():
             for subtype_name in orderitem.product.get_subtypes():
                 subtype = getattr(orderitem.product, subtype_name.lower())
                 success_method = getattr(subtype, 'order_success', None)
