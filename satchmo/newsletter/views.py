@@ -4,6 +4,7 @@ from django.template import RequestContext
 from models import NullContact
 from satchmo.contact.models import Contact
 from satchmo.newsletter import SubscriptionManager
+from django.utils.translation import ugettext_lazy as _
 
 from django import newforms as forms
 

@@ -1,6 +1,7 @@
 """ Just tracks subscriptions, nothing more. """
 
 from satchmo.newsletter.models import Subscription
+from django.utils.translation import ugettext_lazy as _
 
 def update_contact(contact):
     sub, created = Subscription.objects.get_or_create(email=contact.email)
