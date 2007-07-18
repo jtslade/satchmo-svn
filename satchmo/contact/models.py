@@ -396,6 +396,15 @@ class Order(models.Model):
         return moneyfmt(self.total)
     order_total = property(_order_total)
 
+    def order_success(self):
+        """Run each item's order_success method."""
+        for orderitem in self.order.orderitem_set.all():
+            for subtype_name in orderitem.product.get_subtypes():
+                subtype = getattr(orderitem.product, subtype_name.lower())
+                success_method = getattr(subtype, 'order_success', None)
+                if success_method:
+                    success_method(self, orderitem)
+
     class Admin:
         fields = (
             (None, {'fields': ('contact', 'method', 'status', 'notes')}),

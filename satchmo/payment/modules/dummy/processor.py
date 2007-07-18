@@ -12,8 +12,8 @@ class PaymentProcessor(object):
     def __init__(self, settings):
         self.settings = settings
 
-    def prepareData(self, data):
-        pass
+    def prepareData(self, order):
+        self.order = order
 
     def process(self):
         """
@@ -33,6 +33,8 @@ class PaymentProcessor(object):
 
         reason_code = "0"
         response_text = _("Success")
+
+        self.order.order_success()
 
         return (True, reason_code, response_text)
 

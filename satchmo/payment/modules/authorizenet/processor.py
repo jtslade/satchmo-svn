@@ -10,17 +10,16 @@ class PaymentProcessor(object):
         self.contents = ''
         self.configuration = {
             'x_login' : settings.LOGIN,
-            'x_tran_key' : settings.TRANKEY, 
+            'x_tran_key' : settings.TRANKEY,
             'x_version' : '3.1',
             'x_relay_response' : 'FALSE',
             'x_test_request' : settings.TEST,
             'x_delim_data' : 'TRUE',
             'x_delim_char' : '|',
             'x_type': 'AUTH_CAPTURE',
-            'x_method': 'CC',                
+            'x_method': 'CC',
             }
-            
-        
+
     def prepareData(self, data):
         self.custBillData = {
             'x_first_name' : data.contact.first_name,
@@ -39,12 +38,12 @@ class PaymentProcessor(object):
             'x_exp_date' : data.CC.expirationDate,
             'x_card_code' : data.CC.ccv
             }
-        
+
         self.postString = urlencode(self.configuration) + "&" + urlencode(self.transactionData) + "&" + urlencode(self.custBillData)
-            
+        self.order = data
+
     def process(self):
         # Execute the post to Authorize Net
-        # print self.postString
         conn = urllib2.Request(url=self.connection, data=self.postString)
         f = urllib2.urlopen(conn)
         all_results = f.read()
@@ -52,8 +51,8 @@ class PaymentProcessor(object):
         response_code = parsed_results[0]
         reason_code = parsed_results[1]
         response_text = parsed_results[3]
-        #print all_results
         if response_code == '1':
+            self.order.order_success()
             return(True, reason_code, response_text)
         elif response_code == '2':
             return(False, reason_code, response_text)
@@ -69,7 +68,7 @@ if __name__ == "__main__":
 
     import os
     from satchmo.payment.paymentsettings import PaymentSettings
-    
+
     # Set up some dummy classes to mimic classes being passed through Satchmo
     class testContact(object):
         pass
@@ -79,14 +78,14 @@ if __name__ == "__main__":
         def __init__(self):
             self.contact = testContact()
             self.CC = testCC()
-    
+
     if not os.environ.has_key("DJANGO_SETTINGS_MODULE"):
         os.environ["DJANGO_SETTINGS_MODULE"]="satchmo.settings"
-        
+
     settings_module = os.environ['DJANGO_SETTINGS_MODULE']
     settingsl = settings_module.split('.')
     settings = __import__(settings_module, {}, {}, settingsl[-1])
-    
+
     sampleOrder = testOrder()
     sampleOrder.contact.first_name = 'Chris'
     sampleOrder.contact.last_name = 'Smith'
