@@ -1,41 +1,36 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block navbar %}
-<a href="{{shop_base}}/">Home</a> ::
-Registration
+<a href="{{shop_base}}/">{% trans "Home" %}</a> ::
+{% trans "Registration" %}
 {% endblock %}
 
 {% block content %}
-<h3>Please Enter Your Account Information</h3>
-
-{% if form.has_errors %}
-<h2>Please correct the following error{{ form.error_dict|pluralize }}:</h2>
-{% endif %}
+<h3>{% trans "Please Enter Your Account Information" %}</h3>
 
 <table>
 <form method="post" action=".">
 
-
-    <tr><td><label for="id_email">Email Address:</label></td> <td>{{ form.email }}</td></tr>
+    <tr><td>{{ form.email.label_tag }}:</td><td>{{ form.email }}</td></tr>
     <tr><td></td><td>{% if form.email.errors %}*** {{ form.email.errors|join:", " }}{% endif %}</td></tr>
 
-    <tr><td><label for="id_first_name">First Name:</label></td><td> {{ form.first_name }}</td></tr>
+    <tr><td>{{ form.first_name.label_tag }}:</td><td>{{ form.first_name }}</td></tr>
     <tr><td></td><td>{% if form.first_name.errors %}*** {{ form.first_name.errors|join:", " }}{% endif %}</td></tr>
 
-    <tr><td><label for="id_contents">Last Name:</label></td><td> {{ form.last_name }}</td></tr>
+    <tr><td>{{ form.last_name.label_tag }}:</td><td>{{ form.last_name }}</td></tr>
     <tr><td></td><td>{% if form.last_name.errors %}*** {{ form.last_name.errors|join:", " }}{% endif %}</td></tr>
 
-    <tr><td><label for="id_password">Your password:</label></td><td> {{ form.password }}</td></tr>
+    <tr><td>{{ form.password.label_tag }}:</td><td>{{ form.password }}</td></tr>
     <tr><td></td><td>{% if form.password.errors %}*** {{ form.password.errors|join:", " }}{% endif %}</td></tr>
 
-    <tr><td><label for="id_password2">Confirm password:</label></td><td> {{ form.password2 }}</td></tr>
+    <tr><td>{{ form.password2.label_tag }}:</td><td>{{ form.password2 }}</td></tr>
     <tr><td></td><td>{% if form.password2.errors %}*** {{ form.password2.errors|join:", " }}{% endif %}</td></tr>
 
-    <tr><td><label for="id_newsletter">Newsletter:</label></td><td> {{ form.newsletter }}</td></tr>
+    <tr><td>{{ form.newsletter.label_tag }}:</td><td>{{ form.newsletter }}</td></tr>
     <tr><td></td><td>{% if form.newsletter.errors %}*** {{ form.newsletter.errors|join:", " }}{% endif %}</td></tr>
 
-
-<tr><td></td><td><input type="submit" value="Create Account"/></td></tr>
+<tr><td></td><td><input type="submit" value="{% trans "Create Account" %}"/></td></tr>
 </form>
 </table>
 {% endblock %}

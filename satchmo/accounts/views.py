@@ -23,7 +23,7 @@ YESNO = (
 
 class RegistrationForm(forms.Form):
     """The basic account registration form."""
-    email = forms.EmailField(label=_('Email'), max_length=30, required=True)
+    email = forms.EmailField(label=_('Email Address'), max_length=30, required=True)
     password2 = forms.CharField(label=_('Password (again)'), max_length=30, widget=forms.PasswordInput(), required=True)
     password = forms.CharField(label=_('Password'), max_length=30, widget=forms.PasswordInput(), required=True)
     first_name = forms.CharField(label=_('First Name'), max_length=30, required=True)
@@ -45,7 +45,7 @@ class RegistrationForm(forms.Form):
         email = self.cleaned_data.get('email', None)
         if email and User.objects.filter(email=email).count() > 0:
             raise forms.ValidationError("That email address is already in use.")
-        
+
         return email
 
 def send_welcome_email(email, first_name, last_name):
@@ -68,7 +68,7 @@ def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            
+
             data = form.cleaned_data
             password = data['password']
             email = data['email']
@@ -98,7 +98,7 @@ def register(request):
                 user = authenticate(username=username, password=password)
                 login(request, user)
                 send_welcome_email(email, first_name, last_name)
-            
+
             url = urlresolvers.reverse('registration_complete')
             return http.HttpResponseRedirect(url)
 
@@ -112,11 +112,11 @@ def activate(request, activation_key):
     """
     Activates a user's account, if their key is valid and hasn't
     expired.
-    
+
     """
 
     from registration.models import RegistrationProfile
-    
+
     activation_key = activation_key.lower()
     account = RegistrationProfile.objects.activate_user(activation_key)
 
@@ -129,7 +129,7 @@ def activate(request, activation_key):
         contact = Contact.objects.get(user=account)
         request.session['custID'] = contact.id
         send_welcome_email(contact.email, contact.first_name, contact.last_name)
-    
+
     context = RequestContext(request, {
         'account': account,
         'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS,
