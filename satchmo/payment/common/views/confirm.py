@@ -15,7 +15,8 @@ import datetime
 from django.template import loader
 from django.core.mail import send_mail
 
-def confirm_info(request, payment_module):    
+def credit_confirm_info(request, payment_module):
+    """A view which shows and requires credit card selection"""
     if not request.session.get('orderID', False):
         return http.HttpResponseRedirect(urlresolvers.reverse('satchmo_checkout-step1'))
         

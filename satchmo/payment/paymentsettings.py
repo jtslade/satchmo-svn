@@ -10,6 +10,8 @@ The settings modules are imported by the singleton on first request.
 from django.conf import settings
 from django.core import urlresolvers
 from django.conf.urls.defaults import url
+from django.contrib.sites.models import Site
+from satchmo.shop.utils import url_join
 import sys
 import types
 
@@ -198,7 +200,7 @@ class _PaymentModule(object):
         except AttributeError:
             return template
 
-    def lookup_url(self, name):
+    def lookup_url(self, name, include_server=False, ssl=False):
         """Look up a named URL for the payment module.
         
         Tries a three-level specific-to-general lookup chain, returning
@@ -230,6 +232,14 @@ class _PaymentModule(object):
             
         if not url:
             url = urlresolvers.reverse(name)
+
+        if include_server:
+            if ssl:
+                method = "https://"
+            else:
+                method = "http://"
+            site = Site.objects.get(pk=settings.SITE_ID)
+            url = url_join(method, site.domain, url)
             
         return url
     

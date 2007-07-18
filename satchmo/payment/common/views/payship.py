@@ -10,7 +10,7 @@ from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
 from satchmo.contact.models import Contact
 from satchmo.contact.models import Order
-from satchmo.payment.common.forms import PayShipForm
+from satchmo.payment.common.forms import CreditPayShipForm, SimplePayShipForm
 from satchmo.payment.models import CreditCardDetail
 from satchmo.payment.paymentsettings import PaymentSettings
 from satchmo.payment.common.pay_ship import pay_ship_save
@@ -23,7 +23,7 @@ for module in settings.SHIPPING_MODULES:
 
 selection = _("Please Select")
 
-def pay_ship_info(request, payment_module):
+def credit_pay_ship_info(request, payment_module):
     #First verify that the customer exists
     if not request.session.get('custID', False):
         url = payment_module.lookup_url('satchmo_checkout-step1')
@@ -40,7 +40,7 @@ def pay_ship_info(request, payment_module):
     #Verify order info is here
     if request.POST:
         new_data = request.POST.copy()
-        form = PayShipForm(request, payment_module, new_data)
+        form = CreditPayShipForm(request, payment_module, new_data)
         if form.is_valid():
             data = form.cleaned_data
             contact = Contact.objects.get(id=request.session['custID'])
@@ -62,8 +62,46 @@ def pay_ship_info(request, payment_module):
             url = payment_module.lookup_url('satchmo_checkout-step3')
             return http.HttpResponseRedirect(url)
     else:
-        form = PayShipForm(request, payment_module)
+        form = CreditPayShipForm(request, payment_module)
 
     template = payment_module.lookup_template('checkout/pay_ship.html')
+    return render_to_response(template, {'form': form}, RequestContext(request))
+
+def simple_pay_ship_info(request, payment_module, template):
+    """A pay_ship view which doesn't require a credit card"""
+    #First verify that the customer exists
+    if not request.session.get('custID', False):
+        url = payment_module.lookup_url('satchmo_checkout-step1')
+        return http.HttpResponseRedirect(url)
+    #Verify we still have items in the cart
+    if request.session.get('cart', False):
+        tempCart = Cart.objects.get(id=request.session['cart'])
+        if tempCart.numItems == 0:
+            template = payment_module.lookup_template('checkout/empty_cart.html')
+            return render_to_response(template, RequestContext(request))
+    else:
+        template = payment_module.lookup_template('checkout/empty_cart.html')
+        return render_to_response(template, RequestContext(request))
+
+    #Verify order info is here
+    if request.POST:
+        new_data = request.POST.copy()
+        form = SimplePayShipForm(request, new_data)
+        if form.is_valid():
+            data = form.cleaned_data
+            contact = Contact.objects.get(id=request.session['custID'])
+
+            # Create a new order
+            newOrder = Order(contact=contact, payment=payment_module.KEY)
+            pay_ship_save(newOrder, tempCart, contact,
+                shipping=data['shipping'], discount=data['discount'])
+            request.session['orderID'] = newOrder.id
+
+            url = payment_module.lookup_url('satchmo_checkout-step3')
+            return http.HttpResponseRedirect(url)
+    else:
+        form = SimplePayShipForm(request)
+
+    template = payment_module.lookup_template(template)
     return render_to_response(template, {'form': form}, RequestContext(request))
 

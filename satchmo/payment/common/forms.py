@@ -25,7 +25,7 @@ class PaymentContactInfoForm(ContactInfoForm):
                                     widget=_paymentwidget,
                                     required=True)
 
-class PayShipForm(forms.Form):
+class CreditPayShipForm(forms.Form):
     credit_type = forms.ChoiceField()
     credit_number = forms.CharField(max_length=20)
     month_expires = forms.ChoiceField(choices=[(month,month) for month in range(1,13)])
@@ -36,7 +36,7 @@ class PayShipForm(forms.Form):
 
     def __init__(self, request, paymentmodule, *args, **kwargs):
         creditchoices = paymentmodule.CREDITCHOICES
-        super(PayShipForm, self).__init__(*args, **kwargs)
+        super(CreditPayShipForm, self).__init__(*args, **kwargs)
 
         self.fields['credit_type'].choices = creditchoices
 
@@ -99,5 +99,49 @@ class PayShipForm(forms.Form):
             valid, msg = discount[0].isValid(self.tempCart)
             if not valid:
                 raise forms.ValidationError(msg)
+        return data
+
+class SimplePayShipForm(forms.Form):
+    shipping = forms.ChoiceField(widget=forms.RadioSelect(), required=False)
+    discount = forms.CharField(max_length=30, required=False)
+
+    def __init__(self, request, *args, **kwargs):
+        super(SimplePayShipForm, self).__init__(*args, **kwargs)
+
+        shipping_options = []
+        self.tempCart = Cart.objects.get(id=request.session['cart'])
+        self.tempContact = Contact.objects.get(id=request.session['custID'])
+        for module in settings.SHIPPING_MODULES:
+            #Create the list of information the user will see
+            shipping_module = sys.modules[module]
+            shipping_instance = shipping_module.Calc(self.tempCart, self.tempContact)
+            if shipping_instance.valid():
+                t = loader.get_template('shipping_options.html')
+                c = Context({
+                    'amount': shipping_instance.cost(),
+                    'description' : shipping_instance.description(),
+                    'method' : shipping_instance.method(),
+                    'expected_delivery': shipping_instance.expectedDelivery()})
+                shipping_options.append((shipping_instance.id, t.render(c)))
+        self.fields['shipping'].choices = shipping_options
+
+    def clean_shipping(self):
+        shipping = self.cleaned_data['shipping']
+        if not shipping and self.tempCart.is_shippable:
+            raise forms.ValidationError(_('This field is required.'))
+        return shipping
+
+    def clean_discount(self):
+        """ Check if discount exists and is valid. """
+        data = self.cleaned_data['discount']
+        if data:
+            try:
+                discount = Discount.objects.get(code=data, active=True)
+            except Discount.DoesNotExist:
+                raise forms.ValidationError(_('Invalid discount.'))
+            valid, msg = discount.isValid(self.tempCart)
+            if not valid:
+                raise forms.ValidationError(msg)
+            # TODO: validate that it can work with these products
         return data
 

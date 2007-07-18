@@ -1,0 +1,72 @@
+{% load satchmo.currency_filter %}
+{% load google_tags %}
+{% extends "base.html" %}
+
+{% block navbar %}
+<a href="{{shop_base}}/">Home</a> ::
+Checkout
+{% endblock %}
+
+{% block content %}
+<h3>Checkout</h3>
+<div id="checkoutprogress">
+<ul>
+    <li class="first"><a href="{% url satchmo_checkout-step1 %}">Ship/Bill</a></li>
+    <li><a href="{% url PAYPAL_satchmo_checkout-step2 %}">Payment</a></li>
+    <li class="active">Confirmation</li>
+</ul>
+</div>
+{% if errors %}
+    <h3>The following error was returned while trying to process your card.  Please correct and resubmit</h3>
+    {{ errors }}
+{% else %}
+    <h3>Please validate the following information, then submit your order.</h3>
+{% endif %}
+<h4>Items Ordered</h4>
+{% for item in order.orderitem_set.all %}
+{{ item }} - {{item.unitPrice|currency}} x {{item.quantity}} = {{item.lineItemPrice|currency}}<br/>
+{% endfor %}
+
+<h4>Contact Information</h4>
+{{ order.contact.full_name }}<br/>
+{{ order.contact.email }}<br/>
+{{ order.contact.primary_phone.phone }}<br/>
+
+<h4>Billing Information</h4>
+{{ order.fullBillStreet }}<br/>
+{{ order.billCity }} <br/>
+{{ order.billState }}<br/>
+{{ order.billPostalCode }}<br/>
+{{ order.billCountry }}<br/>
+
+<h4>Shipping Address</h4>
+{{ order.fullShipStreet }}<br/>
+{{ order.shipCity }}<br/>
+{{ order.shipState }}<br/>
+{{ order.shipPostalCode }}<br/>
+{{ order.shipCountry }}<br/>
+<h4>Shipping Method</h4>
+{{ order.shippingDescription }}<br/>
+{{ order.shippingMethod }} <br/>
+{{ order.shippingCost|currency }} <br/>
+
+<h4>Total</h4>
+{% if order.discount %}
+    Discount - {{order.discount|currency}}<br/>
+{% endif %}
+Shipping + {{order.shippingCost|currency}}<br/>
+{% if order.tax %}
+    Tax + {{order.tax|currency}}<br/>
+{% endif %}
+Total = {{order.total|currency}}<br/>
+
+<h4>Payment</h4>
+Your payment will be processed through Google Checkout.
+
+<form name="google_form" action="{{ post_url }}" method="post">
+    <input type="hidden" name="cart" value="{{ google_cart }}" />
+    <input type="hidden" name="signature" value="{{ google_signature }}" />
+    <input type="image" name="Google Checkout" src="{% google_checkout_image_url MEDIUM %}" alt="Fast checkout through Google"/>
+</form>
+
+{% endblock %}

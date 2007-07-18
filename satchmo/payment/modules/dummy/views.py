@@ -1,12 +1,12 @@
 """Simple wrapper for standard checkout as implemented in satchmo.payment.common.views"""
 
 from satchmo.payment.paymentsettings import PaymentSettings
-from satchmo.payment.common.views import credit_confirm, credit_payship
+from satchmo.payment.common.views import confirm, payship
     
 def pay_ship_info(request):
-    return credit_payship.pay_ship_info(request, PaymentSettings().DUMMY)
+    return payship.credit_pay_ship_info(request, PaymentSettings().DUMMY)
     
 def confirm_info(request):
-    return credit_confirm.confirm_info(request, PaymentSettings().DUMMY)
+    return confirm.credit_confirm_info(request, PaymentSettings().DUMMY)
 
 
