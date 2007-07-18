@@ -99,7 +99,6 @@ INSTALLED_APPS = (
     'satchmo.i18n',
     'satchmo.tax',
     #'satchmo.newsletter',
-    #'satchmo.shipping', # Only needed to run tests
 )
 
 AUTHENTICATION_BACKENDS = (
