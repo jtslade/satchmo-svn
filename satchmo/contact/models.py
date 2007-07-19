@@ -405,6 +405,20 @@ class Order(models.Model):
                 if success_method:
                     success_method(self, orderitem)
 
+    def validate(self, request):
+        """
+        Return whether the order is valid.
+        Not guaranteed to be side-effect free.
+        """
+        valid = True
+        for orderitem in self.orderitem_set.all():
+            for subtype_name in orderitem.product.get_subtypes():
+                subtype = getattr(orderitem.product, subtype_name.lower())
+                validate_method = getattr(subtype, 'validate_order', None)
+                if validate_method:
+                    valid = valid and validate_method(request, self, orderitem)
+        return valid
+
     class Admin:
         fields = (
             (None, {'fields': ('contact', 'method', 'status', 'notes')}),

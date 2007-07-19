@@ -19,10 +19,10 @@ class GoogleCart(object):
         self.settings = payment_module
         self.cart_xml = self._cart_xml(order)
         self.signature = self._signature()
-        
+
     def _cart_xml(self, order):
         template = get_template(self.settings["CART_XML_TEMPLATE"])
-        
+
         shopping_url = self.settings.lookup_url('satchmo_checkout-success', True, self.settings.SSL)
         edit_url = self.settings.lookup_url('satchmo_cart', True, self.settings.SSL)
         ctx = Context({"order" : order,
@@ -49,15 +49,15 @@ class GoogleCart(object):
 
 def pay_ship_info(request):
     return payship.simple_pay_ship_info(request, PaymentSettings().GOOGLE, 'checkout/google/pay_ship.html')
-    
+
 def confirm_info(request):
     payment_module = PaymentSettings().GOOGLE
 
-    if not request.session.get('orderID', False):
+    if not request.session.get('orderID'):
         url = payment_module.lookup_url('satchmo_checkout-step1')
         return http.HttpResponseRedirect(url)
 
-    if request.session.get('cart', False):
+    if request.session.get('cart'):
         tempCart = Cart.objects.get(id=request.session['cart'])
         if tempCart.numItems == 0:
             template = payment_module.lookup_template('checkout/empty_cart.html')
@@ -67,6 +67,13 @@ def confirm_info(request):
         return render_to_response(template, RequestContext(request))
 
     order = Order.objects.get(id=request.session['orderID'])
+
+    # Check if the order is still valid
+    if not order.validate(request):
+        context = RequestContext(request,
+            {'message': _('Your order is no longer valid.')})
+        return render_to_response('shop_404.html', context)
+
     gcart = GoogleCart(order, payment_module)
     log.debug("CART:\n%s", gcart.cart_xml)
     template = payment_module.lookup_template('checkout/google/confirm.html')
@@ -78,5 +85,6 @@ def confirm_info(request):
         'google_cart' : gcart.encoded_cart(),
         'google_signature' : gcart.encoded_signature()
     })
-    
+
     return render_to_response(template, ctx)
+
