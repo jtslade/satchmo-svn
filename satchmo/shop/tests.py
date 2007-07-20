@@ -78,7 +78,7 @@ class ShopTest(TestCase):
         # you should get the page of the parent configurableproduct, but with the options for
         # that variation already selected
         response = self.client.get(prefix+'/product/neat-book_soft/')
-        self.assertContains(response, 'option selected="selected" value="soft"')
+        self.assertContains(response, 'option value="soft" selected="selected"')
 
     def test_get_price(self):
         """
