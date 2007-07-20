@@ -11,7 +11,7 @@ class NullContact(object):
     Note, this is *not* a Django object, and is not saved to the DB, only to the subscription lists.
     """
     
-    def __init__(self, nname, email, status):
+    def __init__(self, full_name, email, status):
         if not full_name:
             full_name = email.split('@')[0]
             
