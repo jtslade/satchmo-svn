@@ -73,6 +73,13 @@ class ShopTest(TestCase):
         response = self.client.get(prefix+'/cart/')
         self.assertContains(response, "Django Rocks shirt (Large/Blue)", count=1, status_code=200)
 
+    def test_product(self):
+        # Test for an easily missed reversion. When you lookup a productvariation product then
+        # you should get the page of the parent configurableproduct, but with the options for
+        # that variation already selected
+        response = self.client.get(prefix+'/product/neat-book_soft/')
+        self.assertContains(response, 'option selected="selected" value="soft"')
+
     def test_get_price(self):
         """
         Get a price/productname for a ProductVariation

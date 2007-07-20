@@ -46,7 +46,7 @@ def serialize_options(config_product, selected_options=Set()):
                         }
             if not option in d[option.optionGroup_id]['items']:
                 d[option.optionGroup_id]['items'] += [option]
-                option.selected = str(option) in selected_options
+                option.selected = option.unique_id in selected_options
     return d.values()
 
 def get_product(request, product_name, selected_options=Set()):
