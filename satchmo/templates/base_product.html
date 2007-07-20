@@ -29,7 +29,7 @@ function getPrice(){
     }
     opts["quantity"] = $("input#quantity")[0].value;
     setPrice("loading");
-    $.post("{% url satchmo_product_prices product_name=product.name %}", opts, setNamePrice);
+    $.post("{% url satchmo_product_prices product_slug=product.slug %}", opts, setNamePrice);
 }
 
 $(document).ready( function(){ getPrice();});
@@ -76,7 +76,7 @@ Price: <h3 id="price">{{item.price}}</h3>
       </select> 
 {% endfor %} 
 Quantity <input type="text", size="2", name="quantity" id="quantity" value=1 onchange="getPrice()" /> 
-<input type="hidden" name="productname" id="productname" value="{{product.name}}" />
+<input type="hidden" name="productname" id="productname" value="{{product.slug}}" />
 <input type="submit" value="Add to cart" /> 
 </form> 
 {% endblock %} 

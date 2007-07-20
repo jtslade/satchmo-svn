@@ -202,15 +202,15 @@ class Product(models.Model):
     """
     Root class for all Products
     """
-    name = models.SlugField(_("Slug Name"), unique=True, prepopulate_from=('full_name',), core=True, blank=False)
     full_name = models.CharField(_("Full Name"), maxlength=255)
+    slug = models.SlugField(_("Slug Name"), unique=True, prepopulate_from=('full_name',), core=True, blank=False)
     short_description = models.TextField(_("Short description of product"), help_text=_("This should be a 1 or 2 line description for use in product listing screens"), maxlength=200, default='', blank=True)
     description = models.TextField(_("Description of product"), help_text=_("This field can contain HTML and should be a few paragraphs explaining the background of the product, and anything that would help the potential customer make their purchase."), default='', blank=True)
     category = models.ManyToManyField(Category, filter_interface=True, blank=True)
     items_in_stock = models.IntegerField(_("Number in stock"), default=0)
     #TODO: Add this, useful for things like DownloadableProducts that wont have stock
     #require_stock = models.BooleanField(default=True)
-    meta = models.TextField(maxlength=200, blank=True, null=True, help_text=_("Meta description for this item"))
+    meta = models.TextField(_("Meta Description"), maxlength=200, blank=True, null=True, help_text=_("Meta description for this product"))
     date_added = models.DateField(null=True, blank=True)
     active = models.BooleanField(_("Is product active?"), default=True, help_text=_("This will determine whether or not this product will appear on the site"))
     featured = models.BooleanField(_("Featured Item"), default=False, help_text=_("Featured items will show on the front page"))
@@ -305,13 +305,13 @@ class Product(models.Model):
   
     def get_absolute_url(self):
         return urlresolvers.reverse('satchmo_product',
-            kwargs={'product_name': self.name})
+            kwargs={'product_slug': self.slug})
 
     class Admin:
-        list_display = ('name', 'full_name', 'unit_price', 'items_in_stock', 'get_subtypes',)
+        list_display = ('slug', 'full_name', 'unit_price', 'items_in_stock', 'get_subtypes',)
         list_filter = ('category',)
         fields = (
-        (None, {'fields': ('category', 'full_name', 'name', 'description', 'short_description', 'date_added', 'active', 'featured', 'items_in_stock',)}),
+        (None, {'fields': ('category', 'full_name', 'slug', 'description', 'short_description', 'date_added', 'active', 'featured', 'items_in_stock',)}),
         ('Meta Data', {'fields': ('meta',), 'classes': 'collapse'}),
         ('Item Dimensions', {'fields': (('length', 'width','height',),'weight'), 'classes': 'collapse'}),
         ('Tax', {'fields':('taxable', 'taxClass'), 'classes': 'collapse'}),
@@ -319,7 +319,7 @@ class Product(models.Model):
         )
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('slug',)
         verbose_name = _("Product")
         verbose_name_plural = _("Products")
 
@@ -402,7 +402,7 @@ class ConfigurableProduct(models.Model):
             price_delta = 0
             variant = Product(items_in_stock=0)
             optnames = [opt.value for opt in options] #build an array of strings containing the names of the options
-            variant.name = '%s_%s' % (self.product.name, '_'.join(optnames))
+            variant.slug = '%s_%s' % (self.product.slug, '_'.join(optnames))
             variant.save()
             pv = ProductVariation(product=variant, parent=self)
             s1 = Set()
@@ -464,7 +464,7 @@ class ConfigurableProduct(models.Model):
         pass
 
     def __unicode__(self):
-        return u"<ConfigurableProduct for: %s>" % self.product.name
+        return u"<ConfigurableProduct for: %s>" % self.product.slug
 
 # The following 2 classes are examples of how to implement the models for these requested features. 
 #
@@ -578,7 +578,7 @@ class ProductVariation(models.Model):
         pass
 
     def __unicode__(self):
-        return u"<ProductVariation for: %s>" % self.product.name
+        return u"<ProductVariation for: %s>" % self.product.slug
 
 class ProductAttribute(models.Model):
     """
@@ -638,14 +638,14 @@ class ProductImage(models.Model):
 
     def _get_filename(self):
         if self.product:
-            return self.product.name
+            return self.product.slug
         else:
             return 'default'
     _filename = property(_get_filename)
 
     def __unicode__(self):
         if self.product:
-            return u"Image of Product %s" % self.product.name
+            return u"Image of Product %s" % self.product.slug
         elif self.caption:
             return u"Image with caption \"%s\"" % self.caption
         else:

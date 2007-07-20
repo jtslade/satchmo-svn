@@ -28,7 +28,7 @@ def add(request, id=0):
     #Add an item to the session/cart
 
     try:
-        product = Product.objects.get(name=request.POST['productname'])
+        product = Product.objects.get(slug=request.POST['productname'])
         if 'ConfigurableProduct' in product.get_subtypes():
             #This can happen if ajax isn't working to update productname
             cp = product.configurableproduct
@@ -63,7 +63,7 @@ def add(request, id=0):
 def add_ajax(request, id=0, template="json.html"):
     data = {'errors': []}
     try:
-        product = Product.objects.get(name=request.POST['productname'])
+        product = Product.objects.get(slug=request.POST['productname'])
         if 'ConfigurableProduct' in product.get_subtypes():
             #This can happen if ajax isn't working to update productname
             cp = product.configurableproduct

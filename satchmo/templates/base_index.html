@@ -11,16 +11,16 @@
 Welcome to the shop. 
 
 
-{% if all_items_list %}
+{% if all_products_list %}
     <h4>{% trans "Featured Items" %}</h4>
-    {% for item in all_items_list %} 
+    {% for product in all_products_list %} 
             <div class = "productImage">    
-           {% if item.main_image %}
+           {% if product.main_image %}
               <center>
-              <a href="{{ item.get_absolute_url }}"><img src="{{ item.main_image.get_picture_url|thumbnail:"width=85" }}" width="85" /> </a>
+              <a href="{{ product.get_absolute_url }}"><img src="{{ product.main_image.get_picture_url|thumbnail:"width=85" }}" width="85" /> </a>
               </center>
            {% endif %}     
-            <p><a href="{{ item.get_absolute_url }}">{{ item.full_name }}</a></p>
+            <p><a href="{{ product.get_absolute_url }}">{{ product.full_name }}</a></p>
         </div>
     {% endfor %}
 {% endif %}

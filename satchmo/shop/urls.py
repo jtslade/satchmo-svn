@@ -23,15 +23,15 @@ urlpatterns += patterns('satchmo.shop.views',
 
 urlpatterns += patterns('satchmo.product.views',
     (r'^search/$', 'do_search', {}, 'satchmo_search'),
-    (r'^product/(?P<product_name>[-\w]+)/prices/$', 'get_price', {}, 'satchmo_product_prices'),
-    (r'^product/(?P<product_name>[-\w]+)/$', 'get_product', {}, 'satchmo_product'),
+    (r'^product/(?P<product_slug>[-\w]+)/prices/$', 'get_price', {}, 'satchmo_product_prices'),
+    (r'^product/(?P<product_slug>[-\w]+)/$', 'get_product', {}, 'satchmo_product'),
 )
 
 #Dictionaries for generic views used in Satchmo
 
 index_dict = {
     'queryset': Product.objects.filter(active="1").filter(featured="1"),
-    'template_object_name': 'all_items',
+    'template_object_name': 'all_products',
     'template_name': 'base_index.html',
     'allow_empty': True,
     'paginate_by': 10,

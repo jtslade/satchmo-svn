@@ -49,9 +49,9 @@ def serialize_options(config_product, selected_options=Set()):
                 option.selected = option.unique_id in selected_options
     return d.values()
 
-def get_product(request, product_name, selected_options=Set()):
+def get_product(request, product_slug, selected_options=Set()):
     try:
-        product = Product.objects.get(active=True, name=product_name)
+        product = Product.objects.get(active=True, slug=product_slug)
     except Product.DoesNotExist:
         return bad_or_missing(request, _('The product you have requested does not exist.'))
 
@@ -77,15 +77,15 @@ def optionset_from_post(configurableproduct, POST):
             chosenOptions.add('%s-%s' % (opt_grp.id, POST[str(opt_grp.id)]))
     return chosenOptions
 
-def get_price(request, product_name):
+def get_price(request, product_slug):
     quantity = 1
 
     try:
-        product = Product.objects.get(active=True, name=product_name)
+        product = Product.objects.get(active=True, slug=product_slug)
     except Product.DoesNotExist:
         return http.HttpResponseNotFound(simplejson.dumps(('','not available')), mimetype="text/javascript")
 
-    prod_name = product.name
+    prod_slug = product.slug
 
     if request.POST.has_key('quantity'):
         quantity = int(request.POST['quantity'])
@@ -97,7 +97,7 @@ def get_price(request, product_name):
 
         if not pvp:
             return http.HttpResponse(simplejson.dumps(('','not available')), mimetype="text/javascript")
-        prod_name = pvp.name
+        prod_slug = pvp.slug
         price = moneyfmt(pvp.get_qty_price(quantity))
     else:
         price = moneyfmt(product.get_qty_price(quantity))
@@ -105,7 +105,7 @@ def get_price(request, product_name):
     if not price:
         return http.HttpResponse(simplejson.dumps(('','not available')), mimetype="text/javascript")
 
-    return http.HttpResponse(simplejson.dumps((prod_name,price)), mimetype="text/javascript")
+    return http.HttpResponse(simplejson.dumps((prod_slug,price)), mimetype="text/javascript")
 
 
 def do_search(request):
@@ -135,5 +135,5 @@ def getConfigurableProductOptions(request, id):
         for opt in og.option_set.all():
             options += '<option value="%s">%s</option>' % (opt.id, str(opt))
     if not options:
-        return '<option>No valid options found in "%s"</option>' % cp.product.name
+        return '<option>No valid options found in "%s"</option>' % cp.product.slug
     return http.HttpResponse(options, mimetype="text/html")
