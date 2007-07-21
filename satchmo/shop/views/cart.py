@@ -42,12 +42,12 @@ def add(request, id=0):
         quantity = int(request.POST['quantity'])
     except ValueError:
         context = RequestContext(request, {
-            'item': product,
+            'product': product,
             'error_message': _("Please enter a whole number.")})
         return render_to_response('base_product.html', context)
     if quantity < 1:
         context = RequestContext(request, {
-            'item': product,
+            'product': product,
             'error_message': _("Please enter a positive number.")})
         return render_to_response('base_product.html', context)
 
