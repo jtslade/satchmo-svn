@@ -1,13 +1,13 @@
 {% extends "base.html" %}
-{% load satchmo.thumbnail %}
+{% load i18n %}
 
 {% block navbar %}
-<a href="{{shop_base}}/">Home</a>
+<a href="{{ shop_base }}/">{% trans "Home" %}</a>
 {% endblock %}
 
 {% block content %}
 
-    <h3>Error</h3>
-    <h4> {{ message }} </h4>
+    <h3>{% trans "Error" %}</h3>
+    <h4>{{ message }}</h4>
 
 {% endblock %}

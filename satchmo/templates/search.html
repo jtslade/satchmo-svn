@@ -1,13 +1,14 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block navbar %}
-<a href="{{shop_base}}/">Home</a>
+<a href="{{ shop_base }}/">{% trans "Home" %}</a>
 {% endblock %}
 
 {% block content %}
 
 {% if not results %}
-<h4>Nothing found</h4>
+<h4>{% trans "Nothing found" %}</h4>
 {% else %}
     {% for result in results %}
         <div><a href="{{ result.2 }}">{{ result.0 }}: {{ result.1 }}</a></div>

@@ -1,16 +1,16 @@
 {% extends "base.html" %}
-
+{% load i18n %}
 
 {% block navbar %}
-<a href="{{shop_base}}/">Home</a> ::
-Contact Us
+<a href="{{ shop_base }}/">{% trans "Home" %}</a> ::
+{% trans "Contact Us" %}
 {% endblock %}
 
 {% block content %}
-<h3>Contact Information</h3>
+<h3>{% trans "Contact Information" %}</h3>
 
-<p>Thank you for contacting us.</p>
+<p>{% trans "Thank you for contacting us." %}</p>
 
-<p>We will attempt to get back to you within 48 hours</p>
+<p>{% trans "We will attempt to get back to you within 48 hours." %}</p>
 
 {% endblock %}

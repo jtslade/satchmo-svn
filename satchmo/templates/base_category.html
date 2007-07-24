@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load satchmo.thumbnail %}
 
 {% block extra-head %}
@@ -9,7 +10,7 @@
 
 {% block navbar %}
 
-<a href="{{shop_base}}/">Home</a> 
+<a href="{{ shop_base }}/">{% trans "Home" %}</a> 
 {% for urls in category.get_url_name %}
     ::<a href="{{urls.1}}">{{ urls.0 }}</a>
 {% endfor %}

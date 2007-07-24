@@ -1,4 +1,8 @@
 {% extends "base.html" %}
+{% load i18n %}
+{% load satchmo.thumbnail %}
+{% load satchmo.price_display %}
+{% load satchmo.currency_filter %}
 
 {% block extra-head %}
 {% if product.meta %}
@@ -36,13 +40,9 @@ $(document).ready( function(){ getPrice();});
 </script>
 {% endblock %}
 
-{% load satchmo.thumbnail %}
-{% load satchmo.price_display %}
-{% load satchmo.currency_filter %}
-
 {% block navbar %}
 
-<a href="{{shop_base}}/">Home</a> 
+<a href="{{ shop_base }}/">{% trans "Home" %}</a> 
 {% for name, url in product.category.all.0.get_url_name %}
     ::<a href="{{ url }}">{{ name }}</a>
 {% endfor %}
@@ -52,7 +52,7 @@ $(document).ready( function(){ getPrice();});
 {% block content %}
 <h4>{{ product.full_name }}</h4>
 <p>{{ product.description }}</p>
-Price: <h3 id="price">{{item.price}}</h3>
+{% trans "Price" %}: <h3 id="price">{{item.price}}</h3>
 {% for pic in product.productimage_set.all %}
     <img src="{{ pic.get_picture_url|thumbnail:"width=280" }}" width="280" />
 {% endfor %}
@@ -60,7 +60,7 @@ Price: <h3 id="price">{{item.price}}</h3>
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 <form id="options" action="{% url satchmo_cart_add %}" method="post">
 {% if options %}
-<p>Please choose your options:</p>
+<p>{% trans "Please choose your options" %}:</p>
 {% endif %}
 
 {% for option_group in options %}
@@ -75,8 +75,8 @@ Price: <h3 id="price">{{item.price}}</h3>
     {% endfor %}
       </select> 
 {% endfor %} 
-Quantity <input type="text", size="2", name="quantity" id="quantity" value=1 onchange="getPrice()" /> 
+{% trans "Quantity" %} <input type="text", size="2", name="quantity" id="quantity" value=1 onchange="getPrice()" /> 
 <input type="hidden" name="productname" id="productname" value="{{product.slug}}" />
-<input type="submit" value="Add to cart" /> 
+<input type="submit" value="{% trans "Add to cart" %}" /> 
 </form> 
 {% endblock %} 
