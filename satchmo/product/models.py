@@ -638,7 +638,7 @@ class ProductImage(models.Model):
 
     def _get_filename(self):
         if self.product:
-            return self.product.slug
+            return '%s-%s' % (self.product.slug, self.id)
         else:
             return 'default'
     _filename = property(_get_filename)
