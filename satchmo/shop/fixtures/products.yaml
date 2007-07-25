@@ -568,11 +568,11 @@
     option_group: [!!python/long '3']
   model: product.configurableproduct
   pk: '4'
-- fields:
-    create_subs: false
-    option_group: [!!python/long '4']
-  model: product.configurableproduct
-  pk: '5'
+#- fields:
+#    create_subs: false
+#    option_group: [!!python/long '4']
+#  model: product.configurableproduct
+#  pk: '5'
 - fields:
     options: [!!python/long '1', !!python/long '4']
     parent: !!python/long '1'

@@ -15,7 +15,7 @@
   pk: '3'
 - fields: {create_date: 2007-05-19, dob: null, email: chris@aol.com, first_name: Chris,
     last_name: Smith, notes: Really cool stuff, organization: null, role: Customer,
-    user: !!python/long '2'}
+    user: null}
   model: contact.contact
   pk: '1'
 - fields: {create_date: 2007-05-19, dob: null, email: abc@comcast.com, first_name: John,
