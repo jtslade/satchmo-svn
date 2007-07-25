@@ -59,7 +59,7 @@ def list_variations(configurableproduct):
             <td><a href="%s">%s</a></td>
             <td><a class="deletelink" href="%sdelete/"> Delete ProductVariation</a></td>
             </tr>
-            """ % (opt_str, p_url, product.name, pv_url)
+            """ % (opt_str, p_url, product.slug, pv_url)
         else:
             opt_ids = []
             [opt_ids.append(str(opt.id)) for opt in p_opt]

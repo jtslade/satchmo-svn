@@ -7,11 +7,11 @@ prefix = settings.SHOP_BASE
 
 class ShopTest(TestCase):
     fixtures = ['i18n-data.yaml', 'sample-store-data.yaml', 'products.yaml']
-    
+
     def setUp(self):
         # Every test needs a client
         self.client = Client()
-    
+
     def test_main_page(self):
         """
         Look at the main page
@@ -19,32 +19,32 @@ class ShopTest(TestCase):
         response = self.client.get(prefix+'/')
 
         # Check that the rendered context contains 4 products
-        self.assertContains(response, '<div class = "productImage">', 
+        self.assertContains(response, '<div class = "productImage">',
                             count=4, status_code=200)
-    
+
     def test_contact_form(self):
         """
         Validate the contact form works
         """
-        
+
         response = self.client.get(prefix+'/contact/')
-        self.assertContains(response, '<h3>Contact Information</h3>', 
+        self.assertContains(response, '<h3>Contact Information</h3>',
                             count=1, status_code=200)
         response = self.client.post(prefix+'/contact/', {'name': 'Test Runner',
                               'sender': 'Someone@testrunner.com',
                               'subject': 'A question to test',
                               'inquiry': 'General Question',
-                              'contents': 'A lot of info goes here.'})    
+                              'contents': 'A lot of info goes here.'})
         self.assertRedirects(response, prefix+'/contact/thankyou/', status_code=302, target_status_code=200)
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, 'A question to test')
-        
+
     def test_new_account(self):
         """
         Validate account creation process
         """
         response = self.client.get('/accounts/register/')
-        self.assertContains(response, "Please Enter Your Account Information", 
+        self.assertContains(response, "Please Enter Your Account Information",
                             count=1, status_code=200)
         response = self.client.post('/accounts/register/', {'email': 'someone@test.com',
                                     'first_name': 'Paul',
@@ -55,7 +55,7 @@ class ShopTest(TestCase):
         self.assertRedirects(response, '/accounts/register/complete/', status_code=302, target_status_code=200)
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, 'Welcome to My Site')
-        
+
         response = self.client.get('/accounts/info/')
         self.assertContains(response, "Welcome, Paul Test.", count=1, status_code=200)
 
@@ -87,8 +87,8 @@ class ShopTest(TestCase):
         response = self.client.get(prefix+'/product/DJ-Rocks/')
         self.assertContains(response, "Django Rocks shirt", count=1, status_code=200)
 
-        # this tests the umolested price from the ConfigurableProduct, and makes sure we get 
-        # a good productname back for the ProductVariation
+        # this tests the unmolested price from the ConfigurableProduct, and
+        # makes sure we get a good productname back for the ProductVariation
         response = self.client.post(prefix+'/product/DJ-Rocks/prices/', {"1" : "S",
                                                       "2" : "B",
                                                       "quantity" : 1})
@@ -117,7 +117,7 @@ class ShopTest(TestCase):
 #        response = self.client.post(prefix+'/product/neat-software/prices/', {"4" : "full",
 #                                                      "quantity" : 50})
 #        self.assertContains(response, "$2.00", count=1, status_code=200)
-        
+
     def test_cart_removing(self):
         """
         Validate we can remove an item
@@ -127,7 +127,7 @@ class ShopTest(TestCase):
         self.assertRedirects(response, prefix+'/cart/', status_code=302, target_status_code=200)
         response = self.client.get(prefix+'/cart/')
         self.assertContains(response, "Your cart is empty.", count=1, status_code=200)
-        
+
     def test_checkout(self):
         """
         Run through a full checkout process
@@ -162,4 +162,25 @@ class ShopTest(TestCase):
         response = self.client.post(prefix+"/checkout/dummy/confirm/", {'process' : 'True'})
         self.assertRedirects(response, prefix+'/checkout/dummy/success/', status_code=302, target_status_code=200)
         self.assertEqual(len(mail.outbox), 1)
-       
+
+from django.contrib.auth.models import User
+
+class AdminTest(TestCase):
+    fixtures = ['i18n-data.yaml', 'sample-store-data.yaml', 'products.yaml']
+
+    def setUp(self):
+        self.client = Client()
+        user = User.objects.create_user('fredsu', 'fred@root.org', 'passwd')
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
+        self.client.login(username='fredsu', password='passwd')
+
+    def test_product(self):
+        response = self.client.get('/admin/product/product/1/')
+        self.assertContains(response, "Django Rocks shirt")
+
+    def test_configurableproduct(self):
+        response = self.client.get('/admin/product/configurableproduct/1/')
+        self.assertContains(response, "Small, Black")
+
