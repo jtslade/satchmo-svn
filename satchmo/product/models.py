@@ -638,7 +638,7 @@ class ProductImage(models.Model):
 
     def _get_filename(self):
         if self.product:
-            return '%s-%s' % (self.product.slug, self.id)
+            return '%s-%s' % (self.product.slug, self.sort)
         else:
             return 'default'
     _filename = property(_get_filename)
@@ -652,7 +652,8 @@ class ProductImage(models.Model):
             return u"%s" % self.picture
 
     class Meta:
-        ordering = ['sort']
+        ordering = ['product', 'sort']
+        unique_together = (('product', 'sort'),)
         verbose_name = _("Product Image")
         verbose_name_plural = _("Product Images")
 
