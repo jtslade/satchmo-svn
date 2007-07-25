@@ -24,7 +24,7 @@ class Category(models.Model):
     parent = models.ForeignKey('self', blank=True, null=True, related_name='child')
     meta = models.TextField(_("Meta Description"), blank=True, null=True, help_text=_("Meta description for this category"))
     description = models.TextField(_("Description"), blank=True,help_text="Optional")
-        
+
     def _recurse_for_parents_slug(self, cat_obj):
         #This is used for the urls
         p_list = []
@@ -41,7 +41,7 @@ class Category(models.Model):
         p_list = self._recurse_for_parents_slug(self)
         p_list.append(self.slug)
         return u'%s/category/%s/' % (settings.SHOP_BASE, u'/'.join(p_list))
-                
+
     def _recurse_for_parents_name(self, cat_obj):
         #This is used for the visual display & save validation
         p_list = []
@@ -53,15 +53,15 @@ class Category(models.Model):
         if cat_obj == self and p_list:
             p_list.reverse()
         return p_list
-                
+
     def get_separator(self):
         return ' :: '
-        
+
     def _parents_repr(self):
         p_list = self._recurse_for_parents_name(self)
         return self.get_separator().join(p_list)
     _parents_repr.short_description = "Category parents"
-    
+
     def _recurse_for_parents_name_url(self, cat_obj):
         #Get all the absolute urls and names (for use in site navigation)
         p_list = []
@@ -84,18 +84,18 @@ class Category(models.Model):
         p_list.append(self.name)
         url_list.append(self.get_absolute_url())
         return zip(p_list, url_list)
-    
+
     def __unicode__(self):
         p_list = self._recurse_for_parents_name(self)
         p_list.append(self.name)
         return self.get_separator().join(p_list)
-        
+
     def save(self):
         p_list = self._recurse_for_parents_name(self)
         if self.name in p_list:
             raise validators.ValidationError(_("You must not save a category in itself!"))
         super(Category, self).save()
-        
+
     def _flatten(self, L):
         """
         Taken from a python newsgroup post
@@ -103,7 +103,7 @@ class Category(models.Model):
         if type(L) != type([]): return [L]
         if L == []: return L
         return self._flatten(L[0]) + self._flatten(L[1:])
-            
+
     def _recurse_for_children(self, node):
         children = []
         children.append(node)
@@ -119,7 +119,7 @@ class Category(models.Model):
         children_list = self._recurse_for_children(self)
         flat_list = self._flatten(children_list[1:])
         return(flat_list)
-    
+
     class Admin:
         list_display = ('name', '_parents_repr')
         ordering = ['name']
@@ -133,19 +133,23 @@ class OptionGroup(models.Model):
     A set of options that can be applied to an item.
     Examples - Size, Color, Shape, etc
     """
-    name = models.CharField(_("Name of Option Group"),maxlength = 50, core=True, help_text=_('This will be the text displayed on the product page'),)
-    description = models.CharField(_("Detailed Description"),maxlength = 100, blank=True, help_text=_('Further description of this group i.e. shirt size vs shoe size'),)
-    sort_order = models.IntegerField(_("Sort Order"), help_text=_("The order they will be displayed on the screen"))
-    
+    name = models.CharField(_("Name of Option Group"), maxlength=50, core=True,
+        help_text=_("This will be the text displayed on the product page."))
+    description = models.CharField(_("Detailed Description"), maxlength=100,
+        blank=True,
+        help_text=_("Further description of this group (i.e. shirt size vs shoe size)."))
+    sort_order = models.IntegerField(_("Sort Order"),
+        help_text=_("The order they will be displayed on the screen."))
+
     def __unicode__(self):
         if self.description:
             return u"%s - %s" % (self.name, self.description)
         else:
             return self.name
-    
+
     class Admin:
         pass
-        
+
     class Meta:
         ordering = ['sort_order']
         verbose_name = _("Option Group")
@@ -162,14 +166,22 @@ class Option(models.Model):
     These are the actual items in an OptionGroup.  If the OptionGroup is Size, then an Option
     would be Small.
     """
-    optionGroup = models.ForeignKey(OptionGroup, edit_inline=models.TABULAR, num_in_admin=5)
-    name = models.CharField(_("Display value"), maxlength = 50, core=True)
-    value = models.SlugField(_("Stored value"), prepopulate_from=("name",), maxlength = 50)
-    price_change = models.DecimalField(_("Price Change"), null=True, blank=True, 
-                                    help_text=_("This is the price differential for this option"), max_digits=4, decimal_places=2)
+    objects = OptionManager()
+    optionGroup = models.ForeignKey(OptionGroup, edit_inline=models.TABULAR,
+        num_in_admin=5)
+    name = models.CharField(_("Display value"), maxlength=50, core=True)
+    value = models.SlugField(_("Stored value"), maxlength=50,
+        prepopulate_from=('name',))
+    price_change = models.DecimalField(_("Price Change"), null=True, blank=True,
+        max_digits=10, decimal_places=2,
+        help_text=_("This is the price differential for this option."))
     displayOrder = models.IntegerField(_("Display Order"))
 
-    objects = OptionManager()
+    class Meta:
+        ordering = ('optionGroup', 'displayOrder')
+        unique_together = (('optionGroup', 'value'),)
+        verbose_name = _("Option Item")
+        verbose_name_plural = _("Option Items")
 
     def _get_unique_id(self):
         return '%s-%s' % (str(self.optionGroup.id), str(self.value),)
@@ -177,22 +189,10 @@ class Option(models.Model):
     unique_id = property(_get_unique_id)
 
     def __repr__(self):
-        return '<Option: %s>'%self.name
+        return u"<Option: %s>" % self.name
 
     def __unicode__(self):
         return u'%s: %s' % (self.optionGroup.name, self.name)
-        
-    class Meta:
-        ordering = ['optionGroup','displayOrder']
-        verbose_name = _("Option Item")
-        verbose_name_plural = _("Option Items")
-
-    def save(self):
-        #Combination of optionGroup and value must be unique
-        if Option.objects.filter(optionGroup=self.optionGroup, value=self.value).count():
-            return
-
-        super(Option, self).save()
 
 class ProductManager(models.Manager):
     def active(self):
@@ -237,7 +237,7 @@ class Product(models.Model):
                 print >>sys.stderr, 'Warning: default product image not found - try syncdb'
                 return(False)
     main_image = property(_get_mainImage)
-    
+
     def _get_fullPrice(self):
         """
         returns price as a Decimal
@@ -246,7 +246,7 @@ class Product(models.Model):
         qty_price = self._get_qty_price(1)
         if qty_price is not None:
             return qty_price
-        
+
         #if that didn't work, and this is a "ProductVariation" then calculate the price from the options
         try:
             return self.productvariation.unit_price
@@ -269,7 +269,7 @@ class Product(models.Model):
                 return False
         return True
     is_shippable = property(_get_shippable)
-    
+
     def get_qty_price(self, qty):
         """
         If QTY_DISCOUNT prices are specified, then return the appropriate discount price for
@@ -292,8 +292,8 @@ class Product(models.Model):
             return qty_discounts.order_by('-quantity')[0].price
         else:
             return None
-    
-  
+
+
     def in_stock(self):
         if self.items_in_stock > 0:
             return True
@@ -302,7 +302,7 @@ class Product(models.Model):
 
     def __unicode__(self):
         return self.full_name
-  
+
     def get_absolute_url(self):
         return urlresolvers.reverse('satchmo_product',
             kwargs={'product_slug': self.slug})
@@ -350,7 +350,7 @@ class ConfigurableProduct(models.Model):
     product = models.OneToOneField(Product)
     option_group = models.ManyToManyField(OptionGroup, blank=True,)
     create_subs = models.BooleanField(_("Create Variations"), default=False, help_text =_("Create ProductVariations for all this product's options"))
- 
+
     def _cross_list(self, sequences):
         """
         Code taken from the Python cookbook v.2 (19.9 - Looping through the cross-product of multiple iterators)
@@ -360,7 +360,7 @@ class ConfigurableProduct(models.Model):
         for seq in sequences:
             result = [sublist+[item] for sublist in result for item in seq]
         return result
- 
+
     def get_all_options(self):
         """
         Returns all possible combinations of options for this products OptionGroups as a List of Lists.
@@ -381,7 +381,7 @@ class ConfigurableProduct(models.Model):
 
     def get_valid_options(self):
         """
-        Returns the same output as get_all_options(), but filters out Options that this 
+        Returns the same output as get_all_options(), but filters out Options that this
         ConfigurableProduct doesn't have a ProductVariation for.
         """
         opts = self.get_all_options()
@@ -394,7 +394,7 @@ class ConfigurableProduct(models.Model):
     def create_products(self):
         """
         Get a list of all the optiongroups applied to this object
-        Create all combinations of the options and create variations 
+        Create all combinations of the options and create variations
         """
         combinedlist = self.get_all_options()
         #Create new ConfigurableProduct/ProductVariation for each combo
@@ -412,7 +412,7 @@ class ConfigurableProduct(models.Model):
             pv.save()
             #No longer need to check for dups, done in pv.save()
         return(True)
-    
+
     def _ensure_option_set(self, options):
         """
         Takes an iterable of Options (or str(Option)) and outputs a Set of
@@ -436,7 +436,7 @@ class ConfigurableProduct(models.Model):
             if member.option_values == options:
                 return member.product
         return None
-    
+
     def get_product_count(self, options):
         options = self._ensure_option_set(options)
         count = 0
@@ -444,7 +444,7 @@ class ConfigurableProduct(models.Model):
             if variant.option_values == options:
                 count+=1
         return count
-    
+
     def save(self):
         """
         Right now this only works if you save the suboptions, then go back and choose to create the variations.
@@ -456,7 +456,7 @@ class ConfigurableProduct(models.Model):
             self.create_products()
             self.create_subs = False
             super(ConfigurableProduct, self).save()
-    
+
     def get_absolute_url(self):
         return self.product.get_absolute_url()
 
@@ -466,7 +466,7 @@ class ConfigurableProduct(models.Model):
     def __unicode__(self):
         return u"<ConfigurableProduct for: %s>" % self.product.slug
 
-# The following 2 classes are examples of how to implement the models for these requested features. 
+# The following 2 classes are examples of how to implement the models for these requested features.
 #
 #class DownloadableProduct(models.Model):
 #    """
@@ -493,7 +493,7 @@ class ConfigurableProduct(models.Model):
 
 class ProductVariation(models.Model):
     """
-    This is the real Product that is ordered when a customer orders a 
+    This is the real Product that is ordered when a customer orders a
     ConfigurableProduct with the matching Options selected
 
     """
@@ -533,7 +533,7 @@ class ProductVariation(models.Model):
 
     def _get_optionValues(self):
         """
-        Return a set of all the valid options for this variant.  
+        Return a set of all the valid options for this variant.
         A set makes sure we don't have to worry about ordering
         """
         output = Set()
@@ -553,7 +553,7 @@ class ProductVariation(models.Model):
 
     def isValidOption(self, field_data, all_data):
         raise validators.ValidationError, _("Two options from the same option group can not be applied to an item.")
-    
+
     def save(self):
         pvs = ProductVariation.objects.filter(parent=self.parent)
         for pv in pvs:
@@ -573,7 +573,7 @@ class ProductVariation(models.Model):
 
     def get_absolute_url(self):
         return self.product.get_absolute_url()
-  
+
     class Admin:
         pass
 
@@ -584,7 +584,7 @@ class ProductAttribute(models.Model):
     """
     Allows arbitrary name/value pairs (as strings) to be attached to a product.
     This is a very quick and dirty way to add extra info to a product.
-    If you want more structure then this, create your own subtype to add 
+    If you want more structure then this, create your own subtype to add
     whatever you want to your Products.
     """
     product = models.ForeignKey(Product, edit_inline=models.TABULAR, num_in_admin=1)
@@ -650,7 +650,7 @@ class ProductImage(models.Model):
             return u"Image with caption \"%s\"" % self.caption
         else:
             return u"%s" % self.picture
-        
+
     class Meta:
         ordering = ['sort']
         verbose_name = _("Product Image")
