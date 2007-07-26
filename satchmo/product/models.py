@@ -626,19 +626,29 @@ class Price(models.Model):
         verbose_name_plural = _("Prices")
         unique_together = (("product", "quantity", "expires"),)
 
+class ProductImageManager(models.Manager):
+    def get_query_set(self):
+        # ordering has no effect when order_with_respect_to is defined.
+        # So instead of doing the ordering in Meta, we do it in the manager.
+        return super(ProductImageManager, self).get_query_set().order_by('sort')
+
 class ProductImage(models.Model):
     """
     A picture of an item.  Can have many pictures associated with an item.
     Thumbnails are automatically created.
     """
-    product = models.ForeignKey(Product, edit_inline=models.TABULAR, num_in_admin=3, null=True, blank=True)
-    picture = ImageWithThumbnailField(upload_to="./images", name_field="_filename") #Media root is automatically prepended
-    caption = models.CharField(_("Optional caption"),maxlength=100,null=True, blank=True)
-    sort = models.IntegerField(_("Sort Order"), help_text=_("Leave blank to delete"), core=True)
+    objects = ProductImageManager()
+    product = models.ForeignKey(Product, null=True, blank=True,
+        edit_inline=models.TABULAR, num_in_admin=3)
+    picture = ImageWithThumbnailField(upload_to="./images",
+        name_field="_filename") #Media root is automatically prepended
+    caption = models.CharField(_("Optional caption"), maxlength=100,
+        null=True, blank=True)
+    sort = models.IntegerField(_("Sort Order"), core=True)
 
     def _get_filename(self):
         if self.product:
-            return '%s-%s' % (self.product.slug, self.sort)
+            return '%s-%s' % (self.product.slug, self.id)
         else:
             return 'default'
     _filename = property(_get_filename)
@@ -652,7 +662,7 @@ class ProductImage(models.Model):
             return u"%s" % self.picture
 
     class Meta:
-        ordering = ['product', 'sort']
+        order_with_respect_to = 'product'
         unique_together = (('product', 'sort'),)
         verbose_name = _("Product Image")
         verbose_name_plural = _("Product Images")
