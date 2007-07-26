@@ -15,13 +15,12 @@ r"""
 >>> option1.price_change = 10
 >>> option1.displayOrder = 2
 >>> option1.save()
->>> option1.value, option1.price_change, option1.displayOrder
-('1', 10, 2)
 
 # Retrieve it from the database and verify that its attributes are correct
 >>> option1 = Option.objects.get(id=option1.id)
->>> option1.value, option1.price_change, option1.displayOrder
-(u'1', Decimal("10"), 2)
+>>> ((option1.value, option1.price_change, option1.displayOrder) ==
+... (u'1', 10, 2))
+True
 """
 
 if __name__ == "__main__":
