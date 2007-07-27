@@ -91,9 +91,9 @@
 <story>
 
     <para style="name">{{order.contact.full_name}}</para>
-	<para>{{order.fullBillStreet}}</para>
-	<para>{{order.billCity}}, {{order.billState}}</para>
-	<para>{{order.billPostalCode}}</para>
+	<para>{{order.full_bill_street}}</para>
+	<para>{{order.bill_city}}, {{order.bill_state}}</para>
+	<para>{{order.bill_postal_code}}</para>
 	<spacer length="0.8cm" width="1mm"/>
 	<para>Phone: {{order.contact.primary_phone.phone}}</para>
 	<para>Email: {{order.contact.email}}</para>
@@ -101,9 +101,9 @@
 	<nextFrame/>
     
     <para style="name">{{order.contact.full_name}}</para>
-	<para>{{order.fullShipStreet}}</para>
-	<para>{{order.shipCity}}, {{order.shipState}}</para>
-	<para>{{order.shipPostalCode}}</para>
+	<para>{{order.full_ship_street}}</para>
+	<para>{{order.ship_city}}, {{order.ship_state}}</para>
+	<para>{{order.ship_postal_code}}</para>
 	<spacer length="0.8cm" width="1mm"/>
     <nextFrame/>
     
@@ -117,8 +117,8 @@
     <tr>
         <td><para>{{ item }}</para></td>
         <td>{{ item.quantity }} </td>
-        <td>{{ item.unitPrice|currency }}</td>
-        <td>{{ item.lineItemPrice|currency }} </td>
+        <td>{{ item.unit_price|currency }}</td>
+        <td>{{ item.line_item_price|currency }} </td>
     </tr>
     {% endfor %}
 	<tr><td></td></tr>
@@ -134,7 +134,7 @@
     </tr>
     <tr>
         <td></td>
-        <td></td><td>{{order.shippingMethod}} - {{order.shippingDescription}}</td><td>{{order.shippingCost|currency}}</td>
+        <td></td><td>{{order.shipping_method}} - {{order.shipping_description}}</td><td>{{order.shipping_cost|currency}}</td>
     </tr>
     <tr>
         <td></td><td></td>
@@ -146,8 +146,8 @@
 	</blockTable>
 	<spacer length="2cm" width="1mm"/>
 	<para style="payment">
-        {% if order.CC %}
-        {{order.total|currency}} was charged to your {{order.CC.creditType}} card (x{{order.CC.displayCC}}) on {{order.timeStamp|date:"F j, Y"}}.
+        {% if order.credit_card %}
+        {{order.total|currency}} was charged to your {{order.credit_card.creditType}} card (x{{order.credit_card.displayCC}}) on {{order.timestamp|date:"F j, Y"}}.
         {% endif %}
 	</para>
 	<spacer length="0.5cm" width="1mm"/>

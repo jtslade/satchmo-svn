@@ -13,8 +13,8 @@ def home(request):
     else:
         pending = unicode(ORDER_STATUS[1][1])
         inProcess = unicode(ORDER_STATUS[2][1])
-        pendings =  Order.objects.filter(status=pending).order_by('timeStamp')
-        in_process = Order.objects.filter(status=inProcess).order_by('timeStamp')
+        pendings =  Order.objects.filter(status=pending).order_by('timestamp')
+        in_process = Order.objects.filter(status=inProcess).order_by('timestamp')
         return render_to_response('admin/portal.html', 
                                     {'pendings': pendings,
                                      'in_process': in_process,

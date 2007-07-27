@@ -8,7 +8,7 @@ Your order is summarized below:
 Items Ordered
 --------------
 {% for item in order.orderitem_set.all %}
-{{ item }} - {{item.unitPrice|currency}} x {{item.quantity}} = {{item.lineItemPrice|currency}}
+{{ item }} - {{item.unit_price|currency}} x {{item.quantity}} = {{item.line_item_price|currency}}
 {% endfor %}
 
 Contact Information
@@ -19,32 +19,32 @@ Contact Information
 
 Billing Information
 -------------------
-{{ order.fullBillStreet }}
-{{ order.billCity }} 
-{{ order.billState }}
-{{ order.billPostalCode }}
-{{ order.billCountry }}
+{{ order.full_bill_street }}
+{{ order.bill_city }} 
+{{ order.bill_state }}
+{{ order.bill_postal_code }}
+{{ order.bill_country }}
 
 Shipping Address
 ----------------
-{{ order.fullShipStreet }}
-{{ order.shipCity }}
-{{ order.shipState }}
-{{ order.shipPostalCode }}
-{{ order.shipCountry }}
+{{ order.full_ship_street }}
+{{ order.ship_city }}
+{{ order.ship_state }}
+{{ order.ship_postal_code }}
+{{ order.ship_country }}
 
 Shipping Method
 ---------------
-{{ order.shippingDescription }}
-{{ order.shippingMethod }} 
-{{ order.shippingCost|currency }} 
+{{ order.shipping_description }}
+{{ order.shipping_method }} 
+{{ order.shipping_cost|currency }} 
 
 Total
 -----
 {% if order.discount %}
 Discount - {{order.discount|currency}}
 {% endif %}
-Shipping + {{order.shippingCost|currency}}
+Shipping + {{order.shipping_cost|currency}}
 {% if order.tax %}
 Tax + {{order.tax|currency}}
 {% endif %}
@@ -52,8 +52,8 @@ Total = {{order.total|currency}}
 
 Payment
 -------
-Your {{ order.CC.creditType }} card ending in 
-{{ order.CC.displayCC}} will be charged - {{order.total|currency}}
+Your {{ order.credit_card.creditType }} card ending in 
+{{ order.credit_card.displayCC}} will be charged - {{order.total|currency}}
 
 Regards,
 

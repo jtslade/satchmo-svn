@@ -116,10 +116,10 @@ def load_data():
     p2.save()
     # Import some addresses for these customers
     a1 = AddressBook(description="Home", street1="8235 Pike Street", city="Anywhere Town", state="TN",
-                 postalCode="38138", country="US", is_default_shipping=True, contact=c1)
+                 postal_code="38138", country="US", is_default_shipping=True, contact=c1)
     a1.save()
     a2 = AddressBook(description="Work", street1="1245 Main Street", city="Stillwater", state="MN",
-                 postalCode="55082", country="US", is_default_shipping=True, contact=c2)
+                 postal_code="55082", country="US", is_default_shipping=True, contact=c2)
     a2.save()
     print "Creating Suppliers..."
     #Import some suppliers
@@ -132,7 +132,7 @@ def load_data():
     p5 = PhoneNumber(contact=c4,phone="755-555-1111",type="Fax")
     p5.save()
     a3 = AddressBook(contact=c4, description="Mailing address", street1="Receiving Dept", street2="918 Funky Town St", city="Fishkill",
-                     state="NJ", postalCode="19010")
+                     state="NJ", postal_code="19010")
     a3.save()
     #s1 = Supplier(name="Rhinestone Ronny", address1="918 Funky Town St", address2="Suite 200",
     #              city="Fishkill", state="NJ", zip="19010", phone1="800-188-7611", fax="900-110-1909", email="ron@rhinestone.com",
@@ -377,4 +377,5 @@ if __name__ == '__main__':
         load_US_tax_table()
 
    
+
 

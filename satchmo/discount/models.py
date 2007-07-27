@@ -87,7 +87,7 @@ class Discount(models.Model):
         if self.amount:
             return(self.amount)
         if self.percentage and self.includeShipping:
-            return(self.percentage * (order.sub_total + order.shippingCost))
+            return(self.percentage * (order.sub_total + order.shipping_cost))
         if self.percentage:
             return((self.percentage * order.sub_total))
         
@@ -97,4 +97,5 @@ class Discount(models.Model):
     class Meta:
         verbose_name = _("Discount")
         verbose_name_plural = _("Discounts")
+
 

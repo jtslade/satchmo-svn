@@ -25,7 +25,7 @@ u'Jim Tester'
 
 #Add an address & make sure it is default billing and shipping
 >>> add1 = AddressBook.objects.create(contact=contact1, description="Home Address",
-... street1="56 Cool Lane", city="Niftyville", state="IA", postalCode="12344",
+... street1="56 Cool Lane", city="Niftyville", state="IA", postal_code="12344",
 ... country="USA")
 >>> contact1.billing_address
 <AddressBook: Jim Tester - Home Address>
@@ -42,7 +42,7 @@ u''
 
 #Add a new shipping address
 >>> add2 = AddressBook(description="Work Address", street1="56 Industry Way", city="Niftytown", 
-... state="IA", postalCode="12366", country="USA", is_default_shipping=True)
+... state="IA", postal_code="12366", country="USA", is_default_shipping=True)
 >>> add2.contact = contact1
 >>> add2.save()
 >>> contact1.save()

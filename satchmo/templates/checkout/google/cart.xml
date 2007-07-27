@@ -11,7 +11,7 @@
         {% for orderitem in order.orderitem_set.all %}<item>
         <item-name>{{ orderitem.product.name }}</item-name>
         <item-description>{{ orderitem.product.description }}</item-description>
-        <unit-price currency="{{ currency }}">{{ orderitem.unitPrice }}</unit-price>
+        <unit-price currency="{{ currency }}">{{ orderitem.unit_price }}</unit-price>
         <quantity>{{ orderitem.quantity }}</quantity>
       </item>{% endfor %}
     </items>
@@ -21,8 +21,8 @@
       <edit-cart-url>{{ edit_cart_url }}</edit-cart-url>{% endif %}{% if continue_shopping_url %}
       <continue-shopping-url>{{ continue_shopping_url }}</continue-shopping-url>{% endif %}
       <shipping-methods>
-          <flat-rate-shipping name="{{ order.shippingMethod }}">
-              <price currency="{{ currency }}">{{ order.shippingCost }}</price>
+          <flat-rate-shipping name="{{ order.shipping_method }}">
+              <price currency="{{ currency }}">{{ order.shipping_cost }}</price>
           </flat-rate-shipping>
       </shipping-methods>
     </merchant-checkout-flow-support>

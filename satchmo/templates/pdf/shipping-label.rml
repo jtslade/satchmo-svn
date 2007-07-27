@@ -45,9 +45,10 @@
      <nextFrame/>
 
     <para style="sendto"><b>{{order.contact.full_name}}</b></para>
-	<para style="sendto">{{order.fullShipStreet}}</para>
-	<para style="sendto">{{order.shipCity}}, {{order.shipState}} {{order.shipPostalCode}}</para>
+	<para style="sendto">{{order.full_ship_street}}</para>
+	<para style="sendto">{{order.ship_city}}, {{order.ship_state}} {{order.ship_postal_code}}</para>
 
 </story>
 </document>
+
 

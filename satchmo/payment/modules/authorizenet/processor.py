@@ -24,19 +24,19 @@ class PaymentProcessor(object):
         self.custBillData = {
             'x_first_name' : data.contact.first_name,
             'x_last_name' : data.contact.last_name,
-            'x_address': data.fullBillStreet,
-            'x_city': data.billCity,
-            'x_state' : data.billState,
-            'x_zip' : data.billPostalCode,
-            'x_country': data.billCountry,
+            'x_address': data.full_bill_street,
+            'x_city': data.bill_city,
+            'x_state' : data.bill_state,
+            'x_zip' : data.bill_postal_code,
+            'x_country': data.bill_country,
             'x_phone' : data.contact.primary_phone
             }
         # Can add additional info here if you want to but it's not required
         self.transactionData = {
             'x_amount' : data.total,
-            'x_card_num' : data.CC.decryptedCC,
-            'x_exp_date' : data.CC.expirationDate,
-            'x_card_code' : data.CC.ccv
+            'x_card_num' : data.credit_card.decryptedCC,
+            'x_exp_date' : data.credit_card.expirationDate,
+            'x_card_code' : data.credit_card.ccv
             }
 
         self.postString = urlencode(self.configuration) + "&" + urlencode(self.transactionData) + "&" + urlencode(self.custBillData)
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     class testOrder(object):
         def __init__(self):
             self.contact = testContact()
-            self.CC = testCC()
+            self.credit_card = testCC()
 
     if not os.environ.has_key("DJANGO_SETTINGS_MODULE"):
         os.environ["DJANGO_SETTINGS_MODULE"]="satchmo.settings"
@@ -90,18 +90,19 @@ if __name__ == "__main__":
     sampleOrder.contact.first_name = 'Chris'
     sampleOrder.contact.last_name = 'Smith'
     sampleOrder.contact.primary_phone = '801-555-9242'
-    sampleOrder.fullBillStreet = '123 Main Street'
-    sampleOrder.billPostalCode = '12345'
-    sampleOrder.billState = 'TN'
-    sampleOrder.billCity = 'Some City'
-    sampleOrder.billCountry = 'US'
+    sampleOrder.full_bill_street = '123 Main Street'
+    sampleOrder.bill_postal_code = '12345'
+    sampleOrder.bill_state = 'TN'
+    sampleOrder.bill_city = 'Some City'
+    sampleOrder.bill_country = 'US'
     sampleOrder.total = "27.00"
-    sampleOrder.CC.decryptedCC = '6011000000000012'
-    sampleOrder.CC.expirationDate = "10/09"
-    sampleOrder.CC.ccv = "144"
+    sampleOrder.credit_card.decryptedCC = '6011000000000012'
+    sampleOrder.credit_card.expirationDate = "10/09"
+    sampleOrder.credit_card.ccv = "144"
 
     processor = PaymentProcessor(PaymentSettings().AUTHORIZENET)
     processor.prepareData(sampleOrder)
     results, reason_code, msg = processor.process()
     print results,"::", msg
+
 

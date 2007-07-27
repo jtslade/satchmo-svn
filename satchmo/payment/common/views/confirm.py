@@ -50,7 +50,7 @@ def credit_confirm_info(request, payment_module):
             status = OrderStatus()
             status.status = _("Pending")
             status.notes = _("Order successfully submitted")
-            status.timeStamp = datetime.datetime.now()
+            status.timestamp = datetime.datetime.now()
             status.order = orderToProcess #For some reason auto_now_add wasn't working right in admin
             status.save()
             #Now, send a confirmation email
@@ -78,4 +78,5 @@ def credit_confirm_info(request, payment_module):
         'errors': errors,
         'checkout_step2': payment_module.lookup_url('satchmo_checkout-step2')})
     return render_to_response(template, context)
+
 

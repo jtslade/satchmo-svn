@@ -7,17 +7,17 @@ from satchmo.tax.modules import simpleTax
 
 def pay_ship_save(new_order, cart, contact, shipping, discount):
     # Set a default for when no shipping module is used
-    new_order.shippingCost = Decimal("0.00")
+    new_order.shipping_cost = Decimal("0.00")
 
     # Save the shipping info
     for module in settings.SHIPPING_MODULES:
         shipping_module = sys.modules[module]
         shipping_instance = shipping_module.Calc(cart, contact)
         if shipping_instance.id == shipping:
-            new_order.shippingDescription = shipping_instance.description()
-            new_order.shippingMethod = shipping_instance.method()
-            new_order.shippingCost = shipping_instance.cost()
-            new_order.shippingModel = shipping
+            new_order.shipping_description = shipping_instance.description()
+            new_order.shipping_method = shipping_instance.method()
+            new_order.shipping_cost = shipping_instance.cost()
+            new_order.shipping_model = shipping
 
     # Temp setting of the tax and total so we can save it
     new_order.total = Decimal('0.00')
@@ -30,7 +30,7 @@ def pay_ship_save(new_order, cart, contact, shipping, discount):
     if discount:
         discountObject = Discount.objects.filter(code=discount)[0]
         if discountObject.freeShipping:
-            new_order.shippingCost = Decimal("0.00")
+            new_order.shipping_cost = Decimal("0.00")
         discount_amount = discountObject.calc(new_order)
     else:
         discount_amount = Decimal("0.00")
@@ -41,15 +41,14 @@ def pay_ship_save(new_order, cart, contact, shipping, discount):
     taxProcessor = simpleTax(new_order)
     new_order.tax = taxProcessor.process()
 
-    new_order.total = cart.total + new_order.shippingCost - discount_amount + new_order.tax
-
-    new_order.copyAddresses()
+    new_order.total = cart.total + new_order.shipping_cost - discount_amount + new_order.tax
 
     new_order.save()
 
     # Add all the items in the cart to the order
     for item in cart.cartitem_set.all():
         new_order_item = OrderItem(order=new_order, product=item.product, quantity=item.quantity,
-        unitPrice=item.unit_price, lineItemPrice=item.line_total)
+        unit_price=item.unit_price, line_item_price=item.line_total)
         new_order_item.save()
+
 

@@ -216,7 +216,7 @@ class AddressBook(models.Model):
     street2 = models.CharField(_("Street"), maxlength=50, blank=True)
     city = models.CharField(_("City"), maxlength=50)
     state = models.CharField(_("State"), maxlength=10)
-    postalCode = models.CharField(_("Zip Code"), maxlength=10)
+    postal_code = models.CharField(_("Zip Code"), maxlength=10)
     country = models.CharField(_("Country"), maxlength=50, blank=True)
     is_default_shipping = models.BooleanField(_("Default Shipping Address"),
         default=False)
@@ -279,18 +279,18 @@ class Order(models.Model):
     placed.
     """
     contact = models.ForeignKey(Contact)
-    shipStreet1=models.CharField(_("Street"), maxlength=50, blank=True)
-    shipStreet2=models.CharField(_("Street"), maxlength=50, blank=True)
-    shipCity=models.CharField(_("City"), maxlength=50, blank=True)
-    shipState=models.CharField(_("State"), maxlength=10, blank=True)
-    shipPostalCode=models.CharField(_("Zip Code"), maxlength=10, blank=True)
-    shipCountry=models.CharField(_("Country"), maxlength=50, blank=True)
-    billStreet1=models.CharField(_("Street"), maxlength=50, blank=True)
-    billStreet2=models.CharField(_("Street"), maxlength=50, blank=True)
-    billCity=models.CharField(_("City"), maxlength=50, blank=True)
-    billState=models.CharField(_("State"), maxlength=10, blank=True)
-    billPostalCode=models.CharField(_("Zip Code"), maxlength=10, blank=True)
-    billCountry=models.CharField(_("Country"), maxlength=50, blank=True)
+    ship_street1 = models.CharField(_("Street"), maxlength=50, blank=True)
+    ship_street2 = models.CharField(_("Street"), maxlength=50, blank=True)
+    ship_city = models.CharField(_("City"), maxlength=50, blank=True)
+    ship_state = models.CharField(_("State"), maxlength=10, blank=True)
+    ship_postal_code = models.CharField(_("Zip Code"), maxlength=10, blank=True)
+    ship_country = models.CharField(_("Country"), maxlength=50, blank=True)
+    bill_street1 = models.CharField(_("Street"), maxlength=50, blank=True)
+    bill_street2 = models.CharField(_("Street"), maxlength=50, blank=True)
+    bill_city = models.CharField(_("City"), maxlength=50, blank=True)
+    bill_state = models.CharField(_("State"), maxlength=10, blank=True)
+    bill_postal_code = models.CharField(_("Zip Code"), maxlength=10, blank=True)
+    bill_country = models.CharField(_("Country"), maxlength=50, blank=True)
     notes = models.TextField(_("Notes"), maxlength=100, blank=True, null=True)
     sub_total = models.DecimalField(_("Sub total"),
         max_digits=6, decimal_places=2, blank=True, null=True)
@@ -302,71 +302,71 @@ class Order(models.Model):
         choices=PAYMENT_CHOICES, maxlength=25, blank=True)
     method = models.CharField(_("Payment method"),
         choices=ORDER_CHOICES, maxlength=50, blank=True)
-    shippingDescription = models.CharField(_("Shipping Description"),
+    shipping_description = models.CharField(_("Shipping Description"),
         maxlength=50, blank=True, null=True)
-    shippingMethod = models.CharField(_("Shipping Method"),
+    shipping_method = models.CharField(_("Shipping Method"),
         maxlength=50, blank=True, null=True)
-    shippingModel = models.CharField(_("Shipping Models"),
+    shipping_model = models.CharField(_("Shipping Models"),
         choices=activeShippingModules, maxlength=30, blank=True, null=True)
-    shippingCost = models.DecimalField(_("Shipping Cost"),
+    shipping_cost = models.DecimalField(_("Shipping Cost"),
         max_digits=6, decimal_places=2, blank=True, null=True)
     tax = models.DecimalField(_("Tax"),
         max_digits=6, decimal_places=2, blank=True, null=True)
-    timeStamp = models.DateTimeField(_("Time Stamp"), blank=True, null=True)
+    timestamp = models.DateTimeField(_("Time Stamp"), blank=True, null=True)
     status = models.CharField(_("Status"), maxlength=20, choices=ORDER_STATUS,
         core=True, blank=True, help_text=_("This is set automatically."))
 
     def __unicode__(self):
         return self.contact.full_name
 
-    def copyAddresses(self):
+    def copy_addresses(self):
         """
-        Copy the address so we know what the information was at time of order.
+        Copy the addresses so we know what the information was at time of order.
         """
         shipaddress = self.contact.shipping_address
         billaddress = self.contact.billing_address
-        self.shipStreet1 = shipaddress.street1
-        self.shipStreet2 = shipaddress.street2
-        self.shipCity = shipaddress.city
-        self.shipState = shipaddress.state
-        self.shipPostalCode = shipaddress.postalCode
-        self.shipCountry = shipaddress.country
-        self.billStreet1 = billaddress.street1
-        self.billStreet2 = billaddress.street2
-        self.billCity = billaddress.city
-        self.billState = billaddress.state
-        self.billPostalCode = billaddress.postalCode
-        self.billCountry = billaddress.country
+        self.ship_street1 = shipaddress.street1
+        self.ship_street2 = shipaddress.street2
+        self.ship_city = shipaddress.city
+        self.ship_state = shipaddress.state
+        self.ship_postal_code = shipaddress.postal_code
+        self.ship_country = shipaddress.country
+        self.bill_street1 = billaddress.street1
+        self.bill_street2 = billaddress.street2
+        self.bill_city = billaddress.city
+        self.bill_state = billaddress.state
+        self.bill_postal_code = billaddress.postal_code
+        self.bill_country = billaddress.country
 
-    def removeAllItems(self):
+    def remove_all_items(self):
         """Delete all items belonging to this order."""
         for item in self.orderitem_set.all():
             item.delete()
         self.save()
 
-    def _CC(self):
+    def _credit_card(self):
         """Return the credit card associated with this order."""
         try:
             return self.creditcarddetail_set.get()
         except self.creditcarddetail_set.model.DoesNotExist:
             return None
-    CC = property(_CC)
+    credit_card = property(_credit_card)
 
-    def _fullBillStreet(self, delim="<br/>"):
+    def _full_bill_street(self, delim="<br/>"):
         """Return both billing street entries separated by delim."""
-        if self.billStreet2:
-            return (self.billStreet1 + delim + self.billStreet2)
+        if self.bill_street2:
+            return self.bill_street1 + delim + self.bill_street2
         else:
-            return (self.billStreet1)
-    fullBillStreet = property(_fullBillStreet)
+            return self.bill_street1
+    full_bill_street = property(_full_bill_street)
 
-    def _fullShipStreet(self, delim="<br/>"):
+    def _full_ship_street(self, delim="<br/>"):
         """Return both shipping street entries separated by delim."""
-        if self.shipStreet2:
-            return (self.shipStreet1 + delim + self.shipStreet2)
+        if self.ship_street2:
+            return self.ship_street1 + delim + self.ship_street2
         else:
-            return (self.shipStreet1)
-    fullShipStreet = property(_fullShipStreet)
+            return self.ship_street1
+    full_ship_street = property(_full_ship_street)
 
     def save(self):
         """
@@ -374,9 +374,9 @@ class Order(models.Model):
         the create_date.
         """
         if not self.id:
-            self.timeStamp = datetime.datetime.now()
+            self.timestamp = datetime.datetime.now()
 
-        self.copyAddresses()
+        self.copy_addresses()
         super(Order, self).save() # Call the "real" save() method.
 
     def invoice(self):
@@ -423,20 +423,20 @@ class Order(models.Model):
         fields = (
             (None, {'fields': ('contact', 'method', 'status', 'notes')}),
             (_('Shipping Method'), {'fields':
-                ('shippingMethod', 'shippingDescription')}),
+                ('shipping_method', 'shipping_description')}),
             (_('Shipping Address'), {'classes': 'collapse', 'fields':
-                ('shipStreet1', 'shipStreet2', 'shipCity', 'shipState',
-                'shipPostalCode', 'shipCountry')}),
+                ('ship_street1', 'ship_street2', 'ship_city', 'ship_state',
+                'ship_postal_code', 'ship_country')}),
             (_('Billing Address'), {'classes': 'collapse', 'fields':
-                ('billStreet1', 'billStreet2', 'billCity', 'billState',
-                'billPostalCode', 'billCountry')}),
+                ('bill_street1', 'bill_street2', 'bill_city', 'bill_state',
+                'bill_postal_code', 'bill_country')}),
             (_('Totals'), {'fields':
-                ('sub_total', 'shippingCost', 'tax', 'discount', 'total',
-                'timeStamp', 'payment')}))
-        list_display = ('contact', 'timeStamp', 'order_total', 'status',
+                ('sub_total', 'shipping_cost', 'tax', 'discount', 'total',
+                'timestamp', 'payment')}))
+        list_display = ('contact', 'timestamp', 'order_total', 'status',
             'invoice', 'packingslip', 'shippinglabel')
-        list_filter = ['timeStamp', 'contact']
-        date_hierarchy = 'timeStamp'
+        list_filter = ['timestamp', 'contact']
+        date_hierarchy = 'timestamp'
 
     class Meta:
         verbose_name = _("Product Order")
@@ -449,9 +449,9 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, edit_inline=models.TABULAR, num_in_admin=3)
     product = models.ForeignKey(Product)
     quantity = models.IntegerField(_("Quantity"), core=True)
-    unitPrice = models.DecimalField(_("Unit price"),
+    unit_price = models.DecimalField(_("Unit price"),
         max_digits=6, decimal_places=2)
-    lineItemPrice = models.DecimalField(_("Line item price"),
+    line_item_price = models.DecimalField(_("Line item price"),
         max_digits=6, decimal_places=2)
 
     def __unicode__(self):
@@ -473,7 +473,7 @@ class OrderStatus(models.Model):
     status = models.CharField(_("Status"),
         maxlength=20, choices=ORDER_STATUS, core=True, blank=True)
     notes = models.CharField(_("Notes"), maxlength=100, blank=True)
-    timeStamp = models.DateTimeField(_("Time Stamp"))
+    timestamp = models.DateTimeField(_("Time Stamp"))
 
     def __unicode__(self):
         return self.status
@@ -486,4 +486,5 @@ class OrderStatus(models.Model):
     class Meta:
         verbose_name = _("Order Status")
         verbose_name_plural = _("Order statuses")
+
 

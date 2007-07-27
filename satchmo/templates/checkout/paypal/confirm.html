@@ -23,7 +23,7 @@ Checkout
 {% endif %}
 <h4>Items Ordered</h4>
 {% for item in order.orderitem_set.all %}
-{{ item }} - {{item.unitPrice|currency}} x {{item.quantity}} = {{item.lineItemPrice|currency}}<br/>
+{{ item }} - {{item.unit_price|currency}} x {{item.quantity}} = {{item.line_item_price|currency}}<br/>
 {% endfor %}
 
 <h4>Contact Information</h4>
@@ -32,28 +32,28 @@ Checkout
 {{ order.contact.primary_phone.phone }}<br/>
 
 <h4>Billing Information</h4>
-{{ order.fullBillStreet }}<br/>
-{{ order.billCity }} <br/>
-{{ order.billState }}<br/>
-{{ order.billPostalCode }}<br/>
-{{ order.billCountry }}<br/>
+{{ order.full_bill_street }}<br/>
+{{ order.bill_city }} <br/>
+{{ order.bill_state }}<br/>
+{{ order.bill_postal_code }}<br/>
+{{ order.bill_country }}<br/>
 
 <h4>Shipping Address</h4>
-{{ order.fullShipStreet }}<br/>
-{{ order.shipCity }}<br/>
-{{ order.shipState }}<br/>
-{{ order.shipPostalCode }}<br/>
-{{ order.shipCountry }}<br/>
+{{ order.full_ship_street }}<br/>
+{{ order.ship_city }}<br/>
+{{ order.ship_state }}<br/>
+{{ order.ship_postal_code }}<br/>
+{{ order.ship_country }}<br/>
 <h4>Shipping Method</h4>
-{{ order.shippingDescription }}<br/>
-{{ order.shippingMethod }} <br/>
-{{ order.shippingCost|currency }} <br/>
+{{ order.shipping_description }}<br/>
+{{ order.shipping_method }} <br/>
+{{ order.shipping_cost|currency }} <br/>
 
 <h4>Total</h4>
 {% if order.discount %}
     Discount - {{order.discount|currency}}<br/>
 {% endif %}
-Shipping + {{order.shippingCost|currency}}<br/>
+Shipping + {{order.shipping_cost|currency}}<br/>
 {% if order.tax %}
     Tax + {{order.tax|currency}}<br/>
 {% endif %}
@@ -71,10 +71,10 @@ Your payment will be processed through PayPal.
 <input type="hidden" name="return" value="{{ return_address }}" />
 {% for item in order.orderitem_set.all %}
 <input type="hidden" name="item_name_{{forloop.counter}}" value="{{item}}" />
-<input type="hidden" name="amount_{{forloop.counter}}" value="{{item.unitPrice}}" />
+<input type="hidden" name="amount_{{forloop.counter}}" value="{{item.unit_price}}" />
 <input type="hidden" name="quantity_{{forloop.counter}}" value="{{item.quantity}}" />
 {% endfor %}
-<input type="hidden" name="shipping_1" value="{{order.shippingCost}}" />
+<input type="hidden" name="shipping_1" value="{{order.shipping_cost}}" />
 <input type="hidden" name="tax_cart" value="{{order.tax}}" />
 <input type="submit" value="Purchase Items" />
 </form>
