@@ -19,13 +19,13 @@ class ContactInfoForm(forms.Form):
     city = forms.CharField(max_length=30)
     state = forms.ChoiceField(initial=selection)
     country = forms.ChoiceField()
-    postalCode = forms.CharField(max_length=10)
+    postal_code = forms.CharField(max_length=10)
     copy_address = forms.BooleanField(required=False)
     ship_street1 = forms.CharField(max_length=30, required=False)
     ship_street2 = forms.CharField(max_length=30, required=False)
     ship_city = forms.CharField(max_length=30, required=False)
     ship_state = forms.ChoiceField(initial=selection, required=False)
-    ship_postalCode = forms.CharField(max_length=10, required=False)
+    ship_postal_code = forms.CharField(max_length=10, required=False)
 
     def __init__(self, countries, areas, *args, **kwargs):
         super(ContactInfoForm, self).__init__(*args, **kwargs)
@@ -69,8 +69,8 @@ class ContactInfoForm(forms.Form):
     def clean_ship_city(self):
         return self.ship_charfield_clean('city')
 
-    def clean_ship_postalCode(self):
-        return self.ship_charfield_clean('postalCode')
+    def clean_ship_postal_code(self):
+        return self.ship_charfield_clean('postal_code')
 
 def save_contact_info(data, contact=None):
     #Save the contact info into the database

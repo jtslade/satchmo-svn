@@ -14,12 +14,12 @@ checkout_step1_post_data = {
     'street1': '8299 Some Street',
     'city': 'Springfield',
     'state': 'MO',
-    'postalCode': '81122',
+    'postal_code': '81122',
     'country': 'US',
     'ship_street1': '1011 Some Other Street',
     'ship_city': 'Springfield',
     'ship_state': 'MO',
-    'ship_postalCode': '81123',
+    'ship_postal_code': '81123',
     'paymentmethod': 'DUMMY'}
 
 class ShopTest(TestCase):
