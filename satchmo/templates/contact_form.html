@@ -10,11 +10,7 @@
 <h3>{% trans "Contact Information" %}</h3>
 
 {% if form.errors %}
-<h3>{% blocktrans count form.errors|length as errors %}
-Please correct the following error:
-{% plural %}
-Please correct the following errors:
-{% endblocktrans %}</h3>
+<h3>{% blocktrans count form.errors|length as errors %}Please correct the following error:{% plural %}Please correct the following errors:{% endblocktrans %}</h3>
 {% endif %}
 
 <table>
