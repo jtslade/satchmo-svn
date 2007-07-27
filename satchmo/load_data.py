@@ -8,8 +8,8 @@ import string
 import csv
 import tarfile
 import shutil
-sys.path.insert(0, "django-src-here")
-sys.path.insert(0, "satchmo-src-here")
+#sys.path.insert(0, "django-src-here")
+#sys.path.insert(0, "satchmo-src-here")
 
 if not os.environ.has_key("DJANGO_SETTINGS_MODULE"):
     from settings import DJANGO_SETTINGS_MODULE
@@ -19,6 +19,9 @@ import django.core.management, django.core
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
+from django.core.management import reset
+from django.db import models
+
 
 
 def find_site(): 
@@ -32,6 +35,23 @@ def find_site():
     site = __import__(settingsl[0])
     settings = __import__(settings_module, {}, {}, settingsl[-1])
     return site, settings
+
+def delete_satchmo():
+    """
+    Delete all of the apps associated with satchmo
+    """
+    print "Deleting existing Satchmo data."
+    #First, we need to clean up any satchmo users that may be tied to a django user
+    from satchmo.contact.models import Contact
+    for c in Contact.objects.all():
+        if c.user:
+            c.user.delete()
+    for app in models.get_apps():
+        if len(models.get_models(app)) > 0 and app.__name__.startswith('satchmo'):
+            try:
+                reset(app, interactive=False)
+            except:
+                print "Failed to delete application %s" % app.__name__
 
 def delete_db(settings): 
     """Delete the old database."""
@@ -282,11 +302,16 @@ def load_data():
     c1.save()
 
 
-def eraseDB(): 
+def eraseDB(all=False): 
     """Erase database and init it"""
     try: 
         site, settings = find_site()
-        delete_db(settings)
+        if all:
+            delete_db(settings)
+            print "All data successfully deleted."
+        else:
+            delete_satchmo()
+            print "Satchmo data successfully deleted."
         init_and_install()
     except AssertionError, ex: 
         print ex.args[0]
@@ -335,9 +360,13 @@ if __name__ == '__main__':
     responseWebda = string.lower(raw_input("Type 'yes' to load internationalization data: "))
     if responseWebda == 'yes':
         load_webda()
-    response = string.lower(raw_input("Type 'yes' to erase the database and reinstall all models: "))
-    if response == 'yes':
-        eraseDB()
+    response_erase_all = string.lower(raw_input("Type 'yes' to erase ALL data and reinstall ALL models: "))
+    if response_erase_all == 'yes':
+        eraseDB(all=True)
+    else:
+        response = string.lower(raw_input("Type 'yes' to erase any existing Satchmo data and reinstall all models: "))
+        if response == 'yes':
+            eraseDB(all=False)
     if responseWebda =='yes':
         from satchmo import webda
         webda.main()
