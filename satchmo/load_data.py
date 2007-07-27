@@ -41,11 +41,6 @@ def delete_satchmo():
     Delete all of the apps associated with satchmo
     """
     print "Deleting existing Satchmo data."
-    #First, we need to clean up any satchmo users that may be tied to a django user
-    from satchmo.contact.models import Contact
-    for c in Contact.objects.all():
-        if c.user:
-            c.user.delete()
     for app in models.get_apps():
         if len(models.get_models(app)) > 0 and app.__name__.startswith('satchmo'):
             try:
@@ -296,9 +291,13 @@ def load_data():
     #image4.save()
     
     print "Create a test user..."
-    user = User.objects.create_user('csmith', 'tester@testsite.com', 'test')
-    user.save()
-    c1.user = user
+    #First see if our test user is still there, then use or create that user
+    try:
+        test_user = User.objects.get(username="csmith")
+    except:
+        test_user = User.objects.create_user('csmith', 'tester@testsite.com', 'test')
+        test_user.save()
+    c1.user = test_user
     c1.save()
 
 
