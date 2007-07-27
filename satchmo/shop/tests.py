@@ -2,8 +2,25 @@ from django.test import TestCase
 from django.test.client import Client
 from django.core import mail
 from django.conf import settings
+from django.contrib.auth.models import User
 
 prefix = settings.SHOP_BASE
+
+checkout_step1_post_data = {
+    'email': 'sometester@example.com',
+    'first_name': 'Teddy',
+    'last_name' : 'Tester',
+    'phone': '456-123-5555',
+    'street1': '8299 Some Street',
+    'city': 'Springfield',
+    'state': 'MO',
+    'postalCode': '81122',
+    'country': 'US',
+    'ship_street1': '1011 Some Other Street',
+    'ship_city': 'Springfield',
+    'ship_state': 'MO',
+    'ship_postalCode': '81123',
+    'paymentmethod': 'DUMMY'}
 
 class ShopTest(TestCase):
     fixtures = ['i18n-data.yaml', 'sample-store-data.yaml', 'products.yaml']
@@ -133,20 +150,7 @@ class ShopTest(TestCase):
         Run through a full checkout process
         """
         self.test_cart_adding()
-        response = self.client.post(prefix+"/checkout/", {'email': 'sometester@example.com',
-                                    'first_name': 'Teddy',
-                                    'last_name' : 'Tester',
-                                    'phone': '456-123-5555',
-                                    'street1': '8299 Some Street',
-                                    'city': 'Springfield',
-                                    'state': 'MO',
-                                    'postalCode': '81122',
-                                    'country': 'US',
-                                    'ship_street1': '1011 Some Other Street',
-                                    'ship_city': 'Springfield',
-                                    'ship_state': 'MO',
-                                    'ship_postalCode': '81123',
-                                    'paymentmethod': 'DUMMY'})
+        response = self.client.post(prefix+"/checkout/", checkout_step1_post_data)
         self.assertRedirects(response, prefix+'/checkout/dummy/', status_code=302, target_status_code=200)
         response = self.client.post(prefix+"/checkout/dummy/", {'credit_type': 'Visa',
                                     'credit_number': '4485079141095836',
@@ -162,6 +166,30 @@ class ShopTest(TestCase):
         response = self.client.post(prefix+"/checkout/dummy/confirm/", {'process' : 'True'})
         self.assertRedirects(response, prefix+'/checkout/dummy/success/', status_code=302, target_status_code=200)
         self.assertEqual(len(mail.outbox), 1)
+
+    def test_registration_keeps_contact(self):
+        """Check that if a user creates a Contact and later registers,
+        the existing Contact will be attached to the User.
+        """
+        self.test_cart_adding()
+        self.client.post(prefix + '/checkout/', checkout_step1_post_data)
+        response = self.client.get('/accounts/register/')
+        self.assertContains(response, "Teddy", status_code=200)
+        data = {
+            'email': 'sometester@example.com',
+            'first_name': 'Teddy',
+            'last_name': 'Tester',
+            'password': 'guz90tyc',
+            'password2': 'guz90tyc',
+            'newsletter': '0'}
+        response = self.client.post('/accounts/register/', data)
+        self.assertRedirects(response, '/accounts/register/complete/',
+            status_code=302, target_status_code=200)
+        user = User.objects.get(email="sometester@example.com")
+        contact = user.contact_set.get()
+        assert contact.billing_address.street1 == "8299 Some Street"
+        assert contact.shipping_address.street1 == "1011 Some Other Street"
+        assert contact.primary_phone.phone == "456-123-5555"
 
 from django.contrib.auth.models import User
 
@@ -187,7 +215,7 @@ class AdminTest(TestCase):
     #def test_productimage_list(self):
         response = self.client.get('/admin/product/productimage/')
         self.assertContains(response, "Photo Not Available", status_code=200)
-    
+
     #def test_productimage(self):
         response = self.client.get('/admin/product/productimage/1/')
         self.assertContains(response, "Photo Not Available", status_code=200)

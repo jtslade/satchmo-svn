@@ -47,13 +47,13 @@ def contact_info(request):
             countries.append(country_to_choose)
 
     contact = None
-    if request.session.get('custID', False):
+    if request.session.get('custID'):
         try:
             contact = Contact.objects.get(id=request.session['custID'])
         except Contact.DoesNotExist:
             pass
 
-    if not contact:
+    if contact is None:
         try:
             contact = Contact.objects.get(user=request.user.id)
         except Contact.DoesNotExist:

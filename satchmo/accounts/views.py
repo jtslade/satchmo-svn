@@ -89,9 +89,21 @@ def register(request):
             user.last_name = last_name
             user.save()
 
-            contact = Contact(user=user, first_name=first_name,
-                last_name=last_name, email=email, newsletter=newsletter,
-                role='Customer')
+            # If the user already has a contact, retrieve it.
+            # Otherwise, create a new one.
+            contact = Contact()
+            if request.session.get('custID'):
+                try:
+                    contact = Contact.objects.get(id=request.session['custID'])
+                except Contact.DoesNotExist:
+                    pass
+            
+            contact.user = user
+            contact.first_name = first_name
+            contact.last_name = last_name
+            contact.email = email
+            contact.newsletter = newsletter
+            contact.role = 'Customer'
             contact.save()
 
             if not verify:
@@ -103,7 +115,17 @@ def register(request):
             return http.HttpResponseRedirect(url)
 
     else:
-        form = RegistrationForm()
+        initial_data = {}
+        if request.session.get('custID'):
+            try:
+                contact = Contact.objects.get(id=request.session['custID'])
+                initial_data = {
+                    'email': contact.email,
+                    'first_name': contact.first_name,
+                    'last_name': contact.last_name}
+            except Contact.DoesNotExist:
+                pass
+        form = RegistrationForm(initial=initial_data)
 
     context = RequestContext(request, {'form': form})
     return render_to_response('registration/registration_form.html', context)
