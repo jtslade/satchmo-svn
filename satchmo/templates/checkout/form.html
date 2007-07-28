@@ -73,8 +73,8 @@ Checkout
     <tr><td><label for="id_state">{{country.get_adm_area_display}}*</label></td><td> {{ form.state }}</td></tr>
     {% if form.state.errors %}<tr><td>&nbsp;</td><td>*** {{ form.state.errors|join:", " }}</td></tr>{% endif %}
 
-    <tr><td><label for="id_postalCode">Zipcode/Postcode*</label></td><td> {{ form.postalCode }}</td></tr>
-    {% if form.postalCode.errors %}<tr><td>&nbsp;</td><td>*** {{ form.postalCode.errors|join:", " }}</td></tr>{% endif %}
+    <tr><td><label for="id_postal_code">Zipcode/Postcode*</label></td><td> {{ form.postal_code }}</td></tr>
+    {% if form.postal_code.errors %}<tr><td>&nbsp;</td><td>*** {{ form.postal_code.errors|join:", " }}</td></tr>{% endif %}
 
     <tr><td><label for="id_country">Country</label></td><td> {{ form.country }}</td></tr>
     {% if form.country.errors %}<tr><td>&nbsp;</td><td>*** {{ form.country.errors|join:", " }}</td></tr>{% endif %}
@@ -97,8 +97,8 @@ Checkout
     <tr><td><label for="id_ship_state">{{country.get_adm_area_display}}</label></td><td> {{ form.ship_state }}</td></tr>
     {% if form.ship_state.errors %}<tr><td>&nbsp;</td><td>*** {{ form.ship_state.errors|join:", " }}</td></tr>{% endif %}
 
-    <tr><td><label for="id_ship_postalCode">Zip code</label></td><td> {{ form.ship_postalCode }}</td></tr>
-    {% if form.ship_postalCode.errors %}<tr><td>&nbsp;</td><td>*** {{ form.ship_postalCode.errors|join:", " }}</td></tr>{% endif %}
+    <tr><td><label for="id_ship_postalCode">Zip code</label></td><td> {{ form.ship_postal_code }}</td></tr>
+    {% if form.ship_postal_code.errors %}<tr><td>&nbsp;</td><td>*** {{ form.ship_postal_code.errors|join:", " }}</td></tr>{% endif %}
 {% endif %}
 
 	<tr><td></td><td><input type="submit" value="Continue Checkout"/></td></tr>
