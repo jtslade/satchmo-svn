@@ -22,14 +22,24 @@ from django.contrib.auth.models import User
 from django.core.management import reset
 from django.db import models
 
-
+# Satchmo apps, sorted by their model dependencies.
+satchmo_apps = [
+    'satchmo.i18n',
+    'satchmo.newsletter',
+    'satchmo.tax',
+    'satchmo.product',
+    'satchmo.contact',
+    'satchmo.discount',
+    'satchmo.payment',
+    'satchmo.supplier',
+    'satchmo.shop']
 
 def find_site(): 
     """Find the site by looking at the environment."""
     try: 
         settings_module = os.environ['DJANGO_SETTINGS_MODULE']
     except KeyError: 
-        raise AssertionError, "DJANGO_SETTINGS_MODULE not set."
+        raise AssertionError("DJANGO_SETTINGS_MODULE not set.")
 
     settingsl = settings_module.split('.')
     site = __import__(settingsl[0])
@@ -38,15 +48,20 @@ def find_site():
 
 def delete_satchmo():
     """
-    Delete all of the apps associated with satchmo
+    Delete all of the apps associated with Satchmo.
     """
-    print "Deleting existing Satchmo data."
-    for app in models.get_apps():
-        if len(models.get_models(app)) > 0 and app.__name__.startswith('satchmo'):
-            try:
-                reset(app, interactive=False)
-            except:
-                print "Failed to delete application %s" % app.__name__
+    print("Deleting existing Satchmo data.")
+    # Order the apps so that the apps with dependencies are deleted first.
+    app_list = list(satchmo_apps)
+    app_list.reverse()
+    for app_name in app_list:
+        if app_name in settings.INSTALLED_APPS:
+            app = models.get_app(app_name.split('.')[-1], emptyOK=True)
+            if app is not None:
+                try:
+                    reset(app, interactive=False)
+                except:
+                    print "Failed to delete application %s." % app_name
 
 def delete_db(settings): 
     """Delete the old database."""
