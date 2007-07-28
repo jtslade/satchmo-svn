@@ -97,7 +97,7 @@ Checkout
     <tr><td><label for="id_ship_state">{{country.get_adm_area_display}}</label></td><td> {{ form.ship_state }}</td></tr>
     {% if form.ship_state.errors %}<tr><td>&nbsp;</td><td>*** {{ form.ship_state.errors|join:", " }}</td></tr>{% endif %}
 
-    <tr><td><label for="id_ship_postalCode">Zip code</label></td><td> {{ form.ship_postal_code }}</td></tr>
+    <tr><td><label for="id_ship_postal_code">Zip code</label></td><td>{{ form.ship_postal_code }}</td></tr>
     {% if form.ship_postal_code.errors %}<tr><td>&nbsp;</td><td>*** {{ form.ship_postal_code.errors|join:", " }}</td></tr>{% endif %}
 {% endif %}
 
