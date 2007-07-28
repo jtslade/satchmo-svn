@@ -1,66 +1,64 @@
-{% load satchmo.currency_filter %}
 {% extends "base.html" %}
+{% load i18n %}
+{% load satchmo.currency_filter %}
 
 {% block navbar %}
-<a href="{{shop_base}}/">Home</a> ::
-Checkout
+<a href="{{ shop_base }}/">{% trans "Home" %}</a> ::
+{% trans "Checkout" %}
 {% endblock %}
 
 {% block content %}
 <h3>Checkout</h3>
 <div id="checkoutprogress">
 <ul>
-    <li class="first"><a href="{% url satchmo_checkout-step1 %}">Ship/Bill</a></li>
-    <li><a href="{% url PAYPAL_satchmo_checkout-step2 %}">Payment</a></li>
-    <li class="active">Confirmation</li>
+    <li class="first"><a href="{% url satchmo_checkout-step1 %}">{% trans "Ship/Bill" %}</a></li>
+    <li><a href="{% url PAYPAL_satchmo_checkout-step2 %}">{% trans "Payment" %}</a></li>
+    <li class="active">{% trans "Confirmation" %}</li>
 </ul>
 </div>
-{% if errors %}
-    <h3>The following error was returned while trying to process your card.  Please correct and resubmit</h3>
-    {{ errors }}
-{% else %}
-    <h3>Please validate the following information, then submit your order.</h3>
-{% endif %}
-<h4>Items Ordered</h4>
+<h3>{% blocktrans %}Please validate the following information, then submit your order.{% endblocktrans %}</h3>
+
+<h4>{% trans "Items Ordered" %}</h4>
 {% for item in order.orderitem_set.all %}
 {{ item }} - {{item.unit_price|currency}} x {{item.quantity}} = {{item.line_item_price|currency}}<br/>
 {% endfor %}
 
-<h4>Contact Information</h4>
+<h4>{% trans "Contact Information" %}</h4>
 {{ order.contact.full_name }}<br/>
 {{ order.contact.email }}<br/>
 {{ order.contact.primary_phone.phone }}<br/>
 
-<h4>Billing Information</h4>
+<h4>{% trans "Billing Information" %}</h4>
 {{ order.full_bill_street }}<br/>
-{{ order.bill_city }} <br/>
+{{ order.bill_city }}<br/>
 {{ order.bill_state }}<br/>
 {{ order.bill_postal_code }}<br/>
 {{ order.bill_country }}<br/>
 
-<h4>Shipping Address</h4>
+<h4>{% trans "Shipping Address" %}</h4>
 {{ order.full_ship_street }}<br/>
 {{ order.ship_city }}<br/>
 {{ order.ship_state }}<br/>
 {{ order.ship_postal_code }}<br/>
 {{ order.ship_country }}<br/>
-<h4>Shipping Method</h4>
+
+<h4>{% trans "Shipping Method" %}</h4>
 {{ order.shipping_description }}<br/>
-{{ order.shipping_method }} <br/>
-{{ order.shipping_cost|currency }} <br/>
+{{ order.shipping_method }}<br/>
+{{ order.shipping_cost|currency }}<br/>
 
-<h4>Total</h4>
+<h4>{% trans "Total" %}</h4>
 {% if order.discount %}
-    Discount - {{order.discount|currency}}<br/>
+    {% trans "Discount" %} - {{order.discount|currency}}<br/>
 {% endif %}
-Shipping + {{order.shipping_cost|currency}}<br/>
+{% trans "Shipping" %} + {{order.shipping_cost|currency}}<br/>
 {% if order.tax %}
-    Tax + {{order.tax|currency}}<br/>
+    {% trans "Tax" %} + {{order.tax|currency}}<br/>
 {% endif %}
-Total = {{order.total|currency}}<br/>
+{% trans "Total" %} = {{order.total|currency}}<br/>
 
-<h4>Payment</h4>
-Your payment will be processed through PayPal.
+<h4>{% trans "Payment" %}</h4>
+{% trans "Your payment will be processed through PayPal." %}
 
 <form action="{{ post_url }}" method="post">
 <input type="hidden" name="cmd" value="_cart" />
@@ -76,7 +74,7 @@ Your payment will be processed through PayPal.
 {% endfor %}
 <input type="hidden" name="shipping_1" value="{{order.shipping_cost}}" />
 <input type="hidden" name="tax_cart" value="{{order.tax}}" />
-<input type="submit" value="Purchase Items" />
+<input type="submit" value="{% trans "Purchase Items" %}" />
 </form>
 
 {% endblock %}

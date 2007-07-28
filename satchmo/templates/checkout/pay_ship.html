@@ -1,57 +1,59 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block navbar %}
-<a href="{{shop_base}}/">Home</a> ::
-Checkout
+<a href="{{ shop_base }}/">{% trans "Home" %}</a> ::
+{% trans "Checkout" %}
 {% endblock %}
 
 {% block content %}
-<h3>Checkout</h3>
+<h3>{% trans "Checkout" %}</h3>
 <div id="checkoutprogress">
 <ul>
-    <li class="first"><a href="{% url satchmo_checkout-step1 %}">Ship/Bill</a></li>
-    <li class="active">Payment</li>
-    <li>Confirmation</li>
+    <li class="first"><a href="{% url satchmo_checkout-step1 %}">{% trans "Ship/Bill" %}</a></li>
+    <li class="active">{% trans "Payment" %}</li>
+    <li>{% trans "Confirmation" %}</li>
 </ul>
 </div>
-<h4>Please complete the following information in order to submit your order.</h4>
-{% if form.has_errors %}
-<h2>Please correct the following error{{ form.error_dict|pluralize }}:</h2>
+<h4>{% trans "Please complete the following information in order to submit your order." %}</h4>
+
+{% if form.errors %}
+    <h2>{% blocktrans count form.errors|length as count %}Please correct the following error:{% plural %}Please correct the following errors:{% endblocktrans %}</h2>
 {% endif %}
 
 <table>
 <form method="post" action=".">
 
-    <tr><td><h4>Payment Information</h4></td></tr>
+    <tr><td><h4>{% trans "Payment Information" %}</h4></td></tr>
 
-    <tr><td><label for="id_credit_type">Type of credit card</label></td> <td>{{ form.credit_type }}</td></tr>
+    <tr><td><label for="id_credit_type">{% trans "Type of credit card" %}</label></td> <td>{{ form.credit_type }}</td></tr>
     <tr><td></td><td>{% if form.credit_type.errors %}*** {{ form.credit_type.errors|join:", " }}{% endif %}</td></tr>
 
-    <tr><td><label for="id_credit_number">Credit card number</label></td><td> {{ form.credit_number }}</td></tr>
+    <tr><td><label for="id_credit_number">{% trans "Credit card number" %}</label></td><td> {{ form.credit_number }}</td></tr>
     <tr><td></td><td>{% if form.credit_number.errors %}*** {{ form.credit_number.errors|join:", " }}{% endif %}</td></tr>
 
-    <tr><td><label for="id_month_expires">Expiration date</label><label for+"id_year_expires"></label></td><td> {{ form.month_expires }} {{form.year_expires}}</td></tr>
+    <tr><td><label for="id_month_expires">{% trans "Expiration date" %}</label><label for+"id_year_expires"></label></td><td> {{ form.month_expires }} {{form.year_expires}}</td></tr>
     <tr><td></td><td>{% if form.year_expires.errors %}*** {{ form.year_expires.errors|join:", " }}{% endif %}</td></tr>
 
-    <tr><td><label for="id_ccv">CCV</label></td><td> {{ form.ccv}}</td></tr>
+    <tr><td><label for="id_ccv">{% trans "CCV" %}</label></td><td> {{ form.ccv}}</td></tr>
     <tr><td></td><td>{% if form.ccv.errors %}*** {{ form.ccv.errors|join:", " }}{% endif %}</td></tr>
 
-    <tr><td><h4>Discounts</h4></td></tr>
-    <tr><td><label for="id_discount">Discount code</label></td><td> {{ form.discount }}</td></tr>
+    <tr><td><h4>{% trans "Discounts" %}</h4></td></tr>
+    <tr><td><label for="id_discount">{% trans "Discount code" %}</label></td><td> {{ form.discount }}</td></tr>
     <tr><td></td><td>{% if form.discount.errors %}*** {{ form.discount.errors|join:", " }}{% endif %}</td></tr>
 
 {% if cart.is_shippable %}
-    <tr><td><h4>Shipping Information</h4></td></tr>
+    <tr><td><h4>{% trans "Shipping Information" %}</h4></td></tr>
     </table>
     <div id="shipping">
-    <label for="id_shipping">Please choose your preferred shipping method</label>{{ form.shipping}}
+    <label for="id_shipping">{% trans "Please choose your preferred shipping method" %}</label>{{ form.shipping}}
     {% if form.shipping.errors %}*** {{ form.shipping.errors|join:", " }}{% endif %}
     </div>
 {% else %}
     </table>
 {% endif %}
 
-    <input type="submit" value="Confirm"/>
+    <input type="submit" value="{% trans "Confirm" %}"/>
 </form>
 
 {% endblock %}

@@ -1,13 +1,14 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load satchmo.google %}
 
 {% block navbar %}
-<a href="{{shop_base}}/">Home</a> ::
-Checkout
+<a href="{{ shop_base }}/">{% trans "Home" %}</a> ::
+{% trans "Checkout" %}
 {% endblock %}
 
 {% block content %}
-<h4>Success!</h4>
+<h4>{% trans "Success!" %}</h4>
 {% endblock %}
 
 {% block google-tracker %}
