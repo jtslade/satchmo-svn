@@ -340,6 +340,24 @@ class Product(models.Model):
                 pass
         return tuple(types)
     get_subtypes.short_description = "Product SubTypes"
+    
+    def _has_variants(self):
+        try:
+            if self.productvariation:
+                return(True)
+        except:
+            return(False)
+    has_variants = property(_has_variants)
+    
+    def _get_category(self):
+        """
+        Return the primary category associated with this product
+        """
+        if self.has_variants:
+            return self.productvariation.parent.product.category.all()[0].name
+        else:
+            return self.category.all()[0].name
+    get_category = property(_get_category)
 
 class ConfigurableProduct(models.Model):
     """
@@ -462,7 +480,7 @@ class ConfigurableProduct(models.Model):
 
     class Admin:
         pass
-
+        
     def __unicode__(self):
         return u"<ConfigurableProduct for: %s>" % self.product.slug
 
