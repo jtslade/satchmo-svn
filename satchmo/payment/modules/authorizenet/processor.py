@@ -78,6 +78,8 @@ if __name__ == "__main__":
         def __init__(self):
             self.contact = testContact()
             self.credit_card = testCC()
+        def order_success(self):
+            pass
 
     if not os.environ.has_key("DJANGO_SETTINGS_MODULE"):
         os.environ["DJANGO_SETTINGS_MODULE"]="satchmo.settings"
