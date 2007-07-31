@@ -12,9 +12,18 @@
 gettext = lambda s:s
 PAYMENT_LIVE = False
 
+# A Quick note on the urls
+# If you are posting to https://test.authorize.net/gateway/transact.dll,
+# and you are not using an account whose API login ID starts with
+# "cpdev" or "cnpdev", you will get an Error 13 message. 
+# Make sure you are posting to https://secure.authorize.net/gateway/transact.dll for
+# live transactions, or https://certification.authorize.net/gateway/transact.dll
+# for test transactions if you do not have a cpdev or cnpdev.
+
 # AUTHORIZE_NET CUSTOM FIELDS
 CONNECTION = 'https://test.authorize.net/gateway/transact.dll'
 TEST = 'TRUE'
+# These keys are generated via the Authorize.net website
 LOGIN = ''
 TRANKEY = ''
 
