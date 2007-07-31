@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="no" ?>
 <!DOCTYPE document SYSTEM "rml_1_0.dtd">
-{% load satchmo.currency_filter %}
-<document filename="{{filename}}">
+{% load i18n satchmo.currency_filter %}
+<document filename="{{ filename }}">
 <template pageSize="(21.5cm, 28cm)" leftMargin="1.0cm" rightMargin="1.0cm" topMargin="1.0cm" bottomMargin="1.0cm" title="Store Packing Slip" author="My Store" allowSplitting="20">
 	<pageTemplate id="first">
 		<pageGraphics>
@@ -11,18 +11,18 @@
             <setFont name="Helvetica" size="10"/>
 			<fill color="(0,0,0)"/>
 
-			<drawString x="14cm" y="270mm">Invoice #</drawString>
-			<drawString x="14cm" y="266mm">Date: </drawString>
+			<drawString x="14cm" y="270mm">{% trans "Invoice #" %}</drawString>
+			<drawString x="14cm" y="266mm">{% trans "Date" %}: </drawString>
 
 			<drawRightString x="18cm" y="270mm">{{ order.id }}</drawRightString>
 			<drawRightString x="18cm" y="266mm">{% now "N j, Y" %}</drawRightString>
 
 			<setFont name="Helvetica" size="16"/>
-			<drawCentredString x="11cm" y="182mm">PACKING SLIP</drawCentredString>
+			<drawCentredString x="11cm" y="182mm">{% trans "PACKING SLIP" %}</drawCentredString>
             
             <setFont name="Helvetica" size="14"/>
-			<drawString x="7.5cm" y="24cm">Billing Address</drawString>
-            <drawString x="13.5cm" y="24cm">Shipping Address</drawString>
+			<drawString x="7.5cm" y="24cm">{% trans "Billing Address" %}</drawString>
+            <drawString x="13.5cm" y="24cm">{% trans "Shipping Address" %}</drawString>
             
             <setFont name="Helvetica" size="12"/>
             <drawString x="1cm" y="235mm">{{shopDetails.street1}}</drawString>
@@ -47,14 +47,14 @@
 			<setFont name="Helvetica" size="8"/>
 			<fill color="(0,0,0)"/>
 
-			<drawString x="15cm" y="270mm">Invoice #</drawString>
-			<drawString x="15cm" y="266mm">Date: </drawString>
+			<drawString x="15cm" y="270mm">{% trans "Invoice #" %}</drawString>
+			<drawString x="15cm" y="266mm">{% trans "Date" %}: </drawString>
 
 			<drawRightString x="20cm" y="270mm">{{ order.id }}</drawRightString>
 			<drawRightString x="20cm" y="266mm">{% now "N j, Y" %}</drawRightString>
 
 			<setFont name="Helvetica" size="18"/>
-			<drawString x="13cm" y="230mm">PACKING SLIP, Page 2</drawString>
+			<drawString x="13cm" y="230mm">{% trans "PACKING SLIP" %}, {% trans "Page" %} 2</drawString>
             <rect x="14.5cm" y="26cm" width="6.5cm" height="1.5cm" fill="no" stroke="yes" round="5mm" />
 		</pageGraphics>
 		<frame id="column" x1="2.0cm" y1="1.5cm" width="18cm" height="17cm"/>
@@ -95,8 +95,8 @@
 	<para>{{order.bill_city}}, {{order.bill_state}}</para>
 	<para>{{order.bill_postal_code}}</para>
 	<spacer length="0.8cm" width="1mm"/>
-	<para>Phone: {{order.contact.primary_phone.phone}}</para>
-	<para>Email: {{order.contact.email}}</para>
+	<para>{% trans "Phone" %}: {{order.contact.primary_phone.phone}}</para>
+	<para>{% trans "Email" %}: {{order.contact.email}}</para>
 
 	<nextFrame/>
     
@@ -111,7 +111,10 @@
 	<spacer length="0.5cm" width="1mm"/>
 	<blockTable colWidths="7cm, 3.5cm, 3.5cm, 3.5cm" style="products">
 	<tr>
-		<td>Description</td><td>Quantity</td><td>Unit Price</td><td>Total</td>
+		<td>{% trans "Description" %}</td>
+        <td>{% trans "Quantity" %}</td>
+        <td>{% trans "Unit Price" %}</td>
+        <td>{% trans "Total" %}</td>
 	</tr>
     {% for item in order.orderitem_set.all %}
     <tr>
@@ -130,7 +133,7 @@
 	<blockTable colWidths="7cm, 3.5cm, 3.5cm,3.5cm" style="products2">
 	<tr>
         <td></td><td></td>
-		<td>Sub-Total:</td><td>{{order.sub_total|currency}}</td>
+		<td>{% trans "Subtotal" %}:</td><td>{{order.sub_total|currency}}</td>
     </tr>
     <tr>
         <td></td>
@@ -138,21 +141,25 @@
     </tr>
     <tr>
         <td></td><td></td>
-		<td>Tax: </td><td>{{order.tax|currency}}</td>
+		<td>{% trans "Tax" %}: </td><td>{{order.tax|currency}}</td>
 	</tr><tr>
         <td></td><td></td>
-		<td>Total:</td><td>{{order.total|currency}}</td>
+		<td>{% trans "Total" %}:</td><td>{{order.total|currency}}</td>
 	</tr>
 	</blockTable>
 	<spacer length="2cm" width="1mm"/>
 	<para style="payment">
         {% if order.credit_card %}
-        {{order.total|currency}} was charged to your {{order.credit_card.creditType}} card (x{{order.credit_card.displayCC}}) on {{order.timestamp|date:"F j, Y"}}.
+        {% with order.total|currency as order_total %}
+        {% with order.credit_card.creditType as credit_card_type %}
+        {% with order.credit_card.displayCC as credit_card_number %}
+        {% blocktrans with order.timestamp|date:"F j, Y" as order_date %}{{ order_total }} was charged to your {{ credit_card_type }} card (x{{ credit_card_number }}) on {{ order_date }}.{% endblocktrans %}
+        {% endwith %}{% endwith %}{% endwith %}
         {% endif %}
 	</para>
 	<spacer length="0.5cm" width="1mm"/>
 	<para style="payment">
-		Thank you for your business!
+		{% trans "Thank you for your business!" %}
 	</para>
 </story>
 </document>

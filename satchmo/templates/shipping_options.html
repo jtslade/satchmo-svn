@@ -1,5 +1,6 @@
+{% load i18n %}
 {% load satchmo.currency_filter %}
 
 {{amount|currency}} : {{ description }}<br>
-Sent via {{ method }} arrives approximately {{ expected_delivery }}
+{% blocktrans %}Sent via {{ method }} arrives approximately {{ expected_delivery }}.{% endblocktrans %}
 <hr>

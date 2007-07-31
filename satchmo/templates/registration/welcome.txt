@@ -4,6 +4,6 @@
 
 {% blocktrans %}Your new username is this email address, and you can login at{% endblocktrans %} http://{{ site_url }}{% url auth_login %}
 
-{% trans "Regards," %}
+{% trans "Regards" %},
 
 {% trans "Store Management" %}

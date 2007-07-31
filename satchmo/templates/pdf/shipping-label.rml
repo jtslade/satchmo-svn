@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="no" ?>
 <!DOCTYPE document SYSTEM "rml_1_0.dtd">
-<document filename="{{filename}}">
+<document filename="{{ filename }}">
 <template pageSize="(10.2cm, 15.4cm)"
           leftMargin="1cm"
           rightMargin="1cm"
@@ -45,10 +45,8 @@
      <nextFrame/>
 
     <para style="sendto"><b>{{order.contact.full_name}}</b></para>
-	<para style="sendto">{{order.full_ship_street}}</para>
-	<para style="sendto">{{order.ship_city}}, {{order.ship_state}} {{order.ship_postal_code}}</para>
+    <para style="sendto">{{order.full_ship_street}}</para>
+    <para style="sendto">{{order.ship_city}}, {{order.ship_state}} {{order.ship_postal_code}}</para>
 
 </story>
 </document>
-
-

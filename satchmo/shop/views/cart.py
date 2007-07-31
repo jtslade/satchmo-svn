@@ -36,8 +36,7 @@ def add(request, id=0):
             chosenOptions = optionset_from_post(cp, request.POST)
             product = cp.get_product_from_options(chosenOptions)
     except Product.DoesNotExist:
-        return bad_or_missing(request, _('The product you have requested ' +
-            'does not exist.'))
+        return bad_or_missing(request, _('The product you have requested does not exist.'))
     try:
         quantity = int(request.POST['quantity'])
     except ValueError:

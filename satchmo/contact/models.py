@@ -292,7 +292,7 @@ class Order(models.Model):
     bill_postal_code = models.CharField(_("Zip Code"), maxlength=10, blank=True)
     bill_country = models.CharField(_("Country"), maxlength=50, blank=True)
     notes = models.TextField(_("Notes"), maxlength=100, blank=True, null=True)
-    sub_total = models.DecimalField(_("Sub total"),
+    sub_total = models.DecimalField(_("Subtotal"),
         max_digits=6, decimal_places=2, blank=True, null=True)
     total = models.DecimalField(_("Total"),
         max_digits=6, decimal_places=2, blank=True, null=True)
@@ -312,7 +312,7 @@ class Order(models.Model):
         max_digits=6, decimal_places=2, blank=True, null=True)
     tax = models.DecimalField(_("Tax"),
         max_digits=6, decimal_places=2, blank=True, null=True)
-    timestamp = models.DateTimeField(_("Time Stamp"), blank=True, null=True)
+    timestamp = models.DateTimeField(_("Timestamp"), blank=True, null=True)
     status = models.CharField(_("Status"), maxlength=20, choices=ORDER_STATUS,
         core=True, blank=True, help_text=_("This is set automatically."))
 
@@ -473,7 +473,7 @@ class OrderStatus(models.Model):
     status = models.CharField(_("Status"),
         maxlength=20, choices=ORDER_STATUS, core=True, blank=True)
     notes = models.CharField(_("Notes"), maxlength=100, blank=True)
-    timestamp = models.DateTimeField(_("Time Stamp"))
+    timestamp = models.DateTimeField(_("Timestamp"))
 
     def __unicode__(self):
         return self.status
@@ -485,6 +485,6 @@ class OrderStatus(models.Model):
 
     class Meta:
         verbose_name = _("Order Status")
-        verbose_name_plural = _("Order statuses")
+        verbose_name_plural = _("Order Statuses")
 
 

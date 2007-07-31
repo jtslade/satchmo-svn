@@ -23,15 +23,14 @@ def children(request, slug_parent, slug):
     try:
         parent = Category.objects.filter(slug=slug_parent)[0]
     except IndexError:
-        return bad_or_missing(request, _('The category you have requested ' +
-            'does not exist.'))
+        return bad_or_missing(request, _('The category you have requested does not exist.'))
     try:
         category = parent.child.filter(slug=slug)[0]
     except IndexError:
-        return bad_or_missing(request, _('The category you have requested ' +
-            'does not exist.'))
+        return bad_or_missing(request, _('The category you have requested does not exist.'))
 
     child_categories = category.get_all_children()
     return render_to_response('base_category.html',
         {'category': category, 'child_categories': child_categories},
         RequestContext(request))
+

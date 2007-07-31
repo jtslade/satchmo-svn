@@ -20,7 +20,7 @@ class PaymentContactInfoForm(ContactInfoForm):
     else:
         _paymentwidget = forms.HiddenInput(attrs={'value' : _choices[0][0]})
 
-    paymentmethod = forms.ChoiceField(label=_('Payment Method'),
+    paymentmethod = forms.ChoiceField(label=_('Payment method'),
                                     choices=_choices,
                                     widget=_paymentwidget,
                                     required=True)

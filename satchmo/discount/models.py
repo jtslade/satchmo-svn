@@ -23,11 +23,11 @@ class Discount(models.Model):
         help_text=_("Coupon Code"))
     amount = models.DecimalField(_("Discount Amount"), decimal_places=2,
         max_digits=4, blank=True, null=True, validator_list=[amount_validator],
-        help_text=_("Enter absolute discount amount OR percentage"))
+        help_text=_("Enter absolute discount amount OR percentage."))
     percentage = models.DecimalField(_("Discount Percentage"), decimal_places=2,
         max_digits=4, blank=True, null=True,
         validator_list=[percentage_validator],
-        help_text=_("Enter absolute discount amount OR percentage.  Percentage example: 0.10"))
+        help_text=_("Enter absolute discount amount OR percentage.  Percentage example: \"0.10\"."))
     allowedUses = models.IntegerField(_("Number of allowed uses"),
         blank=True, null=True, help_text=_('Not implemented.'))
     numUses = models.IntegerField(_("Number of times already used"),
@@ -58,15 +58,13 @@ class Discount(models.Model):
         if self.endDate < date.today():
             return (False, ugettext('This coupon has expired.'))
         if self.numUses > self.allowedUses:
-            return (False, ugettext('This discount has exceeded the number of' +
-                ' allowed uses.'))
+            return (False, ugettext('This discount has exceeded the number of allowed uses.'))
         if not cart:
             return (True, ugettext('Valid.'))
 
         minOrder = self.minOrder or 0
         if cart.total < minOrder:
-            return (False, ugettext('This discount only applies to orders of at'
-                + ' least %s.' % moneyfmt(minOrder)))
+            return (False, ugettext('This discount only applies to orders of at least %s.' % moneyfmt(minOrder)))
 
         #Check to see if the cart items are included
         validProducts = self.validProducts.all()
@@ -80,7 +78,7 @@ class Discount(models.Model):
         if validItems:
             return (True, ugettext('Valid.'))
         else:
-            return (False, ugettext('This discount can not be applied to the products in your cart.'))
+            return (False, ugettext('This discount cannot be applied to the products in your cart.'))
         
     def calc(self, order):
         # Use the order details and the discount specifics to calculate the actual discount

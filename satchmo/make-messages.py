@@ -103,9 +103,9 @@ def make_messages():
                     if msgs:
                         open(potfile, 'ab').write(msgs)
                     os.unlink(os.path.join(dirpath, thefile))
-                elif domain == 'django' and (file.endswith('.py') or file.endswith('.html') or file.endswith('.txt')):
+                elif domain == 'django' and (file.endswith('.py') or file.endswith('.html') or file.endswith('.txt') or file.endswith('.rml')):
                     thefile = file
-                    if file.endswith('.html') or file.endswith('.txt'):
+                    if file.endswith('.html') or file.endswith('.txt') or file.endswith('.rml'):
                         src = open(os.path.join(dirpath, file), "rb").read()
                         thefile = '%s.py' % file
                         open(os.path.join(dirpath, thefile), "wb").write(templatize(src))
