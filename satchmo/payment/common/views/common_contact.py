@@ -13,6 +13,7 @@ from satchmo.payment.paymentsettings import PaymentSettings
 from satchmo.shop.models import Cart, CartItem
 from satchmo.shop.views.common import save_contact_info, selection
 from satchmo.payment.common.forms import PaymentContactInfoForm
+from django.conf import settings
 
 def contact_info(request):
     """View which collects demographic information from customer."""
@@ -25,11 +26,14 @@ def contact_info(request):
     else:
         return render_to_response('checkout/empty_cart.html', RequestContext(request))
 
-    # Get the default country
+    # Get the default country via a get or the config setting
     if request.GET.get('iso2', False):
         iso2 = request.GET['iso2']
     else:
-        iso2 = 'US'
+        try:
+            iso2 = settings.COUNTRY_CODE
+        except AttributeError:
+            iso2 = 'US'
     default_country = Country.objects.get(iso2_code=iso2)
     init_data = {'country': default_country.iso2_code}
     # Create country and state lists
