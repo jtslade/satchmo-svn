@@ -2,15 +2,15 @@
 {% load i18n %}
 
 {% block navbar %}
-<a href="{{shop_base}}/">Home</a> ::
-Newsletter Unsubscribe
+<a href="{{ shop_base }}/">{% trans "Home" %}</a> ::
+{% trans "Newsletter Unsubscribe" %}
 {% endblock %}
 
 {% block content %}
-<h3>Newsletter Unsubscribe</h3>
+<h3>{% trans "Newsletter Unsubscribe" %}</h3>
 
 {% if form.errors %}
-<h3>Please correct the following error{{ form.errors|pluralize }}:</h3>
+<h3>{% blocktrans count form.errors|length as count %}Please correct the following error:{% plural %}Please correct the following errors:{% endblocktrans %}</h3>
 {% endif %}
 
 <form method="post" action="{% url newsletter_unsubscribe %}">
@@ -19,7 +19,7 @@ Newsletter Unsubscribe
 	{% if form.full_name.errors %}<tr><td>&nbsp;</td><td>*** {{ form.full_name.errors|join:", " }}</td></tr>{% endif %}
 	<tr><td><label for="id_email">{% trans 'Email address' %}:</label></td><td>{{ form.email }}</td></tr>
 	{% if form.email.errors %}<tr><td>&nbsp;</td><td>*** {{ form.email.errors|join:", " }}</td></tr>{% endif %}
-	<tr><td></td><td><input type="submit" value="Remove Me"/></td></tr>
+	<tr><td></td><td><input type="submit" value="{% trans "Remove Me" %}"/></td></tr>
 	<input type="hidden" value="off" name="subscribed"/>
 	</table>
 </form>

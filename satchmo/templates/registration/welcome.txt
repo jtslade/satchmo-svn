@@ -1,9 +1,9 @@
-Dear {{ first_name }} {{ last_name }},
+{% load i18n %}{% blocktrans %}Dear {{ first_name }} {{ last_name }},{% endblocktrans %}
 
-Thank you for signing up with {{ company_name }}.
+{% blocktrans %}Thank you for signing up with {{ company_name }}.{% endblocktrans %}
 
-Your new username is this email address, and you can login at http://{{ site_url }}{% url auth_login %}
+{% blocktrans %}Your new username is this email address, and you can login at{% endblocktrans %} http://{{ site_url }}{% url auth_login %}
 
-Regards,
+{% trans "Regards," %}
 
-Store Management
+{% trans "Store Management" %}

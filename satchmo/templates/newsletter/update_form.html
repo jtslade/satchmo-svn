@@ -1,15 +1,16 @@
 {% extends "base.html" %}
 {% load i18n %}
+
 {% block navbar %}
-<a href="{{shop_base}}/">Home</a> ::
-Newsletter Subscription
+<a href="{{ shop_base }}/">{% trans "Home" %}</a> ::
+{% trans "Newsletter Subscription" %}
 {% endblock %}
 
 {% block content %}
-<h3>Newsletter Subscription</h3>
+<h3>{% trans "Newsletter Subscription" %}</h3>
 
 {% if form.errors %}
-<h3>Please correct the following error{{ form.errors|pluralize }}:</h3>
+<h3>{% blocktrans count form.errors|length as count %}Please correct the following error:{% plural %}Please correct the following errors:{% endblocktrans %}</h3>
 {% endif %}
 
 <form method="post" action="{% url newsletter_update %}">
@@ -20,7 +21,7 @@ Newsletter Subscription
 	{% if form.email.errors %}<tr><td>&nbsp;</td><td>*** {{ form.email.errors|join:", " }}</td></tr>{% endif %}
 	<tr><td><label for="id_subscribed">{% trans 'Subscribe' %}:</label></td><td>{{ form.subscribed }}</td></tr>
 	{% if form.subscribed.errors %}<tr><td>&nbsp;</td><td>*** {{ form.subscribed.errors|join:", " }}</td></tr>{% endif %}
-	<tr><td></td><td><input type="submit" value="Subscribe"/></td></tr>
+	<tr><td></td><td><input type="submit" value="{% trans "Subscribe" %}"/></td></tr>
 
 	</table>
 </form>

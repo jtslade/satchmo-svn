@@ -1,14 +1,17 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block navbar %}
-<a href="{{shop_base}}/">Home</a> 
+<a href="{{ shop_base }}/">{% trans "Home" %}</a> 
 {% endblock %}
 
 {% block content %}
- <h4>Your Account info</h4>
-<p>Welcome, {{ user_data.full_name }}.</p> 
-Account options:
+<h4>{% trans "Your Account info" %}</h4>
+{% with user_data.full_name as full_name %}
+<p>{% blocktrans %}Welcome, {{ full_name }}.{% endblocktrans %}</p> 
+{% endwith %}
+{% trans "Account options" %}:
 <ul>
-<li><a href="{% url auth_password_change %}">Change your password</a></li>
+<li><a href="{% url auth_password_change %}">{% trans "Change your password" %}</a></li>
 </ul>
 {% endblock %}

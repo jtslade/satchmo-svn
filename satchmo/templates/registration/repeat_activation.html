@@ -1,14 +1,15 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block navbar %}
-<a href="{{shop_base}}/">Home</a> ::
-Repeat Activation
+<a href="{{ shop_base }}/">{% trans "Home" %}</a> ::
+{% trans "Repeat Activation" %}
 {% endblock %}
 
 {% block content %}
 
-<h3>Account Activation</h3>
+<h3>{% trans "Account Activation" %}</h3>
 
-<p>This account has already been activated. Please login.</p>
+<p>{% trans "This account has already been activated. Please login." %}</p>
 
 {% endblock %}
