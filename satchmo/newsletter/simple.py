@@ -1,7 +1,7 @@
 """ Just tracks subscriptions, nothing more. """
 
 from satchmo.newsletter.models import Subscription
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 
 def update_contact(contact):
     sub, created = Subscription.objects.get_or_create(email=contact.email)
@@ -13,14 +13,15 @@ def update_contact(contact):
         if created or changed:
             sub.save()
             if sub.subscribed:
-                result = _("Subscribed: %(email)s") % { 'email' : contact.email }
+                result = _("Subscribed: %(email)s") % {'email': contact.email}
             else:
-                result = _("Unsubscribed: %(email)s") % { 'email' : contact.email }
+                result = _("Unsubscribed: %(email)s") % {'email': contact.email}
 
         else:
             if sub.subscribed:
-                result = _("Already Subscribed")
+                result = _("Already subscribed.")
             else:
-                result = _("Already removed")
+                result = _("Already removed.")
 
         return result
+

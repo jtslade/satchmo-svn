@@ -32,10 +32,10 @@ class RegistrationForm(forms.Form):
 
     def clean_password(self):
         """Enforce that password and password2 are the same."""
-        p1 = self.cleaned_data.get('password', None)
-        p2 = self.cleaned_data.get('password2', None)
-        if not(p1 and p2 and p1 == p2):
-            raise forms.ValidationError("The two passwords do not match." )
+        p1 = self.cleaned_data.get('password')
+        p2 = self.cleaned_data.get('password2')
+        if not (p1 and p2 and p1 == p2):
+            raise forms.ValidationError(ugettext("The two passwords do not match."))
 
         # note, here is where we'd put some kind of custom validator to enforce "hard" passwords.
         return p1
@@ -44,7 +44,7 @@ class RegistrationForm(forms.Form):
         """Prevent account hijacking by disallowing duplicate emails."""
         email = self.cleaned_data.get('email', None)
         if email and User.objects.filter(email=email).count() > 0:
-            raise forms.ValidationError("That email address is already in use.")
+            raise forms.ValidationError(ugettext("That email address is already in use."))
 
         return email
 
@@ -97,7 +97,7 @@ def register(request):
                     contact = Contact.objects.get(id=request.session['custID'])
                 except Contact.DoesNotExist:
                     pass
-            
+
             contact.user = user
             contact.first_name = first_name
             contact.last_name = last_name
@@ -163,9 +163,10 @@ def info(request):
         user_data = Contact.objects.get(user=request.user.id)
     except Contact.DoesNotExist:
         #This case happens if a user is created in admin but does not have account info
-        return bad_or_missing(request, 'The person you are logged in as does not have an account.  Please create one.')
-    return render_to_response('registration/account_info.html', {'user_data': user_data},
-                              RequestContext(request))
+        return bad_or_missing(request, ugettext("The person you are logged in as does not have an account. Please create one."))
+    context = RequestContext(request, {
+        'user_data': user_data})
+    return render_to_response('registration/account_info.html', context)
 
 _deco = user_passes_test(lambda u: not u.is_anonymous(),
                         login_url='%s/account/login/' % (settings.SHOP_BASE))
