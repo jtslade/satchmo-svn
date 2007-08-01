@@ -5,7 +5,7 @@ By default, Satchmo doesn't ask users to verify their email addresses. If you'd
 like to, you can configure Satchmo to use django-registration.
 
 1. Download and extract `django-registration`_. Make sure that the registration
-folder is on your pythonpath.
+   folder is on your pythonpath.
 
 2. Edit local_settings.py:
 
@@ -20,3 +20,4 @@ folder is on your pythonpath.
 4. Run "python manage.py syncdb".
 
 .. _django-registration: http://code.google.com/p/django-registration/
+
