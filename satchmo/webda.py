@@ -354,7 +354,11 @@ def load_data(model, i18n_model, i18n_dirname):
             	obj.save()
             except:
                 print "Problem loading data.  Entry will not be loaded."
-                transaction.rollback()
+                try:
+                    transaction.rollback()
+                except:
+                    #Some databases were having trouble with the rollback
+                    pass
 
 def show_license(license):
     """Show the license and continues if the user is agree with it.
