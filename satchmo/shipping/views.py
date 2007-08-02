@@ -34,7 +34,6 @@ def displayDoc(request, id, doc):
                 'order' : order
                 })
     pdf = trml2pdf.parseString(t.render(c))
-    print "test"
     response.write(pdf)
     return response
 displayDoc = staff_member_required(never_cache(displayDoc))

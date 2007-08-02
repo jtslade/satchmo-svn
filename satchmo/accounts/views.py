@@ -23,11 +23,11 @@ YESNO = (
 
 class RegistrationForm(forms.Form):
     """The basic account registration form."""
-    email = forms.EmailField(label=_('Email Address'), max_length=30, required=True)
+    email = forms.EmailField(label=_('Email address'), max_length=30, required=True)
     password2 = forms.CharField(label=_('Password (again)'), max_length=30, widget=forms.PasswordInput(), required=True)
     password = forms.CharField(label=_('Password'), max_length=30, widget=forms.PasswordInput(), required=True)
-    first_name = forms.CharField(label=_('First Name'), max_length=30, required=True)
-    last_name = forms.CharField(label=_('Last Name'), max_length=30, required=True)
+    first_name = forms.CharField(label=_('First name'), max_length=30, required=True)
+    last_name = forms.CharField(label=_('Last name'), max_length=30, required=True)
     newsletter = forms.ChoiceField(label=_('Newsletter'), widget=forms.RadioSelect(), choices=YESNO)
 
     def clean_password(self):

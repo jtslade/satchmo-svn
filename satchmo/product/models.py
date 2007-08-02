@@ -293,7 +293,6 @@ class Product(models.Model):
         else:
             return None
 
-
     def in_stock(self):
         if self.items_in_stock > 0:
             return True

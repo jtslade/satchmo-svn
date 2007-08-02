@@ -10,8 +10,7 @@ def root(request, slug):
     try:
         category = Category.objects.filter(slug=slug)[0]
     except IndexError:
-        return bad_or_missing(request, _('The category you have requested ' +
-            'does not exist.'))
+        return bad_or_missing(request, _('The category you have requested does not exist.'))
 
     child_categories = category.get_all_children()
     return render_to_response('base_category.html',

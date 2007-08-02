@@ -74,18 +74,18 @@ class Contact(models.Model):
     A customer, supplier or any individual that a store owner might interact
     with.
     """
-    first_name = models.CharField(_("First Name"), maxlength=30, core=True)
-    last_name = models.CharField(_("Last Name"), maxlength=30, core=True)
+    first_name = models.CharField(_("First name"), maxlength=30, core=True)
+    last_name = models.CharField(_("Last name"), maxlength=30, core=True)
     user = models.ForeignKey(User, unique=True, blank=True, null=True,
         edit_inline=models.TABULAR, num_in_admin=1, min_num_in_admin=1,
         max_num_in_admin=1, num_extra_on_change=0)
     role = models.CharField(_("Role"), maxlength=20, blank=True, null=True,
         choices=CONTACT_CHOICES)
     organization = models.ForeignKey(Organization, blank=True, null=True)
-    dob = models.DateField(_("Date of Birth"), blank=True, null=True)
+    dob = models.DateField(_("Date of birth"), blank=True, null=True)
     email = models.EmailField(_("Email"), blank=True)
     notes = models.TextField(_("Notes"), maxlength=500, blank=True)
-    create_date = models.DateField(_("Creation Date"))
+    create_date = models.DateField(_("Creation date"))
     newsletter = models.BooleanField(_("Newsletter"), null=True, default=False);
 
     def _get_full_name(self):

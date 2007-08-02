@@ -2,6 +2,7 @@
 Each shipping option uses the data in an Order object to calculate the shipping cost and return the value
 """
 from decimal import Decimal
+from django.utils.translation import ugettext as _
 
 class Calc(object):
 
@@ -16,13 +17,13 @@ class Calc(object):
         """
         This is mainly helpful for debugging purposes
         """
-        return("Per Item")
+        return "Per Item"
 
     def description(self):
         """
         A basic description that will be displayed to the user when selecting their shipping options
         """
-        return("Per Item shipping")
+        return _("Per Item shipping")
 
     def cost(self):
         """
@@ -38,18 +39,19 @@ class Calc(object):
         """
         Describes the actual delivery service (Mail, FedEx, DHL, UPS, etc)
         """
-        return("US Mail")
+        return _("US Mail")
 
     def expectedDelivery(self):
         """
         Can be a plain string or complex calcuation returning an actual date
         """
-        return("3 - 4 business days")
+        return _("3 - 4 business days")
 
     def valid(self, order=None):
         """
-        Can do complex validation about whether or not this option is valid.  For example,
-        may check to see if the recipient is in an allowed country or location.
+        Can do complex validation about whether or not this option is valid.
+        For example, may check to see if the recipient is in an allowed country
+        or location.
         """
-        return(True)
+        return True
 

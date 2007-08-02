@@ -6,17 +6,18 @@ from django import http
 from django.shortcuts import render_to_response
 from django.core.mail import send_mail
 from django.conf import settings
+from django.utils.translation import ugettext as _
 from satchmo.shop.models import Config
 
 #Choices displayed to the user to categorize the type of contact request
 email_choices = (
-    ("General Question", "General question"),
-    ("Order Problem", "Order problem"),
+    ("General Question", _("General question")),
+    ("Order Problem", _("Order problem")),
 )
 
 class ContactForm(forms.Form):
     name = forms.CharField(max_length=100)
-    sender = forms.EmailField(label="Email Address")
+    sender = forms.EmailField(label=_("Email address"))
     subject = forms.CharField()
     inquiry = forms.ChoiceField(choices=email_choices)
     contents = forms.CharField(widget=widgets.Textarea(attrs = {'cols': 40, 'rows': 5}))

@@ -1,7 +1,7 @@
 from django.template import RequestContext, Context
 from django.template import loader
 from django import http
-
+from django.utils.translation import ugettext as _
 
 ccInfo = (
 	#  type, prefix, length
@@ -29,21 +29,21 @@ ccInfo = (
 	)
 
 class CreditCard(object):
-        
+
     def __init__(self, number, cardtype):
         self.card_number = number
         self.card_type = cardtype
-    
+
     def _verifyMod10(self, number):
-        '''Check a credit card number for validity using the mod10 algorithm. '''
+        '''Check a credit card number for validity using the mod10 algorithm.'''
         double = 0
         sum = 0
         for i in range(len(number) - 1, -1, -1):
             for c in str((double + 1) * int(number[i])): sum = sum + int(c)
             double = (double + 1) % 2
         return((sum % 10) == 0)
-    
-    
+
+
     def _stripCardNum(self, card):
         '''Return card number with all non-digits stripped.  '''
         import re
@@ -63,17 +63,17 @@ class CreditCard(object):
                     return(name)
                 break
         return(None)
-    
+
     def verifyCardTypeandNumber(self):
         card_check_type = self.verifyCardNumber()
         if card_check_type:
             if card_check_type == self.card_type:
-                return(True, None)
+                return (True, None)
             else:
-                return(False, "Card type does not match card number.")
+                return (False, _("Card type does not match card number."))
         else:
-            return(False, "Invalid credit card number.")
-            
+            return (False, _("Invalid credit card number."))
+
 def bad_or_missing(request, msg):
     """
     Return an HTTP 404 response for a date request that cannot possibly exist.

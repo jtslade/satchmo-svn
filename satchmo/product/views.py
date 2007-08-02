@@ -19,7 +19,7 @@ def serialize_options(config_product, selected_options=Set()):
     {
     name: 'group name',
     id: 'group id',
-    items: [{ 
+    items: [{
         name: 'opt name',
         value: 'opt value',
         price_change: 'opt price',
@@ -58,7 +58,7 @@ def get_product(request, product_slug, selected_options=Set()):
     p_types = product.get_subtypes()
 
     options = []
-    
+
     if 'ProductVariation' in p_types:
         selected_options = product.productvariation.option_values
         #Display the ConfigurableProduct that this ProductVariation belongs to.
@@ -83,7 +83,7 @@ def get_price(request, product_slug):
     try:
         product = Product.objects.get(active=True, slug=product_slug)
     except Product.DoesNotExist:
-        return http.HttpResponseNotFound(simplejson.dumps(('','not available')), mimetype="text/javascript")
+        return http.HttpResponseNotFound(simplejson.dumps(('', _("not available"))), mimetype="text/javascript")
 
     prod_slug = product.slug
 
@@ -96,17 +96,16 @@ def get_price(request, product_slug):
         pvp = cp.get_product_from_options(chosenOptions)
 
         if not pvp:
-            return http.HttpResponse(simplejson.dumps(('','not available')), mimetype="text/javascript")
+            return http.HttpResponse(simplejson.dumps(('', _("not available"))), mimetype="text/javascript")
         prod_slug = pvp.slug
         price = moneyfmt(pvp.get_qty_price(quantity))
     else:
         price = moneyfmt(product.get_qty_price(quantity))
 
     if not price:
-        return http.HttpResponse(simplejson.dumps(('','not available')), mimetype="text/javascript")
+        return http.HttpResponse(simplejson.dumps(('', _("not available"))), mimetype="text/javascript")
 
-    return http.HttpResponse(simplejson.dumps((prod_slug,price)), mimetype="text/javascript")
-
+    return http.HttpResponse(simplejson.dumps((prod_slug, price)), mimetype="text/javascript")
 
 def do_search(request):
     keywords = request.POST.get('keywords', '').split(' ')
@@ -121,12 +120,12 @@ def do_search(request):
         products = products.filter(Q(full_name__icontains=keyword) | Q(short_description__icontains=keyword) | Q(description__icontains=keyword) | Q(meta__icontains=keyword))
     list = []
     for category in categories:
-        list.append(('Category', category.name, category.get_absolute_url()))
+        list.append((_("Category"), category.name, category.get_absolute_url()))
     for product in products:
-        list.append(('Product', product.full_name, product.get_absolute_url()))
+        list.append((_("Product"), product.full_name, product.get_absolute_url()))
 
-    return render_to_response('search.html', {'results': list}, RequestContext(request))
-
+    context = RequestContext(request, {'results': list})
+    return render_to_response('search.html', context)
 
 def getConfigurableProductOptions(request, id):
     cp = get_object_or_404(ConfigurableProduct, product__id=id)

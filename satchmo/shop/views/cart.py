@@ -77,10 +77,10 @@ def add_ajax(request, id=0, template="json.html"):
         try:
             quantity = int(request.POST['quantity'])
             if quantity < 0:
-                data['errors'].append(('quantity', _('Choose a quantity')))
+                data['errors'].append(('quantity', _('Choose a quantity.')))
 
         except ValueError:
-            data['errors'].append(('quantity', _('Choose a whole number')))
+            data['errors'].append(('quantity', _('Choose a whole number.')))
 
     except Product.DoesNotExist:
         data['errors'].append(('product', _('The product you have requested does not exist.')))
