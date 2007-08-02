@@ -204,7 +204,11 @@ class AdminTest(TestCase):
         user.save()
         self.client.login(username='fredsu', password='passwd')
 
-    def test_product(self):
+    def test_index(self):
+        response = self.client.get('/admin/')
+        self.assertContains(response, "auth/user/", status_code=200)
+
+    #def test_product(self):
         response = self.client.get('/admin/product/product/1/')
         self.assertContains(response, "Django Rocks shirt", status_code=200)
 

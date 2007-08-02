@@ -15,137 +15,50 @@
 {% block content %}
 <div id="content-main">
 
-        <a href=".?legacy=True">{% trans "Switch to Legacy View" %}</a>
-        <div class="module">
-        <table summary="{% trans 'Store Configuration' %}">
-        <caption>{% trans "Store Configuration" %}</caption>
-            <tr>
-                <th scope="row"><a href="/admin/shop/config">{% trans 'Store Details' %}</a></th>
-                <td><a href="/admin/shop/config/add/" class="addlink">{% trans 'Add' %}</a></td>
-                <td><a href="/admin/shop/config/" class="changelink">{% trans 'Change' %}</a></td>
-            </tr>
-            <tr>
-                <th scope="row"><a href="/admin/sites/site">{% trans "Store Web Site" %}</a></th>
-                <td><a href="/admin/sites/site/add/" class="addlink">{% trans 'Add' %}</a></td>
-                <td><a href="/admin/sites/site" class="changelink">{% trans 'Change' %}</a></td>
-            </tr>
-        </table>
-        </div>
-   
-       <div class="module">
-            <table summary="{% trans 'Product Configuration' %}">
-            <caption>{% trans "Product Configuration" %}</caption>
+    {% include "admin/satchmo_app_list.html" %}
+
+    {% load adminapplist %}
+    {% load filter_adminapplist %}
+    {% get_admin_app_list as app_list %}
+    {% filter_admin_app_list app_list as app_list %}
+
+    {% if app_list %}
+        {% for app in app_list %}
+            <div class="module">
+            <table summary="{% blocktrans with app.name as name %}Models available in the {{ name }} application.{% endblocktrans %}">
+            <caption>{% blocktrans with app.name as name %}{{ name }}{% endblocktrans %}</caption>
+            {% for model in app.models %}
                 <tr>
-                    <th scope="row"><a href="/admin/product/category">{% trans "Product Categories" %}</a></th>
-                    <td><a href="/admin/product/category/add/" class="addlink">{% trans 'Add' %}</a></td>
-                    <td><a href="/admin/product/category" class="changelink">{% trans 'Change' %}</a></td>
+                {% if model.perms.change %}
+                    <th scope="row"><a href="{{ model.admin_url }}">{{ model.name|escape }}</a></th>
+                {% else %}
+                    <th scope="row">{{ model.name|escape }}</th>
+                {% endif %}
+
+                {% if model.perms.add %}
+                    <td><a href="{{ model.admin_url }}add/" class="addlink">{% trans "Add" %}</a></td>
+                {% else %}
+                    <td>&nbsp;</td>
+                {% endif %}
+
+                {% if model.perms.change %}
+                    <td><a href="{{ model.admin_url }}" class="changelink">{% trans "Change" %}</a></td>
+                {% else %}
+                    <td>&nbsp;</td>
+                {% endif %}
                 </tr>
-                <tr>
-                    <th scope="row"><a href="/admin/product/optiongroup">{% trans "Product Options" %}</a></th>
-                    <td><a href="/admin/product/optiongroup/add/" class="addlink">{% trans 'Add' %}</a></td>
-                    <td><a href="/admin/product/optiongroup" class="changelink">{% trans 'Change' %}</a></td>
-                </tr>
-                <tr>
-                    <th scope="row"><a href="/admin/product/product">{% trans "Individual Products" %}</a></th>
-                    <td><a href="/admin/product/product/add/" class="addlink">{% trans 'Add' %}</a></td>
-                    <td><a href="/admin/product/product" class="changelink">{% trans 'Change' %}</a></td>
-                </tr>
+            {% endfor %}
             </table>
             </div>
-            
-        <div class="module">
-            <table summary="{% trans "Contacts" %}">
-            <caption>{% trans "Contacts" %}</caption>
-                <tr>
-                    <th scope="row"><a href="/admin/contact/contact">{% trans "Contact" %}</a></th>
-                    <td><a href="/admin/contact/contact/add/" class="addlink">{% trans 'Add' %}</a></td>
-                    <td><a href="/admin/contact/contact" class="changelink">{% trans 'Change' %}</a></td>
-                </tr>
-                <tr>
-                    <th scope="row"><a href="/admin/contact/interaction">{% trans "Contact Interactions" %}</a></th>
-                    <td><a href="/admin/contact/interaction/add/" class="addlink">{% trans 'Add' %}</a></td>
-                    <td><a href="/admin/contact/interaction" class="changelink">{% trans 'Change' %}</a></td>
-                </tr>
-                <tr>
-                    <th scope="row"><a href="/admin/contact/organization">{% trans "Organizations" %}</a></th>
-                    <td><a href="/admin/contact/organization/add/" class="addlink">{% trans 'Add' %}</a></td>
-                    <td><a href="/admin/contact/organization" class="changelink">{% trans 'Change' %}</a></td>
-                </tr>
-            </table>
-        </div>
-        <div class="module">
-            <table summary="{% trans "Discounts" %}">
-            <caption>{% trans "Discounts" %}</caption>
-                <tr>
-                    <th scope="row"><a href="/admin/discount/discount">{% trans "Discount" %}</a></th>
-                    <td><a href="/admin/discount/discount/add/" class="addlink">{% trans 'Add' %}</a></td>
-                    <td><a href="/admin/discount/discount" class="changelink">{% trans 'Change' %}</a></td>
-                </tr>
-            </table>
-        </div>
-        
-        <div class="module">
-            <table summary="{% trans 'International Information' %}">
-            <caption>{% trans "International Information" %}</caption>
-                <tr>
-                    <th scope="row"><a href="/admin/i18n/area">{% trans "Areas" %}</a></th>
-                    <td><a href="/admin/i18n/area/add/" class="addlink">{% trans 'Add' %}</a></td>
-                    <td><a href="/admin/i18n/area" class="changelink">{% trans 'Change' %}</a></td>
-                </tr>
-                <tr>
-                    <th scope="row"><a href="/admin/i18n/country">{% trans "Countries" %}</a></th>
-                    <td><a href="/admin/i18n/country/add" class="addlink">{% trans 'Add' %}</a></td>
-                    <td><a href="/admin/i18n/country" class="changelink">{% trans 'Change' %}</a></td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="module">
-            <table summary="{% trans 'Taxes' %}">
-            <caption>{% trans "Tax Information" %}</caption>
-                <tr>
-                    <th scope="row"><a href="/admin/tax/taxclass">{% trans "Tax Classes" %}</a></th>
-                    <td><a href="/admin/tax/taxclass/add/" class="addlink">{% trans 'Add' %}</a></td>
-                    <td><a href="/admin//tax/taxclass" class="changelink">{% trans 'Change' %}</a></td>
-                </tr>
-                <tr>
-                    <th scope="row"><a href="/admin/tax/taxrate">{% trans "Tax Rates" %}</a></th>
-                    <td><a href="/admin/tax/taxrate/add" class="addlink">{% trans 'Add' %}</a></td>
-                    <td><a href="/admin/tax/taxrate" class="changelink">{% trans 'Change' %}</a></td>
-                </tr>
-            </table>
-        </div>
-   
+        {% endfor %}
+    {% endif %}
 
 </div>
 {% endblock %}
 
 {% block sidebar %}
 <div id="content-related">
-    <div class="module" id="Orders">
-        <h2><a href="/admin/contact/order/?ot=asc&o=3">{% trans 'New Orders' %}</a></h2>
-        <ul>
-        {% for order in pendings %}
-            <li><a href="/admin/contact/order/{{ order.id }}">{{order}}</a> - {{order.total|currency}} on {{order.timestamp|date:"F jS Y H:i"}}</li>
-            <ul>
-                {% for item in order.orderitem_set.all %}
-                    <li>{{ item }} x {{item.quantity}}</li>
-                {% endfor %}
-            </ul>
-        {% endfor %}
-        </ul>
-        <h2><a href="/admin/contact/order/?ot=asc&o=3">{% trans 'Orders in Process' %}</a></h2>
-        <ul>
-        {% for order in in_process %}
-             <li><a href="/admin/contact/order/{{ order.id }}">{{order}}</a> - {{order.total|currency}} on {{order.timestamp|date:"F jS Y H:i"}}</li>
-            <ul>
-                {% for item in order.orderitem_set.all %}
-                    <li>{{ item }} x {{item.quantity}}</li>
-                {% endfor %}
-            </ul>
-        {% endfor %}
-        </ul>
-         <h2><a href="/admin/contact/order/">{% trans "View all Orders" %}</a></h2>
-    </div>
+    {% include "admin/order_sidebar.html" %}
+    <a href=".?legacy=True">{% trans "Switch to Legacy View" %}</a>
 </div>
 {% endblock %}
