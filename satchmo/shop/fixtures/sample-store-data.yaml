@@ -1,3 +1,21 @@
+- fields: {create_date: 2007-05-19, name: Rhinestone Ronny, notes: null, role: Supplier,
+    type: Company}
+  model: contact.organization
+  pk: '1'
+- fields: {create_date: 2007-05-19, dob: null, email: chris@aol.com, first_name: Chris,
+    last_name: Smith, notes: Really cool stuff, organization: null, role: Customer,
+    user: null}
+  model: contact.contact
+  pk: '1'
+- fields: {create_date: 2007-05-19, dob: null, email: abc@comcast.com, first_name: John,
+    last_name: Smith, notes: Second user, organization: null, role: Customer, user: null}
+  model: contact.contact
+  pk: '2'
+- fields: {create_date: 2007-05-19, dob: null, email: fj@rr.com, first_name: Fred,
+    last_name: Jones, notes: '', organization: !!python/long '1', role: Supplier,
+    user: null}
+  model: contact.contact
+  pk: '3'
 - fields: {city: Anywhere Town, contact: !!python/long '1', country: US, description: Home,
     is_default_billing: true, is_default_shipping: true, postal_code: '38138', state: TN,
     street1: 8235 Pike Street, street2: ''}
@@ -13,20 +31,6 @@
     state: NJ, street1: Receiving Dept, street2: 918 Funky Town St}
   model: contact.addressbook
   pk: '3'
-- fields: {create_date: 2007-05-19, dob: null, email: chris@aol.com, first_name: Chris,
-    last_name: Smith, notes: Really cool stuff, organization: null, role: Customer,
-    user: null}
-  model: contact.contact
-  pk: '1'
-- fields: {create_date: 2007-05-19, dob: null, email: abc@comcast.com, first_name: John,
-    last_name: Smith, notes: Second user, organization: null, role: Customer, user: null}
-  model: contact.contact
-  pk: '2'
-- fields: {create_date: 2007-05-19, dob: null, email: fj@rr.com, first_name: Fred,
-    last_name: Jones, notes: '', organization: !!python/long '1', role: Supplier,
-    user: null}
-  model: contact.contact
-  pk: '3'
 - fields: {contact: !!python/long '1', phone: 601-555-5511, primary: true, type: Home}
   model: contact.phonenumber
   pk: '1'
@@ -39,14 +43,13 @@
 - fields: {contact: !!python/long '3', phone: 755-555-1111, primary: false, type: Fax}
   model: contact.phonenumber
   pk: '4'
-- fields: {create_date: 2007-05-19, name: Rhinestone Ronny, notes: null, role: Supplier,
-    type: Company}
-  model: contact.organization
-  pk: '1'
 - fields: {city: null, country: null, noStockCheckout: false, phone: null, postalCode: null,
     state: null, storeDescription: null, storeEmail: null, storeName: My Site, street1: null,
     street2: null}
   model: shop.config
+  pk: '1'
+- fields: {description: Default, title: Default}
+  model: tax.taxclass
   pk: '1'
 - fields:
     percentage: !!python/object/apply:decimal.Decimal ['0.040000']
@@ -405,8 +408,3 @@
     taxZone: US-WY
   model: tax.taxrate
   pk: '51'
-- fields: {description: Default, title: Default}
-  model: tax.taxclass
-  pk: '1'
-
-
