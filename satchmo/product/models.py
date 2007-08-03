@@ -226,16 +226,28 @@ class Product(models.Model):
     objects = ProductManager()
 
     def _get_mainImage(self):
+        img = False
         if self.productimage_set.count() > 0:
-            return(self.productimage_set.order_by('sort')[0])
+            img = self.productimage_set.order_by('sort')[0]
         else:
+            # try to get a main image by looking at the parent if this has one
+            try:
+                parent = self.productvariation.parent
+                img = parent.product.main_image
+                
+            except Product.DoesNotExist:
+                pass
+        
+        if not img:
             #This should be a "Image Not Found" placeholder image
             try:
-                return(ProductImage.objects.filter(product__isnull=True).order_by('sort')[0])
+                img = ProductImage.objects.filter(product__isnull=True).order_by('sort')[0]
             except IndexError:
                 import sys
                 print >>sys.stderr, 'Warning: default product image not found - try syncdb'
-                return(False)
+                
+        return img
+        
     main_image = property(_get_mainImage)
 
     def _get_fullPrice(self):
