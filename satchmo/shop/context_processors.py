@@ -26,6 +26,12 @@ class NullCart(object):
 
     def __str__(self):
         return "NullCart (empty)"
+        
+    def __iter__(self):
+        return iter([])
+        
+    def __nonzero__(self):
+        return False
 
     def __iter__(self):
         return iter([])
