@@ -20,10 +20,14 @@ class Category(models.Model):
     Basic hierarchical category model for storing products
     """
     name = models.CharField(_("Name"), core=True, maxlength=200)
-    slug = models.SlugField(prepopulate_from=('name',),help_text=_("Used for URLs"))
-    parent = models.ForeignKey('self', blank=True, null=True, related_name='child')
-    meta = models.TextField(_("Meta Description"), blank=True, null=True, help_text=_("Meta description for this category"))
-    description = models.TextField(_("Description"), blank=True,help_text="Optional")
+    slug = models.SlugField(prepopulate_from=('name',),
+        help_text=_("Used for URLs"))
+    parent = models.ForeignKey('self', blank=True, null=True,
+        related_name='child')
+    meta = models.TextField(_("Meta Description"), blank=True, null=True,
+        help_text=_("Meta description for this category"))
+    description = models.TextField(_("Description"), blank=True,
+        help_text="Optional")
 
     def _recurse_for_parents_slug(self, cat_obj):
         #This is used for the urls
@@ -563,7 +567,7 @@ class ProductVariation(models.Model):
     def _get_optionValues(self):
         """
         Return a set of all the valid options for this variant.
-        A set makes sure we don't have to worry about ordering
+        A set makes sure we don't have to worry about ordering.
         """
         output = Set()
         for option in self.options.all():
@@ -581,7 +585,7 @@ class ProductVariation(models.Model):
         return(False)
 
     def isValidOption(self, field_data, all_data):
-        raise validators.ValidationError, _("Two options from the same option group can not be applied to an item.")
+        raise validators.ValidationError(_("Two options from the same option group can not be applied to an item."))
 
     def save(self):
         pvs = ProductVariation.objects.filter(parent=self.parent)
@@ -595,7 +599,7 @@ class ProductVariation(models.Model):
            for option in self.options.order_by("optionGroup"):
                options += [option.name]
 
-           self.product.full_name = '%s (%s)'% (self.parent.product.full_name, '/'.join(options))
+           self.product.full_name = u'%s (%s)' % (self.parent.product.full_name, u'/'.join(options))
            self.product.save()
 
         super(ProductVariation, self).save()

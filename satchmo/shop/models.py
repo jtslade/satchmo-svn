@@ -70,6 +70,9 @@ class Cart(models.Model):
     def __iter__(self):
         return iter(self.cartitem_set.all())
 
+    def __len__(self):
+        return self.cartitem_set.count()
+
     def __unicode__(self):
         return u"Shopping Cart (%s)" % self.date_time_created
 

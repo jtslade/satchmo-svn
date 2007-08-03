@@ -27,6 +27,12 @@ class NullCart(object):
     def __str__(self):
         return "NullCart (empty)"
 
+    def __iter__(self):
+        return iter([])
+
+    def __len__(self):
+        return 0
+
 
 def settings(request):
     from django.conf import settings
