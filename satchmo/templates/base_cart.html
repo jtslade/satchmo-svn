@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load satchmo.currency_filter %}
+{% load satchmo.custom_filter %}
 
 {% block navbar %}
 <a href="{{shop_base}}/">{% trans "Home" %}</a>
@@ -8,7 +9,10 @@
 
 {% block content %}
 
-{% if not all_items %}
+{% if error_message %}
+<div class="error">{{ error_message }}</div>
+{% endif %}
+{% if not cart %}
     <h4>{% trans "Your cart is empty." %}</h4>
 {% else %}
     <h4>{% trans "Your Cart" %}</h4>
@@ -18,15 +22,30 @@
     <th align="center">{% trans "Total" %}</th>
     </tr>
 
-    {% for cartitem in all_items %}
-        <tr><td><a href="{% url satchmo_cart_remove cartitem.id %}">{% trans "Remove" %}</a></td>
-            <td align="center">{{cartitem.quantity}}</td>
+    {% for cartitem in cart %}
+        <tr><td>
+            <form action="{% url satchmo_cart_remove %}" method="post">
+                <input type="hidden" name="cartitem" value="{{ cartitem.id }}" />
+                <input type="submit" value="{% trans 'Remove' %}" />
+            </form>
+        </td>
+            <td align="center">
+                <form class="qtyform" id="form-{{ cartitem.id }}" action="{% url satchmo_cart_set_qty %}" method="post">
+                    <input type="hidden" name="cartitem" value="{{ cartitem.id }}" />
+                    <select name="quantity">
+                        {% for q in 10|template_range %}
+                        <option {% ifequal q cartitem.quantity %}selected="yes"{% endifequal %} value="{{ q }}">{{ q }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="submit" value="{% trans 'update amount' %}" />
+                </form>
+            </td>
             <td><a href="{{cartitem.product.get_absolute_url}}">{{ cartitem.description }}</a></td>
             <td align="center">{{ cartitem.line_total|currency }}</td>
         </tr>
     {% endfor %}
     <tr><td colspan="3" align="right">{% trans "Cart Total" %}:</td>
-        <td>{{total|currency}}</td></tr>
+        <td>{{cart.total|currency}}</td></tr>
     </table>
     
     <a href="{% url satchmo_checkout-step1 %}">{% trans "Check out" %}</a>

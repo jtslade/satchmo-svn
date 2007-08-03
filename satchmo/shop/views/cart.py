@@ -1,5 +1,5 @@
 from decimal import Decimal
-from sets import Set
+from django import newforms as forms
 from django.conf import settings
 from django.core import urlresolvers
 from django.http import HttpResponseRedirect
@@ -7,21 +7,68 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext, Context
 from django.utils.simplejson.encoder import JSONEncoder
 from django.utils.translation import ugettext as _
-from satchmo.shop.views.utils import bad_or_missing
-from satchmo.shop.models import Cart, CartItem, Config
 from satchmo.product.models import Product, ConfigurableProduct, Category, Option
 from satchmo.product.views import optionset_from_post
+from satchmo.shop.models import Cart, CartItem, Config
+from satchmo.shop.views.utils import bad_or_missing
+from sets import Set
 
-def display(request):
-    """Display the items in the cart."""
-    total = Decimal("0")
-    all_items = []
+class NullCartItem(object):
+    def __init__(self, itemid):
+        self.id = itemid
+        self.quantity = 0
+        self.line_total = 0
+
+def _set_quantity(request, force_delete = False):
+    """Set the quantity for a specific cartitem.
+    Checks to make sure the item is actually in the user's cart.
+    """
+    cart = None
+    cartitem = None
     if request.session.get('cart'):
         cart = Cart.objects.get(id=request.session['cart'])
-        total = cart.total
-        all_items = cart.cartitem_set.all()
+    else:
+        return (False, None, None, _("No cart to update."))
+    
+    if force_delete:
+        qty = 0
+    else:
+        try:  
+            qty = int(request.POST['quantity'])
+        except ValueError:
+            return (False, cart, None, _("Bad Quantity"))
+        if qty<0: 
+            qty = 0
+        
+    try:
+        itemid = int(request.POST['cartitem'])
+    except ValueError:
+        return (False, cart, None, _("Bad Item number"))
+    
+    try:    
+        cartitem = CartItem.objects.get(pk=itemid, cart=cart)
+    except CartItem.DoesNotExist:
+        return (False, cart, None, _("No such item in your cart"))
+    
+    if qty == 0:
+        cartitem.delete()
+        cartitem = NullCartItem(itemid)
+    else:
+        cartitem.quantity = qty
+        cartitem.save()
+    
+    return (True, cart, cartitem, "")
+
+
+def display(request, cart = None, error_message = ""):
+    """Display the items in the cart."""
+    if (not cart) and request.session.get('cart'):
+        cart = Cart.objects.get(id=request.session['cart'])
+    
     context = RequestContext(request, {
-        'all_items': all_items, 'total': total})
+        'cart' : cart,
+        'error_message' : error_message
+        })
     return render_to_response('base_cart.html', context)
 
 def add(request, id=0):
@@ -102,11 +149,71 @@ def add_ajax(request, id=0, template="json.html"):
 
     return render_to_response(template, {'json' : JSONEncoder().encode(data)})
 
-def remove(request, id):
+def remove(request):
     """Remove an item from the cart."""
-    item = CartItem.objects.get(id=id)
-    item.delete()
+    if not request.POST:
+        url = urlresolvers.reverse('satchmo_cart')
+        return HttpResponseRedirect(url)
 
-    url = urlresolvers.reverse('satchmo_cart')
-    return HttpResponseRedirect(url)
+    success, cart, cartitem, errors = _set_quantity(request, force_delete=True)
+    return display(request, cart = cart, error_message = errors)
 
+def remove_ajax(request, template="json.html"):
+    """Remove an item from the cart. Returning JSON formatted results."""
+    data = {}
+    if not request.POST:
+        data['results'] = False
+        data['errors'] = _('Internal error: please submit as a POST')
+
+    else:
+        success, cart, cartitem, errors = _set_quantity(request, force_delete=True)
+
+        data['results'] = success
+        data['errors'] = errors
+
+        # note we have to convert Decimals to strings, since simplejson doesn't know about Decimals
+        if cart and cartitem:
+            data['cart_total'] = str(cart.total)
+            data['cart_count'] = cart.numItems
+            data['item_id'] = cartitem.id
+
+        return render_to_response(template, {'json' : JSONEncoder().encode(data)})
+        
+def set_quantity(request):
+    """Set the quantity for a cart item.
+
+    Intended to be called via the cart itself, returning to the cart after done.
+    """
+    if not request.POST:
+        url = urlresolvers.reverse('satchmo_cart')
+        return HttpResponseRedirect(url)
+
+    success, cart, cartitem, errors = _set_quantity(request)
+    return display(request, cart = cart, error_message = errors)
+
+def set_quantity_ajax(request, template="json.html"):
+    """Set the quantity for a cart item, returning results formatted for handling by script.
+    """
+    data = {}
+    if not request.POST:
+        data['results'] = False
+        data['errors'] = _('Internal error: please submit as a POST')
+
+    else:
+        success, cart, cartitem, errors = _set_quantity(request)
+    
+        data['results'] = success
+        data['errors'] = errors
+
+    
+        # note we have to convert Decimals to strings, since simplejson doesn't know about Decimals
+        if cart and cartitem:
+            data['cart_total'] = str(cart.total)
+            data['cart_count'] = cart.numItems
+            data['item_id'] = cartitem.id
+            data['item_qty'] = cartitem.quantity
+            data['item_price'] = str(cartitem.line_total)
+        
+    return render_to_response(template, {'json' : JSONEncoder().encode(data)})
+    
+        

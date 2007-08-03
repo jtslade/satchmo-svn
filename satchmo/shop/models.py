@@ -67,6 +67,9 @@ class Cart(models.Model):
         return(total)
     total = property(_get_total)
 
+    def __iter__(self):
+        return iter(self.cartitem_set.all())
+
     def __unicode__(self):
         return u"Shopping Cart (%s)" % self.date_time_created
 
