@@ -30,12 +30,6 @@ class NullCart(object):
     def __iter__(self):
         return iter([])
         
-    def __nonzero__(self):
-        return False
-
-    def __iter__(self):
-        return iter([])
-
     def __len__(self):
         return 0
 
