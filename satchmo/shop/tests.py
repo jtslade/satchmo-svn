@@ -140,7 +140,7 @@ class ShopTest(TestCase):
         Validate we can remove an item
         """
         self.test_cart_adding()
-        response = self.client.get(prefix+'/cart/1/remove/')
+        response = self.client.post(prefix + '/cart/remove/', {'cartitem': '1'})
         self.assertRedirects(response, prefix+'/cart/', status_code=302, target_status_code=200)
         response = self.client.get(prefix+'/cart/')
         self.assertContains(response, "Your cart is empty.", count=1, status_code=200)
