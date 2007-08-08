@@ -457,10 +457,9 @@ class ConfigurableProduct(models.Model):
                 pv.save()
                 for option in options:
                     pv.options.add(option)
-
-                variant.full_name = ''
+                variant.full_name = u'%s (%s)' % (
+                    self.product.full_name, u'/'.join(optnames))
                 variant.save()
-                pv.save()
         return True
 
     def _ensure_option_set(self, options):
@@ -614,12 +613,12 @@ class ProductVariation(models.Model):
 
         #Ensure associated Product has a reasonable display name
         if not self.product.full_name:
-           options = []
-           for option in self.options.order_by("optionGroup"):
-               options += [option.name]
+            options = []
+            for option in self.options.order_by("optionGroup"):
+                options += [option.name]
 
-           self.product.full_name = u'%s (%s)' % (self.parent.product.full_name, u'/'.join(options))
-           self.product.save()
+            self.product.full_name = u'%s (%s)' % (self.parent.product.full_name, u'/'.join(options))
+            self.product.save()
 
         super(ProductVariation, self).save()
 
