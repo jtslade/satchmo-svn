@@ -430,21 +430,38 @@ class ConfigurableProduct(models.Model):
         Create all combinations of the options and create variations
         """
         combinedlist = self.get_all_options()
-        #Create new ConfigurableProduct/ProductVariation for each combo
+        #Create new ProductVariation for each combo.
         for options in combinedlist:
-            price_delta = 0
-            variant = Product(items_in_stock=0)
-            optnames = [opt.value for opt in options] #build an array of strings containing the names of the options
-            variant.slug = '%s_%s' % (self.product.slug, '_'.join(optnames))
-            variant.save()
-            pv = ProductVariation(product=variant, parent=self)
-            s1 = Set()
+            # Check for an existing ProductVariation.
+            # Simplify this when Django #4464 is fixed.
+            first_option = True
             for option in options:
-                pv.options.add(option)
-                s1.add(option.unique_id)
-            pv.save()
-            #No longer need to check for dups, done in pv.save()
-        return(True)
+                L = ProductVariation.objects.filter(parent=self, options=option)
+                L = [pv.product.id for pv in L]
+                if first_option:
+                    S = set(L)
+                    first_option = False
+                else:
+                    S = S.intersection(L)
+
+            if not S:
+                # There isn't an existing ProductVariation.
+                variant = Product(items_in_stock=0)
+                optnames = [opt.value for opt in options]
+                slug = u'%s_%s' % (self.product.slug, u'_'.join(optnames))
+                while Product.objects.filter(slug=slug).count():
+                    slug = u'_'.join((slug, unicode(self.product.id)))
+                variant.slug = slug
+                variant.save()
+                pv = ProductVariation(product=variant, parent=self)
+                pv.save()
+                for option in options:
+                    pv.options.add(option)
+
+                variant.full_name = ''
+                variant.save()
+                pv.save()
+        return True
 
     def _ensure_option_set(self, options):
         """
@@ -484,7 +501,8 @@ class ConfigurableProduct(models.Model):
         """
         super(ConfigurableProduct, self).save()
 
-        #Doesn't work with admin - the manipulator doesn't add the option_group until after save() is called.
+        # Doesn't work with admin - the manipulator doesn't add the option_group
+        # until after save() is called.
         if self.create_subs and self.option_group.count():
             self.create_products()
             self.create_subs = False
@@ -497,7 +515,7 @@ class ConfigurableProduct(models.Model):
         pass
         
     def __unicode__(self):
-        return u"<ConfigurableProduct for: %s>" % self.product.slug
+        return self.product.slug
 
 # The following 2 classes are examples of how to implement the models for these requested features.
 #
@@ -589,6 +607,7 @@ class ProductVariation(models.Model):
 
     def save(self):
         pvs = ProductVariation.objects.filter(parent=self.parent)
+        pvs = pvs.exclude(product=self.product)
         for pv in pvs:
             if pv.option_values == self.option_values:
                 return # Don't allow duplicates
@@ -611,7 +630,7 @@ class ProductVariation(models.Model):
         pass
 
     def __unicode__(self):
-        return u"<ProductVariation for: %s>" % self.product.slug
+        return self.product.slug
 
 class ProductAttribute(models.Model):
     """
