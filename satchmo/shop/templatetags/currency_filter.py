@@ -1,6 +1,7 @@
+from decimal import Decimal
 from django import template
 from django.conf import settings
-from decimal import Decimal
+from django.utils.encoding import force_unicode
 
 #The moneyfmt script was taken from the Python decimal recipes.
 #See it here - http://docs.python.org/lib/decimal-recipes.html
@@ -37,7 +38,7 @@ def moneyfmt(value, places=2, curr=settings.CURRENCY, sep=',', dp='.',
 
     if value == '':
         return value
-   
+
     value = Decimal(str(value))
 
     q = Decimal((0, (1,), -places))    # 2 places --> '0.01'
@@ -61,13 +62,13 @@ def moneyfmt(value, places=2, curr=settings.CURRENCY, sep=',', dp='.',
         if i == 3 and digits:
             i = 0
             build(sep)
-    build(curr)
+    build(force_unicode(curr))
     if sign:
         build(neg)
     else:
         build(pos)
     result.reverse()
-    return ''.join(result)
+    return u''.join(result)
 
 
-register.filter('currency',moneyfmt)
+register.filter('currency', moneyfmt)
