@@ -13,7 +13,7 @@
 
 {% block google-tracker %}
     {% if enable_google %}
-        {% show_tracker %}
+        {% show_tracker is_secure %}
         {% show_receipt %}
     {% endif %}
 {% endblock %}

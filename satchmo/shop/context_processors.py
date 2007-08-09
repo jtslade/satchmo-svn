@@ -63,4 +63,6 @@ def settings(request):
              'cart_count': cart.numItems,
              'cart': cart,
              'categories': all_categories,
-             'enable_google': settings.GOOGLE_ANALYTICS}
+             'enable_google': settings.GOOGLE_ANALYTICS,
+             'is_secure' : request.is_secure(),
+             }

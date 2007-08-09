@@ -3,11 +3,12 @@ from django.conf import settings
 
 register = Library()
 
-def show_tracker():
+def show_tracker(secure):
     """
     Output the google tracker code.
     """
-    return({"GOOGLE_CODE": settings.GOOGLE_ANALYTICS_CODE})
+    return({"GOOGLE_CODE": settings.GOOGLE_ANALYTICS_CODE,
+            "secure" : secure})
     
 register.inclusion_tag("google-analytics/tracker.html")(show_tracker)
 
