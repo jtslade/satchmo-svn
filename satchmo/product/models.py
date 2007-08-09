@@ -666,7 +666,9 @@ class Price(models.Model):
             prices = prices.filter(expires=self.expires)
         else:
             prices = prices.filter(expires__isnull=True)
-        if prices.exclude(id=self.id).count():
+        if self.id:
+            prices = prices.exclude(id=self.id)
+        if prices.count():
             return #Duplicate Price
 
         super(Price, self).save()
