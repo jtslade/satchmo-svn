@@ -86,7 +86,7 @@ def simple_pay_ship_info(request, payment_module, template):
     #Verify order info is here
     if request.POST:
         new_data = request.POST.copy()
-        form = SimplePayShipForm(request, new_data)
+        form = SimplePayShipForm(request, payment_module, new_data)
         if form.is_valid():
             data = form.cleaned_data
             contact = Contact.objects.get(id=request.session['custID'])
@@ -100,7 +100,7 @@ def simple_pay_ship_info(request, payment_module, template):
             url = payment_module.lookup_url('satchmo_checkout-step3')
             return http.HttpResponseRedirect(url)
     else:
-        form = SimplePayShipForm(request)
+        form = SimplePayShipForm(request, payment_module)
 
     template = payment_module.lookup_template(template)
     return render_to_response(template, {'form': form}, RequestContext(request))
