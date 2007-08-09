@@ -9,34 +9,43 @@
     <meta name="description" content="{{product.meta}}">
 {% endif %}
 
-<script type="text/javascript" src="{{media_url}}jquery-latest.pack.js"></script>
+<script type="text/javascript" src="{{media_url}}js/jquery.js"></script>
+<script type="text/javascript" src="{{media_url}}js/jquery.form.js"></script>
 <script type="text/javascript">
-function setNamePrice(json){
-    [name, price] = eval(json);
-    if (name){
-        setName(name);
+var satchmo = {
+    getPrice : function(url) {	
+    	var options = {
+    		url : url,
+    		type: 'POST',
+    		success : function(json) {
+    			var name = json[0];
+    			var price = json[1];
+    		    if (name) {
+    		        satchmo.setName(name);
+    		    }
+    		    satchmo.setPrice(price);
+    		},
+    		dataType : 'json'
+    	};
+
+    	$('form#options').ajaxSubmit(options);
+    },
+    
+    setName : function(name) {
+        $("#productname").attr('value', name);
+    },
+
+    setPrice : function(price){
+        $("#price").text(price);
     }
-    setPrice(price);
-}
-function setName(name){
-    $("#productname").attr('value', name);
-}
-function setPrice(price){
-    $("#price").text(price);
 }
 
-function getPrice(){
-    opts = {};
-    price_options = $("form#options").find("select");
-    for (a=0; a<price_options.length; a++){
-        opts[price_options[a].name] = price_options[a].value;
-    }
-    opts["quantity"] = $("input#quantity")[0].value;
-    setPrice("loading");
-    $.post("{% url satchmo_product_prices product_slug=product.slug %}", opts, setNamePrice);
-}
+var localProductPrice = function() { satchmo.getPrice('{% url satchmo_product_prices product_slug=product.slug %}'); };
 
-$(document).ready( function(){ getPrice();});
+$(function() {
+    localProductPrice();
+    $('.priced').change(function() { localProductPrice(); });    
+});
 </script>
 {% endblock %}
 
@@ -65,7 +74,7 @@ $(document).ready( function(){ getPrice();});
 
 {% for option_group in options %}
  {{ option_group.name }}
-    <select name="{{ option_group.id }}" id="{{option_group.id}}" onchange="getPrice()">
+    <select name="{{ option_group.id }}" id="{{option_group.id}}" class="priced">
     {% for choice in option_group.items %}
      <option value="{{ choice.value }}" {% if choice.selected %}selected="selected"{% endif %}>{{ choice.name }}
         {% if choice.price_change %}
@@ -75,7 +84,7 @@ $(document).ready( function(){ getPrice();});
     {% endfor %}
       </select> 
 {% endfor %} 
-{% trans "Quantity" %} <input type="text", size="2", name="quantity" id="quantity" value=1 onchange="getPrice()" /> 
+{% trans "Quantity" %} <input type="text", size="2", name="quantity" id="quantity" value="1" class="priced" /> 
 <input type="hidden" name="productname" id="productname" value="{{product.slug}}" />
 <input type="submit" value="{% trans "Add to cart" %}" /> 
 </form> 
