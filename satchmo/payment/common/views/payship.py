@@ -65,7 +65,11 @@ def credit_pay_ship_info(request, payment_module):
         form = CreditPayShipForm(request, payment_module)
 
     template = payment_module.lookup_template('checkout/pay_ship.html')
-    return render_to_response(template, {'form': form}, RequestContext(request))
+    ctx = { 
+        'form' : form,
+        'PAYMENT_LIVE' : payment_module.PAYMENT_LIVE
+    }
+    return render_to_response(template, ctx, RequestContext(request))
 
 def simple_pay_ship_info(request, payment_module, template):
     """A pay_ship view which doesn't require a credit card"""
@@ -103,5 +107,8 @@ def simple_pay_ship_info(request, payment_module, template):
         form = SimplePayShipForm(request, payment_module)
 
     template = payment_module.lookup_template(template)
-    return render_to_response(template, {'form': form}, RequestContext(request))
-
+    ctx = { 
+        'form' : form,
+        'PAYMENT_LIVE' : payment_module.PAYMENT_LIVE
+    }
+    return render_to_response(template, ctx, RequestContext(request))

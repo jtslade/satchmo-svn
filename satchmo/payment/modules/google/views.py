@@ -83,7 +83,8 @@ def confirm_info(request):
         'order': order,
         'post_url': post_url,
         'google_cart' : gcart.encoded_cart(),
-        'google_signature' : gcart.encoded_signature()
+        'google_signature' : gcart.encoded_signature(),
+        'PAYMENT_LIVE' : payment_module.PAYMENT_LIVE,
     })
 
     return render_to_response(template, ctx)

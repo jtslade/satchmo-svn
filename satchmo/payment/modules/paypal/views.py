@@ -41,6 +41,7 @@ def confirm_info(request):
      'business': payment_module.BUSINESS,
      'currency_code': payment_module.CURRENCY_CODE,
      'return_address': payment_module.RETURN_ADDRESS,
+     'PAYMENT_LIVE' : payment_module.PAYMENT_LIVE,
     })
 
     return render_to_response(template, ctx)
