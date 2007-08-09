@@ -86,10 +86,10 @@ ACCOUNT_ACTIVATION_DAYS = 7 # Days until activation code expires.
 SHOP_BASE = '/shop'
 
 # Currency symbol to use
-CURRENCY = '$'
+CURRENCY = u'$'
 
 #Default country for customers (use ISO2 format, i.e. US, GB, ES, SE)
-COUNTRY_CODE='US'
+COUNTRY_CODE = 'US'
 
 #These are used when loading the test data
 SITE_DOMAIN = "example.com"
@@ -121,7 +121,7 @@ PRODUCT_TYPES = (
 #NEWSLETTER_NAME = 'ooh-ga-boo-ga'
 
 #Configure logging
-LOGDIR = "/path/to/log"
+LOGDIR = DIRNAME
 LOGFILE = "satchmo.log"
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
