@@ -435,16 +435,16 @@ class ConfigurableProduct(models.Model):
             # Check for an existing ProductVariation.
             # Simplify this when Django #4464 is fixed.
             first_option = True
+            pvs = ProductVariation.objects.filter(parent=self)
             for option in options:
-                L = ProductVariation.objects.filter(parent=self, options=option)
-                L = [pv.product.id for pv in L]
+                query = pvs.filter(options=option)
                 if first_option:
-                    S = set(L)
                     first_option = False
                 else:
-                    S = S.intersection(L)
+                    query = query.filter(product__id__in=products)
+                products = [variation.product.id for variation in query]
 
-            if not S:
+            if not products:
                 # There isn't an existing ProductVariation.
                 variant = Product(items_in_stock=0)
                 optnames = [opt.value for opt in options]
