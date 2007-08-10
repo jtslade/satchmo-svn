@@ -202,6 +202,23 @@ class ShopTest(TestCase):
         self.client.post(prefix + '/checkout/', checkout_step1_post_data)
         assert user.contact_set.count() == 1
 
+    def test_logout(self):
+        """The logout view should remove the user and contact id from the
+        session.
+        """
+        user = User.objects.create_user('teddy', 'sometester@example.com', 'guz90tyc')
+        self.client.login(username='teddy', password='guz90tyc')
+        response = self.client.get('/accounts/info/') # test logged in status
+        self.assertContains(response, "The person you are logged in as does not have an account.", status_code=404)
+        self.test_cart_adding()
+        self.client.post(prefix + '/checkout/', checkout_step1_post_data)
+        assert self.client.session.get('custID') is not None
+        response = self.client.get('/accounts/logout/')
+        self.assertRedirects(response, prefix or '/', status_code=302, target_status_code=200)
+        assert self.client.session.get('custID') is None
+        response = self.client.get('/accounts/info/') # test logged in status
+        self.assertRedirects(response, '/accounts/login/', status_code=302, target_status_code=200)
+
 
 from django.contrib.auth.models import User
 

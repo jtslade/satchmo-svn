@@ -174,5 +174,7 @@ info = _deco(info)
 
 def shop_logout(request):
     logout(request)
+    if 'custID' in request.session:
+        del request.session['custID']
     return http.HttpResponseRedirect('%s/' % (settings.SHOP_BASE))
 
