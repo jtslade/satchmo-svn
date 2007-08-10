@@ -191,6 +191,18 @@ class ShopTest(TestCase):
         assert contact.shipping_address.street1 == "1011 Some Other Street"
         assert contact.primary_phone.phone == "456-123-5555"
 
+    def test_contact_attaches_to_user(self):
+        """Check that if a User registers and later creates a Contact, the
+        Contact will be attached to the existing User.
+        """
+        user = User.objects.create_user('teddy', 'sometester@example.com', 'guz90tyc')
+        assert user.contact_set.count() == 0
+        self.client.login(username='teddy', password='guz90tyc')
+        self.test_cart_adding()
+        self.client.post(prefix + '/checkout/', checkout_step1_post_data)
+        assert user.contact_set.count() == 1
+
+
 from django.contrib.auth.models import User
 
 class AdminTest(TestCase):

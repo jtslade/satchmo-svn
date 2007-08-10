@@ -71,7 +71,9 @@ def contact_info(request):
             initial=init_data)
 
         if form.is_valid():
-            if not contact:
+            if contact is None and request.user:
+                contact = Contact(user=request.user)
+            if contact is None:
                 custID = save_contact_info(form.cleaned_data)
             else:
                 custID = save_contact_info(form.cleaned_data, contact)
