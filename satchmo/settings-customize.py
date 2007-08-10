@@ -44,6 +44,10 @@ MEDIA_ROOT = os.path.join(DIRNAME, 'static/')
 # URL that handles the media served from MEDIA_ROOT. Use a trailing slash.
 # Example: "http://media.lawrence.com/"
 MEDIA_URL='/static/'
+# URL that handles the media served from SSL.  You only need to set this
+# if you are using a non-relative url.
+# Example: "https://media.lawrence.com"
+# MEDIA_SECURE_URL = "https://foo.com/"
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
