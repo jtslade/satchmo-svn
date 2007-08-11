@@ -66,22 +66,23 @@ def mailman_add(contact, listname=None, send_welcome_msg=None, admin_notify=None
 
     else:
         try:
-            mm.Lock()
-            mm.ApprovedAddMember(userdesc, send_welcome_msg, admin_notify)
-            mm.Save()
-            print >> sys.stderr, _('Subscribed: %(email)s') % { 'email' : contact.email }
+            try:
+                mm.Lock()
+                mm.ApprovedAddMember(userdesc, send_welcome_msg, admin_notify)
+                mm.Save()
+                print >> sys.stderr, _('Subscribed: %(email)s') % { 'email' : contact.email }
 
-        except Errors.MMAlreadyAMember:
-            print >> sys.stderr, _('Already a member: %(email)s') % { 'email' : contact.email }
+            except Errors.MMAlreadyAMember:
+                print >> sys.stderr, _('Already a member: %(email)s') % { 'email' : contact.email }
 
-        except Errors.MMBadEmailError:
-            if userdesc.address == '':
-                print >> sys.stderr, _('Bad/Invalid email address: blank line')
-            else:
-                print >> sys.stderr, _('Bad/Invalid email address: %(email)s') % { 'email' : contact.email }
+            except Errors.MMBadEmailError:
+                if userdesc.address == '':
+                    print >> sys.stderr, _('Bad/Invalid email address: blank line')
+                else:
+                    print >> sys.stderr, _('Bad/Invalid email address: %(email)s') % { 'email' : contact.email }
 
-        except Errors.MMHostileAddress:
-            print >> sys.stderr, _('Hostile address (illegal characters): %(email)s') % { 'email' : contact.email }
+            except Errors.MMHostileAddress:
+                print >> sys.stderr, _('Hostile address (illegal characters): %(email)s') % { 'email' : contact.email }
 
         finally:
             mm.Unlock()
