@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load satchmo.google %}
 {% load i18n %}
 
 {% block navbar %}
@@ -14,4 +15,14 @@
 {% endif %}
 </p>
 
+{% endblock %}
+
+{% block google-tracker %}
+{% if enable_google %}
+    {% show_tracker is_secure %}
+    {% google_track_signup %}
+{% endif %}
+{% if enable_adwords %}
+    {% google_adwords_signup %}
+{% endif %}
 {% endblock %}

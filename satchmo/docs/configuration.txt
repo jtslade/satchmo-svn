@@ -68,7 +68,7 @@ Payments are configured using *Satchmo Payment Modules*.  These modules are foun
 	- ``authorizenet`` is used to process credit cards.  
 	- ``dummy`` is used to test payments during development.
 	- ``paypal`` is used to handle PayPal payments.  (Basic module works, IPN is not yet done.)
-	- ``google`` is used to handle Google Checkout payments. (Incomplete, in testing) 
+	- ``google`` is used to handle Google Checkout payments. (Level 1 complete)
 
 	
 To enable a payment module or modules, prepare a custom configuration file for that module, and modify your local_settings file to load
@@ -124,6 +124,11 @@ make sure that it is enabled in the middleware section of your settings.py::
         "django.middleware.doc.XViewMiddleware",
         "satchmo.shop.SSLMiddleware.SSLRedirect"
 			    )
+
+In order to support a fully encrypted page, you also need to make sure you provide a secure url for the media.  This url
+will automatically be used in pages served by SSL, but only if you specify it in your settings.py::
+
+    MEDIA_SECURE_URL = 'https://secure.example.com/static/'
 
 Then, enable it for the specific urls you would like to be protected by adding
 {'SSL': True} to each url.  Here's an example which would enable SSL for login::

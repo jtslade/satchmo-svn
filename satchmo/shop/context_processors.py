@@ -47,6 +47,7 @@ def settings(request):
             shop_name = _("Test Store (No Site id)")
     else:
         shop_name = _("Test Store")
+    
     if request.session.get('cart'):
         try:
             tempCart = Cart.objects.get(id=request.session['cart'])
@@ -57,12 +58,28 @@ def settings(request):
     else:
         cart = NullCart()
     all_categories = Category.objects.all()
+    
+    try:
+        enable_adwords = settings.GOOGLE_ADWORDS
+    except AttributeError:
+        enable_adwords = False
+    
+    # handle secure requests
+    media_url = settings.MEDIA_URL
+    secure = request.is_secure()
+    if secure:
+	try:
+	    media_url = settings.MEDIA_SECURE_URL
+	except AttributeError:
+	    media_url = media_url.replace('http://','https://')
+	
     return {'shop_base': settings.SHOP_BASE,
              'shop_name': shop_name,
-             'media_url': settings.MEDIA_URL,
+             'media_url': media_url,
              'cart_count': cart.numItems,
              'cart': cart,
              'categories': all_categories,
              'enable_google': settings.GOOGLE_ANALYTICS,
-             'is_secure' : request.is_secure(),
+             'enable_adwords': enable_adwords,
+             'is_secure' : secure,
              }

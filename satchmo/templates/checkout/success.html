@@ -12,8 +12,12 @@
 {% endblock %}
 
 {% block google-tracker %}
-    {% if enable_google %}
-        {% show_tracker is_secure %}
-        {% show_receipt %}
-    {% endif %}
+{% if enable_google %}
+{% show_tracker %}
+{% show_receipt %}
+{% endif %}
+{% if enable_adwords %}
+{% google_adwords_sale %}
+{% endif %}
 {% endblock %}
+

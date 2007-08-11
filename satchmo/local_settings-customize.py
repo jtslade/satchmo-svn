@@ -66,6 +66,10 @@ GOOGLE_ANALYTICS = False
 # If google is enabled, enter the full google code here - Example "UA-abcd-1"
 GOOGLE_ANALYTICS_CODE = "UA-xxxx-x"
 
+# Google Adwords
+GOOGLE_ADWORDS = False
+GOOGLE_ADWORDS_ID = 'your adwords id'
+
 ##### For Email ########
 # If this isn't set in your settings file, you can set these here
 #EMAIL_HOST = 'host here'
