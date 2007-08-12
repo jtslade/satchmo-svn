@@ -169,7 +169,7 @@ def info(request):
     return render_to_response('registration/account_info.html', context)
 
 _deco = user_passes_test(lambda u: not u.is_anonymous(),
-                        login_url='%s/accounts/login/' % (settings.SHOP_BASE))
+                        login_url='/accounts/login/')
 info = _deco(info)
 
 def shop_logout(request):
