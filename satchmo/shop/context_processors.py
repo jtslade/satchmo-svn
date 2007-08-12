@@ -42,7 +42,7 @@ def settings(request):
     if Config.objects.count() > 0:
         try:
             shop_config = Config.objects.get(site=settings.SITE_ID)
-            shop_name = shop_config.storeName
+            shop_name = shop_config.store_name
         except ObjectDoesNotExist:
             shop_name = _("Test Store (No Site id)")
     else:

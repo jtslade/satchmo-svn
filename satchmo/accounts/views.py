@@ -51,12 +51,12 @@ class RegistrationForm(forms.Form):
 def send_welcome_email(email, first_name, last_name):
     t = loader.get_template('registration/welcome.txt')
     shop_config = Config.objects.get(site=settings.SITE_ID)
-    shop_email = shop_config.storeEmail
-    subject = ugettext("Welcome to %s") % shop_config.storeName
+    shop_email = shop_config.store_email
+    subject = ugettext("Welcome to %s") % shop_config.store_name
     c = Context({
         'first_name': first_name,
         'last_name': last_name,
-        'company_name': shop_config.storeName,
+        'company_name': shop_config.store_name,
         'site_url': shop_config.site.domain,
     })
     send_mail(subject, t.render(c), shop_email, [email], fail_silently=False)

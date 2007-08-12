@@ -55,8 +55,8 @@ def credit_confirm_info(request, payment_module):
             status.save()
             #Now, send a confirmation email
             shop_config = Config.objects.get(site=settings.SITE_ID)
-            shop_email = shop_config.storeEmail
-            shop_name = shop_config.storeName
+            shop_email = shop_config.store_email
+            shop_name = shop_config.store_name
             t = loader.get_template('email/order_complete.txt')
             c = Context({'order': orderToProcess,
                           'shop_name': shop_name})

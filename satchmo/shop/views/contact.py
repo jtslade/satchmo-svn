@@ -35,7 +35,7 @@ def form(request):
                 'request_text': new_data['contents'] })
             subject = new_data['subject']
             shop_config = Config.objects.get(site=settings.SITE_ID)
-            shop_email = shop_config.storeEmail
+            shop_email = shop_config.store_email
             send_mail(subject, t.render(c), shop_email,
                      [shop_email], fail_silently=False)
             return http.HttpResponseRedirect('%s/contact/thankyou/' % (settings.SHOP_BASE))

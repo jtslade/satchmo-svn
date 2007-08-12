@@ -43,8 +43,8 @@
 - fields: {contact: !!python/long '3', phone: 755-555-1111, primary: false, type: Fax}
   model: contact.phonenumber
   pk: '4'
-- fields: {city: null, country: null, noStockCheckout: false, phone: null, postalCode: null,
-    state: null, storeDescription: null, storeEmail: null, storeName: My Site, street1: null,
+- fields: {city: null, country: null, no_stock_checkout: false, phone: null, postal_code: null,
+    state: null, store_description: null, store_email: null, store_name: My Site, street1: null,
     street2: null}
   model: shop.config
   pk: '1'
