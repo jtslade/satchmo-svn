@@ -117,7 +117,7 @@ def load_data():
     site.domain = settings.SITE_DOMAIN  
     site.name = settings.SITE_NAME
     site.save()
-    config = Config(site=site, storeName = settings.SITE_NAME, noStockCheckout=False)
+    config = Config(site=site, store_name = settings.SITE_NAME, no_stock_checkout=False)
     config.save()
     print "Creating Customers..."
     # Import some customers

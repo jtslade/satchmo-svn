@@ -214,7 +214,7 @@ class ShopTest(TestCase):
         self.client.post(prefix + '/checkout/', checkout_step1_post_data)
         assert self.client.session.get('custID') is not None
         response = self.client.get('/accounts/logout/')
-        self.assertRedirects(response, prefix or '/', status_code=302, target_status_code=200)
+        self.assertRedirects(response, (prefix+'/') or '/', status_code=302, target_status_code=200)
         assert self.client.session.get('custID') is None
         response = self.client.get('/accounts/info/') # test logged in status
         self.assertRedirects(response, '/accounts/login/', status_code=302, target_status_code=200)

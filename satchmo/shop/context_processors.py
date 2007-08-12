@@ -68,11 +68,11 @@ def settings(request):
     media_url = settings.MEDIA_URL
     secure = request.is_secure()
     if secure:
-	try:
-	    media_url = settings.MEDIA_SECURE_URL
-	except AttributeError:
-	    media_url = media_url.replace('http://','https://')
-	
+        try:
+            media_url = settings.MEDIA_SECURE_URL
+        except AttributeError:
+            media_url = media_url.replace('http://','https://')
+
     return {'shop_base': settings.SHOP_BASE,
              'shop_name': shop_name,
              'media_url': media_url,
