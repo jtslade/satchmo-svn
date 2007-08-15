@@ -47,7 +47,7 @@ If Satchmo is part of another Django app (follow step 5):
         from local_settings import *
 
 Now that the basic application settings are complete, you will need to
-configure the satchmo specific items stored in local_settings.py::
+configure the satchmo specific items stored in local_settings.py.
 
 6.  Create your customized local_settings.py file::
     
