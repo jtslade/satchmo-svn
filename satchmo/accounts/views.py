@@ -15,6 +15,10 @@ from satchmo.contact.models import Contact
 from satchmo.shop.models import Config
 from satchmo.shop.utils.unique_id import generate_id
 from satchmo.shop.views.utils import bad_or_missing
+from socket import error as SocketError
+import logging
+
+log = logging.getLogger('satchmo.accounts.views')
 
 YESNO = (
     (1, _('Yes')),
@@ -59,7 +63,17 @@ def send_welcome_email(email, first_name, last_name):
         'company_name': shop_config.store_name,
         'site_url': shop_config.site.domain,
     })
-    send_mail(subject, t.render(c), shop_email, [email], fail_silently=False)
+    body = t.render(c)
+    try:
+        send_mail(subject, body, shop_email, [email], fail_silently=False)
+    except SocketError, e:
+        if settings.DEBUG:
+            log.error('Error sending mail: %s' % e)
+            log.warn('Ignoring email error, since you are running in DEBUG mode.  Email was:\nTo:%s\nSubject: %s\n---\n%s', email, subject, body)
+        else:
+            log.fatal('Error sending mail: %s' % e)
+            raise IOError('Could not send email, please check to make sure your email settings are correct, and that you are not being blocked by your ISP.')
+    
 
 def register(request):
     """

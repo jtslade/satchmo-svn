@@ -82,4 +82,5 @@ def settings(request):
              'enable_google': settings.GOOGLE_ANALYTICS,
              'enable_adwords': enable_adwords,
              'is_secure' : secure,
+             'request' : request,
              }
