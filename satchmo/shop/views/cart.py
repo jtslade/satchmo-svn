@@ -118,7 +118,7 @@ def add_ajax(request, id=0, template="json.html"):
             product = cp.get_product_from_options(chosenOptions)
 
         data['id'] = product.id
-        data['name'] = product.full_name
+        data['name'] = product.name
 
         try:
             quantity = int(request.POST['quantity'])

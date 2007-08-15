@@ -455,7 +455,7 @@ class OrderItem(models.Model):
         max_digits=6, decimal_places=2)
 
     def __unicode__(self):
-        return self.product.full_name
+        return self.product.name
 
     def _get_category(self):
         return(self.product.get_category)

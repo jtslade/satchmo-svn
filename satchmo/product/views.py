@@ -117,12 +117,12 @@ def do_search(request):
     products = Product.objects.filter(active=True)
     for keyword in keywords:
         categories = categories.filter(Q(name__icontains=keyword) | Q(meta__icontains=keyword) | Q(description__icontains=keyword))
-        products = products.filter(Q(full_name__icontains=keyword) | Q(short_description__icontains=keyword) | Q(description__icontains=keyword) | Q(meta__icontains=keyword))
+        products = products.filter(Q(name__icontains=keyword) | Q(short_description__icontains=keyword) | Q(description__icontains=keyword) | Q(meta__icontains=keyword))
     list = []
     for category in categories:
         list.append((_("Category"), category.name, category.get_absolute_url()))
     for product in products:
-        list.append((_("Product"), product.full_name, product.get_absolute_url()))
+        list.append((_("Product"), product.name, product.get_absolute_url()))
 
     context = RequestContext(request, {'results': list})
     return render_to_response('search.html', context)

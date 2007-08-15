@@ -180,28 +180,28 @@ def load_data():
     
     print "Creating products..."   
     #Create some items
-    i1 = Product(full_name="Django Rocks shirt", slug="DJ-Rocks", description="Really cool shirt",
+    i1 = Product(name="Django Rocks shirt", slug="DJ-Rocks", description="Really cool shirt",
              active=True, featured=True)
     i1.save()
     p1 = Price(price="20.00", product=i1)
     p1.save()
     i1.category.add(cat1)
     i1.save()
-    i2 = Product(full_name="Python Rocks shirt", slug="PY-Rocks", description="Really cool python shirt - One Size Fits All", 
+    i2 = Product(name="Python Rocks shirt", slug="PY-Rocks", description="Really cool python shirt - One Size Fits All", 
              active=True, featured=True)
     i2.save()
     p2 = Price(price="19.50", product=i2)
     p2.save()
     i2.category.add(cat2)
     i2.save()
-    i3 = Product(full_name="A really neat book", slug="neat-book", description="A neat book.  You should buy it.", 
+    i3 = Product(name="A really neat book", slug="neat-book", description="A neat book.  You should buy it.", 
              active=True, featured=True)
     i3.save()
     p3 = Price(price="5.00", product=i3)
     p3.save()
     i3.category.add(cat4)
     i3.save()
-    i4 = Product(full_name="Robots Attack!", slug="robot-attack", description="Robots try to take over the world.", 
+    i4 = Product(name="Robots Attack!", slug="robot-attack", description="Robots try to take over the world.", 
              active=True, featured=True)
     i4.save()
     p4 = Price(price="7.99", product=i4)

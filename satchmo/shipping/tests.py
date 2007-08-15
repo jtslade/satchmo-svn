@@ -4,7 +4,7 @@ r"""
 >>> from satchmo.product.models import *
 >>> from satchmo.shop.models import *
 
->>> product1 = Product.objects.create(slug='p1', full_name='p1')
+>>> product1 = Product.objects.create(slug='p1', name='p1')
 >>> cart1 = Cart.objects.create()
 >>> cartitem1 = CartItem.objects.create(product=product1, cart=cart1,
 ...     quantity=3)

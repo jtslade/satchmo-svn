@@ -30,7 +30,7 @@
     date_added: 2007-05-30
     description: Really cool shirt
     featured: true
-    full_name: Django Rocks shirt
+    name: Django Rocks shirt
     height: null
     items_in_stock: !!python/long '0'
     length: null
@@ -51,7 +51,7 @@
     date_added: 2007-05-30
     description: ''
     featured: false
-    full_name: Django Rocks shirt (Large/Black)
+    name: Django Rocks shirt (Large/Black)
     height: null
     items_in_stock: !!python/long '0'
     length: null
@@ -72,7 +72,7 @@
     date_added: 2007-05-30
     description: ''
     featured: false
-    full_name: Django Rocks shirt (Large/Blue)
+    name: Django Rocks shirt (Large/Blue)
     height: null
     items_in_stock: !!python/long '0'
     length: null
@@ -93,7 +93,7 @@
     date_added: 2007-05-30
     description: ''
     featured: false
-    full_name: Django Rocks shirt (Large/White)
+    name: Django Rocks shirt (Large/White)
     height: null
     items_in_stock: !!python/long '0'
     length: null
@@ -114,7 +114,7 @@
     date_added: 2007-05-30
     description: ''
     featured: false
-    full_name: Django Rocks shirt (Medium/Black)
+    name: Django Rocks shirt (Medium/Black)
     height: null
     items_in_stock: !!python/long '0'
     length: null
@@ -135,7 +135,7 @@
     date_added: 2007-05-30
     description: ''
     featured: false
-    full_name: Django Rocks shirt (Medium/Blue)
+    name: Django Rocks shirt (Medium/Blue)
     height: null
     items_in_stock: !!python/long '0'
     length: null
@@ -156,7 +156,7 @@
     date_added: 2007-05-30
     description: ''
     featured: false
-    full_name: Django Rocks shirt (Medium/White)
+    name: Django Rocks shirt (Medium/White)
     height: null
     items_in_stock: !!python/long '0'
     length: null
@@ -177,7 +177,7 @@
     date_added: 2007-05-30
     description: ''
     featured: false
-    full_name: Django Rocks shirt (Small/Black)
+    name: Django Rocks shirt (Small/Black)
     height: null
     items_in_stock: !!python/long '0'
     length: null
@@ -198,7 +198,7 @@
     date_added: 2007-05-30
     description: ''
     featured: false
-    full_name: Django Rocks shirt (Small/Blue)
+    name: Django Rocks shirt (Small/Blue)
     height: null
     items_in_stock: !!python/long '0'
     length: null
@@ -219,7 +219,7 @@
     date_added: 2007-05-30
     description: ''
     featured: false
-    full_name: Django Rocks shirt (Small/White)
+    name: Django Rocks shirt (Small/White)
     height: null
     items_in_stock: !!python/long '0'
     length: null
@@ -240,7 +240,7 @@
     date_added: 2007-05-30
     description: A neat book.  You should buy it.
     featured: true
-    full_name: A really neat book
+    name: A really neat book
     height: null
     items_in_stock: !!python/long '0'
     length: null
@@ -261,7 +261,7 @@
     date_added: 2007-05-30
     description: ''
     featured: false
-    full_name: A really neat book (Hard cover)
+    name: A really neat book (Hard cover)
     height: null
     items_in_stock: !!python/long '0'
     length: null
@@ -282,7 +282,7 @@
     date_added: 2007-05-30
     description: ''
     featured: false
-    full_name: A really neat book (Soft cover)
+    name: A really neat book (Soft cover)
     height: null
     items_in_stock: !!python/long '0'
     length: null
@@ -303,7 +303,7 @@
     date_added: 2007-05-30
     description: ''
     featured: false
-    full_name: A really neat book (On tape)
+    name: A really neat book (On tape)
     height: null
     items_in_stock: !!python/long '0'
     length: null
@@ -324,7 +324,7 @@
 #    date_added: 2007-05-30
 #    description: Example Configurable/Downloadable product
 #    featured: true
-#    full_name: Really Neat Software
+#    name: Really Neat Software
 #    height: null
 #    items_in_stock: !!python/long '0'
 #    length: null
@@ -345,7 +345,7 @@
     date_added: 2007-05-30
     description: ''
     featured: false
-    full_name: Really Neat Software (Full Version)
+    name: Really Neat Software (Full Version)
     height: null
     items_in_stock: !!python/long '0'
     length: null
@@ -366,7 +366,7 @@
     date_added: 2007-05-30
     description: ''
     featured: false
-    full_name: Really Neat Software (Upgrade Version)
+    name: Really Neat Software (Upgrade Version)
     height: null
     items_in_stock: !!python/long '0'
     length: null
@@ -387,7 +387,7 @@
     date_added: 2007-05-30
     description: Really cool python shirt - One Size Fits All
     featured: true
-    full_name: Python Rocks shirt
+    name: Python Rocks shirt
     height: null
     items_in_stock: !!python/long '0'
     length: null
@@ -408,7 +408,7 @@
     date_added: 2007-05-30
     description: Robots try to take over the world.
     featured: true
-    full_name: Robots Attack!
+    name: Robots Attack!
     height: null
     items_in_stock: !!python/long '0'
     length: null
@@ -429,7 +429,7 @@
     date_added: 2007-05-30
     description: ''
     featured: false
-    full_name: Robots Attack! (Hard cover)
+    name: Robots Attack! (Hard cover)
     height: null
     items_in_stock: !!python/long '0'
     length: null
@@ -450,7 +450,7 @@
     date_added: 2007-05-30
     description: ''
     featured: false
-    full_name: Robots Attack! (Soft cover)
+    name: Robots Attack! (Soft cover)
     height: null
     items_in_stock: !!python/long '0'
     length: null
@@ -471,7 +471,7 @@
     date_added: 2007-05-30
     description: ''
     featured: false
-    full_name: Robots Attack! (On tape)
+    name: Robots Attack! (On tape)
     height: null
     items_in_stock: !!python/long '0'
     length: null

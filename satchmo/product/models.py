@@ -206,8 +206,8 @@ class Product(models.Model):
     """
     Root class for all Products
     """
-    full_name = models.CharField(_("Full Name"), maxlength=255)
-    slug = models.SlugField(_("Slug Name"), unique=True, prepopulate_from=('full_name',), core=True, blank=False)
+    name = models.CharField(_("Full Name"), maxlength=255)
+    slug = models.SlugField(_("Slug Name"), unique=True, prepopulate_from=('name',), core=True, blank=False)
     short_description = models.TextField(_("Short description of product"), help_text=_("This should be a 1 or 2 line description for use in product listing screens"), maxlength=200, default='', blank=True)
     description = models.TextField(_("Description of product"), help_text=_("This field can contain HTML and should be a few paragraphs explaining the background of the product, and anything that would help the potential customer make their purchase."), default='', blank=True)
     category = models.ManyToManyField(Category, filter_interface=True, blank=True)
@@ -316,17 +316,17 @@ class Product(models.Model):
             return False;
 
     def __unicode__(self):
-        return self.full_name
+        return self.name
 
     def get_absolute_url(self):
         return urlresolvers.reverse('satchmo_product',
             kwargs={'product_slug': self.slug})
 
     class Admin:
-        list_display = ('slug', 'full_name', 'unit_price', 'items_in_stock', 'get_subtypes',)
+        list_display = ('slug', 'name', 'unit_price', 'items_in_stock', 'get_subtypes',)
         list_filter = ('category',)
         fields = (
-        (None, {'fields': ('category', 'full_name', 'slug', 'description', 'short_description', 'date_added', 'active', 'featured', 'items_in_stock',)}),
+        (None, {'fields': ('category', 'name', 'slug', 'description', 'short_description', 'date_added', 'active', 'featured', 'items_in_stock',)}),
         ('Meta Data', {'fields': ('meta',), 'classes': 'collapse'}),
         ('Item Dimensions', {'fields': (('length', 'width','height',),'weight'), 'classes': 'collapse'}),
         ('Tax', {'fields':('taxable', 'taxClass'), 'classes': 'collapse'}),
@@ -457,8 +457,8 @@ class ConfigurableProduct(models.Model):
                 pv.save()
                 for option in options:
                     pv.options.add(option)
-                variant.full_name = u'%s (%s)' % (
-                    self.product.full_name, u'/'.join(optnames))
+                variant.name = u'%s (%s)' % (
+                    self.product.name, u'/'.join(optnames))
                 variant.save()
         return True
 
@@ -612,12 +612,12 @@ class ProductVariation(models.Model):
                 return # Don't allow duplicates
 
         #Ensure associated Product has a reasonable display name
-        if not self.product.full_name:
+        if not self.product.name:
             options = []
             for option in self.options.order_by("optionGroup"):
                 options += [option.name]
 
-            self.product.full_name = u'%s (%s)' % (self.parent.product.full_name, u'/'.join(options))
+            self.product.name = u'%s (%s)' % (self.parent.product.name, u'/'.join(options))
             self.product.save()
 
         super(ProductVariation, self).save()

@@ -59,7 +59,7 @@ $(function() {
 {% endblock %}
 
 {% block content %}
-<h4>{{ product.full_name }}</h4>
+<h4>{{ product.name }}</h4>
 <p>{{ product.description }}</p>
 {% trans "Price" %}: <h3 id="price">{{item.price}}</h3>
 {% for pic in product.productimage_set.all %}

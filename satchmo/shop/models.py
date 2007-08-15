@@ -135,11 +135,11 @@ class CartItem(models.Model):
     line_total = property(_get_line_total)
 
     def _get_description(self):
-        return(self.product.full_name)
+        return self.product.name
     description = property(_get_description)
 
     def __unicode__(self):
-        return u'%s - %s %s%s' % (self.quantity, self.product.full_name,
+        return u'%s - %s %s%s' % (self.quantity, self.product.name,
             force_unicode(settings.CURRENCY), self.line_total)
 
     class Admin:
