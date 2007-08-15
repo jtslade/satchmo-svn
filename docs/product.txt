@@ -1,7 +1,9 @@
 Products
 ========
 
-The core of any online store is the product  you are selling.  Some people may have very simple needs for categorizing and describing their products, while others may have much more complex needs.  Satchmo's product framework tries to strike a balance, enabling easy product configuration but supporting complex products if your needs demand.
+The core of any online store is the product  you are selling.  Some people may have very simple needs for categorizing and describing their products, 
+while others may have much more complex needs.  Satchmo's product framework tries to strike a balance, enabling easy product configuration but supporting 
+complex products if your needs demand.
 
 Categories
 ----------
@@ -47,17 +49,17 @@ Description
     This is a free form field that describes this category.  You can use this to help guide users in your site.  It's also helpful for search engines.
     
 Product
-----
+-------
 
 A Product is the main focus of your store.  It is the "thing" that a person going to your store would see.  There are many fields you can use to configure your Items.
 
 Category
     See the description above.  This is where you choose one or more categories where a person could find this product.
     
-Full_name
+Name
     This is the full name of an product.  Think of it as the title of the product.
     
-Slug_name (simply name in the model)
+Slug
     This is similar to the slug field in category.  It is a brief description of the item that will show up in the url and uniquely identify this product.
     
 Description
@@ -105,6 +107,12 @@ Images
 Product Subtypes
     There's a variety of ways that the behavior of a product can be expanded. These additional, optional, features are shown as product SubTypes. The most commonly used of these will be ConfigurableProduct which allows you to have options on your product such as Sizes: Small/Medium/Large, Colors, etc. For more details on the Product SubTypes look in the applicable sections below.
 
+Product Attributes
+++++++++++++++++++
+
+In some cases, you may want to have certain product information stored in the database.  For instance, you might want to have "number of pages" or "ISBN" fields
+for all of the books in your store.  Attributes allow you to associate arbitrary data with your products via name, value pairs.
+
 Price
 +++++
 
@@ -138,7 +146,7 @@ Sort
 Item Options
 ------------
 
-As discussed above, an item is the central focus of your store.  For many cases, the items in your store may have several options.  For instance, if you sell t-shirts, a visitor to your store should be able to choose the size of the shirt while looking at the main item.  You may also want them to choose a color, style and/or a bunch of other different options.  The challenge with this much flexibility is building something that is easy for the user to understnad and easy for the store administrator to maintain.  Satchmo has designed option groups, and options used with configurable products and product variants to provide maximum flexibility and maintainability.
+As discussed above, an item is the central focus of your store.  For many cases, the items in your store may have several options.  For instance, if you sell t-shirts, a visitor to your store should be able to choose the size of the shirt while looking at the main item.  You may also want them to choose a color, style and/or a bunch of other different options.  The challenge with this much flexibility is building something that is easy for the user to understnad and easy for the store administrator to maintain.  Satchmo uses option groups and options to create configurable products and product variants.
 
 Option Groups
 +++++++++++++
@@ -156,10 +164,10 @@ Description
 Sort Order
     This helps you order the options in the way you would like them displayed.  For instance, you may want colors to show before sizes.
 
-Option Items
+Options
 ++++++++++++
 
-In our example, if an option group is size, then the option items would be "small", "medium" or "large."  The nice thing about these option items is that you can configure these to change the price of your product.  If a large shirt costs more than a small shirt, then you can assign the incremental cost to the "large" option item and the correct price will be shown in the users cart and order.
+In our example, if an option group is size, then the options would be "small", "medium" or "large."  The nice thing about these options is that you can configure these to change the price of your product.  If a large shirt costs more than a small shirt, then you can assign the incremental cost to the "large" option item and the correct price will be shown in the users cart and order.
 
 Name
     This is the displayed value of the option.  You may want to show people "Small" but only store "S" in the database.  
@@ -173,6 +181,7 @@ Price Change
 
 Configurable Products
 +++++++++++++++++++++
+
 ConfigurableProduct is a modifier for a product that allows you to associate an OptionGroup with a particular Product.
 
 Option group
@@ -182,8 +191,28 @@ Create_Variations
     This is a special option that allows you to create ProductVariations.
 
 Variations
-    Variations are all Products that are never displayed directly to a customer, but represent the actual product as you would have it on the shelf.  For example, if your ConfigurableProduct is a t-shirt, then you will probably have ProductVariations for "Large Green t-shirt", "Small Blue t-shirt", etc.  It's easiest to have these generated for you using the create_variations option above, but once their created then you can edit these individually to do things such as set a different price for the XL shirt, or whatever.
+    Variations are all Products that are never displayed directly to a customer, but represent the actual product as you would have it on the shelf.  For example, if your ConfigurableProduct is a t-shirt, then you will probably have ProductVariations for "Large Green t-shirt", "Small Blue t-shirt", etc.  It's easiest to have these generated for you using the create_variations option above, but once they are created, you can edit these individually to do things such as set a different price for the XL shirt.
     
-ProductVariation
-++++++++
-As described above a ProductVariation can be thought of as the actual product you maintain in inventory and sell to a customer.  It is an item with all of the options applied.  In our example case, it might be a Large, White Shirt. The ProductVariation object itself only has links between a ConfigurableProduct, a Product
+Product Variations
+++++++++++++++++++
+
+As described above a ProductVariation can be thought of as the actual product you maintain in inventory and sell to a customer.  It is an item with all of the options applied.  In our example case, it might be a Large, White Shirt. The ProductVariation object itself only has links between a ConfigurableProduct, and a Product.
+
+A short tutorial
+----------------
+
+Here is a quick step by step overview for adding something to your store.  Hopefully it illustrates how to add products and use the concepts described above.
+
+ - From the admin interface, add a new individual Product
+ - Choose the appropriate Category, Name, etc.  For illustration purposes, create a Satchmo Developer Book  
+ - Be sure to put in a value for the price ($25.00) with no expiration or quantity.  Then click save
+ - You should see a list of all your products
+ - Click on the Satchmo Developer Book
+ - At the bottom of your screen, you'll see the option to "Add ConfigurableProduct"  
+ - Click on the link
+ - Select the appropriate Option Group (Book Type) and click Save & Continue Editing
+ - Check "Create Variations" and Click the save button
+
+You've now created all the Product Variants for the Satchmo Developer
+Handbook.  If you want to tweak specific ProductVariants you can but you
+don't have to. 

@@ -16,5 +16,8 @@ under the BSD license.
 
 Current Development Status
 --------------------------
-Satchmo is currently in alpha status.  Many functions work but there is still a lot
-of change in the underlying api.
+With the release of version 0.5, Satchmo will enter beta status.  All the basic 
+functionalities required to run the store are present.  Many advanced functions are also available.
+While we have tried to squash all of the bugs, there still may be a few out there.  We are
+also striving to maintain a stable api going forward.  All future releases will contain
+instructions on how to migrate the changes.

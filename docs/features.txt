@@ -38,7 +38,7 @@ of very sophisticated features.  Some highlights include:
 -   A robust customer model that allows you to maintain unlimited addresses for 
     each of your customers as well as customer specific notes and information.
 -   Customer orders can have multiple statuses so it's easy for you to track your 
-    interactions
+    interactions.
 -   A full localization model that is pre-loaded with over 250 countries and 
     information about their subdivisions including states, counties or other 
     divisions.
@@ -57,21 +57,22 @@ of very sophisticated features.  Some highlights include:
     and is automatically cached for maximum performance.
 -   Support for Authorize.net credit card processing.
 -   Support for accepting paypal.
--   Google analytics support.
+-   Google analytics, google addwords and sitemaps support.
 -   Support for invoice, packing slip and shipping label creation and printing.
 -   Fine grained ssl support to secure certain urls in your store.
 -   Store product search functionality.
 -   Tax calculations based on your unique requirements.
+-   Flexible pricing and discounting model.
+-   Mailman integration for newsletter management.
+-   Flexible email notifications for purchases and account signup.
+-   Account management features (logout, password reset and change password functionality).
+-   User configurable shipping modules.
+-   Regression test suite to catch bugs early.
 
-Models are currently in place to allow additional shipping and payment options 
-as well as flexible discount options.
-
-Features in Development
------------------------
-
-
-Features under Consideration
+Features for future releases
 ----------------------------
+
 -   Support for virtual products
 -   Additional payment modules
+-   Multiple price tiers
 

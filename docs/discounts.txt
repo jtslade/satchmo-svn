@@ -20,7 +20,7 @@ Creating Discounts
 A discount code is easy to setup in Satchmo using the following fields:
 
 Description
-    A simple characterization of the discount.  For example, "New User Discount" or "Repeat Customer Promotion"
+    A simple characterization of the discount.  For example, "New User Discount" or "Repeat Customer Promotion."
     
 Code
     The unique identifier a user would enter to activate this discount.
@@ -47,10 +47,13 @@ End Date
     The date when this discount is no longer valid.
     
 Active
-    Boolean flag you can set to make it active.  If you want to create a discount in advance but hold off on making it available, you can use this flag.
+    A flag you can set to make it active.  If you want to create a discount in advance but hold off on making it available, you can use this flag.
     
 Free Shipping
     Whether or not this discount allows the user to not have to pay shipping charges.
+    
+Include Shipping
+    A flag to determine if shipping costs should be affected by the discount.
     
 Valid Products
     A list of all the products this discount is valid for.

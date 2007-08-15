@@ -26,6 +26,10 @@ The following packages are optional but encouraged:
 
 - `PyYaml`_ (For unit tests)
 
+For more complex email verification process, you will need:
+
+- `Django Registration`_
+
 The following Internationalization data can be automatically installed by the
 Satchmo scripts.
 
@@ -43,3 +47,4 @@ Satchmo scripts.
 .. _Authorize.net: http://www.authorize.net/
 .. _Tiny RML2PDF: http://www.openreport.org/index.py/static/page/trml2pdf
 .. _download link: http://tinyforge.org/frs/download.php/1/trml2pdf.tar.gz
+.. _Django Registration: http://code.google.com/p/django-registration/

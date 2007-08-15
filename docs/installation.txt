@@ -45,7 +45,10 @@ If Satchmo is part of another Django app (follow step 5):
 5. Modify you project settings.py file so that it has the following line at the end::
 
         from local_settings import *
-    
+
+Now that the basic application settings are complete, you will need to
+configure the satchmo specific items stored in local_settings.py::
+
 6.  Create your customized local_settings.py file::
     
         cp local_settings-customize.py local_settings.py
@@ -60,7 +63,7 @@ If Satchmo is part of another Django app (follow step 5):
         Any other values that are applicable to your setup
 
 .. warning::
-    The next step can erase data in the satchmo database. Be sure to have a backup of any critical data
+    The next step can erase data in the satchmo database. Be sure to have a backup of any critical data.
 
 8.  Load the sample data::
 

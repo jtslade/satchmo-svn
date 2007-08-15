@@ -45,8 +45,14 @@ To enable handling, first add "satchmo.newsletter" to your list of installed mod
 
 Next, choose the way you want to handle the subscriptions.  Currently we have two working newsletter plugins:
 
-	- ``satchmo.newsletter.simple``  - This just tracks subscriptions in a database table for your querying pleasure.  You can then export that list to whatever mailing manager you want to use.
-	- ``satchmo.newsletter.mailman`` - This is an integration module which works with Gnu Mailman (http://www.gnu.org/software/mailman/).  This is particularly convenient if you have a Cpanel VPS system, since Mailman is installed by default on most such systems.  To use this, you need to make sure Mailman is on your PYTHONPATH and you should have already set up a mailing list as an announce-only list (http://www.modwest.com/help/kb13-195.html).  You'll need to enter the name of the list in your local settings file.
+	- ``satchmo.newsletter.simple``  - This just tracks subscriptions in a database table for your querying pleasure.  
+        You can then export that list to whatever mailing manager you want to use.
+	- ``satchmo.newsletter.mailman`` - This is an integration module which works with 
+       Gnu Mailman (http://www.gnu.org/software/mailman/).  This is particularly convenient 
+       if you have a Cpanel VPS system, since Mailman is installed by default on most such systems.  
+       To use this, you need to make sure Mailman is on your PYTHONPATH and you should have already 
+       set up a mailing list as an announce-only list (http://www.modwest.com/help/kb13-195.html).  
+       You'll need to enter the name of the list in your local settings file.
 
 Enable your chosen module by adding the following line to your local_settings file::
 	
