@@ -44,13 +44,13 @@ class Organization(models.Model):
     """
     An organization can be a company, government or any kind of group.
     """
-    name = models.CharField(_("Name"), maxlength=50, core=True)
-    type = models.CharField(_("Type"), maxlength=30,
+    name = models.CharField(_("Name"), max_length=50, core=True)
+    type = models.CharField(_("Type"), max_length=30,
         choices=ORGANIZATION_CHOICES)
-    role = models.CharField(_("Role"), maxlength=30,
+    role = models.CharField(_("Role"), max_length=30,
         choices=ORGANIZATION_ROLE_CHOICES)
     create_date = models.DateField(_("Creation Date"))
-    notes = models.TextField(_("Notes"), maxlength=200, blank=True, null=True)
+    notes = models.TextField(_("Notes"), max_length=200, blank=True, null=True)
 
     def __unicode__(self):
         return self.name
@@ -74,17 +74,17 @@ class Contact(models.Model):
     A customer, supplier or any individual that a store owner might interact
     with.
     """
-    first_name = models.CharField(_("First name"), maxlength=30, core=True)
-    last_name = models.CharField(_("Last name"), maxlength=30, core=True)
+    first_name = models.CharField(_("First name"), max_length=30, core=True)
+    last_name = models.CharField(_("Last name"), max_length=30, core=True)
     user = models.ForeignKey(User, unique=True, blank=True, null=True,
         edit_inline=models.TABULAR, num_in_admin=1, min_num_in_admin=1,
         max_num_in_admin=1, num_extra_on_change=0)
-    role = models.CharField(_("Role"), maxlength=20, blank=True, null=True,
+    role = models.CharField(_("Role"), max_length=20, blank=True, null=True,
         choices=CONTACT_CHOICES)
     organization = models.ForeignKey(Organization, blank=True, null=True)
     dob = models.DateField(_("Date of birth"), blank=True, null=True)
     email = models.EmailField(_("Email"), blank=True)
-    notes = models.TextField(_("Notes"), maxlength=500, blank=True)
+    notes = models.TextField(_("Notes"), max_length=500, blank=True)
     create_date = models.DateField(_("Creation date"))
     newsletter = models.BooleanField(_("Newsletter"), null=True, default=False);
 
@@ -155,9 +155,9 @@ class Interaction(models.Model):
     or in-person interactions.
     """
     contact = models.ForeignKey(Contact)
-    type = models.CharField(_("Type"), maxlength=30,choices=INTERACTION_CHOICES)
+    type = models.CharField(_("Type"), max_length=30,choices=INTERACTION_CHOICES)
     date_time = models.DateTimeField(_("Date and Time"), core=True)
-    description = models.TextField(_("Description"), maxlength=200)
+    description = models.TextField(_("Description"), max_length=200)
 
     def __unicode__(self):
         return u'%s - %s' % (self.contact.full_name, self.type)
@@ -176,8 +176,8 @@ class PhoneNumber(models.Model):
     contact = models.ForeignKey(Contact, edit_inline=models.TABULAR,
         num_in_admin=1)
     type = models.CharField(_("Description"), choices=PHONE_CHOICES,
-        maxlength=20, blank=True)
-    phone = models.CharField(_("Phone Number"), blank=True, maxlength=12,
+        max_length=20, blank=True)
+    phone = models.CharField(_("Phone Number"), blank=True, max_length=12,
         core=True)
     primary = models.BooleanField(_("Primary"), default=False)
 
@@ -210,14 +210,14 @@ class AddressBook(models.Model):
     """
     contact = models.ForeignKey(Contact,
         edit_inline=models.STACKED, num_in_admin=1)
-    description = models.CharField(_("Description"), maxlength=20, blank=True,
+    description = models.CharField(_("Description"), max_length=20, blank=True,
         help_text=_('Description of address - Home, Office, Warehouse, etc.',))
-    street1 = models.CharField(_("Street"), core=True, maxlength=50)
-    street2 = models.CharField(_("Street"), maxlength=50, blank=True)
-    city = models.CharField(_("City"), maxlength=50)
-    state = models.CharField(_("State"), maxlength=10)
-    postal_code = models.CharField(_("Zip Code"), maxlength=10)
-    country = models.CharField(_("Country"), maxlength=50, blank=True)
+    street1 = models.CharField(_("Street"), core=True, max_length=50)
+    street2 = models.CharField(_("Street"), max_length=50, blank=True)
+    city = models.CharField(_("City"), max_length=50)
+    state = models.CharField(_("State"), max_length=10)
+    postal_code = models.CharField(_("Zip Code"), max_length=10)
+    country = models.CharField(_("Country"), max_length=50, blank=True)
     is_default_shipping = models.BooleanField(_("Default Shipping Address"),
         default=False)
     is_default_billing = models.BooleanField(_("Default Billing Address"),
@@ -279,19 +279,19 @@ class Order(models.Model):
     placed.
     """
     contact = models.ForeignKey(Contact)
-    ship_street1 = models.CharField(_("Street"), maxlength=50, blank=True)
-    ship_street2 = models.CharField(_("Street"), maxlength=50, blank=True)
-    ship_city = models.CharField(_("City"), maxlength=50, blank=True)
-    ship_state = models.CharField(_("State"), maxlength=10, blank=True)
-    ship_postal_code = models.CharField(_("Zip Code"), maxlength=10, blank=True)
-    ship_country = models.CharField(_("Country"), maxlength=50, blank=True)
-    bill_street1 = models.CharField(_("Street"), maxlength=50, blank=True)
-    bill_street2 = models.CharField(_("Street"), maxlength=50, blank=True)
-    bill_city = models.CharField(_("City"), maxlength=50, blank=True)
-    bill_state = models.CharField(_("State"), maxlength=10, blank=True)
-    bill_postal_code = models.CharField(_("Zip Code"), maxlength=10, blank=True)
-    bill_country = models.CharField(_("Country"), maxlength=50, blank=True)
-    notes = models.TextField(_("Notes"), maxlength=100, blank=True, null=True)
+    ship_street1 = models.CharField(_("Street"), max_length=50, blank=True)
+    ship_street2 = models.CharField(_("Street"), max_length=50, blank=True)
+    ship_city = models.CharField(_("City"), max_length=50, blank=True)
+    ship_state = models.CharField(_("State"), max_length=10, blank=True)
+    ship_postal_code = models.CharField(_("Zip Code"), max_length=10, blank=True)
+    ship_country = models.CharField(_("Country"), max_length=50, blank=True)
+    bill_street1 = models.CharField(_("Street"), max_length=50, blank=True)
+    bill_street2 = models.CharField(_("Street"), max_length=50, blank=True)
+    bill_city = models.CharField(_("City"), max_length=50, blank=True)
+    bill_state = models.CharField(_("State"), max_length=10, blank=True)
+    bill_postal_code = models.CharField(_("Zip Code"), max_length=10, blank=True)
+    bill_country = models.CharField(_("Country"), max_length=50, blank=True)
+    notes = models.TextField(_("Notes"), max_length=100, blank=True, null=True)
     sub_total = models.DecimalField(_("Subtotal"),
         max_digits=6, decimal_places=2, blank=True, null=True)
     total = models.DecimalField(_("Total"),
@@ -299,21 +299,21 @@ class Order(models.Model):
     discount = models.DecimalField(_("Discount"),
         max_digits=6, decimal_places=2, blank=True, null=True)
     payment= models.CharField(_("Payment"),
-        choices=PAYMENT_CHOICES, maxlength=25, blank=True)
+        choices=PAYMENT_CHOICES, max_length=25, blank=True)
     method = models.CharField(_("Payment method"),
-        choices=ORDER_CHOICES, maxlength=50, blank=True)
+        choices=ORDER_CHOICES, max_length=50, blank=True)
     shipping_description = models.CharField(_("Shipping Description"),
-        maxlength=50, blank=True, null=True)
+        max_length=50, blank=True, null=True)
     shipping_method = models.CharField(_("Shipping Method"),
-        maxlength=50, blank=True, null=True)
+        max_length=50, blank=True, null=True)
     shipping_model = models.CharField(_("Shipping Models"),
-        choices=activeShippingModules, maxlength=30, blank=True, null=True)
+        choices=activeShippingModules, max_length=30, blank=True, null=True)
     shipping_cost = models.DecimalField(_("Shipping Cost"),
         max_digits=6, decimal_places=2, blank=True, null=True)
     tax = models.DecimalField(_("Tax"),
         max_digits=6, decimal_places=2, blank=True, null=True)
     timestamp = models.DateTimeField(_("Timestamp"), blank=True, null=True)
-    status = models.CharField(_("Status"), maxlength=20, choices=ORDER_STATUS,
+    status = models.CharField(_("Status"), max_length=20, choices=ORDER_STATUS,
         core=True, blank=True, help_text=_("This is set automatically."))
 
     def __unicode__(self):
@@ -471,8 +471,8 @@ class OrderStatus(models.Model):
     """
     order = models.ForeignKey(Order, edit_inline=models.STACKED, num_in_admin=1)
     status = models.CharField(_("Status"),
-        maxlength=20, choices=ORDER_STATUS, core=True, blank=True)
-    notes = models.CharField(_("Notes"), maxlength=100, blank=True)
+        max_length=20, choices=ORDER_STATUS, core=True, blank=True)
+    notes = models.CharField(_("Notes"), max_length=100, blank=True)
     timestamp = models.DateTimeField(_("Timestamp"))
 
     def __unicode__(self):

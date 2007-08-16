@@ -87,12 +87,12 @@ class Language(models.Model):
 'synonym' field is used for some languages that are called with
 another name too.
     """
-    name = models.CharField(_('language name'), maxlength=36,
+    name = models.CharField(_('language name'), max_length=36,
         unique=True)
-    iso3_code = models.CharField(_('alpha-3 ISO code'), maxlength=3,
+    iso3_code = models.CharField(_('alpha-3 ISO code'), max_length=3,
         primary_key=True)
-    iso2_code = models.CharField(_('alpha-2 ISO code'), maxlength=2)
-    synonym = models.CharField(_('language synonym'), maxlength=32)
+    iso2_code = models.CharField(_('alpha-2 ISO code'), max_length=2)
+    synonym = models.CharField(_('language synonym'), max_length=32)
     display = models.BooleanField (_('display'), default=False,
         help_text=_('Designates whether the language is shown.'))
 
@@ -116,16 +116,16 @@ class Country(models.Model):
 
 iso2_code and iso3_code are ISO 3166-1 codes.
     """
-    name = models.CharField(_('country name'), maxlength=48,
+    name = models.CharField(_('country name'), max_length=48,
         unique=True)
-    iso3_code = models.CharField(_('alpha-3 ISO code'), maxlength=3,
+    iso3_code = models.CharField(_('alpha-3 ISO code'), max_length=3,
         primary_key=True)
-    iso2_code = models.CharField(_('alpha-2 ISO code'), maxlength=2,
+    iso2_code = models.CharField(_('alpha-2 ISO code'), max_length=2,
         unique=True)
-    region = models.CharField(_('geographical region'), maxlength=5,
+    region = models.CharField(_('geographical region'), max_length=5,
         choices=REGION)
-    territory_of = models.CharField(_('territory of'), maxlength=3)
-    adm_area = models.CharField(_('administrative area'), maxlength=2,
+    territory_of = models.CharField(_('territory of'), max_length=3)
+    adm_area = models.CharField(_('administrative area'), max_length=2,
         choices=AREA)
     display = models.BooleanField(_('display'), default=True,
         help_text=_('Designates whether the country is shown.'))
@@ -161,9 +161,9 @@ class CountryLanguage(models.Model):
     """
     country = models.ForeignKey(Country, edit_inline=models.TABULAR)
     language = models.ForeignKey(Language, core=True)
-    lang_type = models.CharField(_('language type'), maxlength=1,
+    lang_type = models.CharField(_('language type'), max_length=1,
         choices=LANGUAGE_TYPES)
-    identifier = models.CharField(_('identifier'), maxlength=6,
+    identifier = models.CharField(_('identifier'), max_length=6,
         primary_key=True)
 
     class Meta:
@@ -188,12 +188,12 @@ In others it is omitted, and in others it is either optional,
 or needed in some cases but omitted in others.
     """
     country = models.ForeignKey(Country, edit_inline=models.TABULAR)
-    name_id = models.CharField(_('name identifier'), maxlength=6,
+    name_id = models.CharField(_('name identifier'), max_length=6,
         primary_key=True)
-    name = models.CharField(_('area name'), maxlength=40, core=True)
-    alt_name = models.CharField(_('area alternate name'), maxlength=32)
-    abbrev = models.CharField(_('postal abbreviation'), maxlength=3)
-    reg_area = models.CharField(_('regional administrative area'), maxlength=2,
+    name = models.CharField(_('area name'), max_length=40, core=True)
+    alt_name = models.CharField(_('area alternate name'), max_length=32)
+    abbrev = models.CharField(_('postal abbreviation'), max_length=3)
+    reg_area = models.CharField(_('regional administrative area'), max_length=2,
         choices=AREA)
 
     class Meta:
@@ -216,8 +216,8 @@ class TimeZone(models.Model):
     """The time zones for each country or territory.
     """
     country = models.ForeignKey(Country, edit_inline=models.TABULAR)
-    tz = models.CharField(_('time zone'), maxlength=32, core=True)
-    comment = models.CharField(_('comment'), maxlength=88)
+    tz = models.CharField(_('time zone'), max_length=32, core=True)
+    comment = models.CharField(_('comment'), max_length=88)
 
     class Meta:
         verbose_name = _('time zone')
@@ -237,13 +237,13 @@ class Phone(models.Model):
     """
     country = models.ForeignKey(Country, edit_inline=models.TABULAR)
     code = models.PositiveSmallIntegerField(_('country code'), null=True)
-    ln_area = models.CharField(_('length of area code'), maxlength=10, core=True)
+    ln_area = models.CharField(_('length of area code'), max_length=10, core=True)
     ln_sn = models.CharField(_('length of subscriber number (SN)'),
-        maxlength=8)
+        max_length=8)
     ln_area_sn = models.CharField(_('length of area code and SN'),
-        maxlength=8)
-    nat_prefix = models.CharField(_('national prefix'), maxlength=2)
-    int_prefix = models.CharField(_('international prefix'), maxlength=4)
+        max_length=8)
+    nat_prefix = models.CharField(_('national prefix'), max_length=2)
+    int_prefix = models.CharField(_('international prefix'), max_length=4)
 
     class Meta:
         verbose_name = _('phone')

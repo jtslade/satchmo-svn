@@ -19,7 +19,7 @@ class Category(models.Model):
     """
     Basic hierarchical category model for storing products
     """
-    name = models.CharField(_("Name"), core=True, maxlength=200)
+    name = models.CharField(_("Name"), core=True, max_length=200)
     slug = models.SlugField(prepopulate_from=('name',),
         help_text=_("Used for URLs"))
     parent = models.ForeignKey('self', blank=True, null=True,
@@ -137,9 +137,9 @@ class OptionGroup(models.Model):
     A set of options that can be applied to an item.
     Examples - Size, Color, Shape, etc
     """
-    name = models.CharField(_("Name of Option Group"), maxlength=50, core=True,
+    name = models.CharField(_("Name of Option Group"), max_length=50, core=True,
         help_text=_("This will be the text displayed on the product page."))
-    description = models.CharField(_("Detailed Description"), maxlength=100,
+    description = models.CharField(_("Detailed Description"), max_length=100,
         blank=True,
         help_text=_("Further description of this group (i.e. shirt size vs shoe size)."))
     sort_order = models.IntegerField(_("Sort Order"),
@@ -173,8 +173,8 @@ class Option(models.Model):
     objects = OptionManager()
     optionGroup = models.ForeignKey(OptionGroup, edit_inline=models.TABULAR,
         num_in_admin=5)
-    name = models.CharField(_("Display value"), maxlength=50, core=True)
-    value = models.SlugField(_("Stored value"), maxlength=50,
+    name = models.CharField(_("Display value"), max_length=50, core=True)
+    value = models.SlugField(_("Stored value"), max_length=50,
         prepopulate_from=('name',))
     price_change = models.DecimalField(_("Price Change"), null=True, blank=True,
         max_digits=10, decimal_places=2,
@@ -206,15 +206,15 @@ class Product(models.Model):
     """
     Root class for all Products
     """
-    name = models.CharField(_("Full Name"), maxlength=255)
+    name = models.CharField(_("Full Name"), max_length=255)
     slug = models.SlugField(_("Slug Name"), unique=True, prepopulate_from=('name',), core=True, blank=False)
-    short_description = models.TextField(_("Short description of product"), help_text=_("This should be a 1 or 2 line description for use in product listing screens"), maxlength=200, default='', blank=True)
+    short_description = models.TextField(_("Short description of product"), help_text=_("This should be a 1 or 2 line description for use in product listing screens"), max_length=200, default='', blank=True)
     description = models.TextField(_("Description of product"), help_text=_("This field can contain HTML and should be a few paragraphs explaining the background of the product, and anything that would help the potential customer make their purchase."), default='', blank=True)
     category = models.ManyToManyField(Category, filter_interface=True, blank=True)
     items_in_stock = models.IntegerField(_("Number in stock"), default=0)
     #TODO: Add this, useful for things like DownloadableProducts that wont have stock
     #require_stock = models.BooleanField(default=True)
-    meta = models.TextField(_("Meta Description"), maxlength=200, blank=True, null=True, help_text=_("Meta description for this product"))
+    meta = models.TextField(_("Meta Description"), max_length=200, blank=True, null=True, help_text=_("Meta description for this product"))
     date_added = models.DateField(null=True, blank=True)
     active = models.BooleanField(_("Is product active?"), default=True, help_text=_("This will determine whether or not this product will appear on the site"))
     featured = models.BooleanField(_("Featured Item"), default=False, help_text=_("Featured items will show on the front page"))
@@ -639,8 +639,8 @@ class ProductAttribute(models.Model):
     whatever you want to your Products.
     """
     product = models.ForeignKey(Product, edit_inline=models.TABULAR, num_in_admin=1)
-    name = models.SlugField(_("Attribute Name"), maxlength=100, core=True)
-    value = models.CharField(_("Value"), maxlength=255)
+    name = models.SlugField(_("Attribute Name"), max_length=100, core=True)
+    value = models.CharField(_("Value"), max_length=255)
 
 class Price(models.Model):
     """
@@ -688,7 +688,7 @@ class ProductImage(models.Model):
         edit_inline=models.TABULAR, num_in_admin=3)
     picture = ImageWithThumbnailField(upload_to="./images",
         name_field="_filename") #Media root is automatically prepended
-    caption = models.CharField(_("Optional caption"), maxlength=100,
+    caption = models.CharField(_("Optional caption"), max_length=100,
         null=True, blank=True)
     sort = models.IntegerField(_("Sort Order"), core=True)
 

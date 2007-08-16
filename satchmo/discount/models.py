@@ -18,8 +18,8 @@ class Discount(models.Model):
     Allows for multiple types of discounts including % and dollar off.
     Also allows finite number of uses.
     """
-    description = models.CharField(_("Description"), maxlength=100)
-    code = models.CharField(_("Discount Code"), maxlength=20, unique=True,
+    description = models.CharField(_("Description"), max_length=100)
+    code = models.CharField(_("Discount Code"), max_length=20, unique=True,
         help_text=_("Coupon Code"))
     amount = models.DecimalField(_("Discount Amount"), decimal_places=2,
         max_digits=4, blank=True, null=True, validator_list=[amount_validator],

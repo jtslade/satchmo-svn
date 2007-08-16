@@ -21,16 +21,16 @@ class Config(models.Model):
     configure various store behaviors
     """
     site = models.OneToOneField(Site)
-    store_name = models.CharField(_("Store Name"),maxlength=100, unique=True)
+    store_name = models.CharField(_("Store Name"),max_length=100, unique=True)
     store_description = models.TextField(_("Description"), blank=True, null=True)
     store_email = models.EmailField(_("Email"), blank=True, null=True)
-    street1=models.CharField(_("Street"),maxlength=50, blank=True, null=True)
-    street2=models.CharField(_("Street"), maxlength=50, blank=True, null=True)
-    city=models.CharField(_("City"), maxlength=50, blank=True, null=True)
-    state=models.CharField(_("State"), maxlength=30, blank=True, null=True)
-    postal_code=models.CharField(_("Zip Code"), blank=True, null=True, maxlength=9)
+    street1=models.CharField(_("Street"),max_length=50, blank=True, null=True)
+    street2=models.CharField(_("Street"), max_length=50, blank=True, null=True)
+    city=models.CharField(_("City"), max_length=50, blank=True, null=True)
+    state=models.CharField(_("State"), max_length=30, blank=True, null=True)
+    postal_code=models.CharField(_("Zip Code"), blank=True, null=True, max_length=9)
     country=models.ForeignKey(Country, blank=True, null=True)
-    phone = models.CharField(_("Phone Number"), blank=True, null=True, maxlength=12)
+    phone = models.CharField(_("Phone Number"), blank=True, null=True, max_length=12)
     no_stock_checkout = models.BooleanField(_("Purchase item not in stock?"))
 
     def __unicode__(self):
@@ -49,7 +49,7 @@ class Cart(models.Model):
     The desc isn't used but it is needed to make the admin interface work appropriately
     Could be used for debugging
     """
-    desc = models.CharField(_("Description"), blank=True, null=True, maxlength=10)
+    desc = models.CharField(_("Description"), blank=True, null=True, max_length=10)
     date_time_created = models.DateTimeField(_("Creation Date"))
     customer = models.ForeignKey(Contact, blank=True, null=True)
 

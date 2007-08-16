@@ -14,9 +14,9 @@ class TaxClass(models.Model):
     might vary based on the type of product.  In the US, clothing could be
     taxed at a different rate than food items.
     """
-    title = models.CharField(_("Title"), maxlength=20,
+    title = models.CharField(_("Title"), max_length=20,
         help_text=_("Displayed title of this tax."))
-    description = models.CharField(_("Description"), maxlength=30,
+    description = models.CharField(_("Description"), max_length=30,
         help_text=_("Description of products that would be taxed."))
 
     def __unicode__(self):

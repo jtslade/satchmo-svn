@@ -14,8 +14,8 @@ class RawItem(models.Model):
     shirt that you process to make your Item
     """
     supplier = models.ForeignKey(Organization)
-    supplier_num = models.CharField(_("Supplier ID"), maxlength=50)
-    description = models.CharField(_("Description"), maxlength=200)
+    supplier_num = models.CharField(_("Supplier ID"), max_length=50)
+    description = models.CharField(_("Description"), max_length=200)
     unit_cost = models.DecimalField(_("Unit Cost"), max_digits=6, decimal_places=2)
     inventory = models.IntegerField(_("Inventory"))
     
@@ -39,7 +39,7 @@ class SupplierOrder(models.Model):
     order_subtotal = models.DecimalField(_("Subtotal"), max_digits=6, decimal_places=2)
     order_shipping = models.DecimalField(_("Shipping"), max_digits=6, decimal_places=2)
     order_tax = models.DecimalField(_("Tax"), max_digits=6, decimal_places=2)
-    order_notes = models.CharField(_("Notes"), maxlength=200, blank=True)
+    order_notes = models.CharField(_("Notes"), max_length=200, blank=True)
     order_total = models.DecimalField(_("Total"), max_digits=6, decimal_places=2)
     
     def __unicode__(self):
@@ -89,8 +89,8 @@ class SupplierOrderStatus(models.Model):
     placed and subsequently processed and received.
     """
     order = models.ForeignKey(SupplierOrder, edit_inline=models.STACKED, num_in_admin=1)
-    status = models.CharField(_("Status"), maxlength=20, choices=SUPPLIERORDER_STATUS, core=True, blank=True)
-    notes = models.CharField(_("Notes"), maxlength=100, blank=True)
+    status = models.CharField(_("Status"), max_length=20, choices=SUPPLIERORDER_STATUS, core=True, blank=True)
+    notes = models.CharField(_("Notes"), max_length=100, blank=True)
     date = models.DateTimeField(blank=True)
     
     def __unicode__(self):

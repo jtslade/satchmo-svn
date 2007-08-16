@@ -19,10 +19,10 @@ class PaymentOption(models.Model):
     If there are multiple options - CC, Cash, COD, etc this class allows
     configuration.
     """
-    description = models.CharField(_("Description"), maxlength=20)
+    description = models.CharField(_("Description"), max_length=20)
     active = models.BooleanField(_("Active"), 
         help_text=_("Should this be displayed as an option for the user?"))
-    optionName = models.CharField(_("Option Name"), maxlength=20, 
+    optionName = models.CharField(_("Option Name"), max_length=20, 
         choices = PAYMENTCHOICES, unique=True, 
         help_text=_("The class name as defined in payment.py"))
     sortOrder = models.IntegerField(_("Sort Order"))
@@ -42,12 +42,12 @@ class CreditCardDetail(models.Model):
     """
     order = models.ForeignKey(Order, unique=True, edit_inline=True,
         num_in_admin=1, max_num_in_admin=1)
-    creditType = models.CharField(_("Credit Card Type"), maxlength=16,
+    creditType = models.CharField(_("Credit Card Type"), max_length=16,
         choices=CREDITCHOICES)
     displayCC = models.CharField(_("CC Number (Last 4 digits)"),
-        maxlength=4, core=True)
+        max_length=4, core=True)
     encryptedCC = models.CharField(_("Encrypted Credit Card"),
-        maxlength=40, blank=True, null=True, editable=False)
+        max_length=40, blank=True, null=True, editable=False)
     expireMonth = models.IntegerField(_("Expiration Month"))
     expireYear = models.IntegerField(_("Expiration Year"))
     ccv = models.IntegerField(_("CCV"), blank=True, null=True)
