@@ -16,7 +16,7 @@ if not os.environ.has_key("DJANGO_SETTINGS_MODULE"):
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
-from django.core.management.commands import reset, syncdb
+from django.core.management import call_command
 from django.db import models
 
 # Satchmo apps, sorted by their model dependencies.
@@ -56,7 +56,7 @@ def delete_satchmo():
             app = models.get_app(app_name.split('.')[-1], emptyOK=True)
             if app is not None:
                 try:
-                    reset.Command().handle_app(app, interactive=False)
+                    call_command('reset', app, interactive=False)
                 except:
                     print "Failed to delete application %s." % app_name
 
@@ -100,7 +100,7 @@ def delete_db(settings):
 
 
 def init_and_install():
-    syncdb.Command().handle_noargs()
+    call_command('syncdb')
     
 def load_data():
     from satchmo.contact.models import Contact, AddressBook, PhoneNumber
