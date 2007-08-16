@@ -8,18 +8,15 @@ import string
 import csv
 import tarfile
 import shutil
-#sys.path.insert(0, "django-src-here")
-#sys.path.insert(0, "satchmo-src-here")
 
 if not os.environ.has_key("DJANGO_SETTINGS_MODULE"):
     from settings import DJANGO_SETTINGS_MODULE
     os.environ["DJANGO_SETTINGS_MODULE"]=DJANGO_SETTINGS_MODULE
 
-import django.core.management, django.core
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
-from django.core.management import reset
+from django.core.management.commands import reset, syncdb
 from django.db import models
 
 # Satchmo apps, sorted by their model dependencies.
@@ -59,7 +56,7 @@ def delete_satchmo():
             app = models.get_app(app_name.split('.')[-1], emptyOK=True)
             if app is not None:
                 try:
-                    reset(app, interactive=False)
+                    reset.Command().handle_app(app, interactive=False)
                 except:
                     print "Failed to delete application %s." % app_name
 
@@ -103,7 +100,7 @@ def delete_db(settings):
 
 
 def init_and_install():
-    django.core.management.syncdb()
+    syncdb.Command().handle_noargs()
     
 def load_data():
     from satchmo.contact.models import Contact, AddressBook, PhoneNumber

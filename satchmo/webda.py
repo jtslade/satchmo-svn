@@ -21,7 +21,7 @@ import sys
 
 try:
     from django.conf import settings  # 'conf.settings' is passed to syncdb().
-    from django.core.management import syncdb
+    from django.core.management.commands import syncdb
     from django.db import transaction
 except ImportError, err:
     sys.stderr.write("Error: %s. Are you sure Django is installed?\n" % err)
@@ -441,7 +441,7 @@ def setup_environ(project_dir, i18n_dirname, set_file):
         # since that is only necessary create the tables for I18n.
         settings.INSTALLED_APPS = []
         settings.INSTALLED_APPS.append("%s" % i18n_app)
-        syncdb()
+        syncdb.Command().handle_noargs()
 
     return i18n_model
 
