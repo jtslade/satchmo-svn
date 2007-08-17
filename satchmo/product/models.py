@@ -222,8 +222,8 @@ class Product(models.Model):
     length = models.DecimalField(_("Length"), max_digits=6, decimal_places=2, null=True, blank=True)
     width = models.DecimalField(_("Width"), max_digits=6, decimal_places=2, null=True, blank=True)
     height = models.DecimalField(_("Height"), max_digits=6, decimal_places=2, null=True, blank=True)
-    relatedItems = models.ManyToManyField('self', blank=True, null=True, related_name='related')
-    alsoPurchased = models.ManyToManyField('self', blank=True, null=True, related_name='previouslyPurchased')
+    related_items = models.ManyToManyField('self', blank=True, null=True, related_name='related')
+    also_purchased = models.ManyToManyField('self', blank=True, null=True, related_name='previouslyPurchased')
     taxable = models.BooleanField(default=False)
     taxClass = models.ForeignKey(TaxClass, blank=True, null=True, help_text=_("If it is taxable, what kind of tax?"))
 
@@ -330,7 +330,7 @@ class Product(models.Model):
         ('Meta Data', {'fields': ('meta',), 'classes': 'collapse'}),
         ('Item Dimensions', {'fields': (('length', 'width','height',),'weight'), 'classes': 'collapse'}),
         ('Tax', {'fields':('taxable', 'taxClass'), 'classes': 'collapse'}),
-        ('Related Products', {'fields':('relatedItems','alsoPurchased'),'classes':'collapse'}),
+        ('Related Products', {'fields':('related_items','also_purchased'),'classes':'collapse'}),
         )
 
     class Meta:

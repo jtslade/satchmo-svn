@@ -25,7 +25,7 @@
   pk: '7'
 - fields:
     active: true
-    alsoPurchased: []
+    also_purchased: []
     category: [!!python/long '1']
     date_added: 2007-05-30
     description: Really cool shirt
@@ -36,7 +36,7 @@
     length: null
     meta: null
     slug: DJ-Rocks
-    relatedItems: []
+    related_items: []
     short_description: ''
     taxClass: null
     taxable: false
@@ -46,7 +46,7 @@
   pk: '1'
 - fields:
     active: true
-    alsoPurchased: []
+    also_purchased: []
     category: []
     date_added: 2007-05-30
     description: ''
@@ -57,7 +57,7 @@
     length: null
     meta: null
     slug: DJ-Rocks_L_B
-    relatedItems: []
+    related_items: []
     short_description: ''
     taxClass: null
     taxable: false
@@ -67,7 +67,7 @@
   pk: '12'
 - fields:
     active: true
-    alsoPurchased: []
+    also_purchased: []
     category: []
     date_added: 2007-05-30
     description: ''
@@ -78,7 +78,7 @@
     length: null
     meta: null
     slug: DJ-Rocks_L_BL
-    relatedItems: []
+    related_items: []
     short_description: ''
     taxClass: null
     taxable: false
@@ -88,7 +88,7 @@
   pk: '14'
 - fields:
     active: true
-    alsoPurchased: []
+    also_purchased: []
     category: []
     date_added: 2007-05-30
     description: ''
@@ -99,7 +99,7 @@
     length: null
     meta: null
     slug: DJ-Rocks_L_W
-    relatedItems: []
+    related_items: []
     short_description: ''
     taxClass: null
     taxable: false
@@ -109,7 +109,7 @@
   pk: '13'
 - fields:
     active: true
-    alsoPurchased: []
+    also_purchased: []
     category: []
     date_added: 2007-05-30
     description: ''
@@ -120,7 +120,7 @@
     length: null
     meta: null
     slug: DJ-Rocks_M_B
-    relatedItems: []
+    related_items: []
     short_description: ''
     taxClass: null
     taxable: false
@@ -130,7 +130,7 @@
   pk: '9'
 - fields:
     active: true
-    alsoPurchased: []
+    also_purchased: []
     category: []
     date_added: 2007-05-30
     description: ''
@@ -141,7 +141,7 @@
     length: null
     meta: null
     slug: DJ-Rocks_M_BL
-    relatedItems: []
+    related_items: []
     short_description: ''
     taxClass: null
     taxable: false
@@ -151,7 +151,7 @@
   pk: '11'
 - fields:
     active: true
-    alsoPurchased: []
+    also_purchased: []
     category: []
     date_added: 2007-05-30
     description: ''
@@ -162,7 +162,7 @@
     length: null
     meta: null
     slug: DJ-Rocks_M_W
-    relatedItems: []
+    related_items: []
     short_description: ''
     taxClass: null
     taxable: false
@@ -172,7 +172,7 @@
   pk: '10'
 - fields:
     active: true
-    alsoPurchased: []
+    also_purchased: []
     category: []
     date_added: 2007-05-30
     description: ''
@@ -183,7 +183,7 @@
     length: null
     meta: null
     slug: DJ-Rocks_S_B
-    relatedItems: []
+    related_items: []
     short_description: ''
     taxClass: null
     taxable: false
@@ -193,7 +193,7 @@
   pk: '6'
 - fields:
     active: true
-    alsoPurchased: []
+    also_purchased: []
     category: []
     date_added: 2007-05-30
     description: ''
@@ -204,7 +204,7 @@
     length: null
     meta: null
     slug: DJ-Rocks_S_BL
-    relatedItems: []
+    related_items: []
     short_description: ''
     taxClass: null
     taxable: false
@@ -214,7 +214,7 @@
   pk: '8'
 - fields:
     active: true
-    alsoPurchased: []
+    also_purchased: []
     category: []
     date_added: 2007-05-30
     description: ''
@@ -225,7 +225,7 @@
     length: null
     meta: null
     slug: DJ-Rocks_S_W
-    relatedItems: []
+    related_items: []
     short_description: ''
     taxClass: null
     taxable: false
@@ -235,7 +235,7 @@
   pk: '7'
 - fields:
     active: true
-    alsoPurchased: []
+    also_purchased: []
     category: [!!python/long '4']
     date_added: 2007-05-30
     description: A neat book.  You should buy it.
@@ -246,7 +246,7 @@
     length: null
     meta: null
     slug: neat-book
-    relatedItems: []
+    related_items: []
     short_description: ''
     taxClass: null
     taxable: false
@@ -256,7 +256,7 @@
   pk: '3'
 - fields:
     active: true
-    alsoPurchased: []
+    also_purchased: []
     category: []
     date_added: 2007-05-30
     description: ''
@@ -267,7 +267,7 @@
     length: null
     meta: null
     slug: neat-book_hard
-    relatedItems: []
+    related_items: []
     short_description: ''
     taxClass: null
     taxable: false
@@ -277,7 +277,7 @@
   pk: '15'
 - fields:
     active: true
-    alsoPurchased: []
+    also_purchased: []
     category: []
     date_added: 2007-05-30
     description: ''
@@ -288,7 +288,7 @@
     length: null
     meta: null
     slug: neat-book_soft
-    relatedItems: []
+    related_items: []
     short_description: ''
     taxClass: null
     taxable: false
@@ -298,7 +298,7 @@
   pk: '16'
 - fields:
     active: true
-    alsoPurchased: []
+    also_purchased: []
     category: []
     date_added: 2007-05-30
     description: ''
@@ -309,7 +309,7 @@
     length: null
     meta: null
     slug: neat-book_tape
-    relatedItems: []
+    related_items: []
     short_description: ''
     taxClass: null
     taxable: false
@@ -319,7 +319,7 @@
   pk: '17'
 #- fields:
 #    active: true
-#    alsoPurchased: []
+#    also_purchased: []
 #    category: [!!python/long '7']
 #    date_added: 2007-05-30
 #    description: Example Configurable/Downloadable product
@@ -330,7 +330,7 @@
 #    length: null
 #    meta: null
 #    slug: neat-software
-#    relatedItems: []
+#    related_items: []
 #    short_description: ''
 #    taxClass: null
 #    taxable: false
@@ -340,7 +340,7 @@
 #  pk: '5'
 - fields:
     active: true
-    alsoPurchased: []
+    also_purchased: []
     category: []
     date_added: 2007-05-30
     description: ''
@@ -351,7 +351,7 @@
     length: null
     meta: null
     slug: neat-software_full
-    relatedItems: []
+    related_items: []
     short_description: ''
     taxClass: null
     taxable: false
@@ -361,7 +361,7 @@
   pk: '21'
 - fields:
     active: true
-    alsoPurchased: []
+    also_purchased: []
     category: []
     date_added: 2007-05-30
     description: ''
@@ -372,7 +372,7 @@
     length: null
     meta: null
     slug: neat-software_upgrade
-    relatedItems: []
+    related_items: []
     short_description: ''
     taxClass: null
     taxable: false
@@ -382,7 +382,7 @@
   pk: '22'
 - fields:
     active: true
-    alsoPurchased: []
+    also_purchased: []
     category: [!!python/long '2']
     date_added: 2007-05-30
     description: Really cool python shirt - One Size Fits All
@@ -393,7 +393,7 @@
     length: null
     meta: null
     slug: PY-Rocks
-    relatedItems: []
+    related_items: []
     short_description: ''
     taxClass: null
     taxable: false
@@ -403,7 +403,7 @@
   pk: '2'
 - fields:
     active: true
-    alsoPurchased: []
+    also_purchased: []
     category: [!!python/long '5']
     date_added: 2007-05-30
     description: Robots try to take over the world.
@@ -414,7 +414,7 @@
     length: null
     meta: null
     slug: robot-attack
-    relatedItems: []
+    related_items: []
     short_description: ''
     taxClass: null
     taxable: false
@@ -424,7 +424,7 @@
   pk: '4'
 - fields:
     active: true
-    alsoPurchased: []
+    also_purchased: []
     category: []
     date_added: 2007-05-30
     description: ''
@@ -435,7 +435,7 @@
     length: null
     meta: null
     slug: robot-attack_hard
-    relatedItems: []
+    related_items: []
     short_description: ''
     taxClass: null
     taxable: false
@@ -445,7 +445,7 @@
   pk: '18'
 - fields:
     active: true
-    alsoPurchased: []
+    also_purchased: []
     category: []
     date_added: 2007-05-30
     description: ''
@@ -456,7 +456,7 @@
     length: null
     meta: null
     slug: robot-attack_soft
-    relatedItems: []
+    related_items: []
     short_description: ''
     taxClass: null
     taxable: false
@@ -466,7 +466,7 @@
   pk: '19'
 - fields:
     active: true
-    alsoPurchased: []
+    also_purchased: []
     category: []
     date_added: 2007-05-30
     description: ''
@@ -477,7 +477,7 @@
     length: null
     meta: null
     slug: robot-attack_tape
-    relatedItems: []
+    related_items: []
     short_description: ''
     taxClass: null
     taxable: false
