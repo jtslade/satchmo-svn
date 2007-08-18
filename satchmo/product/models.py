@@ -239,7 +239,7 @@ class Product(models.Model):
                 parent = self.productvariation.parent
                 img = parent.product.main_image
                 
-            except Product.DoesNotExist:
+            except ProductVariation.DoesNotExist:
                 pass
         
         if not img:
