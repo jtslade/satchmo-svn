@@ -1,13 +1,17 @@
-from django import newforms as forms
-from django.newforms import widgets
-from django.template import RequestContext, Context
-from django.template import loader
 from django import http
-from django.shortcuts import render_to_response
-from django.core.mail import send_mail
+from django import newforms as forms
 from django.conf import settings
+from django.core.mail import send_mail
+from django.newforms import widgets
+from django.shortcuts import render_to_response
+from django.template import loader
+from django.template import RequestContext, Context
 from django.utils.translation import ugettext as _
 from satchmo.shop.models import Config
+from socket import error as SocketError
+import logging
+
+log = logging.getLogger('satchmo.shop.views')
 
 #Choices displayed to the user to categorize the type of contact request
 email_choices = (
@@ -36,8 +40,20 @@ def form(request):
             subject = new_data['subject']
             shop_config = Config.objects.get(site=settings.SITE_ID)
             shop_email = shop_config.store_email
-            send_mail(subject, t.render(c), shop_email,
-                     [shop_email], fail_silently=False)
+            
+            try:
+                email = orderToProcess.contact.email
+                body = t.render(c)
+                send_mail(subject, body, shop_email,
+                         [shop_email], fail_silently=False)
+            except SocketError, e:
+                if settings.DEBUG:
+                    log.error('Error sending mail: %s' % e)
+                    log.warn('Ignoring email error, since you are running in DEBUG mode.  Email was:\nTo:%s\nSubject: %s\n---\n%s', shop_email, subject, body)
+                else:
+                    log.fatal('Error sending mail: %s' % e)
+                    raise IOError('Could not send email, please check to make sure your email settings are correct, and that you are not being blocked by your ISP.')                
+            
             return http.HttpResponseRedirect('%s/contact/thankyou/' % (settings.SHOP_BASE))
     else: #Not a post so create an empty form
         initialData = {}

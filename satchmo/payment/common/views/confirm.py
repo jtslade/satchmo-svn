@@ -4,15 +4,19 @@
 
 from django.conf import settings
 from django.core import urlresolvers
+from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
+from django.template import loader
 from django.template import loader, RequestContext, Context
 from django.utils.translation import ugettext as _
 from satchmo.contact.models import Order, OrderItem, OrderStatus
 from satchmo.shop.models import Cart, CartItem, Config
+from socket import error as SocketError
 import datetime
-from django.template import loader
-from django.core.mail import send_mail
+import logging
+
+log = logging.getLogger('satchmo.payment.common.views')
 
 def credit_confirm_info(request, payment_module):
     """A view which shows and requires credit card selection"""
@@ -61,8 +65,20 @@ def credit_confirm_info(request, payment_module):
             c = Context({'order': orderToProcess,
                           'shop_name': shop_name})
             subject = "Thank you for your order from %s" % shop_name
-            send_mail(subject, t.render(c), shop_email,
-                     [orderToProcess.contact.email], fail_silently=False)
+                     
+            try:
+                email = orderToProcess.contact.email
+                body = t.render(c)
+                send_mail(subject, body, shop_email,
+                          [email], fail_silently=False)
+            except SocketError, e:
+                if settings.DEBUG:
+                    log.error('Error sending mail: %s' % e)
+                    log.warn('Ignoring email error, since you are running in DEBUG mode.  Email was:\nTo:%s\nSubject: %s\n---\n%s', email, subject, body)
+                else:
+                    log.fatal('Error sending mail: %s' % e)
+                    raise IOError('Could not send email, please check to make sure your email settings are correct, and that you are not being blocked by your ISP.')    
+            
             #Redirect to the success page
             url = payment_module.lookup_url('satchmo_checkout-success')
             return HttpResponseRedirect(url)
