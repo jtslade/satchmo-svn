@@ -56,7 +56,8 @@ def delete_satchmo():
             app = models.get_app(app_name.split('.')[-1], emptyOK=True)
             if app is not None:
                 try:
-                    call_command('reset', app, interactive=False)
+                    print "Deleting %s" % app_name
+                    call_command('reset', app_name.split('.')[-1], interactive=False)
                 except:
                     print "Failed to delete application %s." % app_name
 
@@ -100,7 +101,8 @@ def delete_db(settings):
 
 
 def init_and_install():
-    call_command('syncdb')
+    print "Calling syncdb"
+    call_command('syncdb', interactive=True)
     
 def load_data():
     from satchmo.contact.models import Contact, AddressBook, PhoneNumber
