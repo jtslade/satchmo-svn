@@ -92,9 +92,6 @@ SHOP_BASE = '/shop'
 # Currency symbol to use
 CURRENCY = u'$'
 
-#Default country for customers (use ISO2 format, i.e. US, GB, ES, SE)
-COUNTRY_CODE = 'US'
-
 #These are used when loading the test data
 SITE_DOMAIN = "example.com"
 SITE_NAME = "My Site"

@@ -71,14 +71,22 @@
     <tr><td><label for="id_city">{% trans "City" %}*</label></td><td> {{ form.city }}</td></tr>
     {% if form.city.errors %}<tr><td>&nbsp;</td><td>*** {{ form.city.errors|join:", " }}</td></tr>{% endif %}
 
-    <tr><td><label for="id_state">{{country.get_adm_area_display}}*</label></td><td> {{ form.state }}</td></tr>
+    {% if country %}
+      {% if form.fields.state.choices %}
+        <tr><td><label for="id_state">{{ country.get_adm_area_display }}*</label></td><td> {{ form.state }}</td></tr>
+      {% endif %}
+    {% else %}
+      <tr><td><label for="id_state">{% trans "State/Province" %}</label></td><td> {{ form.state }}</td></tr>
+    {% endif %}
     {% if form.state.errors %}<tr><td>&nbsp;</td><td>*** {{ form.state.errors|join:", " }}</td></tr>{% endif %}
 
     <tr><td><label for="id_postal_code">{% trans "Zipcode/Postcode" %}*</label></td><td> {{ form.postal_code }}</td></tr>
     {% if form.postal_code.errors %}<tr><td>&nbsp;</td><td>*** {{ form.postal_code.errors|join:", " }}</td></tr>{% endif %}
 
+    {% if not country %}
     <tr><td><label for="id_country">{% trans "Country" %}</label></td><td> {{ form.country }}</td></tr>
     {% if form.country.errors %}<tr><td>&nbsp;</td><td>*** {{ form.country.errors|join:", " }}</td></tr>{% endif %}
+    {% endif %}
 
 {% if cart.is_shippable %}
     <tr><td colspan="2"><h4>{% trans "Shipping Information" %}</h4></td></tr>
@@ -95,10 +103,16 @@
     <tr><td><label for="id_ship_city">{% trans "City" %}</label></td><td> {{ form.ship_city }}</td></tr>
     {% if form.ship_city.errors %}<tr><td>&nbsp;</td><td>*** {{ form.ship_city.errors|join:", " }}</td></tr>{% endif %}
 
-    <tr><td><label for="id_ship_state">{{country.get_adm_area_display}}</label></td><td> {{ form.ship_state }}</td></tr>
+    {% if country %}
+      {% if form.fields.ship_state.choices %}
+        <tr><td><label for="id_ship_state">{{ country.get_adm_area_display }}*</label></td><td> {{ form.ship_state }}</td></tr>
+      {% endif %}
+    {% else %}
+      <tr><td><label for="id_ship_state">{% trans "State/Province" %}</label></td><td> {{ form.ship_state }}</td></tr>
+    {% endif %}
     {% if form.ship_state.errors %}<tr><td>&nbsp;</td><td>*** {{ form.ship_state.errors|join:", " }}</td></tr>{% endif %}
 
-    <tr><td><label for="id_ship_postal_code">{% trans "Zip code" %}</label></td><td>{{ form.ship_postal_code }}</td></tr>
+    <tr><td><label for="id_ship_postal_code">{% trans "Zipcode/Postcode" %}</label></td><td>{{ form.ship_postal_code }}</td></tr>
     {% if form.ship_postal_code.errors %}<tr><td>&nbsp;</td><td>*** {{ form.ship_postal_code.errors|join:", " }}</td></tr>{% endif %}
 {% endif %}
 

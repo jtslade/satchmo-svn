@@ -32,6 +32,10 @@ class Config(models.Model):
     country=models.ForeignKey(Country, blank=True, null=True)
     phone = models.CharField(_("Phone Number"), blank=True, null=True, max_length=12)
     no_stock_checkout = models.BooleanField(_("Purchase item not in stock?"))
+    in_country_only = models.BooleanField(_("Only sell to in-country customers?"))
+    sales_country = models.ForeignKey(Country, blank=True, null=True,
+                                     related_name='sales_country',
+                                     verbose_name=_("Default country for customers"))
 
     def __unicode__(self):
         return self.store_name

@@ -8,11 +8,11 @@ from django.shortcuts import render_to_response
 from django.template import loader
 from django.template import RequestContext, Context
 from satchmo.contact.models import Contact
-from satchmo.i18n.models import Country
 from satchmo.payment.paymentsettings import PaymentSettings
 from satchmo.shop.models import Cart, CartItem
 from satchmo.shop.views.common import save_contact_info, selection
 from satchmo.payment.common.forms import PaymentContactInfoForm
+from satchmo.contact.common import get_area_country_options
 from django.conf import settings
 
 def contact_info(request):
@@ -26,29 +26,8 @@ def contact_info(request):
     else:
         return render_to_response('checkout/empty_cart.html', RequestContext(request))
 
-    # Get the default country via a get or the config setting
-    if request.GET.get('iso2', False):
-        iso2 = request.GET['iso2']
-    else:
-        try:
-            iso2 = settings.COUNTRY_CODE
-        except AttributeError:
-            iso2 = 'US'
-    default_country = Country.objects.get(iso2_code=iso2)
-    init_data = {'country': default_country.iso2_code}
-    # Create country and state lists
-    areas = [(selection,selection)]
-
-    for area in default_country.area_set.all():
-        value_to_choose = (area.abbrev, area.name)
-        areas.append(value_to_choose)
-    countries = [(default_country.iso2_code, default_country.name)]
-
-    for country in Country.objects.filter(display=True):
-        country_to_choose = (country.iso2_code, country.name)
-        #Make sure the default only shows up once
-        if country.iso2_code <> default_country.iso2_code:
-            countries.append(country_to_choose)
+    init_data = {}
+    areas, countries, only_country = get_area_country_options(request)
 
     contact = None
     if request.session.get('custID'):
@@ -99,7 +78,7 @@ def contact_info(request):
 
     context = RequestContext(request, {
         'form': form,
-        'country': default_country,
+        'country': only_country,
         'paymentmethod_ct': len(PaymentSettings())})
     return render_to_response('checkout/form.html', context)
 

@@ -2,10 +2,13 @@
 Common code used for the checkout process
 """
 from django import newforms as forms
-from satchmo.contact.models import Contact, AddressBook, PhoneNumber, Order
+from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
+from satchmo.contact.models import Contact, AddressBook, PhoneNumber, Order
+from satchmo.i18n.models import Country
+from satchmo.shop.models import Config
 
 selection = _("Please Select")
 
@@ -17,26 +20,45 @@ class ContactInfoForm(forms.Form):
     street1 = forms.CharField(max_length=30)
     street2 = forms.CharField(max_length=30, required=False)
     city = forms.CharField(max_length=30)
-    state = forms.ChoiceField(initial=selection)
-    country = forms.ChoiceField()
+    state = forms.CharField(max_length=30, required=False)
+    country = forms.CharField(max_length=30, required=False)
     postal_code = forms.CharField(max_length=10)
     copy_address = forms.BooleanField(required=False)
     ship_street1 = forms.CharField(max_length=30, required=False)
     ship_street2 = forms.CharField(max_length=30, required=False)
     ship_city = forms.CharField(max_length=30, required=False)
-    ship_state = forms.ChoiceField(initial=selection, required=False)
+    ship_state = forms.CharField(max_length=30, required=False)
     ship_postal_code = forms.CharField(max_length=10, required=False)
 
     def __init__(self, countries, areas, *args, **kwargs):
         super(ContactInfoForm, self).__init__(*args, **kwargs)
-        self.fields['country'].choices = countries
-        self.fields['state'].choices = areas
-        self.fields['ship_state'].choices = areas
+        if areas is not None and countries is None:
+            self.fields['state'] = forms.ChoiceField(choices=areas, initial=selection)
+            self.fields['ship_state'] = forms.ChoiceField(choices=areas, initial=selection)
+        if countries is not None:
+            self.fields['country'] = forms.ChoiceField(choices=countries)
+             
+        shop_config = Config.objects.get(site=settings.SITE_ID)
+        self._local_only = shop_config.in_country_only
+        country = shop_config.sales_country
+        if not country:
+            self._default_country = 'US'
+        else:
+            self._default_country = country.iso2_code
 
     def clean_state(self):
+        if self._local_only:
+            country_iso2 = self._default_country
+        else:
+            country_iso2 = self.data['country']
+
         data = self.cleaned_data['state']
-        if data == selection:
-            raise forms.ValidationError(_('This field is required.'))
+        country = Country.objects.get(iso2_code=country_iso2)
+        if country.area_set.count() > 0:
+            if not data or data == selection:
+                raise forms.ValidationError(
+                    self._local_only and _('This field is required.') \
+                               or _('State is required for your country.'))
         return data
 
     def clean_ship_state(self):
@@ -44,10 +66,24 @@ class ContactInfoForm(forms.Form):
             if 'state' in self.cleaned_data:
                 self.cleaned_data['ship_state'] = self.cleaned_data['state']
             return self.cleaned_data['ship_state']
+
+        if self._local_only:
+            country_iso2 = self._default_country
+        else:
+            country_iso2 = self.data['country']
+
         data = self.cleaned_data['ship_state']
-        if data == selection:
-            raise forms.ValidationError(_('This field is required.'))
+        country = Country.objects.get(iso2_code=country_iso2)
+        if country.area_set.count() > 0:
+            if not data or data == selection:
+                raise forms.ValidationError(
+                    self._local_only and _('This field is required.') \
+                               or _('State is required for your country.'))
         return data
+
+    def clean_country(self):
+        if self._local_only:
+            return self._default_country
 
     def ship_charfield_clean(self, field_name):
         if self.cleaned_data['copy_address']:
@@ -85,6 +121,7 @@ def save_contact_info(data, contact=None):
             setattr(customer, field, data[field])
         except KeyError:
             pass
+
     customer.role = "Customer"
     customer.save()
     address = AddressBook()
