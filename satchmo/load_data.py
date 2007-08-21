@@ -110,13 +110,15 @@ def load_data():
     from satchmo.supplier.models import Organization
     from satchmo.shop.models import Config
     from django.conf import settings
+    from satchmo.i18n.models import Country
     #Load basic configuration information
     print "Creating site..."
     site = Site.objects.get(id=settings.SITE_ID)
     site.domain = settings.SITE_DOMAIN  
     site.name = settings.SITE_NAME
     site.save()
-    config = Config(site=site, store_name = settings.SITE_NAME, no_stock_checkout=False)
+    store_country = Country.objects.get(iso3_code='USA')
+    config = Config(site=site, store_name = settings.SITE_NAME, no_stock_checkout=False, country=store_country, sales_country=store_country)
     config.save()
     print "Creating Customers..."
     # Import some customers

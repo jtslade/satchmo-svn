@@ -42,7 +42,6 @@ def form(request):
             shop_email = shop_config.store_email
             
             try:
-                email = orderToProcess.contact.email
                 body = t.render(c)
                 send_mail(subject, body, shop_email,
                          [shop_email], fail_silently=False)

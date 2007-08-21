@@ -1,6 +1,7 @@
 from django.conf import settings
 from satchmo.i18n.models import Country
 from satchmo.shop.models import Config
+from django.utils.translation import ugettext_lazy as _
 
 selection = _("Please Select")
 
