@@ -10,7 +10,7 @@ from satchmo.contact.models import Contact, AddressBook, PhoneNumber, Order
 from satchmo.i18n.models import Country
 from satchmo.shop.models import Config
 
-selection = _("Please Select")
+selection = ''
 
 class ContactInfoForm(forms.Form):
     email = forms.EmailField(max_length=30)
@@ -34,7 +34,7 @@ class ContactInfoForm(forms.Form):
         super(ContactInfoForm, self).__init__(*args, **kwargs)
         if areas is not None and countries is None:
             self.fields['state'] = forms.ChoiceField(choices=areas, initial=selection)
-            self.fields['ship_state'] = forms.ChoiceField(choices=areas, initial=selection)
+            self.fields['ship_state'] = forms.ChoiceField(choices=areas, initial=selection, required=False)
         if countries is not None:
             self.fields['country'] = forms.ChoiceField(choices=countries)
              
@@ -61,7 +61,7 @@ class ContactInfoForm(forms.Form):
                                or _('State is required for your country.'))
         return data
 
-    def clean_ship_state(self):
+    def clean_ship_state(self):        
         if self.cleaned_data['copy_address']:
             if 'state' in self.cleaned_data:
                 self.cleaned_data['ship_state'] = self.cleaned_data['state']

@@ -28,7 +28,7 @@ def get_area_country_options(request):
 
     area_choices = default_country.area_set.all()
     if area_choices:
-        areas = [(selection, selection)]
+        areas = [('', selection)]
         for area in area_choices:
             value_to_choose = (area.abbrev, area.name)
             areas.append(value_to_choose)
