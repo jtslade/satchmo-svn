@@ -333,8 +333,8 @@ def eraseDB(all=False):
 
 def load_webda():
     """Load internationalization data"""
-    baseURL = "http://svn.webda.python-hosting.com/branches"
-    dataFile = "Webda-0.9.1.tar.gz"
+    baseURL = "http://www.satchmoproject.com/webda"
+    dataFile = "Webda-0.9.2.tar.gz"
     print "Retrieving data files..."
     if os.path.isfile(dataFile):
         print "%s - already exists.  Skipping download" % dataFile
