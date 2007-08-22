@@ -5,9 +5,16 @@ Installation
 This guide assumes that Django is properly installed and that you have installed the
 dependencies mentioned in the requirements section.
 
-1. Get the latest Satchmo source::
+1. Get the latest Satchmo production source release::
 
-        svn co svn://satchmoproject.com/satchmo/trunk/
+        svn co svn://satchmoproject.com/satchmo/tags/0.5
+
+	    or download from http://www.satchmoproject.com/snapshots/satchmo-0.5.tar.gz
+
+
+.. Note::
+    If you would like the latest bleading edge release, get it via svn here-
+	    svn co svn://satchmoproject.com/satchmo/trunk/
         
 2. Ensure that satchmo is on your pythonpath.  There are several options for
 adding Satchmo to the path:
