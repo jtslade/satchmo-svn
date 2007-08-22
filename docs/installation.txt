@@ -13,11 +13,10 @@ dependencies mentioned in the requirements section.
 
 
 .. Note::
-    If you would like the latest bleading edge release, get it via svn here-
+    If you would like the latest bleading edge release, get it via svn-
 	    svn co svn://satchmoproject.com/satchmo/trunk/
         
-2. Ensure that satchmo is on your pythonpath.  There are several options for
-adding Satchmo to the path:
+2. Ensure that satchmo is on your pythonpath.  There are several options for adding Satchmo to the path:
 	
 	- Add satchmo to the PYTHONPATH variable
 	- Create a .pth file in your site-packages directory. pth_.
