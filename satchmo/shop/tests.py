@@ -217,7 +217,7 @@ class ShopTest(TestCase):
         self.assertRedirects(response, (prefix+'/') or '/', status_code=302, target_status_code=200)
         assert self.client.session.get('custID') is None
         response = self.client.get('/accounts/info/') # test logged in status
-        self.assertRedirects(response, '/accounts/login/', status_code=302, target_status_code=200)
+        self.assertRedirects(response, '/accounts/login/?next=/accounts/info/', status_code=302, target_status_code=200)
 
 
 from django.contrib.auth.models import User
