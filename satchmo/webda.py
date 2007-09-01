@@ -460,7 +460,7 @@ def main():
     project_dir = os.path.dirname(i18n_dir)
     settings_file = os.path.join(project_dir, 'settings.py')
 
-    #show_license(data_license)
+    show_license(data_license)
     i18n_model = setup_environ(project_dir, i18n_dirname, settings_file)
     models = get_data_models(models_file)
     new_models = sort_models(data_dir, models)
