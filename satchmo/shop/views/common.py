@@ -84,6 +84,7 @@ class ContactInfoForm(forms.Form):
     def clean_country(self):
         if self._local_only:
             return self._default_country
+        return self.cleaned_data['country']
 
     def ship_charfield_clean(self, field_name):
         if self.cleaned_data['copy_address']:
