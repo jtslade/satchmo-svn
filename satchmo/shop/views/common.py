@@ -9,6 +9,7 @@ from django.utils.translation import ugettext as _
 from satchmo.contact.models import Contact, AddressBook, PhoneNumber, Order
 from satchmo.i18n.models import Country
 from satchmo.shop.models import Config
+from satchmo.shop.views.utils import bad_or_missing
 
 selection = ''
 
@@ -162,7 +163,10 @@ def checkout_success(request):
     """
     The order has been succesfully processed.  This can be used to generate a receipt or some other confirmation
     """
-    order = Order.objects.get(id=request.session['orderID'])
+    try:
+        order = Order.objects.get(id=request.session['orderID'])
+    except KeyError:
+        return bad_or_missing(request, _('Your order has already been processed.'))
     del request.session['orderID']
     context = RequestContext(request, {'order': order})
     return render_to_response('checkout/success.html', context)
