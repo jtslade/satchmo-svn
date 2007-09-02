@@ -92,6 +92,11 @@ SHOP_BASE = '/shop'
 # Currency symbol to use
 CURRENCY = u'$'
 
+#Directory name for storing uploaded images.  This value will be appended
+#to MEDIA_ROOT
+#If left blank, it will default to images.  Do not prepend name with a slash
+#IMAGE_DIR = "pictures"
+
 #These are used when loading the test data
 SITE_DOMAIN = "example.com"
 SITE_NAME = "My Site"

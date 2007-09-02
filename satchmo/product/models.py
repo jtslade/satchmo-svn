@@ -15,6 +15,11 @@ from django.utils.translation import ugettext_lazy as _
 from satchmo.tax.models import TaxClass
 from satchmo.thumbnail.field import ImageWithThumbnailField
 
+if 'IMAGE_DIR' in settings.get_all_members():
+    upload_dir = "./" + settings.IMAGE_DIR
+else:
+    upload_dir = "./images"
+    
 class Category(models.Model):
     """
     Basic hierarchical category model for storing products
@@ -686,7 +691,7 @@ class ProductImage(models.Model):
     """
     product = models.ForeignKey(Product, null=True, blank=True,
         edit_inline=models.TABULAR, num_in_admin=3)
-    picture = ImageWithThumbnailField(upload_to="./images",
+    picture = ImageWithThumbnailField(upload_to=upload_dir,
         name_field="_filename") #Media root is automatically prepended
     caption = models.CharField(_("Optional caption"), max_length=100,
         null=True, blank=True)
