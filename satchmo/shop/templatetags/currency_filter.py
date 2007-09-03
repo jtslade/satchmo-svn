@@ -2,6 +2,7 @@ from decimal import Decimal
 from django import template
 from django.conf import settings
 from django.utils.encoding import force_unicode
+from satchmo.shop.templatetags import get_filter_args
 
 #The moneyfmt script was taken from the Python decimal recipes.
 #See it here - http://docs.python.org/lib/decimal-recipes.html
@@ -9,8 +10,38 @@ from django.utils.encoding import force_unicode
 register = template.Library()
 
 
+def currency(value, args=""):
+    """Convert a value to a money formatted string.
+
+    places:  required number of places after the decimal point
+    curr:    optional currency symbol before the sign (may be blank)
+    sep:     optional grouping separator (comma, period, space, or blank)
+    dp:      decimal point indicator (comma or period)
+             only specify as blank when places is zero
+    pos:     optional sign for positive numbers: '+', space or blank
+    neg:     optional sign for negative numbers: '-', '(', space or blank
+    trailneg:optional trailing minus indicator:  '-', ')', space or blank
+    wrapcents:tag to wrap the part after the decimal point
+
+    Usage:
+        val|currency
+        val|currency:'places=2'
+        val|currency:'places=2:wrapcents=sup'
+    """
+    
+    if value == '':
+        return value
+
+    args, kwargs = get_filter_args(args, 
+        keywords=('places','curr','sep','dp','pos','neg','trailneg','wrapcents'),
+        intargs=('places',), stripquotes=True)
+
+    value = Decimal(str(value))
+        
+    return moneyfmt(value, **kwargs)
+
 def moneyfmt(value, places=2, curr=settings.CURRENCY, sep=',', dp='.',
-             pos='', neg='-', trailneg=''):
+             pos='', neg='-', trailneg='', wrapcents=''):
     """Convert Decimal to a money formatted string.
 
     places:  required number of places after the decimal point
@@ -21,6 +52,7 @@ def moneyfmt(value, places=2, curr=settings.CURRENCY, sep=',', dp='.',
     pos:     optional sign for positive numbers: '+', space or blank
     neg:     optional sign for negative numbers: '-', '(', space or blank
     trailneg:optional trailing minus indicator:  '-', ')', space or blank
+    wrapcents:tag to wrap the part after the decimal point
 
     >>> d = Decimal('-1234567.8901')
     >>> moneyfmt(d, curr='$')
@@ -36,11 +68,6 @@ def moneyfmt(value, places=2, curr=settings.CURRENCY, sep=',', dp='.',
 
     """
 
-    if value == '':
-        return value
-
-    value = Decimal(str(value))
-
     q = Decimal((0, (1,), -places))    # 2 places --> '0.01'
     sign, digits, exp = value.quantize(q).as_tuple()
     assert exp == -places    
@@ -49,12 +76,21 @@ def moneyfmt(value, places=2, curr=settings.CURRENCY, sep=',', dp='.',
     build, next = result.append, digits.pop
     if sign:
         build(trailneg)
+        
+    if wrapcents and places > 0:
+        build("</%s>" % wrapcents)
+    
     for i in range(places):
         if digits:
             build(next())
         else:
             build('0')
+
+    if wrapcents and places > 0:
+        build("<%s>" % wrapcents)
+            
     build(dp)
+    
     i = 0
     while digits:
         build(next())
@@ -70,5 +106,4 @@ def moneyfmt(value, places=2, curr=settings.CURRENCY, sep=',', dp='.',
     result.reverse()
     return u''.join(result)
 
-
-register.filter('currency', moneyfmt)
+register.filter('currency', currency)
