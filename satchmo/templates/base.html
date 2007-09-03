@@ -22,7 +22,7 @@
 
     <div id="leftnav">
         {% trans "Search" %}<br/>
-        <form id="search" action="{% url satchmo_search %}" method="post">
+        <form id="search" action="{% url satchmo_search %}" method="get">
             <input type="text" size="20" name="keywords" id="search_keywords" /><br/>
             <input type="submit" value="{% trans "Search" %}" />
          </form>

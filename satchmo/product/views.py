@@ -108,8 +108,13 @@ def get_price(request, product_slug):
     return http.HttpResponse(simplejson.dumps((prod_slug, price)), mimetype="text/javascript")
 
 def do_search(request):
-    keywords = request.POST.get('keywords', '').split(' ')
+    if request.GET:
+        keywords = request.GET.get('keywords', '').split(' ')
+    else:
+        keywords = request.POST.get('keywords', '').split(' ')
+        
     keywords = filter(None, keywords)
+    
     if not keywords:
         return render_to_response('search.html', RequestContext(request))
 
