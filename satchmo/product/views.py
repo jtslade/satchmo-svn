@@ -119,7 +119,7 @@ def do_search(request):
         return render_to_response('search.html', RequestContext(request))
 
     categories = Category.objects
-    products = Product.objects.filter(active=True)
+    products = Product.objects.active()
     for keyword in keywords:
         categories = categories.filter(Q(name__icontains=keyword) | Q(meta__icontains=keyword) | Q(description__icontains=keyword))
         products = products.filter(Q(name__icontains=keyword) | Q(short_description__icontains=keyword) | Q(description__icontains=keyword) | Q(meta__icontains=keyword))
@@ -127,7 +127,9 @@ def do_search(request):
     for category in categories:
         list.append((_("Category"), category.name, category.get_absolute_url()))
     for product in products:
-        list.append((_("Product"), product.name, product.get_absolute_url()))
+        # we only want to see the master products not each variation of the product
+        if not product.has_variants:
+            list.append((_("Product"), product.name, product.get_absolute_url()))
 
     context = RequestContext(request, {'results': list})
     return render_to_response('search.html', context)

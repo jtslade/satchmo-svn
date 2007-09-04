@@ -219,7 +219,21 @@ class ShopTest(TestCase):
         assert self.client.session.get('custID') is None
         response = self.client.get('/accounts/info/') # test logged in status
         self.assertRedirects(response, '/accounts/login/?next=/accounts/info/', status_code=302, target_status_code=200)
-
+        
+    def test_search(self):
+        """
+        Do some basic searches to make sure it all works as expected
+        """
+        response = self.client.get(prefix+'/search/', {'keywords':'python'})
+        self.assertContains(response, "Product: Python Rocks shirt", count=1)
+        response = self.client.get(prefix+'/search/', {'keywords':'django+book'})
+        self.assertContains(response, "Nothing found")
+        response = self.client.get(prefix+'/search/', {'keywords':'shirt'})
+        self.assertContains(response, "Category: Shirts", count=1)
+        self.assertContains(response, "Category: Short Sleeve", count=1)
+        self.assertContains(response, "Product: Django Rocks shirt", count=1)
+        self.assertContains(response, "Product: Python Rocks shirt", count=1)
+        
 
 from django.contrib.auth.models import User
 
