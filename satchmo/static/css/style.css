@@ -77,6 +77,17 @@ font-weight: bold;
 padding: 0 5px;
 }
 
+#content div.productreviews {
+padding-top: 10px;
+padding-bottom: 10px;
+font-size: 12px;
+}
+
+
+#content div.productreviews h2 {
+    font-size: 14px;
+}
+
 #footer {
 clear: both;
 margin: 0;

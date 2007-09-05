@@ -2,7 +2,6 @@
 Configuration items for the shop.
 Also contains shopping cart and related classes.
 """
-
 import datetime
 from decimal import Decimal
 from django.contrib.sites.models import Site
@@ -14,6 +13,25 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_unicode
 from satchmo.contact.models import Contact
 from satchmo.i18n.models import Country
+
+from logging import getLogger
+
+log = getLogger('satchmo.shop.models')
+
+class NullConfig(object):
+    """Standin for a real config when we don't have one yet."""
+
+    def __init__(self):
+        self.store_name = self.store_description = _("Test Store")
+        self.store_email = self.street1 = self.street2 = self.city = self.state = self.postal_code = self.phone = ""
+        self.site = self.country = None
+        self.no_stock_checkout = False
+        self.in_country_only = True
+        self.sales_country = Country.objects.get(iso3_code__exact='USA')
+        self.enable_ratings = True
+
+    def __str__(self):
+        return "Test Store - no configured store exists!"
 
 class Config(models.Model):
     """
@@ -36,6 +54,19 @@ class Config(models.Model):
     sales_country = models.ForeignKey(Country, blank=True, null=True,
                                      related_name='sales_country',
                                      verbose_name=_("Default country for customers"))
+    enable_ratings = models.BooleanField(_("Enable product ratings?"), default=True)
+
+    def _get_shop_config(cls):
+        """Convenience method to get the current shop config"""
+        try:
+            shop_config = cls.objects.get(site=settings.SITE_ID)
+        except Config.DoesNotExist:
+            log.warning("No Shop Config found, using test shop config.")
+            shop_config = NullConfig()
+        
+        return shop_config
+        
+    get_shop_config = classmethod(_get_shop_config)
 
     def __unicode__(self):
         return self.store_name
@@ -47,6 +78,32 @@ class Config(models.Model):
         verbose_name = _("Store Configuration")
         verbose_name_plural = _("Store Configurations")
 
+class NullCart(object):
+    """Standin for a real cart when we don't have one yet.  More convenient than testing for null all the time."""
+    desc = None
+    date_time_created = None
+    customer = None
+    total=Decimal("0")
+    numItems=0
+
+    def add_item(self, chosen_item, number_added):
+        pass
+
+    def remove_item(self, chosen_item_id, number_removed):
+        pass
+
+    def empty(self):
+        pass
+
+    def __str__(self):
+        return "NullCart (empty)"
+
+    def __iter__(self):
+        return iter([])
+
+    def __len__(self):
+        return 0
+
 class Cart(models.Model):
     """
     Store items currently in a cart
@@ -56,6 +113,22 @@ class Cart(models.Model):
     desc = models.CharField(_("Description"), blank=True, null=True, max_length=10)
     date_time_created = models.DateTimeField(_("Creation Date"))
     customer = models.ForeignKey(Contact, blank=True, null=True)
+
+    def _get_session_cart(cls, request):
+        """Convenience method to get the current cart from the session"""
+        if request.session.get('cart'):
+            try:
+                cart = cls.objects.get(id=request.session['cart'])
+            except Cart.DoesNotExist:
+                log.debug('Removing invalid cart from session')
+                del request.session['cart']
+                cart = NullCart()
+        else:
+            cart = NullCart()
+        
+        return cart
+        
+    get_session_cart = classmethod(_get_session_cart)
 
     def _get_count(self):
         itemCount = 0

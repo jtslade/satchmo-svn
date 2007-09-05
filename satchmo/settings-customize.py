@@ -88,6 +88,8 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.comments',  
+    'commentutils',             # get this from http://code.google.com/p/django-comment-utils and rename to 'commentutils'
     'django.contrib.sessions',
     'django.contrib.sitemaps',
     'django.contrib.sites',

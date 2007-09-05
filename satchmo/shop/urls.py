@@ -20,6 +20,9 @@ urlpatterns += patterns('satchmo.shop.views',
     (r'^cart/qty/ajax/$', 'cart.set_quantity_ajax', {}, 'satchmo_cart_set_qty_ajax'),
     (r'^cart/$', 'cart.display', {}, 'satchmo_cart'),
     (r'^contact/$', 'contact.form', {}, 'satchmo_contact'),
+    # override comments with our redirecting one.  OK to remove the next two URLs if you aren't using ratings
+    (r'^comments/post/$', 'comments.post_rating', { 'maxcomments' : 1 }, 'satchmo_rating_post'), 
+    (r'^comments/', include('django.contrib.comments.urls.comments')),
 )
 #Note with the last category url - this allows category depth to be as deep as we want but the downside
 #is that we ignore all but the child and parent category.  In practice this should be ok
