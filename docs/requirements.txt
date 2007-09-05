@@ -23,8 +23,10 @@ features in Satchmo.
 The following packages are optional but encouraged:
 
 - `DocUtils`_
-
 - `PyYaml`_ (For unit tests)
+
+To use product ratings, you need:
+- `django-comment-utils`_ which must be renamed "commentutils" and put on your PYTHONPATH
 
 For more complex email verification process, you will need:
 
@@ -48,3 +50,4 @@ Satchmo scripts.
 .. _Tiny RML2PDF: http://www.openreport.org/index.py/static/page/trml2pdf
 .. _download link: http://tinyforge.org/frs/download.php/1/trml2pdf.tar.gz
 .. _Django Registration: http://code.google.com/p/django-registration/
+.. _django-comment-utils: http://code.google.com/p/django-comment-utils/
