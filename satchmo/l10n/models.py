@@ -49,18 +49,6 @@ AREAS = (
 class Country(models.Model):
     """
     International Organization for Standardization (ISO) 3166-1 Country list
-    
-     * ``iso`` = ISO 3166-1 alpha-2
-     * ``name`` = Official country names used by the ISO 3166/MA in capital letters
-     * ``printable_name`` = Printable country names for in-text use
-     * ``iso3`` = ISO 3166-1 alpha-3
-     * ``numcode`` = ISO 3166-1 numeric
-    
-    Note::
-        This model is fixed to the database table 'country' to be more general.
-        Change ``db_table`` if this cause conflicts with your database layout.
-        Or comment out the line for default django behaviour.
-    
     """
     iso2_code = models.CharField(_('ISO alpha-2'), max_length=2, unique=True)
     name = models.CharField(_('Official name (CAPS)'), max_length=128)
@@ -88,7 +76,7 @@ class Country(models.Model):
 
 class AdminArea(models.Model):
     """
-    Administrative Area for a country.  For the US, this would be the states
+    Administrative Area level 1 for a country.  For the US, this would be the states
     """
     country = models.ForeignKey(Country, edit_inline=models.TABULAR)
     name = models.CharField(_('Admin Area name'), max_length=50, core=True)
