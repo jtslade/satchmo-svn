@@ -1,6 +1,6 @@
 from django import http
 from django import newforms as forms
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.template import RequestContext, Context
 from django.utils.translation import ugettext_lazy as _, ugettext
@@ -9,6 +9,7 @@ import logging
 
 log = logging.getLogger('satchmo.contact.views')
 
+@login_required
 def view(request):
     """View contact info."""
     try:
@@ -18,10 +19,6 @@ def view(request):
         
     context = RequestContext(request, {'user_data': user_data})
     return render_to_response('contact/view_profile.html', context)
-
-_deco = user_passes_test(lambda u: not u.is_anonymous(),
-    login_url='/accounts/login/') # TODO: Use urlresolvers.reverse here.
-view = _deco(view)
 
 def update(request):
     pass
