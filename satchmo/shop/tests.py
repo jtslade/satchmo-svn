@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 from templatetags import get_filter_args
 
 prefix = settings.SHOP_BASE
+if prefix == '/':
+    prefix = ''
 
 checkout_step1_post_data = {
     'email': 'sometester@example.com',
@@ -209,16 +211,16 @@ class ShopTest(TestCase):
         """
         user = User.objects.create_user('teddy', 'sometester@example.com', 'guz90tyc')
         self.client.login(username='teddy', password='guz90tyc')
-        response = self.client.get('/accounts/info/') # test logged in status
-        self.assertContains(response, "The person you are logged in as does not have an account.", status_code=404)
+        response = self.client.get('/accounts/') # test logged in status
+        self.assertContains(response, "the user you've logged in as doesn't have any contact information.", status_code=200)
         self.test_cart_adding()
         self.client.post(prefix + '/checkout/', checkout_step1_post_data)
         assert self.client.session.get('custID') is not None
         response = self.client.get('/accounts/logout/')
-        self.assertRedirects(response, (prefix+'/') or '/', status_code=302, target_status_code=200)
+        self.assertRedirects(response, prefix + '/', status_code=302, target_status_code=200)
         assert self.client.session.get('custID') is None
-        response = self.client.get('/accounts/info/') # test logged in status
-        self.assertRedirects(response, '/accounts/login/?next=/accounts/info/', status_code=302, target_status_code=200)
+        response = self.client.get('/accounts/') # test logged in status
+        self.assertRedirects(response, '/accounts/login/?next=/accounts/', status_code=302, target_status_code=200)
         
     def test_search(self):
         """
