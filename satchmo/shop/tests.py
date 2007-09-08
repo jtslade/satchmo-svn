@@ -76,7 +76,7 @@ class ShopTest(TestCase):
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, 'Welcome to My Site')
 
-        response = self.client.get('/accounts/info/')
+        response = self.client.get('/accounts/')
         self.assertContains(response, "Welcome, Paul Test.", count=1, status_code=200)
 
     def test_cart_adding(self):
