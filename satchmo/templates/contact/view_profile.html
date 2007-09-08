@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load satchmo.contact_tags %}
+
+{% block navbar %}
+<a href="{{ shop_base }}/">{% trans "Home" %}</a> 
+{% endblock %}
+
+{% block content %}
+<h4>{% trans "Your Account info" %}</h4>
+{% if user_data %}
+{% with user_data.full_name as full_name %}
+<p>{% blocktrans %}Welcome, {{ full_name }}.{% endblocktrans %}</p> 
+{% endwith %}
+
+<h5>{% trans "Your profile" %}</h5>
+<ul class="profile">
+    <li>Email: {{ user_data.email }}
+    <li>Organization: {{ user_data.organization|default_if_none:"--" }}</li>
+    <li>Birthday: {{ user_data.dob|default_if_none:"--" }}</li>
+    <li>Billing Address:<br/>{% addressblock user_data.billing_address %}</li>
+    <li>Shipping Address:<br/>{% addressblock user_data.shipping_address %}</li>    
+</ul>
+<h5>{% trans "Account options" %}:</h5>
+<p>
+    <a href="{% url satchmo_profile_update %}">{% trans "Update your profile" %}</a>
+    <br/>
+    <a href="{% url auth_password_change %}">{% trans "Change your password" %}</a>
+</p>
+</ul>
+{% else %}
+<p>
+    {% trans "Sorry, the user you've logged in as doesn't have any contact information." %}{% if request.user.is_staff %} {% trans 'Probably because you are an admin.' %}{% endif %}
+</p>
+<h5>{% trans "Account options" %}:</h5>
+<p>
+    <a href="{% url satchmo_profile_update %}">{% trans 'Set up contact information' %}</a>
+    <br/>
+    <a href="{% url auth_password_change %}">{% trans "Change your password" %}</a>
+</p>
+{% endif %}
+{% endblock %}

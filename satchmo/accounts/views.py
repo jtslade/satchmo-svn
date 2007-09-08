@@ -172,20 +172,6 @@ def activate(request, activation_key):
     })
     return render_to_response('registration/activate.html', context)
 
-def info(request):
-    try:
-        user_data = Contact.objects.get(user=request.user.id)
-    except Contact.DoesNotExist:
-        #This case happens if a user is created in admin but does not have account info
-        return bad_or_missing(request, ugettext("The person you are logged in as does not have an account. Please create one."))
-    context = RequestContext(request, {
-        'user_data': user_data})
-    return render_to_response('registration/account_info.html', context)
-
-_deco = user_passes_test(lambda u: not u.is_anonymous(),
-                        login_url='/accounts/login/')
-info = _deco(info)
-
 def shop_logout(request):
     logout(request)
     if 'custID' in request.session:
