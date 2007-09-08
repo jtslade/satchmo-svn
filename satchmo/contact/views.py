@@ -20,7 +20,7 @@ def view(request):
     return render_to_response('contact/view_profile.html', context)
 
 _deco = user_passes_test(lambda u: not u.is_anonymous(),
-                        login_url='/accounts/login/')
+    login_url='/accounts/login/') # TODO: Use urlresolvers.reverse here.
 view = _deco(view)
 
 def update(request):
