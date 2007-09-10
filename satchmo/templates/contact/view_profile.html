@@ -16,7 +16,6 @@
 <h5>{% trans "Your profile" %}</h5>
 <ul class="profile">
     <li>Email: {{ user_data.email }}
-    <li>Organization: {{ user_data.organization|default_if_none:"--" }}</li>
     <li>Birthday: {{ user_data.dob|default_if_none:"--" }}</li>
     <li>Billing Address:<br/>{% addressblock user_data.billing_address %}</li>
     <li>Shipping Address:<br/>{% addressblock user_data.shipping_address %}</li>    

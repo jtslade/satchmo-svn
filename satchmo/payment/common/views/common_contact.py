@@ -3,17 +3,17 @@
 #####################################################################
 
 from django import http
+from django.conf import settings
 from django.core import urlresolvers
 from django.shortcuts import render_to_response
 from django.template import loader
 from django.template import RequestContext, Context
+from satchmo.contact.common import get_area_country_options
+from satchmo.contact.forms import selection
 from satchmo.contact.models import Contact
+from satchmo.payment.common.forms import PaymentContactInfoForm
 from satchmo.payment.paymentsettings import PaymentSettings
 from satchmo.shop.models import Cart, CartItem
-from satchmo.shop.views.common import save_contact_info, selection
-from satchmo.payment.common.forms import PaymentContactInfoForm
-from satchmo.contact.common import get_area_country_options
-from django.conf import settings
 
 def contact_info(request):
     """View which collects demographic information from customer."""
@@ -52,10 +52,7 @@ def contact_info(request):
         if form.is_valid():
             if contact is None and request.user:
                 contact = Contact(user=request.user)
-            if contact is None:
-                custID = save_contact_info(form.cleaned_data)
-            else:
-                custID = save_contact_info(form.cleaned_data, contact)
+            custID = form.save(contact=contact)
             request.session['custID'] = custID
             #TODO - Create an order here and associate it with a session
             paymentmodule = PaymentSettings()[new_data['paymentmethod']]

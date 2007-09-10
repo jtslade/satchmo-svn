@@ -3,11 +3,11 @@ from django.conf import settings
 from django.template import Context
 from django.template import loader
 from django.utils.translation import ugettext as _
+from satchmo.contact.forms import ContactInfoForm
 from satchmo.contact.models import Contact
 from satchmo.discount.models import Discount
 from satchmo.payment.paymentsettings import PaymentSettings
 from satchmo.shop.models import Cart
-from satchmo.shop.views.common import ContactInfoForm
 from satchmo.shop.views.utils import CreditCard
 import calendar
 import datetime

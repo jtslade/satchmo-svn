@@ -21,7 +21,7 @@ from django.db import models
 
 # Satchmo apps, sorted by their model dependencies.
 satchmo_apps = [
-    'satchmo.l10n',
+    'satchmo.i18n',
     'satchmo.newsletter',
     'satchmo.tax',
     'satchmo.product',
@@ -110,7 +110,7 @@ def load_data():
     from satchmo.supplier.models import Organization
     from satchmo.shop.models import Config
     from django.conf import settings
-    from satchmo.l10n.models import Country
+    from satchmo.i18n.models import Country
     #Load basic configuration information
     print "Creating site..."
     site = Site.objects.get(id=settings.SITE_ID)
@@ -358,7 +358,7 @@ def load_webda():
 def load_US_tax_table():
     """ Load a simple sales tax table for the US """
     from satchmo.tax.models import TaxRate, TaxClass
-    from satchmo.l10n.models import AdminArea, Country
+    from satchmo.i18n.models import Area, Country
     us = Country.objects.get(iso2_code="US")
     defaultTax = TaxClass(description="Default", title="Default")
     defaultTax.save()
@@ -367,14 +367,14 @@ def load_US_tax_table():
     reader = csv.reader(open(os.path.join(dataDir, dataFile), "rb"))
     reader.next()       #Skip the header row
     for row in reader:
-        state = AdminArea.objects.get(country=us, abbrev=row[0])
+        state = Area.objects.get(country=us, abbrev=row[0])
         stateTax = TaxRate(taxClass=defaultTax, taxZone=state, percentage=row[1])
         stateTax.save()        
     
 if __name__ == '__main__': 
-    #responseWebda = string.lower(raw_input("Type 'yes' to load internationalization data: "))
-    #if responseWebda == 'yes':
-    #    load_webda()
+    responseWebda = string.lower(raw_input("Type 'yes' to load internationalization data: "))
+    if responseWebda == 'yes':
+        load_webda()
     response_erase_all = string.lower(raw_input("Type 'yes' to erase ALL data and reinstall ALL models: "))
     if response_erase_all == 'yes':
         eraseDB(all=True)
@@ -382,9 +382,9 @@ if __name__ == '__main__':
         response = string.lower(raw_input("Type 'yes' to erase any existing Satchmo data and reinstall all models: "))
         if response == 'yes':
             eraseDB(all=False)
-    #if responseWebda =='yes':
-    #    from satchmo import webda
-    #    webda.main()
+    if responseWebda =='yes':
+        from satchmo import webda
+        webda.main()
     response = string.lower(raw_input("Type 'yes' to load sample store data: "))
     if response == 'yes':
         load_data()
