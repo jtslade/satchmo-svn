@@ -218,3 +218,17 @@ padding-bottom: .5em;
 .profile li {
 list-style-type: none;
 }
+
+table.ordertable {
+width:  100%;
+font-weight: normal;
+font-size: 13px;
+}
+
+table.ordertable thead {
+	background-color: #ddd;
+}
+
+table.ordertable span.orderitemqty {
+	font-style: italic;
+}

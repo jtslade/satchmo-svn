@@ -105,12 +105,9 @@ def register(request):
 
             # If the user already has a contact, retrieve it.
             # Otherwise, create a new one.
-            contact = Contact()
-            if request.session.get('custID'):
-                try:
-                    contact = Contact.objects.get(id=request.session['custID'])
-                except Contact.DoesNotExist:
-                    pass
+            contact = Contact.from_request(request, create=False)
+            if contact is None:
+                contact = Contact()
 
             contact.user = user
             contact.first_name = first_name
@@ -130,15 +127,13 @@ def register(request):
 
     else:
         initial_data = {}
-        if request.session.get('custID'):
-            try:
-                contact = Contact.objects.get(id=request.session['custID'])
-                initial_data = {
-                    'email': contact.email,
-                    'first_name': contact.first_name,
-                    'last_name': contact.last_name}
-            except Contact.DoesNotExist:
-                pass
+        contact = Contact.from_request(request, create=False)
+        if contact is not None:
+            initial_data = {
+                'email': contact.email,
+                'first_name': contact.first_name,
+                'last_name': contact.last_name}
+
         form = RegistrationForm(initial=initial_data)
 
     context = RequestContext(request, {'form': form})

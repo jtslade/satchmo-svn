@@ -25,7 +25,8 @@ selection = _("Please Select")
 
 def credit_pay_ship_info(request, payment_module):
     #First verify that the customer exists
-    if not request.session.get('custID', False):
+    contact = Contact.from_request(request, create=False)
+    if contact is None:
         url = payment_module.lookup_url('satchmo_checkout-step1')
         return http.HttpResponseRedirect(url)
 
@@ -43,7 +44,6 @@ def credit_pay_ship_info(request, payment_module):
         form = CreditPayShipForm(request, payment_module, new_data)
         if form.is_valid():
             data = form.cleaned_data
-            contact = Contact.objects.get(id=request.session['custID'])
 
             # Create a new order
             newOrder = Order(contact=contact, payment=payment_module.KEY)
@@ -74,7 +74,8 @@ def credit_pay_ship_info(request, payment_module):
 def simple_pay_ship_info(request, payment_module, template):
     """A pay_ship view which doesn't require a credit card"""
     #First verify that the customer exists
-    if not request.session.get('custID', False):
+    contact = Contact.from_request(request, create=False)
+    if contact is None:
         url = payment_module.lookup_url('satchmo_checkout-step1')
         return http.HttpResponseRedirect(url)
     #Verify we still have items in the cart
@@ -93,7 +94,6 @@ def simple_pay_ship_info(request, payment_module, template):
         form = SimplePayShipForm(request, payment_module, new_data)
         if form.is_valid():
             data = form.cleaned_data
-            contact = Contact.objects.get(id=request.session['custID'])
 
             # Create a new order
             newOrder = Order(contact=contact, payment=payment_module.KEY)

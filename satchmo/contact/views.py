@@ -9,9 +9,9 @@ from django.utils.translation import ugettext_lazy as _, ugettext
 from forms import ExtendedContactInfoForm
 from satchmo.contact.common import get_area_country_options
 from satchmo.contact.forms import selection
-from satchmo.contact.models import Contact
+from satchmo.contact.models import Contact, Order
+from satchmo.shop.views.utils import bad_or_missing
 import logging
-
 
 log = logging.getLogger('satchmo.contact.views')
 
@@ -33,18 +33,7 @@ def update(request):
     init_data = {}
     areas, countries, only_country = get_area_country_options(request)
 
-    contact = None
-    if request.session.get('custID'):
-        try:
-            contact = Contact.objects.get(id=request.session['custID'])
-        except Contact.DoesNotExist:
-            pass
-
-    if contact is None:
-        try:
-            contact = Contact.objects.get(user=request.user.id)
-        except Contact.DoesNotExist:
-            pass
+    contact = Contact.from_request(request, create=False)
 
     if request.POST:
         new_data = request.POST.copy()
@@ -78,10 +67,39 @@ def update(request):
         'country': only_country})
     return render_to_response('contact/update_form.html', context)
         
+@login_required
 def order_history(request):
-    pass
-    
-def order_tracking(request):
-    pass
+    orders = None
+    contact = Contact.from_request(request, create=False)
+    if contact:
+        try:
+            orders = Order.objects.filter(contact=contact).order_by('-timestamp')
+        except Order.DoesNotExist:
+            pass
 
+    ctx = RequestContext(request, {
+        'contact' : contact,
+        'orders' : orders})
+
+    return render_to_response('contact/order_history.html', ctx)
+    
+    
+@login_required
+def order_tracking(request, order_id):
+    order = None
+    contact = Contact.from_request(request, create=False)
+    if contact:
+        try:
+            order = Order.objects.get(id__exact=order_id, contact=contact)
+        except Order.DoesNotExist:
+            pass
+    
+    if order is None:
+        return bad_or_missing(request, _("The order you have requested doesn't exist, or you don't have access to it."))
+
+    ctx = RequestContext(request, {
+        'contact' : contact,
+        'order' : order})
+        
+    return render_to_response('contact/order_tracking.html', ctx)
 

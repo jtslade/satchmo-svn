@@ -8,4 +8,3 @@ register = template.Library()
 def addressblock(address):
     """Output an address as a text block"""
     return {"address" : address}
-    

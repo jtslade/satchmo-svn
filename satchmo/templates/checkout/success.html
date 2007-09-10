@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load order_tags %}
 {% load satchmo.google %}
 
 {% block navbar %}
@@ -8,7 +9,12 @@
 {% endblock %}
 
 {% block content %}
-<h4>{% trans "Success!" %}</h4>
+<div id="ordersuccess">
+<h4>{% trans "Thank you for your order!" %}</h4>
+<p>{% trans 'Please print out this page as a receipt.  You will also receive an email with this information.' %}
+    
+{% order_tracking_details order %}
+</div>
 {% endblock %}
 
 {% block google-tracker %}

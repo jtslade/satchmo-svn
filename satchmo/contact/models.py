@@ -88,6 +88,36 @@ class Contact(models.Model):
     create_date = models.DateField(_("Creation date"))
     newsletter = models.BooleanField(_("Newsletter"), null=True, default=False);
 
+    @classmethod
+    def from_request(cls, request, create=False):
+        """Get the contact from the session, else lookup using the logged-in user.
+        Optionally create an an unsaved new contact if `create` is true.
+        
+        Returns:
+        - Contact object or None
+        """
+        contact = None
+        if request.session.get('custID'):
+            try:
+                contact = cls.objects.get(id=request.session['custID'])
+            except Contact.DoesNotExist:
+                pass
+
+        if contact is None and request.user.is_authenticated():
+            try:
+                contact = cls.objects.get(user=request.user.id)
+                request.session['custID'] = contact
+            except Contact.DoesNotExist:
+                pass
+        else:
+            # can't create if no authenticated user
+            create = False
+                
+        if contact is None and create:
+            contact = Contact(user=request.user)
+            
+        return contact
+
     def _get_full_name(self):
         """Return the person's full name."""
         return u'%s %s' % (self.first_name, self.last_name)

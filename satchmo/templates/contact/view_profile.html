@@ -3,7 +3,8 @@
 {% load satchmo.contact_tags %}
 
 {% block navbar %}
-<a href="{{ shop_base }}/">{% trans "Home" %}</a> 
+<a href="{{ shop_base }}/">{% trans "Home" %}</a> ::
+{% trans "Account" %}
 {% endblock %}
 
 {% block content %}
@@ -25,6 +26,8 @@
     <a href="{% url satchmo_profile_update %}">{% trans "Update your profile" %}</a>
     <br/>
     <a href="{% url auth_password_change %}">{% trans "Change your password" %}</a>
+    <br/>
+    <a href="{% url satchmo_order_history %}">{% trans "Order History" %}</a>
 </p>
 </ul>
 {% else %}

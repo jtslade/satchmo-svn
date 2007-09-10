@@ -3,7 +3,8 @@
 
 {% block navbar %}
 <a href="{{ shop_base }}/">{% trans "Home" %}</a> ::
-{% trans "Checkout" %}
+<a href="{% url satchmo_account_info %}">{% trans "Account" %}</a> ::
+{% trans "Update Profile" %}
 {% endblock %}
 
 {% block content %}

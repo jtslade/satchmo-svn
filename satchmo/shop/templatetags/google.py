@@ -28,18 +28,7 @@ def google_track_signup(context):
     Output a a new user signup in the format that Google Analytics needs.
     """
     request = context['request']
-    contact = None
-    if request.session.get('custID'):
-        try:
-            contact = Contact.objects.get(id=request.session['custID'])
-        except Contact.DoesNotExist:
-            pass
-
-    if contact is None:
-        try:
-            contact = Contact.objects.get(user=request.user.id)
-        except Contact.DoesNotExist:
-            pass
+    contact = Contact.from_request(request, create=False)
     
     return({'contact' : contact})
         

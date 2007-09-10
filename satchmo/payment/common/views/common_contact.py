@@ -29,18 +29,7 @@ def contact_info(request):
     init_data = {}
     areas, countries, only_country = get_area_country_options(request)
 
-    contact = None
-    if request.session.get('custID'):
-        try:
-            contact = Contact.objects.get(id=request.session['custID'])
-        except Contact.DoesNotExist:
-            pass
-
-    if contact is None:
-        try:
-            contact = Contact.objects.get(user=request.user.id)
-        except Contact.DoesNotExist:
-            pass
+    contact = Contact.from_request(request, create=False)
 
     if request.POST:
         new_data = request.POST.copy()

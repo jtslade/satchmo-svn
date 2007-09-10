@@ -72,7 +72,7 @@ class CreditPayShipForm(forms.Form):
         self.fields['year_expires'].choices = [(year, year) for year in range(year_now, year_now+5)]
 
         self.tempCart = Cart.objects.get(id=request.session['cart'])
-        self.tempContact = Contact.objects.get(id=request.session['custID'])
+        self.tempContact = Contact.from_request(request)
 
         shipping_choices, shipping_dict = _get_shipping_choices(paymentmodule, self.tempCart, self.tempContact)
         self.fields['shipping'].choices = shipping_choices
@@ -125,7 +125,7 @@ class SimplePayShipForm(forms.Form):
         super(SimplePayShipForm, self).__init__(*args, **kwargs)
 
         self.tempCart = Cart.objects.get(id=request.session['cart'])
-        self.tempContact = Contact.objects.get(id=request.session['custID'])
+        self.tempContact = Contact.from_request(request)
         shipping_choices, shipping_dict = _get_shipping_choices(paymentmodule, self.tempCart, self.tempContact)
         self.fields['shipping'].choices = shipping_choices
         self.shipping_dict = shipping_dict
