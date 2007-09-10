@@ -1,5 +1,5 @@
 from django.conf import settings
-from satchmo.i18n.models import Country
+from satchmo.l10n.models import Country
 from satchmo.shop.models import Config
 from django.utils.translation import ugettext_lazy as _
 
@@ -26,7 +26,7 @@ def get_area_country_options(request):
     options = {}
     areas = countries = None
 
-    area_choices = default_country.area_set.all()
+    area_choices = default_country.adminarea_set.all()
     if area_choices:
         areas = [('', selection)]
         for area in area_choices:
@@ -37,7 +37,7 @@ def get_area_country_options(request):
         options['country'] = default_country.iso2_code
         countries = [(default_country.iso2_code, default_country.name)]
         for country in Country.objects.filter(display=True):
-            country_to_choose = (country.iso2_code, country.name)
+            country_to_choose = (country.iso2_code, country.printable_name)
             #Make sure the default only shows up once
             if country.iso2_code <> default_country.iso2_code:
                 countries.append(country_to_choose)

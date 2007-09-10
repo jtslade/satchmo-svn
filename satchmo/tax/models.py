@@ -3,7 +3,7 @@ Store tables used to calculate tax on a product
 """
 
 from django.db import models
-from satchmo.i18n.models import Area, Country
+from satchmo.l10n.models import AdminArea, Country
 from satchmo.shop.utils.validators import MutuallyExclusiveWithField
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.core import validators
@@ -38,7 +38,7 @@ class TaxRate(models.Model):
     Actual percentage tax based on area and product class
     """
     taxClass = models.ForeignKey(TaxClass)
-    taxZone = models.ForeignKey(Area, blank=True, null=True,
+    taxZone = models.ForeignKey(AdminArea, blank=True, null=True,
         validator_list=[taxrate_zoneandcountry_zone_validator])
     taxCountry = models.ForeignKey(Country, blank=True, null=True,
         validator_list=[taxrate_zoneandcountry_country_validator])

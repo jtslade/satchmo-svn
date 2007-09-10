@@ -102,7 +102,7 @@ INSTALLED_APPS = (
     'satchmo.discount',
     'satchmo.supplier',
     'satchmo.thumbnail',
-    'satchmo.i18n',
+    'satchmo.l10n',
     'satchmo.tax',
     #'satchmo.newsletter',
 )

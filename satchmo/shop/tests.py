@@ -26,7 +26,7 @@ checkout_step1_post_data = {
     'paymentmethod': 'DUMMY'}
 
 class ShopTest(TestCase):
-    fixtures = ['i18n-data.yaml', 'sample-store-data.yaml', 'products.yaml']
+    fixtures = ['sample-store-data.yaml', 'products.yaml']
 
     def setUp(self):
         # Every test needs a client
@@ -63,6 +63,9 @@ class ShopTest(TestCase):
         """
         Validate account creation process
         """
+        from satchmo.shop.models import Config
+        shop_config = Config.objects.get(site=settings.SITE_ID)
+        subject = u"Welcome to %s" % shop_config.store_name
         response = self.client.get('/accounts/register/')
         self.assertContains(response, "Please Enter Your Account Information",
                             count=1, status_code=200)
@@ -74,7 +77,7 @@ class ShopTest(TestCase):
                                     'newsletter': '0'})
         self.assertRedirects(response, '/accounts/register/complete/', status_code=302, target_status_code=200)
         self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject, 'Welcome to My Site')
+        self.assertEqual(mail.outbox[0].subject, subject)
 
         response = self.client.get('/accounts/')
         self.assertContains(response, "Welcome, Paul Test.", count=1, status_code=200)
@@ -240,7 +243,7 @@ class ShopTest(TestCase):
 from django.contrib.auth.models import User
 
 class AdminTest(TestCase):
-    fixtures = ['i18n-data.yaml', 'sample-store-data.yaml', 'products.yaml']
+    fixtures = ['sample-store-data.yaml', 'products.yaml']
 
     def setUp(self):
         self.client = Client()

@@ -1,410 +1,79 @@
-- fields: {create_date: 2007-05-19, name: Rhinestone Ronny, notes: null, role: Supplier,
-    type: Company}
-  model: contact.organization
-  pk: '1'
-- fields: {create_date: 2007-05-19, dob: null, email: chris@aol.com, first_name: Chris,
-    last_name: Smith, notes: Really cool stuff, organization: null, role: Customer,
+- fields: {create_date: 2007-05-19, name: !!python/unicode 'Rhinestone Ronny', notes: null,
+    role: !!python/unicode 'Supplier', type: !!python/unicode 'Company'}
+  model: !!python/unicode 'contact.organization'
+  pk: !!python/unicode '1'
+- fields: {create_date: 2007-05-19, dob: null, email: !!python/unicode 'chris@aol.com',
+    first_name: !!python/unicode 'Chris', last_name: !!python/unicode 'Smith', newsletter: 0,
+    notes: !!python/unicode 'Really cool stuff', organization: null, role: !!python/unicode 'Customer',
     user: null}
-  model: contact.contact
-  pk: '1'
-- fields: {create_date: 2007-05-19, dob: null, email: abc@comcast.com, first_name: John,
-    last_name: Smith, notes: Second user, organization: null, role: Customer, user: null}
-  model: contact.contact
-  pk: '2'
-- fields: {create_date: 2007-05-19, dob: null, email: fj@rr.com, first_name: Fred,
-    last_name: Jones, notes: '', organization: !!python/long '1', role: Supplier,
+  model: !!python/unicode 'contact.contact'
+  pk: !!python/unicode '1'
+- fields: {create_date: 2007-05-19, dob: null, email: !!python/unicode 'abc@comcast.com',
+    first_name: !!python/unicode 'John', last_name: !!python/unicode 'Smith', newsletter: 0,
+    notes: !!python/unicode 'Second user', organization: null, role: !!python/unicode 'Customer',
     user: null}
-  model: contact.contact
-  pk: '3'
-- fields: {city: Anywhere Town, contact: !!python/long '1', country: US, description: Home,
-    is_default_billing: true, is_default_shipping: true, postal_code: '38138', state: TN,
-    street1: 8235 Pike Street, street2: ''}
-  model: contact.addressbook
-  pk: '1'
-- fields: {city: Stillwater, contact: !!python/long '2', country: US, description: Work,
-    is_default_billing: true, is_default_shipping: true, postal_code: '55082', state: MN,
-    street1: 1245 Main Street, street2: ''}
-  model: contact.addressbook
-  pk: '2'
-- fields: {city: Fishkill, contact: !!python/long '3', country: '', description: Mailing
-      address, is_default_billing: true, is_default_shipping: true, postal_code: '19010',
-    state: NJ, street1: Receiving Dept, street2: 918 Funky Town St}
-  model: contact.addressbook
-  pk: '3'
-- fields: {contact: !!python/long '1', phone: 601-555-5511, primary: true, type: Home}
-  model: contact.phonenumber
-  pk: '1'
-- fields: {contact: !!python/long '2', phone: 999-555-5111, primary: true, type: Work}
-  model: contact.phonenumber
-  pk: '2'
-- fields: {contact: !!python/long '3', phone: 800-188-7611, primary: true, type: Work}
-  model: contact.phonenumber
-  pk: '3'
-- fields: {contact: !!python/long '3', phone: 755-555-1111, primary: false, type: Fax}
-  model: contact.phonenumber
-  pk: '4'
-- fields: {city: null, country: !!python/unicode 'USA', in_country_only: false, no_stock_checkout: false, phone: null, postal_code: null,
-     sales_country: !!python/unicode 'USA', state: null, store_description: null, store_email: null, store_name: My Site, street1: null,
-    street2: null}
-  model: shop.config
-  pk: '1'
-- fields: {description: Default, title: Default}
-  model: tax.taxclass
-  pk: '1'
+  model: !!python/unicode 'contact.contact'
+  pk: !!python/unicode '2'
+- fields: {create_date: 2007-05-19, dob: null, email: !!python/unicode 'fj@rr.com',
+    first_name: !!python/unicode 'Fred', last_name: !!python/unicode 'Jones', newsletter: 0,
+    notes: !!python/unicode '', organization: !!python/long '1', role: !!python/unicode 'Supplier',
+    user: null}
+  model: !!python/unicode 'contact.contact'
+  pk: !!python/unicode '3'
+- fields: {city: !!python/unicode 'Anywhere Town', contact: !!python/long '1', country: !!python/unicode 'US',
+    description: !!python/unicode 'Home', is_default_billing: 1, is_default_shipping: 1,
+    postal_code: !!python/unicode '38138', state: !!python/unicode 'TN', street1: !!python/unicode '8235
+      Pike Street', street2: !!python/unicode ''}
+  model: !!python/unicode 'contact.addressbook'
+  pk: !!python/unicode '1'
+- fields: {city: !!python/unicode 'Stillwater', contact: !!python/long '2', country: !!python/unicode 'US',
+    description: !!python/unicode 'Work', is_default_billing: 1, is_default_shipping: 1,
+    postal_code: !!python/unicode '55082', state: !!python/unicode 'MN', street1: !!python/unicode '1245
+      Main Street', street2: !!python/unicode ''}
+  model: !!python/unicode 'contact.addressbook'
+  pk: !!python/unicode '2'
+- fields: {city: !!python/unicode 'Fishkill', contact: !!python/long '3', country: !!python/unicode 'US',
+    description: !!python/unicode 'Mailing address', is_default_billing: 1, is_default_shipping: 1,
+    postal_code: !!python/unicode '19010', state: !!python/unicode 'NJ', street1: !!python/unicode 'Receiving
+      Dept', street2: !!python/unicode '918 Funky Town St'}
+  model: !!python/unicode 'contact.addressbook'
+  pk: !!python/unicode '3'
+- fields: {contact: !!python/long '1', phone: !!python/unicode '601-555-5511', primary: 1,
+    type: !!python/unicode 'Home'}
+  model: !!python/unicode 'contact.phonenumber'
+  pk: !!python/unicode '1'
+- fields: {contact: !!python/long '2', phone: !!python/unicode '999-555-5111', primary: 1,
+    type: !!python/unicode 'Work'}
+  model: !!python/unicode 'contact.phonenumber'
+  pk: !!python/unicode '2'
+- fields: {contact: !!python/long '3', phone: !!python/unicode '800-188-7611', primary: 1,
+    type: !!python/unicode 'Work'}
+  model: !!python/unicode 'contact.phonenumber'
+  pk: !!python/unicode '3'
+- fields: {contact: !!python/long '3', phone: !!python/unicode '755-555-1111', primary: 0,
+    type: !!python/unicode 'Fax'}
+  model: !!python/unicode 'contact.phonenumber'
+  pk: !!python/unicode '4'
+- fields: {city: null, country: !!python/long '231', enable_ratings: 1, in_country_only: 1,
+    no_stock_checkout: 0, phone: null, postal_code: null, sales_country: !!python/long '231',
+    state: null, store_description: null, store_email: null, store_name: !!python/unicode 'My
+      Site - Trunk', street1: null, street2: null}
+  model: !!python/unicode 'shop.config'
+  pk: !!python/unicode '1'
+- fields: {description: !!python/unicode 'Default', title: !!python/unicode 'Default'}
+  model: !!python/unicode 'tax.taxclass'
+  pk: !!python/unicode '1'
 - fields:
     percentage: !!python/object/apply:decimal.Decimal ['0.040000']
     taxClass: !!python/long '1'
     taxCountry: null
-    taxZone: US-AL
-  model: tax.taxrate
-  pk: '1'
+    taxZone: !!python/long '1'
+  model: !!python/unicode 'tax.taxrate'
+  pk: !!python/unicode '1'
 - fields:
     percentage: !!python/object/apply:decimal.Decimal ['0.000000']
     taxClass: !!python/long '1'
     taxCountry: null
-    taxZone: US-AK
-  model: tax.taxrate
-  pk: '2'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.050000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-AZ
-  model: tax.taxrate
-  pk: '3'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.046250']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-AR
-  model: tax.taxrate
-  pk: '4'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.060000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-CA
-  model: tax.taxrate
-  pk: '5'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.030000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-CO
-  model: tax.taxrate
-  pk: '6'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.060000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-CT
-  model: tax.taxrate
-  pk: '7'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.000000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-DE
-  model: tax.taxrate
-  pk: '8'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.057500']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-DC
-  model: tax.taxrate
-  pk: '9'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.060000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-FL
-  model: tax.taxrate
-  pk: '10'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.040000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-GA
-  model: tax.taxrate
-  pk: '11'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.040000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-HI
-  model: tax.taxrate
-  pk: '12'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.050000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-ID
-  model: tax.taxrate
-  pk: '13'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.062500']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-IL
-  model: tax.taxrate
-  pk: '14'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.050000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-IN
-  model: tax.taxrate
-  pk: '15'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.050000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-IA
-  model: tax.taxrate
-  pk: '16'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.049000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-KS
-  model: tax.taxrate
-  pk: '17'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.060000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-KY
-  model: tax.taxrate
-  pk: '18'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.040000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-LA
-  model: tax.taxrate
-  pk: '19'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.055000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-ME
-  model: tax.taxrate
-  pk: '20'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.050000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-MD
-  model: tax.taxrate
-  pk: '21'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.050000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-MA
-  model: tax.taxrate
-  pk: '22'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.060000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-MI
-  model: tax.taxrate
-  pk: '23'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.065000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-MN
-  model: tax.taxrate
-  pk: '24'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.070000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-MS
-  model: tax.taxrate
-  pk: '25'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.042250']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-MI
-  model: tax.taxrate
-  pk: '26'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.000000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-MO
-  model: tax.taxrate
-  pk: '27'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.050000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-NE
-  model: tax.taxrate
-  pk: '28'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.065000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-NV
-  model: tax.taxrate
-  pk: '29'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.000000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-NH
-  model: tax.taxrate
-  pk: '30'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.060000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-NJ
-  model: tax.taxrate
-  pk: '31'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.050000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-NM
-  model: tax.taxrate
-  pk: '32'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.050000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-NY
-  model: tax.taxrate
-  pk: '33'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.040000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-NC
-  model: tax.taxrate
-  pk: '34'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.050000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-ND
-  model: tax.taxrate
-  pk: '35'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.050000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-OH
-  model: tax.taxrate
-  pk: '36'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.045000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-OK
-  model: tax.taxrate
-  pk: '37'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.000000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-OR
-  model: tax.taxrate
-  pk: '38'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.060000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-PA
-  model: tax.taxrate
-  pk: '39'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.070000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-RI
-  model: tax.taxrate
-  pk: '40'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.050000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-SC
-  model: tax.taxrate
-  pk: '41'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.040000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-SD
-  model: tax.taxrate
-  pk: '42'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.060000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-TN
-  model: tax.taxrate
-  pk: '43'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.062500']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-TX
-  model: tax.taxrate
-  pk: '44'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.047500']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-UT
-  model: tax.taxrate
-  pk: '45'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.050000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-VT
-  model: tax.taxrate
-  pk: '46'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.035000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-VA
-  model: tax.taxrate
-  pk: '47'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.065000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-WA
-  model: tax.taxrate
-  pk: '48'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.060000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-WV
-  model: tax.taxrate
-  pk: '49'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.050000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-WI
-  model: tax.taxrate
-  pk: '50'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.040000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: US-WY
-  model: tax.taxrate
-  pk: '51'
+    taxZone: !!python/long '2'
+  model: !!python/unicode 'tax.taxrate'
+  pk: !!python/unicode '2'

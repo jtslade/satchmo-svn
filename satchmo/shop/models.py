@@ -12,7 +12,7 @@ from django.contrib.sites.models import Site
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_unicode
 from satchmo.contact.models import Contact
-from satchmo.i18n.models import Country
+from satchmo.l10n.models import Country
 
 from logging import getLogger
 

@@ -7,7 +7,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from satchmo.contact.models import Contact, AddressBook, PhoneNumber, Order
-from satchmo.i18n.models import Country
+from satchmo.l10n.models import Country
 from satchmo.shop.models import Config
 from satchmo.shop.views.utils import bad_or_missing
 
@@ -55,7 +55,7 @@ class ContactInfoForm(forms.Form):
 
         data = self.cleaned_data['state']
         country = Country.objects.get(iso2_code=country_iso2)
-        if country.area_set.count() > 0:
+        if country.adminarea_set.count() > 0:
             if not data or data == selection:
                 raise forms.ValidationError(
                     self._local_only and _('This field is required.') \
@@ -75,7 +75,7 @@ class ContactInfoForm(forms.Form):
 
         data = self.cleaned_data['ship_state']
         country = Country.objects.get(iso2_code=country_iso2)
-        if country.area_set.count() > 0:
+        if country.adminarea_set.count() > 0:
             if not data or data == selection:
                 raise forms.ValidationError(
                     self._local_only and _('This field is required.') \
