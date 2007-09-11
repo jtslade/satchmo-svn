@@ -15,6 +15,7 @@ class ImageWithThumbnailField(ImageField):
         on pre_save.
     """
 
+    # TODO: post DB Settings branch merge - make auto_rename a configurable option
     def __init__(self, verbose_name=None, name=None,
                  width_field=None, height_field=None,
                  auto_rename=True, name_field=None, **kwargs):
