@@ -223,6 +223,7 @@ class Product(models.Model):
     date_added = models.DateField(null=True, blank=True)
     active = models.BooleanField(_("Is product active?"), default=True, help_text=_("This will determine whether or not this product will appear on the site"))
     featured = models.BooleanField(_("Featured Item"), default=False, help_text=_("Featured items will show on the front page"))
+    ordering = models.IntegerField(_("Ordering"), default=0, help_text=_("Override alphabetical order in category display"))
     weight = models.DecimalField(_("Weight"), max_digits=8, decimal_places=2, null=True, blank=True)
     length = models.DecimalField(_("Length"), max_digits=6, decimal_places=2, null=True, blank=True)
     width = models.DecimalField(_("Width"), max_digits=6, decimal_places=2, null=True, blank=True)
@@ -331,7 +332,7 @@ class Product(models.Model):
         list_display = ('slug', 'name', 'unit_price', 'items_in_stock', 'get_subtypes',)
         list_filter = ('category',)
         fields = (
-        (None, {'fields': ('category', 'name', 'slug', 'description', 'short_description', 'date_added', 'active', 'featured', 'items_in_stock',)}),
+        (None, {'fields': ('category', 'name', 'slug', 'description', 'short_description', 'date_added', 'active', 'featured', 'items_in_stock','ordering')}),
         ('Meta Data', {'fields': ('meta',), 'classes': 'collapse'}),
         ('Item Dimensions', {'fields': (('length', 'width','height',),'weight'), 'classes': 'collapse'}),
         ('Tax', {'fields':('taxable', 'taxClass'), 'classes': 'collapse'}),
@@ -339,7 +340,7 @@ class Product(models.Model):
         )
 
     class Meta:
-        ordering = ('slug',)
+        ordering = ('ordering', 'name',)
         verbose_name = _("Product")
         verbose_name_plural = _("Products")
 
@@ -387,7 +388,7 @@ class ConfigurableProduct(models.Model):
     """
     product = models.OneToOneField(Product)
     option_group = models.ManyToManyField(OptionGroup, blank=True,)
-    create_subs = models.BooleanField(_("Create Variations"), default=False, help_text =_("Create ProductVariations for all this product's options"))
+    create_subs = models.BooleanField(_("Create Variations"), default=False, help_text =_("Create ProductVariations for all this product's options.  To use this, you must first add an option, save, then return to this page and select this option."))
 
     def _cross_list(self, sequences):
         """
