@@ -60,6 +60,9 @@ def contact_info(request):
                     init_data[item] = getattr(contact.billing_address,item)
             if contact.primary_phone:
                 init_data['phone'] = contact.primary_phone.phone
+        else:
+            # Allow them to login from this page.
+            request.session.set_test_cookie()
         form = PaymentContactInfoForm(countries, areas, initial=init_data)
 
     context = RequestContext(request, {
