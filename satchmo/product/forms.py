@@ -15,22 +15,42 @@ class InventoryForm(forms.Form):
             products = Product.objects.all().order_by('slug')
             
         for product in products:
+            subtypes = product.get_subtypes()
+            qtyclasses = ('text', 'qty') + subtypes
+            qtyclasses = " ".join(qtyclasses)
+
             kw = { 
             'label' : product.slug,
             'help_text' : product.name,
-            'initial' : product.items_in_stock }
+            'initial' : product.items_in_stock,
+            'widget' : forms.TextInput(attrs={'class': qtyclasses}) }
             
             qty = forms.IntegerField(**kw)
             self.fields['qty__%s' % product.slug] = qty
             qty.slug = product.slug
             qty.product_id = product.id
+            qty.subtypes = " ".join(subtypes)
             
             kw['initial'] = product.unit_price
             kw['required'] = False
+            kw['widget'] = forms.TextInput(attrs={'class': "text price"})
             price = forms.DecimalField(**kw)
             price.slug = product.slug
-            price.product_id = product.id
             self.fields['price__%s' % product.slug] = price
+            
+            kw['initial'] = product.active
+            kw['widget'] = forms.CheckboxInput(attrs={'class': "checkbox active"})
+            active = forms.BooleanField(**kw)
+            active.slug = product.slug
+            self.fields['active__%s' % product.slug] = active
+            
+            kw['initial'] = product.featured
+            kw['widget'] = forms.CheckboxInput(attrs={'class': "checkbox featured"})
+            featured = forms.BooleanField(**kw)
+            featured.slug = product.slug
+            self.fields['featured__%s' % product.slug] = featured
+            
+            
             
     def save(self, request):
         self.full_clean()
@@ -54,6 +74,24 @@ class InventoryForm(forms.Form):
                     except Price.DoesNotExist:
                         price = Price(product=prod, quantity=1)
                         
-                    price.price = value
-                    price.save()
+            elif opt=="active":
+                if value != prod.active:
+                    if value:
+                        note = "Activated %s"
+                    else:
+                        note = "Deactivated %s"
+                    request.user.message_set.create(message=note % (key))
+                        
+                    prod.active = value
+                    prod.save()
         
+            elif opt=="featured":
+                if value != prod.featured:
+                    if value:
+                        note = "%s is now featured"
+                    else:
+                        note = "%s is no longer featured"
+                    request.user.message_set.create(message=note % (key))
+
+                    prod.featured = value
+                    prod.save()
