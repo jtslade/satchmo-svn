@@ -47,6 +47,12 @@ def credit_confirm_info(request, payment_module):
         processor = credit_processor.PaymentProcessor(payment_module)
         processor.prepareData(orderToProcess)
         results, reason_code, msg = processor.process()
+        
+        log.info("""Processing credit card transaction with %s
+Order #%i
+Results=%s
+Response=%s
+Reason=%s""", payment_module.key, orderToProcess.id, results, reason_code, msg)
 
         if results:
             tempCart.empty()
