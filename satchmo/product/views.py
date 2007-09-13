@@ -1,13 +1,17 @@
-from sets import Set
 from django import http
+from django.contrib.auth.decorators import user_passes_test
+from django.core import urlresolvers
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
-from django.db.models import Q
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from satchmo.product.models import Category, Option, Product, ConfigurableProduct, ProductVariation
 from satchmo.shop.templatetags.currency_filter import moneyfmt
 from satchmo.shop.views.utils import bad_or_missing
+from sets import Set
+import forms
+
 
 def serialize_options(config_product, selected_options=Set()):
     """
@@ -143,3 +147,27 @@ def getConfigurableProductOptions(request, id):
     if not options:
         return '<option>No valid options found in "%s"</option>' % cp.product.slug
     return http.HttpResponse(options, mimetype="text/html")
+
+@user_passes_test(lambda u: u.is_authenticated() and u.is_staff, login_url='/accounts/login/')
+def edit_inventory(request):
+    """A quick inventory price, qty update form"""
+    if request.POST:
+        new_data = request.POST.copy()
+        form = forms.InventoryForm(new_data)
+        if form.is_valid():
+            form.save(request)
+            url = urlresolvers.reverse('satchmo_admin_edit_inventory')
+            return http.HttpResponseRedirect(url)
+    else:
+        form = forms.InventoryForm()
+        
+    ctx = RequestContext(request, {
+        'title' : _('Inventory Editor'),
+        'form' : form
+        })
+    
+    return render_to_response('admin/inventory_form.html', ctx)
+            
+    
+    
+    

@@ -23,14 +23,13 @@ urlpatterns += patterns('satchmo.shop.views',
     # override comments with our redirecting one.  OK to remove the next two URLs if you aren't using ratings
     (r'^comments/post/$', 'comments.post_rating', { 'maxcomments' : 1 }, 'satchmo_rating_post'), 
     (r'^comments/', include('django.contrib.comments.urls.comments')),
+    (r'^product/', include('satchmo.product.urls')),
 )
 #Note with the last category url - this allows category depth to be as deep as we want but the downside
 #is that we ignore all but the child and parent category.  In practice this should be ok
 
 urlpatterns += patterns('satchmo.product.views',
     (r'^search/$', 'do_search', {}, 'satchmo_search'),
-    (r'^product/(?P<product_slug>[-\w]+)/prices/$', 'get_price', {}, 'satchmo_product_prices'),
-    (r'^product/(?P<product_slug>[-\w]+)/$', 'get_product', {}, 'satchmo_product'),
 )
 
 #Dictionaries for generic views used in Satchmo

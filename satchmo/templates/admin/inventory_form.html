@@ -1,0 +1,72 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_modify %}
+
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/forms.css{% endblock %}
+{% block extrastyle %}
+<style type="text/css">
+form#inventoryform input {
+    width: 6em;
+}
+</style>
+{% endblock %}
+{% block coltype %}colMS{% endblock %}
+{% block bodyclass %}dashboard{% endblock %}
+{% block userlinks %}<a href="/admin/doc/">{% trans 'Documentation' %}</a> / <a href="/admin/password_change/">{% trans 'Change password' %}</a> / <a href="/admin/logout/">{% trans 'Log out' %}</a>{% endblock %}
+{% block breadcrumbs %}{% if not is_popup %}
+<div class="breadcrumbs">
+     <a href="/admin/">{% trans "Home" %}</a> &rsaquo;
+     {% trans "Inventory Management" %}
+</div>
+{% endif %}{% endblock %}
+{% block content %}
+<div id="content-main">
+{% if form.errors %}
+    <p class="errornote">
+    {% blocktrans count form.errors|length as counter %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+    </p>
+{% endif %}
+{% if form.fields %}
+<form method="post" id="inventoryform">
+    <table>
+        <tr>
+            <th>Slug</th>
+            <th>Name</th>
+            <th>Inventory</th>
+            <th>Unit Price</th>
+        </tr>
+    {% for field in form %}
+        {% if field.is_hidden %}
+            {{ field }}
+        {% else %}
+            {% ifchanged field.field.slug %}
+                {% if not forloop.first %}
+        		</tr>
+        		{% endif %}
+                <tr>
+                    <td><a href="/admin/product/product/{{ field.field.product_id }}/">{{ field.label_tag }}</a></td>
+                    <td>{{ field.help_text}}</td>
+            {% endifchanged %}
+                    <td>
+                	    {% if field.errors %}
+                		<span class="error">{{ field.errors }}</span><br/>
+        		        {% endif %}
+                        {{ field }}
+                    </td>
+    	{% endif %}
+    {% endfor %}
+        		</tr>
+    </table>
+<input type="submit" value="Save" class="default" />
+</form>
+{% else %}
+    <p>{% trans "No inventory items." %}</p>
+{% endif %}
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<div id="content-related">
+    {% include "admin/order_sidebar.html" %}
+    <a href="/admin/">{% trans "Shop Administration" %}</a><br/>
+</div>
+{% endblock %}

@@ -160,7 +160,7 @@ class OptionGroup(models.Model):
         pass
 
     class Meta:
-        ordering = ['sort_order']
+        ordering = ['sort_order', 'name']
         verbose_name = _("Option Group")
         verbose_name_plural = _("Option Groups")
 
@@ -187,7 +187,7 @@ class Option(models.Model):
     displayOrder = models.IntegerField(_("Display Order"))
 
     class Meta:
-        ordering = ('optionGroup', 'displayOrder')
+        ordering = ('optionGroup', 'displayOrder', 'name')
         unique_together = (('optionGroup', 'value'),)
         verbose_name = _("Option Item")
         verbose_name_plural = _("Option Items")
@@ -338,6 +338,7 @@ class Product(models.Model):
         ('Tax', {'fields':('taxable', 'taxClass'), 'classes': 'collapse'}),
         ('Related Products', {'fields':('related_items','also_purchased'),'classes':'collapse'}),
         )
+        search_fields = ['slug', 'name']
 
     class Meta:
         ordering = ('ordering', 'name',)

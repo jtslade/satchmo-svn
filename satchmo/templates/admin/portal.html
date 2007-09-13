@@ -118,6 +118,7 @@
 {% block sidebar %}
 <div id="content-related">
     {% include "admin/order_sidebar.html" %}
+    <a href="{% url satchmo_admin_edit_inventory %}">Edit Inventory</a><br/>
     <a id="legacyswitch" href=".?legacy=True">{% trans "Switch to Legacy View" %}</a>
 </div>
 {% endblock %}
