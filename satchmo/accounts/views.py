@@ -74,11 +74,16 @@ def send_welcome_email(email, first_name, last_name):
             log.fatal('Error sending mail: %s' % e)
             raise IOError('Could not send email, please check to make sure your email settings are correct, and that you are not being blocked by your ISP.')
     
-
-def register(request):
+def register_handle_form(request, redirect=None):
     """
-    Allows a new user to register an account.
+    Handle all registration logic.  This is broken out from "register" to allow easy overriding/hooks 
+    such as a combined login/register page.    
+    
+    Returns:
+    - Success flag
+    - HTTPResponseRedirect (success) or form (fail)
     """
+    
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
@@ -122,8 +127,9 @@ def register(request):
                 login(request, user)
                 send_welcome_email(email, first_name, last_name)
 
-            url = urlresolvers.reverse('registration_complete')
-            return http.HttpResponseRedirect(url)
+            if not redirect:
+                redirect = urlresolvers.reverse('registration_complete')
+            return (True, http.HttpResponseRedirect(redirect))
 
     else:
         initial_data = {}
@@ -136,8 +142,20 @@ def register(request):
 
         form = RegistrationForm(initial=initial_data)
 
-    context = RequestContext(request, {'form': form})
-    return render_to_response('registration/registration_form.html', context)
+    return (False, form)
+    
+    
+def register(request, redirect=None, template='registration/registration_form.html'):
+    """
+    Allows a new user to register an account.
+    """
+
+    success, todo = register_handle_form(request, redirect=redirect)
+    if success:
+        return todo
+    else:
+        context = RequestContext(request, {'form': todo, 'title' : _('Registration Form')})
+        return render_to_response(template, context)
 
 def activate(request, activation_key):
     """
