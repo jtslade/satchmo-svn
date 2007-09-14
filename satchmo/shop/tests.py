@@ -238,9 +238,6 @@ class ShopTest(TestCase):
         self.assertContains(response, "Category: Short Sleeve", count=1)
         self.assertContains(response, "Product: Django Rocks shirt", count=1)
         self.assertContains(response, "Product: Python Rocks shirt", count=1)
-        
-
-from django.contrib.auth.models import User
 
 class AdminTest(TestCase):
     fixtures = ['sample-store-data.yaml', 'products.yaml']

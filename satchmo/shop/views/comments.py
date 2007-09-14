@@ -1,5 +1,6 @@
 """Satchmo product rating views"""
 from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 from django.contrib.comments.models import Comment
 from django.contrib.comments.views.comments import post_comment
 from django.contrib.contenttypes.models import ContentType

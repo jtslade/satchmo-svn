@@ -1,5 +1,5 @@
 import trml2pdf
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader, Context
 from django.conf import settings
 from satchmo.shop.models import Config
@@ -22,7 +22,7 @@ def displayDoc(request, id, doc):
         filename = "mystore-shippinglabel.pdf"
         template = "shipping-label.rml"
     else:
-        return http.HttpResponseRedirect('/admin')
+        return HttpResponseRedirect('/admin')
     response = HttpResponse(mimetype='application/pdf')
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
     shopDetails = Config.objects.get(site=settings.SITE_ID)

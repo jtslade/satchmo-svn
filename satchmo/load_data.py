@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-import os, sys
 import urllib
 from os.path import isdir, isfile, join, dirname
 import os
+import sys
 import string
 import csv
 import tarfile
