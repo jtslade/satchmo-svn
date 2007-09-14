@@ -125,6 +125,9 @@ class ContactInfoForm(forms.Form):
                 setattr(customer, field, data[field])
             except KeyError:
                 pass
+        
+        if not data.has_key('newsletter'):
+            customer.newsletter = False
 
         if not customer.role:
             customer.role = "Customer"
@@ -175,5 +178,6 @@ class DateTextInput(forms.TextInput):
         return super(DateTextInput, self).render(name, value, attrs)
 
 class ExtendedContactInfoForm(ContactInfoForm):
-    """Contact form which includes birthday."""
-    dob = forms.DateField()
+    """Contact form which includes birthday and newsletter."""
+    dob = forms.DateField(required=False)
+    newsletter = forms.BooleanField(label=_('Newsletter'), widget=forms.CheckboxInput(), required=False)

@@ -16,10 +16,11 @@
 
 <h5>{% trans "Your profile" %}</h5>
 <ul class="profile">
-    <li>Email: {{ user_data.email }}
-    <li>Birthday: {{ user_data.dob|default_if_none:"--" }}</li>
-    <li>Billing Address:<br/>{% addressblock user_data.billing_address %}</li>
-    <li>Shipping Address:<br/>{% addressblock user_data.shipping_address %}</li>    
+    <li>{% trans 'Email:' %} {{ user_data.email }}
+    <li>{% trans 'Birthday:' %} {{ user_data.dob|default_if_none:"--" }}</li>
+    <li>{% trans 'Newsletter:' %} {% if user_data.newsletter %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}</li>
+    <li>{% trans 'Billing Address:'%}<br/>{% addressblock user_data.billing_address %}</li>
+    <li>{% trans 'Shipping Address:'%}<br/>{% addressblock user_data.shipping_address %}</li>    
 </ul>
 <h5>{% trans "Account options" %}:</h5>
 <p>

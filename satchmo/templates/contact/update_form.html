@@ -33,6 +33,9 @@
     <tr><td><label for="id_phone">{% trans "Phone number" %}*</label></td><td> {{ form.phone }}</td></tr>
     {% if form.phone.errors %}<tr><td>&nbsp;</td><td>*** {{ form.phone.errors|join:", " }}</td></tr>{% endif %}
 
+    <tr><td><label for="id_newsletter">{% trans "Newsletter" %}*</label></td><td> {{ form.newsletter }}</td></tr>
+    {% if form.newsletter.errors %}<tr><td>&nbsp;</td><td>*** {{ form.newsletter.errors|join:", " }}</td></tr>{% endif %}
+
     <tr><td colspan="2"><h4>{% trans "Billing Information" %}</h4></td></tr>
 
     <tr><td><label for="id_street1">{% trans "Street" %}*</label></td><td> {{ form.street1 }}</td></tr>

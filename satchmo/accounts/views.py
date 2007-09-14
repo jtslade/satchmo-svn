@@ -32,7 +32,7 @@ class RegistrationForm(forms.Form):
     password = forms.CharField(label=_('Password'), max_length=30, widget=forms.PasswordInput(), required=True)
     first_name = forms.CharField(label=_('First name'), max_length=30, required=True)
     last_name = forms.CharField(label=_('Last name'), max_length=30, required=True)
-    newsletter = forms.ChoiceField(label=_('Newsletter'), widget=forms.RadioSelect(), choices=YESNO)
+    newsletter = forms.BooleanField(label=_('Newsletter'), widget=forms.CheckboxInput(), required=False)
 
     def clean_password(self):
         """Enforce that password and password2 are the same."""
