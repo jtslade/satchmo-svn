@@ -20,22 +20,17 @@ features in Satchmo.
 - `ReportLab`_
 - `Tiny RML2PDF`_ (`download link`_)
 
-The following packages are optional but encouraged:
+For product comment functionality, you will need:
 
-- `DocUtils`_
-- `PyYaml`_ (For unit tests)
-
-To use product ratings, you need:
 - `django-comment-utils`_ which must be renamed "commentutils" and put on your PYTHONPATH
 
 For more complex email verification process, you will need:
 
 - `Django Registration`_
 
-The following Internationalization data can be automatically installed by the
-Satchmo scripts.
+The following packages are optional but encouraged:
 
-- `Webda`_
+- `PyYaml`_ (For unit tests)
 
 .. _Django installation guide: http://www.djangoproject.com/documentation/install/
 .. _Python Imaging Library: http://www.pythonware.com/products/pil/
@@ -45,7 +40,6 @@ Satchmo scripts.
 .. _ReportLab: http://www.reportlab.org/
 .. _DocUtils: http://docutils.sourceforge.net/
 .. _PyYaml: http://pyyaml.org/
-.. _Webda: http://webda.python-hosting.com/
 .. _Authorize.net: http://www.authorize.net/
 .. _Tiny RML2PDF: http://www.openreport.org/index.py/static/page/trml2pdf
 .. _download link: http://tinyforge.org/frs/download.php/1/trml2pdf.tar.gz
