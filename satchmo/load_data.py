@@ -97,7 +97,7 @@ def delete_db(settings):
             os.system(cmd % params) 
     
     else: 
-        raise AssertionError, "Unknown database engine %s", engine
+        raise AssertionError, "Unknown database engine %s" % engine
 
 
 def init_and_install():
