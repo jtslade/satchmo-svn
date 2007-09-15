@@ -58,18 +58,18 @@ class Country(models.Model):
     active = models.BooleanField(_('Country is active'), default=True)
     continent = models.CharField(_('Continent'), choices=CONTINENTS, max_length=2)
     admin_area = models.CharField(_('Administrative Area'), choices=AREAS, max_length=2, null=True, blank=True)
-    
+
     class Meta:
         verbose_name = _('Country')
         verbose_name_plural = _('Countries')
         ordering = ('name',)
-        
+
     class Admin:
         list_display = ('printable_name', 'iso2_code',)
         list_filter = ('continent', 'active')
         search_fields = ('name', 'iso2_code', 'iso3_code')
-        
-        
+
+
     def __unicode__(self):
         return self.printable_name
 
