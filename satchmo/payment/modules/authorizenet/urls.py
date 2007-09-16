@@ -1,4 +1,3 @@
-import os
 from django.conf.urls.defaults import *
 from satchmo.payment.paymentsettings import PaymentSettings
 

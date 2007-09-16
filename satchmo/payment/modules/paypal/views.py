@@ -1,12 +1,11 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
-from django.template import RequestContext, Context
+from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from satchmo.contact.models import Order
 from satchmo.payment.common.views import payship
 from satchmo.payment.paymentsettings import PaymentSettings
 from satchmo.shop.models import Cart
-import datetime
 
 def pay_ship_info(request):
     return payship.simple_pay_ship_info(request, PaymentSettings().PAYPAL, 'checkout/paypal/pay_ship.html')

@@ -1,12 +1,10 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django import newforms as forms
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from models import NullContact
+from django.utils.translation import ugettext_lazy as _, ugettext
 from satchmo.contact.models import Contact
 from satchmo.newsletter import SubscriptionManager
-from django.utils.translation import ugettext_lazy as _, ugettext
-
-from django import newforms as forms
+from satchmo.newsletter.models import NullContact
 
 class NewsletterForm(forms.Form):
     full_name = forms.CharField(label=_('Full Name'), max_length=100, required=False)

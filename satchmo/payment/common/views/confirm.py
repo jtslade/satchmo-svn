@@ -2,19 +2,18 @@
 # Last step in the order process - confirm the info and process it
 #####################################################################
 
+import datetime
+import logging
+from socket import error as SocketError
 from django.conf import settings
 from django.core import urlresolvers
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
-from django.template import loader
 from django.template import loader, RequestContext, Context
 from django.utils.translation import ugettext as _
-from satchmo.contact.models import Order, OrderItem, OrderStatus
-from satchmo.shop.models import Cart, CartItem, Config
-from socket import error as SocketError
-import datetime
-import logging
+from satchmo.contact.models import Order, OrderStatus
+from satchmo.shop.models import Cart, Config
 
 log = logging.getLogger('satchmo.payment.common.views')
 

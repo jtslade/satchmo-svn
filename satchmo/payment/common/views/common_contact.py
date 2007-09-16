@@ -3,17 +3,13 @@
 #####################################################################
 
 from django import http
-from django.conf import settings
-from django.core import urlresolvers
 from django.shortcuts import render_to_response
-from django.template import loader
-from django.template import RequestContext, Context
+from django.template import RequestContext
 from satchmo.contact.common import get_area_country_options
-from satchmo.contact.forms import selection
 from satchmo.contact.models import Contact
 from satchmo.payment.common.forms import PaymentContactInfoForm
 from satchmo.payment.paymentsettings import PaymentSettings
-from satchmo.shop.models import Cart, CartItem
+from satchmo.shop.models import Cart
 
 def contact_info(request):
     """View which collects demographic information from customer."""

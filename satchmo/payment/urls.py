@@ -1,4 +1,3 @@
-import os
 from django.conf.urls.defaults import *
 from satchmo.payment.paymentsettings import PaymentSettings
 
@@ -13,4 +12,4 @@ urlpatterns = patterns('satchmo.payment.views',
 )
 
 # now add all enabled module payment settings
-urlpatterns += paymentsettings.urlpatterns()  
+urlpatterns += paymentsettings.urlpatterns()
