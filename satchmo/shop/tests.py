@@ -26,7 +26,7 @@ checkout_step1_post_data = {
     'paymentmethod': 'DUMMY'}
 
 class ShopTest(TestCase):
-    fixtures = ['sample-store-data.yaml', 'products.yaml']
+    fixtures = ['l10n-data.yaml','sample-store-data.yaml', 'products.yaml']
 
     def setUp(self):
         # Every test needs a client

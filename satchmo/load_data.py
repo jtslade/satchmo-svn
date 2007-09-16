@@ -103,6 +103,7 @@ def delete_db(settings):
 def init_and_install():
     print "Calling syncdb"
     call_command('syncdb', interactive=True)
+    call_command('loaddata', 'l10n_data.xml', interactive=True)
     
 def load_data():
     from satchmo.contact.models import Contact, AddressBook, PhoneNumber
