@@ -54,26 +54,9 @@
     type: !!python/unicode 'Fax'}
   model: !!python/unicode 'contact.phonenumber'
   pk: !!python/unicode '4'
-- fields: {city: null, country: !!python/long '231', enable_ratings: true, in_country_only: true,
-    no_stock_checkout: false, phone: null, postal_code: null, sales_country: !!python/long '231',
+- fields: {city: null, country: null, enable_ratings: true, in_country_only: true,
+    no_stock_checkout: false, phone: null, postal_code: null, sales_country: null,
     state: null, store_description: null, store_email: null, store_name: !!python/unicode 'My
       Site - Trunk', street1: null, street2: null}
   model: !!python/unicode 'shop.config'
   pk: !!python/unicode '1'
-- fields: {description: !!python/unicode 'Default', title: !!python/unicode 'Default'}
-  model: !!python/unicode 'tax.taxclass'
-  pk: !!python/unicode '1'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.040000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: !!python/long '1'
-  model: !!python/unicode 'tax.taxrate'
-  pk: !!python/unicode '1'
-- fields:
-    percentage: !!python/object/apply:decimal.Decimal ['0.000000']
-    taxClass: !!python/long '1'
-    taxCountry: null
-    taxZone: !!python/long '2'
-  model: !!python/unicode 'tax.taxrate'
-  pk: !!python/unicode '2'
