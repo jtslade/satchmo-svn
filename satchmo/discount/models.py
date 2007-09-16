@@ -2,13 +2,12 @@
 Sets up a discount that can be applied to a product
 """
 
-from django.db import models
-from satchmo.product.models import Product
 from datetime import date
-from satchmo.shop.utils.validators import MutuallyExclusiveWithField
+from django.db import models
 from django.utils.translation import ugettext, ugettext_lazy as _
-from decimal import Decimal
+from satchmo.product.models import Product
 from satchmo.shop.templatetags.satchmo_currency import moneyfmt
+from satchmo.shop.utils.validators import MutuallyExclusiveWithField
 
 percentage_validator = MutuallyExclusiveWithField('amount')
 amount_validator = MutuallyExclusiveWithField('percentage')
@@ -45,7 +44,7 @@ class Discount(models.Model):
 
     def __unicode__(self):
         return self.description
-    
+
     def isValid(self, cart=None):
         """
         Make sure this discount still has available uses and is in the current date range.
@@ -79,7 +78,7 @@ class Discount(models.Model):
             return (True, ugettext('Valid.'))
         else:
             return (False, ugettext('This discount cannot be applied to the products in your cart.'))
-        
+
     def calc(self, order):
         # Use the order details and the discount specifics to calculate the actual discount
         if self.amount:
@@ -88,12 +87,11 @@ class Discount(models.Model):
             return(self.percentage * (order.sub_total + order.shipping_cost))
         if self.percentage:
             return((self.percentage * order.sub_total))
-        
+
     class Admin:
         list_display=('description','active')
 
     class Meta:
         verbose_name = _("Discount")
         verbose_name_plural = _("Discounts")
-
 

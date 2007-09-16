@@ -1,13 +1,10 @@
 import datetime
 from django import newforms as forms
 from django.conf import settings
-from django.shortcuts import render_to_response
-from django.template import RequestContext
 from django.utils.translation import ugettext as _
-from satchmo.contact.models import Contact, AddressBook, PhoneNumber, Order
+from satchmo.contact.models import Contact, AddressBook, PhoneNumber
 from satchmo.l10n.models import Country
 from satchmo.shop.models import Config
-from satchmo.shop.views.utils import bad_or_missing
 
 selection = ''
 
@@ -36,7 +33,7 @@ class ContactInfoForm(forms.Form):
             self.fields['ship_state'] = forms.ChoiceField(choices=areas, initial=selection, required=False)
         if countries is not None:
             self.fields['country'] = forms.ChoiceField(choices=countries)
-             
+
         shop_config = Config.objects.get(site=settings.SITE_ID)
         self._local_only = shop_config.in_country_only
         country = shop_config.sales_country
@@ -60,7 +57,7 @@ class ContactInfoForm(forms.Form):
                                or _('State is required for your country.'))
         return data
 
-    def clean_ship_state(self):        
+    def clean_ship_state(self):
         if self.cleaned_data['copy_address']:
             if 'state' in self.cleaned_data:
                 self.cleaned_data['ship_state'] = self.cleaned_data['state']
@@ -107,31 +104,31 @@ class ContactInfoForm(forms.Form):
 
     def clean_ship_postal_code(self):
         return self.ship_charfield_clean('postal_code')
-        
+
     def save(self, contact=None):
         """Save the contact info into the database.
-        Checks to see if contact exists. If not, creates a contact 
+        Checks to see if contact exists. If not, creates a contact
         and copies in the address and phone number."""
-        
+
         if not contact:
             customer = Contact()
         else:
             customer = contact
-            
+
         data = self.cleaned_data
-        
+
         for field in customer.__dict__.keys():
             try:
                 setattr(customer, field, data[field])
             except KeyError:
                 pass
-        
+
         if not data.has_key('newsletter'):
             customer.newsletter = False
 
         if not customer.role:
             customer.role = "Customer"
-            
+
         customer.save()
         address = AddressBook()
         address_keys = address.__dict__.keys()
@@ -164,11 +161,7 @@ class ContactInfoForm(forms.Form):
         phone.phone = data['phone']
         phone.contact = customer
         phone.save()
-        return customer.id    
-
-
-        import django.newforms as forms
-        import datetime
+        return customer.id
 
 class DateTextInput(forms.TextInput):
     def render(self, name, value, attrs=None):

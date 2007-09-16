@@ -1,17 +1,14 @@
+import logging
 from django import http
-from django import newforms as forms
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core import urlresolvers
 from django.shortcuts import render_to_response
-from django.template import loader, RequestContext, Context
-from django.utils.translation import ugettext_lazy as _, ugettext
-from forms import ExtendedContactInfoForm
+from django.template import RequestContext
+from django.utils.translation import ugettext_lazy as _
 from satchmo.contact.common import get_area_country_options
-from satchmo.contact.forms import selection
+from satchmo.contact.forms import ExtendedContactInfoForm
 from satchmo.contact.models import Contact, Order
 from satchmo.shop.views.utils import bad_or_missing
-import logging
 
 log = logging.getLogger('satchmo.contact.views')
 
@@ -22,7 +19,7 @@ def view(request):
         user_data = Contact.objects.get(user=request.user.id)
     except Contact.DoesNotExist:
         user_data = None
-        
+
     context = RequestContext(request, {'user_data': user_data})
     return render_to_response('contact/view_profile.html', context)
 
@@ -66,7 +63,7 @@ def update(request):
         'form': form,
         'country': only_country})
     return render_to_response('contact/update_form.html', context)
-        
+
 @login_required
 def order_history(request):
     orders = None
@@ -82,8 +79,7 @@ def order_history(request):
         'orders' : orders})
 
     return render_to_response('contact/order_history.html', ctx)
-    
-    
+
 @login_required
 def order_tracking(request, order_id):
     order = None
@@ -93,13 +89,13 @@ def order_tracking(request, order_id):
             order = Order.objects.get(id__exact=order_id, contact=contact)
         except Order.DoesNotExist:
             pass
-    
+
     if order is None:
         return bad_or_missing(request, _("The order you have requested doesn't exist, or you don't have access to it."))
 
     ctx = RequestContext(request, {
         'contact' : contact,
         'order' : order})
-        
+
     return render_to_response('contact/order_tracking.html', ctx)
 

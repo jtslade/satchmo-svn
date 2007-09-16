@@ -1,10 +1,9 @@
+import logging
 from django import http
 from django import newforms as forms
-from django.newforms import widgets
 from django.conf import settings
 from django.core import urlresolvers
 from django.contrib.auth import logout, login, authenticate
-from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.shortcuts import render_to_response
@@ -14,9 +13,7 @@ from django.utils.translation import ugettext_lazy as _, ugettext
 from satchmo.contact.models import Contact
 from satchmo.shop.models import Config
 from satchmo.shop.utils.unique_id import generate_id
-from satchmo.shop.views.utils import bad_or_missing
 from socket import error as SocketError
-import logging
 
 log = logging.getLogger('satchmo.accounts.views')
 
@@ -73,17 +70,17 @@ def send_welcome_email(email, first_name, last_name):
         else:
             log.fatal('Error sending mail: %s' % e)
             raise IOError('Could not send email, please check to make sure your email settings are correct, and that you are not being blocked by your ISP.')
-    
+
 def register_handle_form(request, redirect=None):
     """
-    Handle all registration logic.  This is broken out from "register" to allow easy overriding/hooks 
-    such as a combined login/register page.    
-    
+    Handle all registration logic.  This is broken out from "register" to allow easy overriding/hooks
+    such as a combined login/register page.
+
     Returns:
     - Success flag
     - HTTPResponseRedirect (success) or form (fail)
     """
-    
+
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
@@ -143,8 +140,7 @@ def register_handle_form(request, redirect=None):
         form = RegistrationForm(initial=initial_data)
 
     return (False, form)
-    
-    
+
 def register(request, redirect=None, template='registration/registration_form.html'):
     """
     Allows a new user to register an account.
