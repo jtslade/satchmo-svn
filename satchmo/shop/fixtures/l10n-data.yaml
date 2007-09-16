@@ -249,7 +249,7 @@
   pk: !!python/long '61'
 - fields: {abbrev: !!python/unicode 'WA', active: true, country: !!python/long '231',
     name: !!python/unicode 'Washington'}
-  model: !!python/unicode l10n.adminarea'
+  model: !!python/unicode 'l10n.adminarea'
   pk: !!python/long '62'
 - fields: {abbrev: !!python/unicode 'WV', active: true, country: !!python/long '231',
     name: !!python/unicode 'West Virginia'}
