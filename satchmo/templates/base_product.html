@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load satchmo.thumbnail %}
-{% load satchmo.price_display %}
-{% load satchmo.currency_filter %}
+{% load satchmo_thumbnail %}
+{% load satchmo_price %}
+{% load satchmo_currency %}
 
 {% block extra-head %}
 {% if product.meta %}
@@ -91,7 +91,7 @@ $(function() {
 <input type="submit" value="{% trans "Add to cart" %}" /> 
 </form>
 {% if shop.enable_ratings %} 
-{% load comments.comments %}
+{% load comments %}
 {% load comment_utils %}
 <div class="productreviews">
     <h2>{% trans 'Product Reviews' %}</h2>

@@ -8,7 +8,7 @@ from datetime import date
 from satchmo.shop.utils.validators import MutuallyExclusiveWithField
 from django.utils.translation import ugettext, ugettext_lazy as _
 from decimal import Decimal
-from satchmo.shop.templatetags.currency_filter import moneyfmt
+from satchmo.shop.templatetags.satchmo_currency import moneyfmt
 
 percentage_validator = MutuallyExclusiveWithField('amount')
 amount_validator = MutuallyExclusiveWithField('percentage')

@@ -29,7 +29,7 @@ CART_XML_TEMPLATE = "checkout/google/cart.xml"
 CURRENCY_CODE = 'USD'
 
 # These are the image sizes offered by Google for the checkout button
-# You'll use these with the google_tags tag
+# You'll use these with the satchmo_googlecheckout tag
 # {% google_checkout_button 'MEDIUM' %}
 # please leave the keys upper case!
 CHECKOUT_BUTTON_URL = "http://checkout.google.com/buttons/checkout.gif"

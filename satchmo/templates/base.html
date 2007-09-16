@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-{% load i18n satchmo.category_display satchmo.google %}
+{% load i18n satchmo_category satchmo_google %}
 <head>
     {% block extra-head %}{% endblock %}
     <link rel="stylesheet" href="{{ media_url }}css/style.css" />
@@ -43,7 +43,7 @@
                 <a href="{% url auth_login %}">{% trans "Log in" %}</a><br/>
             {% endif %}
 
-            {% load satchmo.currency_filter %}
+            {% load satchmo_currency %}
             <a href="{% url satchmo_cart %}">{% trans "Cart" %}</a>
 
             {% if cart_count %}

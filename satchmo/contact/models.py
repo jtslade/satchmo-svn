@@ -10,7 +10,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from satchmo.product.models import Product
 from satchmo.newsletter import SubscriptionManager
-from satchmo.shop.templatetags.currency_filter import moneyfmt
+from satchmo.shop.templatetags.satchmo_currency import moneyfmt
 
 activeShippingModules = []
 

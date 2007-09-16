@@ -8,6 +8,7 @@ from templatetags import get_filter_args
 prefix = settings.SHOP_BASE
 if prefix == '/':
     prefix = ''
+redirectprefix = "http://testserver%s" % prefix
 
 checkout_step1_post_data = {
     'email': 'sometester@example.com',
@@ -55,7 +56,7 @@ class ShopTest(TestCase):
                               'subject': 'A question to test',
                               'inquiry': 'General Question',
                               'contents': 'A lot of info goes here.'})
-        self.assertRedirects(response, prefix+'/contact/thankyou/', status_code=302, target_status_code=200)
+        self.assertRedirects(response, redirectprefix+'/contact/thankyou/', status_code=302, target_status_code=200)
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, 'A question to test')
 
@@ -75,7 +76,7 @@ class ShopTest(TestCase):
                                     'password' : 'pass1',
                                     'password2' : 'pass1',
                                     'newsletter': '0'})
-        self.assertRedirects(response, '/accounts/register/complete/', status_code=302, target_status_code=200)
+        self.assertRedirects(response, redirectprefix+'/accounts/register/complete/', status_code=302, target_status_code=200)
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, subject)
 
@@ -92,7 +93,7 @@ class ShopTest(TestCase):
                                                       "1" : "L",
                                                       "2" : "BL",
                                                       "quantity" : 2})
-        self.assertRedirects(response, prefix+'/cart/', status_code=302, target_status_code=200)
+        self.assertRedirects(response, redirectprefix+'/cart/', status_code=302, target_status_code=200)
         response = self.client.get(prefix+'/cart/')
         self.assertContains(response, "Django Rocks shirt (Large/Blue)", count=1, status_code=200)
 
@@ -147,7 +148,7 @@ class ShopTest(TestCase):
         """
         self.test_cart_adding()
         response = self.client.post(prefix + '/cart/remove/', {'cartitem': '1'})
-        self.assertRedirects(response, prefix+'/cart/', status_code=302, target_status_code=200)
+        self.assertRedirects(response, redirectprefix+'/cart/', status_code=302, target_status_code=200)
         response = self.client.get(prefix+'/cart/')
         self.assertContains(response, "Your cart is empty.", count=1, status_code=200)
 
@@ -157,20 +158,20 @@ class ShopTest(TestCase):
         """
         self.test_cart_adding()
         response = self.client.post(prefix+"/checkout/", checkout_step1_post_data)
-        self.assertRedirects(response, prefix+'/checkout/dummy/', status_code=302, target_status_code=200)
+        self.assertRedirects(response, redirectprefix+'/checkout/dummy/', status_code=302, target_status_code=200)
         response = self.client.post(prefix+"/checkout/dummy/", {'credit_type': 'Visa',
                                     'credit_number': '4485079141095836',
                                     'month_expires': '1',
                                     'year_expires': '2009',
                                     'ccv': '552',
                                     'shipping': 'FlatRate'})
-        self.assertRedirects(response, prefix+'/checkout/dummy/confirm/', status_code=302, target_status_code=200)
+        self.assertRedirects(response, redirectprefix+'/checkout/dummy/confirm/', status_code=302, target_status_code=200)
         response = self.client.get(prefix+'/checkout/dummy/confirm/')
         self.assertContains(response, "Total = $54.50", count=1, status_code=200)
         self.assertContains(response, "Shipping + $5.00", count=1, status_code=200)
         self.assertContains(response, "Tax + $3.50", count=1, status_code=200)
         response = self.client.post(prefix+"/checkout/dummy/confirm/", {'process' : 'True'})
-        self.assertRedirects(response, prefix+'/checkout/dummy/success/', status_code=302, target_status_code=200)
+        self.assertRedirects(response, redirectprefix+'/checkout/dummy/success/', status_code=302, target_status_code=200)
         self.assertEqual(len(mail.outbox), 1)
 
     def test_registration_keeps_contact(self):
@@ -189,7 +190,7 @@ class ShopTest(TestCase):
             'password2': 'guz90tyc',
             'newsletter': '0'}
         response = self.client.post('/accounts/register/', data)
-        self.assertRedirects(response, '/accounts/register/complete/',
+        self.assertRedirects(response, redirectprefix+'/accounts/register/complete/',
             status_code=302, target_status_code=200)
         user = User.objects.get(email="sometester@example.com")
         contact = user.contact_set.get()
@@ -220,10 +221,10 @@ class ShopTest(TestCase):
         self.client.post(prefix + '/checkout/', checkout_step1_post_data)
         assert self.client.session.get('custID') is not None
         response = self.client.get('/accounts/logout/')
-        self.assertRedirects(response, prefix + '/', status_code=302, target_status_code=200)
+        self.assertRedirects(response, redirectprefix + '/', status_code=302, target_status_code=200)
         assert self.client.session.get('custID') is None
         response = self.client.get('/accounts/') # test logged in status
-        self.assertRedirects(response, '/accounts/login/?next=/accounts/', status_code=302, target_status_code=200)
+        self.assertRedirects(response, redirectprefix+'/accounts/login/?next=/accounts/', status_code=302, target_status_code=200)
         
     def test_search(self):
         """

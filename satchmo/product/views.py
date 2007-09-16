@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from satchmo.product.models import Category, Option, Product, ConfigurableProduct, ProductVariation
-from satchmo.shop.templatetags.currency_filter import moneyfmt
+from satchmo.shop.templatetags.satchmo_currency import moneyfmt
 from satchmo.shop.views.utils import bad_or_missing
 from sets import Set
 import forms

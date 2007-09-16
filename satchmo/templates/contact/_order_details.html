@@ -1,4 +1,4 @@
-{% load satchmo.currency_filter %}
+{% load satchmo_currency %}
 {% load i18n %}
 {% for item in order.orderitem_set.all %}
 {{ item }} - {{item.unit_price|currency}} x {{item.quantity}} = {{item.line_item_price|currency}}<br/>

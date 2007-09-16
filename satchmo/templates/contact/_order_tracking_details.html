@@ -1,6 +1,6 @@
-{# this text is placed by the order_tags template tag "order_tracking_details" #}
+{# this text is placed by the satchmo_order template tag "order_tracking_details" #}
 {% load i18n %}
-{% load satchmo.currency_filter %}
+{% load satchmo_currency %}
 
 <div class="orderdetails">
 <h4>{% trans 'Order #' %} {{ order.id }}</h4>
