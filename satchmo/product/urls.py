@@ -1,5 +1,3 @@
-from django.conf import settings
-from satchmo.product.models import Product
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('satchmo.product.views',

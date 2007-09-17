@@ -5,7 +5,6 @@ options.
 """
 
 import datetime
-import os
 from sets import Set
 from decimal import Decimal
 from django.conf import settings
@@ -19,7 +18,7 @@ if 'IMAGE_DIR' in settings.get_all_members():
     upload_dir = "./" + settings.IMAGE_DIR
 else:
     upload_dir = "./images"
-    
+
 class Category(models.Model):
     """
     Basic hierarchical category model for storing products
@@ -244,10 +243,10 @@ class Product(models.Model):
             try:
                 parent = self.productvariation.parent
                 img = parent.product.main_image
-                
+
             except ProductVariation.DoesNotExist:
                 pass
-        
+
         if not img:
             #This should be a "Image Not Found" placeholder image
             try:
@@ -255,9 +254,9 @@ class Product(models.Model):
             except IndexError:
                 import sys
                 print >>sys.stderr, 'Warning: default product image not found - try syncdb'
-                
+
         return img
-        
+
     main_image = property(_get_mainImage)
 
     def _get_fullPrice(self):
@@ -362,7 +361,7 @@ class Product(models.Model):
                 pass
         return tuple(types)
     get_subtypes.short_description = "Product SubTypes"
-    
+
     def _has_variants(self):
         try:
             if self.productvariation:
@@ -370,7 +369,7 @@ class Product(models.Model):
         except:
             return(False)
     has_variants = property(_has_variants)
-    
+
     def _get_category(self):
         """
         Return the primary category associated with this product
@@ -519,7 +518,7 @@ class ConfigurableProduct(models.Model):
 
     class Admin:
         pass
-        
+
     def __unicode__(self):
         return self.product.slug
 
