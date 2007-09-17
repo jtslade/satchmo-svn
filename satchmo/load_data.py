@@ -75,7 +75,7 @@ def delete_db(settings):
                            user=settings.DATABASE_USER, 
                            passwd=settings.DATABASE_PASSWORD)
         for cmd in ['drop database if exists %s', 
-                    'create database %s']: 
+                    'create database %s CHARACTER SET utf8 COLLATE utf8_general_ci']: 
             s.query(cmd % settings.DATABASE_NAME)
             
     elif engine in ('postgresql', 'postgresql_psycopg2'):
