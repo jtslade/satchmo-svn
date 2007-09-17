@@ -9,6 +9,7 @@ prefix = settings.SHOP_BASE
 if prefix == '/':
     prefix = ''
 redirectprefix = "http://testserver%s" % prefix
+account_redirect_prefix = "http://testserver"
 
 checkout_step1_post_data = {
     'email': 'sometester@example.com',
@@ -76,7 +77,7 @@ class ShopTest(TestCase):
                                     'password' : 'pass1',
                                     'password2' : 'pass1',
                                     'newsletter': '0'})
-        self.assertRedirects(response, redirectprefix+'/accounts/register/complete/', status_code=302, target_status_code=200)
+        self.assertRedirects(response, account_redirect_prefix +'/accounts/register/complete/', status_code=302, target_status_code=200)
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, subject)
 
@@ -190,7 +191,7 @@ class ShopTest(TestCase):
             'password2': 'guz90tyc',
             'newsletter': '0'}
         response = self.client.post('/accounts/register/', data)
-        self.assertRedirects(response, redirectprefix+'/accounts/register/complete/',
+        self.assertRedirects(response, account_redirect_prefix+'/accounts/register/complete/',
             status_code=302, target_status_code=200)
         user = User.objects.get(email="sometester@example.com")
         contact = user.contact_set.get()
@@ -224,7 +225,7 @@ class ShopTest(TestCase):
         self.assertRedirects(response, redirectprefix + '/', status_code=302, target_status_code=200)
         assert self.client.session.get('custID') is None
         response = self.client.get('/accounts/') # test logged in status
-        self.assertRedirects(response, redirectprefix+'/accounts/login/?next=/accounts/', status_code=302, target_status_code=200)
+        self.assertRedirects(response, account_redirect_prefix +'/accounts/login/?next=/accounts/', status_code=302, target_status_code=200)
         
     def test_search(self):
         """
