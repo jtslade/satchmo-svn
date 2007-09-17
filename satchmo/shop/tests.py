@@ -3,8 +3,10 @@ from django.test.client import Client
 from django.core import mail
 from django.conf import settings
 from django.contrib.auth.models import User
-from templatetags import get_filter_args
+from django.utils.encoding import smart_str
+from satchmo.shop.templatetags import get_filter_args
 
+currency = settings.CURRENCY
 prefix = settings.SHOP_BASE
 if prefix == '/':
     prefix = ''
@@ -118,14 +120,14 @@ class ShopTest(TestCase):
                                                       "2" : "B",
                                                       "quantity" : 1})
         self.assertContains(response, "DJ-Rocks_S_B", count=1, status_code=200)
-        self.assertContains(response, "$20.00", count=1, status_code=200)
+        self.assertContains(response, "20.00", count=1, status_code=200)
 
         # This tests the option price_change feature, and again the productname
         response = self.client.post(prefix+'/product/DJ-Rocks/prices/', {"1" : "L",
                                                       "2" : "BL",
                                                       "quantity" : 2})
         self.assertContains(response, "DJ-Rocks_L_BL", count=1, status_code=200)
-        self.assertContains(response, "$23.00", count=1, status_code=200)
+        self.assertContains(response, "23.00", count=1, status_code=200)
 
 #        response = self.client.get(prefix+'/product/neat-software/')
 #        self.assertContains(response, "Neat Software", count=1, status_code=200)
@@ -168,12 +170,27 @@ class ShopTest(TestCase):
                                     'shipping': 'FlatRate'})
         self.assertRedirects(response, redirectprefix+'/checkout/dummy/confirm/', status_code=302, target_status_code=200)
         response = self.client.get(prefix+'/checkout/dummy/confirm/')
-        self.assertContains(response, "Total = $54.50", count=1, status_code=200)
-        self.assertContains(response, "Shipping + $5.00", count=1, status_code=200)
-        self.assertContains(response, "Tax + $3.50", count=1, status_code=200)
+        self.assertContains(response, smart_str("Total = %s54.50" % currency), count=1, status_code=200)
+        self.assertContains(response, smart_str("Shipping + %s5.00" % currency), count=1, status_code=200)
+        self.assertContains(response, smart_str("Tax + %s3.50" % currency), count=1, status_code=200)
         response = self.client.post(prefix+"/checkout/dummy/confirm/", {'process' : 'True'})
         self.assertRedirects(response, redirectprefix+'/checkout/dummy/success/', status_code=302, target_status_code=200)
         self.assertEqual(len(mail.outbox), 1)
+
+        # Log in as a superuser
+        user = User.objects.create_user('fredsu', 'fred@root.org', 'passwd')
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
+        self.client.login(username='fredsu', password='passwd')
+
+        # Test pdf generation
+        response = self.client.post(prefix + '/admin/print/invoice/1/')
+        self.assertContains(response, 'reportlab', status_code=200)
+        response = self.client.post(prefix + '/admin/print/packingslip/1/')
+        self.assertContains(response, 'reportlab', status_code=200)
+        response = self.client.post(prefix + '/admin/print/shippinglabel/1/')
+        self.assertContains(response, 'reportlab', status_code=200)
 
     def test_registration_keeps_contact(self):
         """Check that if a user creates a Contact and later registers,
@@ -226,7 +243,7 @@ class ShopTest(TestCase):
         assert self.client.session.get('custID') is None
         response = self.client.get('/accounts/') # test logged in status
         self.assertRedirects(response, account_redirect_prefix +'/accounts/login/?next=/accounts/', status_code=302, target_status_code=200)
-        
+
     def test_search(self):
         """
         Do some basic searches to make sure it all works as expected
@@ -274,13 +291,13 @@ class AdminTest(TestCase):
 
 class FilterUtilTest(TestCase):
     """Test the templatetags util class"""
-    
+
     def test_simple_get_args(self):
         args, kwargs = get_filter_args('one=1,two=2')
         self.assertEqual(len(args), 0)
 
         self.assertEqual(kwargs['one'], '1')
-        
+
         self.assertEqual(kwargs['two'], '2')
 
     def test_extended_get_args(self):
@@ -288,9 +305,9 @@ class FilterUtilTest(TestCase):
         self.assertEqual(args[0], 'test')
 
         self.assertEqual(kwargs['one'], '1')
-        
+
         self.assertEqual(kwargs['two'], '2')
-        
+
     def test_numerical_get_args(self):
         args, kwargs = get_filter_args('test,one=1,two=2', (), ('one','two'))
         self.assertEqual(args[0], 'test')
@@ -298,7 +315,7 @@ class FilterUtilTest(TestCase):
         self.assertEqual(kwargs['one'], 1)
 
         self.assertEqual(kwargs['two'], 2)
-        
+
     def test_keystrip_get_args(self):
         args, kwargs = get_filter_args('test,one=1,two=2', ('one'), ('one'))
         self.assertEqual(args[0], 'test')
@@ -306,8 +323,8 @@ class FilterUtilTest(TestCase):
         self.assertEqual(kwargs['one'], 1)
 
         self.assertFalse('two' in kwargs)
-        
-        
+
+
     def test_stripquotes_get_args(self):
         args, kwargs = get_filter_args('"test",one="test",two=2', stripquotes=True)
         self.assertEqual(args[0], 'test')

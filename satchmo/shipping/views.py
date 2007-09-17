@@ -1,13 +1,14 @@
+import os
 import trml2pdf
+from django.conf import settings
+from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader, Context
-from django.conf import settings
-from satchmo.shop.models import Config
 from django.shortcuts import get_object_or_404
-from satchmo.contact.models import Order
-from django.contrib.admin.views.decorators import staff_member_required
+from django.utils.encoding import smart_str
 from django.views.decorators.cache import never_cache
-import os
+from satchmo.contact.models import Order
+from satchmo.shop.models import Config
 
 def displayDoc(request, id, doc):
     # Create the HttpResponse object with the appropriate PDF headers for an invoice or a packing slip
@@ -35,7 +36,7 @@ def displayDoc(request, id, doc):
                 'shopDetails' : shopDetails,
                 'order' : order
                 })
-    pdf = trml2pdf.parseString(t.render(c))
+    pdf = trml2pdf.parseString(smart_str(t.render(c)))
     response.write(pdf)
     return response
 displayDoc = staff_member_required(never_cache(displayDoc))
