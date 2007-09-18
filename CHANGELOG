@@ -1,0 +1,18 @@
+==================
+Satchmo Change Log
+==================
+
+Changes in Trunk
+----------------
+ * Removed dependency on Webda and added new l10n models
+ * Added capability to rate and review products
+ * Improved capabilities for user's to manage their account information
+ * Creation of a simple inventory management interface
+ * Multiple bug fixes and code cleanups
+ * New configuration option to allow user to set image upload directory name
+ * Improved error handling for loading data
+ * Allow manual product ordering in a category
+
+Version 0.5, August 22, 2007
+----------------------------
+ * First official package launch
