@@ -147,7 +147,7 @@ class OptionGroup(models.Model):
         blank=True,
         help_text=_("Further description of this group (i.e. shirt size vs shoe size)."))
     sort_order = models.IntegerField(_("Sort Order"),
-        help_text=_("The order they will be displayed on the screen."))
+        help_text=_("The display order for this group."))
 
     def __unicode__(self):
         if self.description:
