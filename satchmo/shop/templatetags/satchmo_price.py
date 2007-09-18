@@ -1,6 +1,5 @@
-from django.template import Library, Node
-from satchmo.product.models import Option
 from django.conf import settings
+from django.template import Library
 
 register = Library()
 

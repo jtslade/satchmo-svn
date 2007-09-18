@@ -1,6 +1,5 @@
-from django import http
 from django.shortcuts import render_to_response
-from django.template import RequestContext, Context
+from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from satchmo.product.models import Category
 from satchmo.shop.views.utils import bad_or_missing

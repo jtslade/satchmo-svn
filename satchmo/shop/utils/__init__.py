@@ -12,7 +12,7 @@ def can_loop_over(maybe):
 def is_scalar(maybe):
     """Test to see value is a string, an int, or some other scalar type"""
     return is_string_like(maybe) or not can_loop_over(maybe)
-    
+
 def flatten_list(sequence, scalarp=is_scalar, result=None):
     """flatten out a list by putting sublist entries in the main list"""
     if result is None:
@@ -37,7 +37,7 @@ def get_flat_list(sequence):
     """flatten out a list and return the flat list"""
     flat = []
     flatten_list(sequence, result=flat)
-    return flat    
+    return flat
 
 def is_string_like(maybe):
     """Test value to see if it acts like a string"""
@@ -51,9 +51,9 @@ def is_string_like(maybe):
 def url_join(*args):
     """Join any arbitrary strings into a forward-slash delimited string.
     Do not strip leading / from first element, nor trailing / from last element.
-    
+
     This function can take lists as arguments, flattening them appropriately.
-    
+
     example:
     url_join('one','two',['three','four'],'five') => 'one/two/three/four/five'
     """

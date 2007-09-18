@@ -123,7 +123,7 @@ class ContactInfoForm(forms.Form):
             except KeyError:
                 pass
 
-        if not data.has_key('newsletter'):
+        if 'newsletter' not in data:
             customer.newsletter = False
 
         if not customer.role:
@@ -165,9 +165,8 @@ class ContactInfoForm(forms.Form):
 
 class DateTextInput(forms.TextInput):
     def render(self, name, value, attrs=None):
-        if (type(value) == datetime.date):
-          value = value.strftime("%m.%d.%Y")
-
+        if isinstance(value, datetime.date):
+            value = value.strftime("%m.%d.%Y")
         return super(DateTextInput, self).render(name, value, attrs)
 
 class ExtendedContactInfoForm(ContactInfoForm):

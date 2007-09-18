@@ -1,17 +1,13 @@
-from decimal import Decimal
-from django import newforms as forms
-from django.conf import settings
 from django.core import urlresolvers
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
-from django.template import RequestContext, Context
+from django.template import RequestContext
 from django.utils.simplejson.encoder import JSONEncoder
 from django.utils.translation import ugettext as _
-from satchmo.product.models import Product, ConfigurableProduct, Category, Option
+from satchmo.product.models import Product
 from satchmo.product.views import optionset_from_post
-from satchmo.shop.models import Cart, CartItem, Config
+from satchmo.shop.models import Cart, CartItem
 from satchmo.shop.views.utils import bad_or_missing
-from sets import Set
 
 class NullCartItem(object):
     def __init__(self, itemid):
@@ -203,7 +199,6 @@ def set_quantity_ajax(request, template="json.html"):
 
         data['results'] = success
         data['errors'] = errors
-
 
         # note we have to convert Decimals to strings, since simplejson doesn't know about Decimals
         if cart and cartitem:

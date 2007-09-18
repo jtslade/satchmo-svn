@@ -1,8 +1,6 @@
-import os
+from django.conf.urls.defaults import *
 from django.conf import settings
 from satchmo.product.models import Product
-from django.conf.urls.defaults import *
-from satchmo.payment.paymentsettings import PaymentSettings
 
 #The following views are custom to Satchmo
 

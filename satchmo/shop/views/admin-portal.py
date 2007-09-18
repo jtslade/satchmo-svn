@@ -1,10 +1,10 @@
-from django.template import RequestContext, Context
-from django.shortcuts import render_to_response
 from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
 from satchmo.contact.models import Order
 from satchmo.contact.models import ORDER_STATUS
-from django.utils.translation import ugettext as _
 
 def home(request):
     title = _("Site Administration")

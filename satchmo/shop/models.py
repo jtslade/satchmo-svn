@@ -4,17 +4,15 @@ Also contains shopping cart and related classes.
 """
 import datetime
 from decimal import Decimal
-from django.contrib.sites.models import Site
+from logging import getLogger
 from django.conf import settings
-from django.db import models
-from satchmo.product.models import ConfigurableProduct, Product
 from django.contrib.sites.models import Site
+from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_unicode
 from satchmo.contact.models import Contact
 from satchmo.l10n.models import Country
-
-from logging import getLogger
+from satchmo.product.models import Product
 
 log = getLogger('satchmo.shop.models')
 
@@ -63,9 +61,9 @@ class Config(models.Model):
         except Config.DoesNotExist:
             log.warning("No Shop Config found, using test shop config.")
             shop_config = NullConfig()
-        
+
         return shop_config
-        
+
     get_shop_config = classmethod(_get_shop_config)
 
     def __unicode__(self):
@@ -125,9 +123,9 @@ class Cart(models.Model):
                 cart = NullCart()
         else:
             cart = NullCart()
-        
+
         return cart
-        
+
     get_session_cart = classmethod(_get_session_cart)
 
     def _get_count(self):

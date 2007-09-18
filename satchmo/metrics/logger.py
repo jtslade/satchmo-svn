@@ -1,6 +1,5 @@
-from satchmo.product.models import ConfigurableProduct
 import logging
-
+from satchmo.product.models import ConfigurableProduct
 
 class LogMiddleware(object):
     """
@@ -9,8 +8,7 @@ class LogMiddleware(object):
     """
     def process_view(self, request, view_func, view_args, view_kwargs):
         logger1 = logging.getLogger('stats')
-        count = 0
-        if view_kwargs.has_key('slug') and view_kwargs.has_key('queryset'):
+        if 'slug' in view_kwargs and 'queryset' in view_kwargs:
             try:
                 if isinstance(view_kwargs['queryset'][0], ConfigurableProduct):
                     logger1.info("Viewing item %s" % view_kwargs['slug'])
