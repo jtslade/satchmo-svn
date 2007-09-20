@@ -105,7 +105,7 @@ $(function() {
         {% for comment in comments %}
         <div class="comment {% cycle odd,even %}" id="c{{ comment.id }}">
             <p><a id="c{{ comment.id }}"></a>
-                <b>{% if user.get_full_name %}{{ user.get_full_name|escape }}{% else %}{{ user.username|escape }}{% endif %}</b> &mdash; {{ comment.submit_date|date:"F j, Y" }} &mdash; Rating {{ comment.rating1 }}/5</span>
+                <b>{% if comment.user.get_full_name %}{{ comment.user.get_full_name|escape }}{% else %}{{ comment.user.username|escape }}{% endif %}</b> &mdash; {{ comment.submit_date|date:"F j, Y" }} &mdash; Rating {{ comment.rating1 }}/5</span> 
             </p>
         	{{ comment.comment|escape|urlizetrunc:40|linebreaks }}
         </div>
