@@ -133,6 +133,7 @@ class Category(models.Model):
         ordering = ['name']
 
     class Meta:
+        ordering = ['name']
         verbose_name = _("Category")
         verbose_name_plural = _("Categories")
 
