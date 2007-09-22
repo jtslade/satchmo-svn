@@ -68,11 +68,8 @@ def update(request):
 def order_history(request):
     orders = None
     contact = Contact.from_request(request, create=False)
-    if contact:
-        try:
-            orders = Order.objects.filter(contact=contact).order_by('-timestamp')
-        except Order.DoesNotExist:
-            pass
+    if contact is not None:
+        orders = Order.objects.filter(contact=contact).order_by('-timestamp')
 
     ctx = RequestContext(request, {
         'contact' : contact,
@@ -84,7 +81,7 @@ def order_history(request):
 def order_tracking(request, order_id):
     order = None
     contact = Contact.from_request(request, create=False)
-    if contact:
+    if contact is not None:
         try:
             order = Order.objects.get(id__exact=order_id, contact=contact)
         except Order.DoesNotExist:
