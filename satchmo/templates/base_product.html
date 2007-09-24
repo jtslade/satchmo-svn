@@ -13,7 +13,7 @@
 <script type="text/javascript" src="{{media_url}}js/jquery.form.js"></script>
 <script type="text/javascript">
 var satchmo = {
-    getPrice : function(url) {	
+    getPrice : function(url) {
         satchmo.setName("{{product.slug}}");
         satchmo.setPrice("");
     	var options = {
@@ -32,7 +32,7 @@ var satchmo = {
 
     	$('form#options').ajaxSubmit(options);
     },
-    
+
     setName : function(name) {
         $("#productname").attr('value', name);
     },
@@ -46,14 +46,14 @@ var localProductPrice = function() { satchmo.getPrice('{% url satchmo_product_pr
 
 $(function() {
     localProductPrice();
-    $('.priced').change(function() { localProductPrice(); });    
+    $('.priced').change(function() { localProductPrice(); });
 });
 </script>
 {% endblock %}
 
 {% block navbar %}
 
-<a href="{{ shop_base }}/">{% trans "Home" %}</a> 
+<a href="{{ shop_base }}/">{% trans "Home" %}</a>
 {% for name, url in product.category.all.0.get_url_name %}
     ::<a href="{{ url }}">{{ name }}</a>
 {% endfor %}
@@ -63,7 +63,7 @@ $(function() {
 {% block content %}
 <h4>{{ product.name }}</h4>
 <p>{{ product.description }}</p>
-{% trans "Price" %}: <h3 id="price">{{item.price}}</h3>
+{% trans "Price" %}: <h3 id="price">{{ product.unit_price|currency }}</h3>
 {% for pic in product.productimage_set.all %}
     <img src="{{ pic.get_picture_url|thumbnail:"width=280" }}" width="280" />
 {% endfor %}
@@ -84,13 +84,13 @@ $(function() {
         {% endif %}
      </option>
     {% endfor %}
-      </select> 
-{% endfor %} 
-{% trans "Quantity" %} <input type="text", size="2", name="quantity" id="quantity" value="1" class="priced" /> 
+      </select>
+{% endfor %}
+{% trans "Quantity" %} <input type="text", size="2", name="quantity" id="quantity" value="1" class="priced" />
 <input type="hidden" name="productname" id="productname" value="{{product.slug}}" />
-<input type="submit" value="{% trans "Add to cart" %}" /> 
+<input type="submit" value="{% trans "Add to cart" %}" />
 </form>
-{% if shop.enable_ratings %} 
+{% if shop.enable_ratings %}
 {% load comments %}
 {% load comment_utils %}
 <div class="productreviews">
@@ -104,7 +104,7 @@ $(function() {
         {% for comment in comments %}
         <div class="comment {% cycle odd,even %}" id="c{{ comment.id }}">
             <p><a id="c{{ comment.id }}"></a>
-                <b>{% if comment.user.get_full_name %}{{ comment.user.get_full_name|escape }}{% else %}{{ comment.user.username|escape }}{% endif %}</b> &mdash; {{ comment.submit_date|date:"F j, Y" }} &mdash; Rating {{ comment.rating1 }}/5</span> 
+                <b>{% if comment.user.get_full_name %}{{ comment.user.get_full_name|escape }}{% else %}{{ comment.user.username|escape }}{% endif %}</b> &mdash; {{ comment.submit_date|date:"F j, Y" }} &mdash; Rating {{ comment.rating1 }}/5</span>
             </p>
         	{{ comment.comment|escape|urlizetrunc:40|linebreaks }}
         </div>
@@ -118,4 +118,4 @@ $(function() {
     {% endif %}
 </div>
 {% endif %}
-{% endblock %} 
+{% endblock %}
