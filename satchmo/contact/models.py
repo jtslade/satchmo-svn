@@ -90,9 +90,9 @@ class Contact(models.Model):
 
     @classmethod
     def from_request(cls, request, create=False):
-        """Get the contact from the session, else lookup using the logged-in user.
-        Optionally create an an unsaved new contact if `create` is true.
-        
+        """Get the contact from the session, else look up using the logged-in
+        user. Create an unsaved new contact if `create` is true.
+
         Returns:
         - Contact object or None
         """
@@ -101,21 +101,21 @@ class Contact(models.Model):
             try:
                 contact = cls.objects.get(id=request.session['custID'])
             except Contact.DoesNotExist:
-                pass
+                del request.session['custID']
 
         if contact is None and request.user.is_authenticated():
             try:
                 contact = cls.objects.get(user=request.user.id)
-                request.session['custID'] = contact
+                request.session['custID'] = contact.id
             except Contact.DoesNotExist:
                 pass
         else:
-            # can't create if no authenticated user
+            # Don't create a Contact if the user isn't authenticated.
             create = False
-                
+
         if contact is None and create:
             contact = Contact(user=request.user)
-            
+
         return contact
 
     def _get_full_name(self):

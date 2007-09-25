@@ -1,10 +1,13 @@
 from django.test import TestCase
 from django.test.client import Client
-from django.core import mail
+from django.core import mail, urlresolvers
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.encoding import smart_str
+from satchmo.contact.models import Contact
 from satchmo.shop.templatetags import get_filter_args
+
+url = urlresolvers.reverse
 
 currency = settings.CURRENCY
 prefix = settings.SHOP_BASE
@@ -192,6 +195,18 @@ class ShopTest(TestCase):
         self.assertContains(response, 'reportlab', status_code=200)
         response = self.client.post(prefix + '/admin/print/shippinglabel/1/')
         self.assertContains(response, 'reportlab', status_code=200)
+
+    def test_contact_login(self):
+        """Check that when a user logs in, the user's existing Contact will be
+        used.
+        """
+        user = User.objects.create_user('teddy', 'sometester@example.com', 'guz90tyc')
+        contact = Contact.objects.create(user=user, first_name="Teddy",
+            last_name="Tester")
+        self.client.login(username='teddy', password='guz90tyc')
+        self.test_cart_adding()
+        response = self.client.get(url('satchmo_checkout-step1'))
+        self.assertContains(response, "Teddy", status_code=200)
 
     def test_registration_keeps_contact(self):
         """Check that if a user creates a Contact and later registers,
