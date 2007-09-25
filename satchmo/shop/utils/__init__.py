@@ -1,4 +1,5 @@
-import os
+import os, sys
+import types
 
 def can_loop_over(maybe):
     """Test value to see if it is list like"""
@@ -39,6 +40,9 @@ def get_flat_list(sequence):
     flatten_list(sequence, result=flat)
     return flat
 
+def is_list_or_tuple(maybe):
+    return isinstance(maybe, (types.TupleType, types.ListType))
+
 def is_string_like(maybe):
     """Test value to see if it acts like a string"""
     try:
@@ -48,6 +52,15 @@ def is_string_like(maybe):
     else:
         return 1
 
+def load_module(module):
+    """Load a named python module."""
+    try:
+        module = sys.modules[module]
+    except KeyError:
+        __import__(module)
+        module = sys.modules[module]
+    return module
+    
 def url_join(*args):
     """Join any arbitrary strings into a forward-slash delimited string.
     Do not strip leading / from first element, nor trailing / from last element.

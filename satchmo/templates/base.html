@@ -65,7 +65,7 @@
 
     </div>
     {% block google-tracker %}
-    {% if enable_google %}
+    {% if shop.options.GOOGLE.ANALYTICS %}
         {% show_tracker is_secure %}
     {% endif %}
     {% endblock %}

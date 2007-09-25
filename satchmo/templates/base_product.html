@@ -1,61 +1,28 @@
 {% extends "base.html" %}
+{% comment %}
+-------------------------------------------------------------------
+Note to template authors.
+
+This is the base product detail page.
+To modify pages specific types of pages, such as ProductVariations
+or CustomProducts look for product/detail_xxx.html
+-------------------------------------------------------------------
+{% endcomment %}
 {% load i18n %}
 {% load satchmo_thumbnail %}
 {% load satchmo_price %}
 {% load satchmo_currency %}
-
 {% block extra-head %}
 {% if product.meta %}
     <meta name="description" content="{{product.meta}}">
 {% endif %}
-
-<script type="text/javascript" src="{{media_url}}js/jquery.js"></script>
-<script type="text/javascript" src="{{media_url}}js/jquery.form.js"></script>
-<script type="text/javascript">
-var satchmo = {
-    getPrice : function(url) {
-        satchmo.setName("{{product.slug}}");
-        satchmo.setPrice("");
-    	var options = {
-    		url : url,
-    		type: 'POST',
-    		success : function(json) {
-    			var name = json[0];
-    			var price = json[1];
-    		    if (name) {
-    		        satchmo.setName(name);
-    		    }
-    		    satchmo.setPrice(price);
-    		},
-    		dataType : 'json'
-    	};
-
-    	$('form#options').ajaxSubmit(options);
-    },
-
-    setName : function(name) {
-        $("#productname").attr('value', name);
-    },
-
-    setPrice : function(price){
-        $("#price").text(price);
-    }
-}
-
-var localProductPrice = function() { satchmo.getPrice('{% url satchmo_product_prices product_slug=product.slug %}'); };
-
-$(function() {
-    localProductPrice();
-    $('.priced').change(function() { localProductPrice(); });
-});
-</script>
 {% endblock %}
 
 {% block navbar %}
 
-<a href="{{ shop_base }}/">{% trans "Home" %}</a>
+<a href="{{ shop_base }}/">{% trans "Home" %}</a> 
 {% for name, url in product.category.all.0.get_url_name %}
-    ::<a href="{{ url }}">{{ name }}</a>
+    :: <a href="{{ url }}">{{ name }}</a>
 {% endfor %}
 
 {% endblock %}
@@ -70,52 +37,9 @@ $(function() {
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 <form id="options" action="{% url satchmo_cart_add %}" method="post">
-{% if options %}
-<p>{% trans "Please choose your options" %}:</p>
-{% endif %}
-
-{% for option_group in options %}
- {{ option_group.name }}
-    <select name="{{ option_group.id }}" id="{{option_group.id}}" class="priced">
-    {% for choice in option_group.items %}
-     <option value="{{ choice.value }}" {% if choice.selected %}selected="selected"{% endif %}>{{ choice.name }}
-        {% if choice.price_change %}
-            {% option_price choice %}
-        {% endif %}
-     </option>
-    {% endfor %}
-      </select>
-{% endfor %}
-{% trans "Quantity" %} <input type="text", size="2", name="quantity" id="quantity" value="1" class="priced" />
+{% trans "Quantity" %} <input type="text", size="2", name="quantity" id="quantity" value="1" class="priced" /> 
 <input type="hidden" name="productname" id="productname" value="{{product.slug}}" />
-<input type="submit" value="{% trans "Add to cart" %}" />
+<input type="submit" value="{% trans "Add to cart" %}" /> 
 </form>
-{% if shop.enable_ratings %}
-{% load comments %}
-{% load comment_utils %}
-<div class="productreviews">
-    <h2>{% trans 'Product Reviews' %}</h2>
-    {% get_public_comment_list for product.product product.id as comments %}
-    {% if not comments %}
-        {% if user.is_authenticated %}
-            {% trans 'Be the first to review it!' %}
-        {% endif %}
-    {% else %}
-        {% for comment in comments %}
-        <div class="comment {% cycle odd,even %}" id="c{{ comment.id }}">
-            <p><a id="c{{ comment.id }}"></a>
-                <b>{% if comment.user.get_full_name %}{{ comment.user.get_full_name|escape }}{% else %}{{ comment.user.username|escape }}{% endif %}</b> &mdash; {{ comment.submit_date|date:"F j, Y" }} &mdash; Rating {{ comment.rating1 }}/5</span>
-            </p>
-        	{{ comment.comment|escape|urlizetrunc:40|linebreaks }}
-        </div>
-        {% endfor %}
-    {% endif %}
-    {% if user.is_authenticated %}
-        <h2>Review this product</h2>
-        {% comment_form for product.product product.id with ratings_optional scale:1-5|Rating %}
-    {% else %}
-        {% trans 'Please login to review this product.' %}
-    {% endif %}
-</div>
-{% endif %}
-{% endblock %}
+{% if shop.options.SHOP.RATINGS %}{% include _product_ratings.html %}{% endif %}
+{% endblock %} 

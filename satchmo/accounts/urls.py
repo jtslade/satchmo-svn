@@ -6,9 +6,8 @@ root URLConf to include this URLConf for any URL beginning with
 '/accounts/'.
 
 """
-
-from django.conf import settings
 from django.conf.urls.defaults import *
+from satchmo.configuration import config_value
 
 # extending the urls in contacts
 from satchmo.contact.urls import urlpatterns
@@ -23,11 +22,13 @@ urlpatterns += patterns('satchmo.accounts.views',
     (r'^register/$', 'register', {}, 'registration_register'),
 )
 
+verify = (config_value('SHOP', 'ACCOUNT_VERIFICATION') == 'EMAIL')
+
 urlpatterns += patterns('django.views.generic',
     (r'^register/complete/$', 'simple.direct_to_template',
         {'template': 'registration/registration_complete.html',
-        'extra_context':
-            {'verify': getattr(settings, 'REQUIRE_EMAIL_VERIFICATION', False)}},        'registration_complete'),
+        'extra_context': {'verify': verify }}, 
+        'registration_complete'),
 )
 
 #Dictionary for authentication views

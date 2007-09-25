@@ -1,6 +1,7 @@
 from django import template
 from django.conf import settings
 from django.template import Context, Template
+from satchmo.configuration import config_value
 
 register = template.Library()
 
@@ -27,7 +28,8 @@ def js_make_select_readonly(select):
 @register.simple_tag
 def edit_subtypes(product):
     output = '<ul>'
-    for (app ,subtype) in settings.PRODUCT_TYPES:
+    for key in config_value('PRODUCT', 'PRODUCT_TYPES'):
+        app, subtype = key.split("::")
         if subtype in product.get_subtypes():
             output += '<li><a href="/admin/%s/%s/%s/">Edit %s</a></li>'%(app, subtype.lower(), product.id, subtype)
         else:

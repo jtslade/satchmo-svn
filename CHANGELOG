@@ -12,6 +12,8 @@ Changes in Trunk
  * New configuration option to allow user to set image upload directory name
  * Improved error handling for loading data
  * Allow manual product ordering in a category
+ * Remove most custom settings from local_settings.py, instead using the satchmo.configuration app
+ * Added a cache manager
 
 Version 0.5, August 22, 2007
 ----------------------------

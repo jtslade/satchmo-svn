@@ -3,9 +3,11 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext, Context
 from django.template.loader import get_template
 from django.utils.translation import ugettext as _
+from satchmo.configuration import config_get_group
 from satchmo.contact.models import Order
+from satchmo.payment.config import payment_live
 from satchmo.payment.common.views import payship
-from satchmo.payment.paymentsettings import PaymentSettings
+from satchmo.payment.urls import lookup_url, lookup_template
 from satchmo.shop.models import Cart
 import base64
 import hmac
@@ -23,12 +25,12 @@ class GoogleCart(object):
     def _cart_xml(self, order):
         template = get_template(self.settings["CART_XML_TEMPLATE"])
 
-        shopping_url = self.settings.lookup_url('satchmo_checkout-success', True, self.settings.SSL)
-        edit_url = self.settings.lookup_url('satchmo_cart', True, self.settings.SSL)
+        shopping_url = lookup_url(self.settings, payment_module, 'satchmo_checkout-success', True, self.settings.SSL.value)
+        edit_url = lookup_url(self.settings, payment_module, 'satchmo_cart', True, self.settings.SSL.value)
         ctx = Context({"order" : order,
                        "continue_shopping_url" : shopping_url,
                        "edit_cart_url" : edit_url,
-                       "currency" : self.settings['CURRENCY_CODE'],
+                       "currency" : self.settings.CURRENCY_CODE.value,
                        })
         return template.render(ctx)
 
@@ -48,22 +50,22 @@ class GoogleCart(object):
 
 
 def pay_ship_info(request):
-    return payship.simple_pay_ship_info(request, PaymentSettings().GOOGLE, 'checkout/google/pay_ship.html')
+    return payship.simple_pay_ship_info(request, config_get_group('PAYMENT_GOOGLE'), 'checkout/google/pay_ship.html')
 
 def confirm_info(request):
-    payment_module = PaymentSettings().GOOGLE
+    payment_module = config_get_group('PAYMENT_GOOGLE')
 
     if not request.session.get('orderID'):
-        url = payment_module.lookup_url('satchmo_checkout-step1')
+        url = lookup_url(payment_module, 'satchmo_checkout-step1')
         return http.HttpResponseRedirect(url)
 
     if request.session.get('cart'):
         tempCart = Cart.objects.get(id=request.session['cart'])
         if tempCart.numItems == 0:
-            template = payment_module.lookup_template('checkout/empty_cart.html')
+            template = lookup_template(payment_module, 'checkout/empty_cart.html')
             return render_to_response(template, RequestContext(request))
     else:
-        template = payment_module.lookup_template('checkout/empty_cart.html')
+        template = lookup_template(payment_module, 'checkout/empty_cart.html')
         return render_to_response(template, RequestContext(request))
 
     order = Order.objects.get(id=request.session['orderID'])
@@ -76,15 +78,19 @@ def confirm_info(request):
 
     gcart = GoogleCart(order, payment_module)
     log.debug("CART:\n%s", gcart.cart_xml)
-    template = payment_module.lookup_template('checkout/google/confirm.html')
-    post_url = payment_module.POST_URL % payment_module
+    template = lookup_template(payment_module, 'checkout/google/confirm.html')
+    
+    if payment_module.LIVE.value:
+        post_url = payment_module.POST_URL % payment_module
+    else:
+        post_url = payment_module.POST_TEST_URL % payment_module
 
     ctx = RequestContext(request, {
         'order': order,
         'post_url': post_url,
         'google_cart' : gcart.encoded_cart(),
         'google_signature' : gcart.encoded_signature(),
-        'PAYMENT_LIVE' : payment_module.PAYMENT_LIVE,
+        'PAYMENT_LIVE' : payment_live(payment_module)
     })
 
     return render_to_response(template, ctx)

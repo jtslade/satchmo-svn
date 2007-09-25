@@ -14,6 +14,7 @@ from satchmo.contact.models import Contact
 from satchmo.shop.models import Config
 from satchmo.shop.utils.unique_id import generate_id
 from socket import error as SocketError
+from satchmo.configuration import config_value
 
 log = logging.getLogger('satchmo.accounts.views')
 
@@ -51,7 +52,7 @@ class RegistrationForm(forms.Form):
 
 def send_welcome_email(email, first_name, last_name):
     t = loader.get_template('registration/welcome.txt')
-    shop_config = Config.objects.get(site=settings.SITE_ID)
+    shop_config = Config.get_shop_config()
     shop_email = shop_config.store_email
     subject = ugettext("Welcome to %s") % shop_config.store_name
     c = Context({
@@ -93,7 +94,7 @@ def register_handle_form(request, redirect=None):
             newsletter = data['newsletter']
             username = generate_id(first_name, last_name)
 
-            verify = getattr(settings, 'REQUIRE_EMAIL_VERIFICATION', False)
+            verify = (config_value('SHOP', 'ACCOUNT_VERIFICATION') == 'EMAIL')
             if verify:
                 from registration.models import RegistrationProfile
                 user = RegistrationProfile.objects.create_inactive_user(
@@ -177,7 +178,7 @@ def activate(request, activation_key):
 
     context = RequestContext(request, {
         'account': account,
-        'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS,
+        'expiration_days': config_value('SHOP', 'ACCOUNT_ACTIVATION_DAYS'),
     })
     return render_to_response('registration/activate.html', context)
 

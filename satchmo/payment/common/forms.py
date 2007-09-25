@@ -3,12 +3,15 @@ from django.conf import settings
 from django.template import Context
 from django.template import loader
 from django.utils.translation import ugettext as _
+from satchmo.configuration import config_value
 from satchmo.contact.forms import ContactInfoForm
 from satchmo.contact.models import Contact
 from satchmo.discount.models import Discount
-from satchmo.payment.paymentsettings import PaymentSettings
+from satchmo.payment.config import payment_choices
+from satchmo.payment.urls import lookup_template
 from satchmo.shop.models import Cart
 from satchmo.shop.views.utils import CreditCard
+from satchmo.shop.utils import load_module
 import calendar
 import datetime
 import sys
@@ -22,12 +25,12 @@ def _get_shipping_choices(paymentmodule, cart, contact):
     shipping_options = []
     shipping_dict = {}
     
-    for module in settings.SHIPPING_MODULES:
+    for module in config_value('SHIPPING','MODULES'):
         #Create the list of information the user will see
-        shipping_module = sys.modules[module]
+        shipping_module = load_module(module)
         shipping_instance = shipping_module.Calc(cart, contact)
         if shipping_instance.valid():
-            template = paymentmodule.lookup_template('shipping_options.html')
+            template = lookup_template(paymentmodule, 'shipping_options.html')
             t = loader.get_template(template)
             shipcost = shipping_instance.cost()
             c = Context({
@@ -42,16 +45,17 @@ def _get_shipping_choices(paymentmodule, cart, contact):
     
 
 class PaymentContactInfoForm(ContactInfoForm):
-    _choices = PaymentSettings().as_selectpairs()
-    if len(_choices) > 1:
-        _paymentwidget = forms.RadioSelect
-    else:
-        _paymentwidget = forms.HiddenInput(attrs={'value' : _choices[0][0]})
+    _choices = payment_choices()
+    if len(_choices) > 0:
+        if len(_choices) > 1:
+            _paymentwidget = forms.RadioSelect
+        else:
+            _paymentwidget = forms.HiddenInput(attrs={'value' : _choices[0][0]})
 
-    paymentmethod = forms.ChoiceField(label=_('Payment method'),
-                                    choices=_choices,
-                                    widget=_paymentwidget,
-                                    required=True)
+        paymentmethod = forms.ChoiceField(label=_('Payment method'),
+                                        choices=_choices,
+                                        widget=_paymentwidget,
+                                        required=True)
 
 class CreditPayShipForm(forms.Form):
     credit_type = forms.ChoiceField()
@@ -63,7 +67,7 @@ class CreditPayShipForm(forms.Form):
     discount = forms.CharField(max_length=30, required=False)
 
     def __init__(self, request, paymentmodule, *args, **kwargs):
-        creditchoices = paymentmodule.CREDITCHOICES
+        creditchoices = paymentmodule.CREDITCHOICES.choice_values
         super(CreditPayShipForm, self).__init__(*args, **kwargs)
 
         self.fields['credit_type'].choices = creditchoices

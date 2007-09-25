@@ -38,7 +38,7 @@ def form(request):
                 'email': new_data['sender'],    
                 'request_text': new_data['contents'] })
             subject = new_data['subject']
-            shop_config = Config.objects.get(site=settings.SITE_ID)
+            shop_config = Config.get_shop_config()
             shop_email = shop_config.store_email
             if not shop_email:
                 log.warn('No email address configured for the shop.  Using admin settings.')

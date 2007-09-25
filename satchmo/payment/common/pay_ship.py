@@ -1,20 +1,25 @@
 import sys
 from decimal import Decimal
 from django.conf import settings
+from satchmo.configuration import config_value
 from satchmo.contact.models import OrderItem
 from satchmo.discount.models import Discount
+from satchmo.shop.utils import load_module
 from satchmo.tax.modules import simpleTax
+import logging
+
+log = logging.getLogger('pay_ship')
 
 def pay_ship_save(new_order, cart, contact, shipping, discount):
     # Set a default for when no shipping module is used
     new_order.shipping_cost = Decimal("0.00")
 
     # Save the shipping info
-    for module in settings.SHIPPING_MODULES:
-        shipping_module = sys.modules[module]
+    for module in config_value('SHIPPING','MODULES'):
+        shipping_module = load_module(module)
         shipping_instance = shipping_module.Calc(cart, contact)
         if shipping_instance.id == shipping:
-            new_order.shipping_description = shipping_instance.description()
+            new_order.shipping_description = shipping_instance.description().encode()
             new_order.shipping_method = shipping_instance.method()
             new_order.shipping_cost = shipping_instance.cost()
             new_order.shipping_model = shipping

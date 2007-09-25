@@ -1,44 +1,34 @@
 # -*- coding: UTF-8 -*-
 from django.test import TestCase
 from django.core import urlresolvers
-from satchmo.payment.paymentsettings import PaymentSettings, _PaymentModule
+from satchmo.configuration import config_get_group, config_value
+from urls import lookup_template, lookup_url, make_urlpatterns
 
 class TestModulesSettings(TestCase):
 
     def setUp(self):
-        module = 'satchmo.payment.modules.dummy.dummy_settings'
-        PaymentSettings().modules['DUMMY'] = _PaymentModule(module)
-        self.dummy = PaymentSettings().DUMMY
+        self.dummy = config_get_group('PAYMENT_DUMMY')
 
     def testGetDummy(self):
         self.assert_(self.dummy != None)
-        self.assertEqual(self.dummy.label, 'Dummy processor')
+        self.assertEqual(self.dummy.LABEL, 'Payment test module')
 
     def testLookupTemplateSet(self):
-        t = self.dummy.lookup_template('test.html')
+        t = lookup_template(self.dummy, 'test.html')
         self.assertEqual(t, 'test.html')
 
-        self.dummy['TEMPLATE_OVERRIDES'] = {'test2.html' : 'foo.html'}
-        t = self.dummy.lookup_template('test2.html')
-        self.assertEqual(t, 'foo.html')
+        # TODO, add these back in when DictValues are added to Comfiguration
+        #self.dummy['TEMPLATE_OVERRIDES'] = {'test2.html' : 'foo.html'}
+        #t = lookup_template(self.dummy, 'test2.html')
+        #self.assertEqual(t, 'foo.html')
 
     def testLookupURL(self):
         try:
-            t = self.dummy.lookup_url('test_doesnt_exist')
+            t = lookup_url(self.dummy, 'test_doesnt_exist')
             self.fail('Should have failed with NoReverseMatch')
         except urlresolvers.NoReverseMatch:
             pass
 
-    #def testLoad(self):
-    #    module = self.dummy.load_processor()
-    #    p = module.PaymentProcessor(self.dummy)
-    #    result, reason, response = p.process()
-    #    self.assertTrue(result)
-    #    self.assertEqual(reason, "0")
-
-    def testModuleName(self):
-        self.assertEqual(self.dummy.make_modulename('urls'), 'satchmo.payment.modules.dummy.urls')
-
     def testUrlPatterns(self):
-        pats = PaymentSettings().urlpatterns()
+        pats = make_urlpatterns()
         self.assertTrue(len(pats) > 0)

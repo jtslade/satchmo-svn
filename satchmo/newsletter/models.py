@@ -1,6 +1,7 @@
-import datetime
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+import config
+import datetime
 
 class NullContact(object):
     """Simple object emulating a Contact, so that we can add users who aren't Satchmo Contacts.

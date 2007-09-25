@@ -2,17 +2,21 @@
 Configuration items for the shop.
 Also contains shopping cart and related classes.
 """
-import datetime
+from config import *
 from decimal import Decimal
-from logging import getLogger
 from django.conf import settings
 from django.contrib.sites.models import Site
+from django.contrib.sites.models import Site
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_unicode
+from django.utils.translation import ugettext_lazy as _
+from satchmo.configuration import ConfigurationSettings, config_value
 from satchmo.contact.models import Contact
 from satchmo.l10n.models import Country
-from satchmo.product.models import Product
+from satchmo.product.models import ConfigurableProduct, Product
+import datetime
+
+from logging import getLogger
 
 log = getLogger('satchmo.shop.models')
 
@@ -26,7 +30,11 @@ class NullConfig(object):
         self.no_stock_checkout = False
         self.in_country_only = True
         self.sales_country = Country.objects.get(iso3_code__exact='USA')
-        self.enable_ratings = True
+    
+    def _options(self):
+        return ConfigurationSettings()
+        
+    options = property(fget=_options)
 
     def __str__(self):
         return "Test Store - no configured store exists!"
@@ -52,7 +60,6 @@ class Config(models.Model):
     sales_country = models.ForeignKey(Country, blank=True, null=True,
                                      related_name='sales_country',
                                      verbose_name=_("Default country for customers"))
-    enable_ratings = models.BooleanField(_("Enable product ratings?"), default=True)
 
     def _get_shop_config(cls):
         """Convenience method to get the current shop config"""
@@ -61,10 +68,15 @@ class Config(models.Model):
         except Config.DoesNotExist:
             log.warning("No Shop Config found, using test shop config.")
             shop_config = NullConfig()
-
+        
         return shop_config
-
+        
     get_shop_config = classmethod(_get_shop_config)
+    
+    def _options(self):
+        return ConfigurationSettings()
+        
+    options = property(fget=_options)
 
     def __unicode__(self):
         return self.store_name
@@ -123,9 +135,9 @@ class Cart(models.Model):
                 cart = NullCart()
         else:
             cart = NullCart()
-
+        
         return cart
-
+        
     get_session_cart = classmethod(_get_session_cart)
 
     def _get_count(self):
@@ -214,8 +226,9 @@ class CartItem(models.Model):
     description = property(_get_description)
 
     def __unicode__(self):
+        currency = config_value('SHOP', 'CURRENCY')
         return u'%s - %s %s%s' % (self.quantity, self.product.name,
-            force_unicode(settings.CURRENCY), self.line_total)
+            force_unicode(currency), self.line_total)
 
     class Admin:
         pass

@@ -2,9 +2,6 @@
 # Last step in the order process - confirm the info and process it
 #####################################################################
 
-import datetime
-import logging
-from socket import error as SocketError
 from django.conf import settings
 from django.core import urlresolvers
 from django.core.mail import send_mail
@@ -13,7 +10,12 @@ from django.shortcuts import render_to_response
 from django.template import loader, RequestContext, Context
 from django.utils.translation import ugettext as _
 from satchmo.contact.models import Order, OrderStatus
+from satchmo.payment.urls import lookup_url, lookup_template
 from satchmo.shop.models import Cart, Config
+from satchmo.shop.utils import load_module
+from socket import error as SocketError
+import datetime
+import logging
 
 log = logging.getLogger('satchmo.payment.common.views')
 
@@ -26,10 +28,10 @@ def credit_confirm_info(request, payment_module):
     if request.session.get('cart'):
         tempCart = Cart.objects.get(id=request.session['cart'])
         if tempCart.numItems == 0:
-            template = payment_module.lookup_template('checkout/empty_cart.html')
+            template = lookup_template(payment_module, 'checkout/empty_cart.html')
             return render_to_response(template, RequestContext(request))
     else:
-        template = payment_module.lookup_template('checkout/empty_cart.html')
+        template = lookup_template(payment_module, 'checkout/empty_cart.html')
         return render_to_response(template, RequestContext(request))
 
     orderToProcess = Order.objects.get(id=request.session['orderID'])
@@ -42,7 +44,7 @@ def credit_confirm_info(request, payment_module):
 
     if request.POST:
         #Do the credit card processing here & if successful, empty the cart and update the status
-        credit_processor = payment_module.load_processor()
+        credit_processor = payment_module.MODULE.load_module('processor')
         processor = credit_processor.PaymentProcessor(payment_module)
         processor.prepareData(orderToProcess)
         results, reason_code, msg = processor.process()
@@ -63,7 +65,7 @@ Reason=%s""", payment_module.key, orderToProcess.id, results, reason_code, msg)
             status.order = orderToProcess #For some reason auto_now_add wasn't working right in admin
             status.save()
             #Now, send a confirmation email
-            shop_config = Config.objects.get(site=settings.SITE_ID)
+            shop_config = Config.get_shop_config()
             shop_email = shop_config.store_email
             shop_name = shop_config.store_name
             t = loader.get_template('email/order_complete.txt')
@@ -85,7 +87,7 @@ Reason=%s""", payment_module.key, orderToProcess.id, results, reason_code, msg)
                     raise IOError('Could not send email, please check to make sure your email settings are correct, and that you are not being blocked by your ISP.')    
             
             #Redirect to the success page
-            url = payment_module.lookup_url('satchmo_checkout-success')
+            url = lookup_url(payment_module, 'satchmo_checkout-success')
             return HttpResponseRedirect(url)
         #Since we're not successful, let the user know via the confirmation page
         else:
@@ -93,11 +95,11 @@ Reason=%s""", payment_module.key, orderToProcess.id, results, reason_code, msg)
     else:
         errors = ''
 
-    template = payment_module.lookup_template('checkout/confirm.html')
+    template = lookup_template(payment_module, 'checkout/confirm.html')
     context = RequestContext(request, {
         'order': orderToProcess,
         'errors': errors,
-        'checkout_step2': payment_module.lookup_url('satchmo_checkout-step2')})
+        'checkout_step2': lookup_url(payment_module, 'satchmo_checkout-step2')})
     return render_to_response(template, context)
 
 

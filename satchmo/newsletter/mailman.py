@@ -1,15 +1,13 @@
 """A Mailman newsletter subscription interface.
 
-To use this plugin, set it up in in your local_settings file with these two settings:
-
-NEWSLETTER_MODULE='satchmo.newsletter.mailman'
-NEWSLETTER_NAME='your-mailman-listname'
+To use this plugin, enable the newsletter module and set the newsletter module and name settings
+in the admin settings page.
 """
 
-from django.conf import settings
+from django.utils.translation import ugettext as _
 from Mailman import MailList, Errors
 from satchmo.newsletter.models import Subscription
-from django.utils.translation import ugettext as _
+from satchmo.configuration import config_value
 import sys
 
 class UserDesc: pass
@@ -112,15 +110,14 @@ def mailman_remove(contact, listname=None, userack=None, admin_notify=None):
 def _get_maillist(listname):
     try:
         if not listname:
-            listname = settings.NEWSLETTER_NAME
+            listname = config_value('NEWSLETTER', 'NAME')
+
+        if listname == "":
+            log.warn("NEWSLETTER_NAME not set in store settings")
+            raise NameError('No NEWSLETTER_NAME in settings')
 
         return MailList.MailList(listname, lock=0), listname
-
-    except AttributeError:
-        print >> sys.stderr, "No NEWSLETTER_NAME found in settings"
-        raise NameError('No NEWSLETTER_NAME in settings')
 
     except Errors.MMUnknownListError:
         print >> sys.stderr, "Can't find the MailMan newsletter: %s" % listname
         raise NameError('No such newsletter, "%s"' % listname)
-

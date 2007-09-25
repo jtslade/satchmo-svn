@@ -1,6 +1,5 @@
 import datetime
 from django import newforms as forms
-from django.conf import settings
 from django.utils.translation import ugettext as _
 from satchmo.contact.models import Contact, AddressBook, PhoneNumber
 from satchmo.l10n.models import Country
@@ -34,7 +33,7 @@ class ContactInfoForm(forms.Form):
         if countries is not None:
             self.fields['country'] = forms.ChoiceField(choices=countries)
 
-        shop_config = Config.objects.get(site=settings.SITE_ID)
+        shop_config = Config.get_shop_config()
         self._local_only = shop_config.in_country_only
         country = shop_config.sales_country
         if not country:

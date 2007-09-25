@@ -2,25 +2,18 @@
 Stores customer, organization, and order information.
 """
 
+import config
 import datetime
 import sys
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from satchmo.configuration import config_choice_values
 from satchmo.product.models import Product
 from satchmo.newsletter import SubscriptionManager
 from satchmo.shop.templatetags.satchmo_currency import moneyfmt
-
-activeShippingModules = []
-
-#Load the shipping modules to populate the choices
-#None is passed in, since all we need is the id
-for module in settings.SHIPPING_MODULES:
-    __import__(module)
-    shipping_module = sys.modules[module]
-    activeShippingModules.append((shipping_module.Calc(None, None).id,
-        shipping_module.Calc(None, None).id))
+import satchmo.shipping.config
 
 CONTACT_CHOICES = (
     ('Customer', _('Customer')),
@@ -337,7 +330,7 @@ class Order(models.Model):
     shipping_method = models.CharField(_("Shipping Method"),
         max_length=50, blank=True, null=True)
     shipping_model = models.CharField(_("Shipping Models"),
-        choices=activeShippingModules, max_length=30, blank=True, null=True)
+        choices=config_choice_values('SHIPPING','MODULES'), max_length=30, blank=True, null=True)
     shipping_cost = models.DecimalField(_("Shipping Cost"),
         max_digits=6, decimal_places=2, blank=True, null=True)
     tax = models.DecimalField(_("Tax"),

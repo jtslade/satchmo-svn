@@ -17,6 +17,8 @@ urlpatterns += patterns('',
     (r'^accounts/', include('satchmo.accounts.urls')),
     (shopregex, include('satchmo.shop.urls')),
     (r'sitemap.xml', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
+    (r'settings/', include('satchmo.configuration.urls')),
+    (r'cache/', include('satchmo.caching.urls')),
 )
 
 #The following is used to serve up local media files like images

@@ -1,7 +1,7 @@
 """Pluggable newsletter handling."""
 
-from django.conf import settings
-import sys
+from satchmo.configuration import config_value
+from satchmo.shop.utils import load_module
 
 class SubscriptionManager(object):
     """A singleton manager for Newsletter Subscription handling."""
@@ -12,12 +12,12 @@ class SubscriptionManager(object):
         if SubscriptionManager.__instance is None:
             
             try:
-                modulename = settings.NEWSLETTER_MODULE
+                modulename = config_value('NEWSLETTER', 'MODULE')
             except AttributeError:
                 modulename = 'satchmo.newsletter.ignore'
                 
-            __import__(modulename)            
-            SubscriptionManager.__instance = sys.modules[modulename]
+            module = load_module(modulename)
+            SubscriptionManager.__instance = module
         
         self.__dict__['_SubscriptionManager__instance'] = SubscriptionManager.__instance
 

@@ -19,7 +19,7 @@ True
 >>> cart1.is_shippable
 True
 >>> flat.Calc(cart1, None).cost()
-Decimal("5.00")
+Decimal("4.00")
 >>> per.Calc(cart1, None).cost()
 Decimal("12.00")
 

@@ -5,19 +5,25 @@ options.
 """
 
 import datetime
+import config
 from sets import Set
 from decimal import Decimal
 from django.conf import settings
 from django.core import validators, urlresolvers
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from satchmo.configuration import config_value
+from satchmo.shop.utils import url_join
 from satchmo.tax.models import TaxClass
 from satchmo.thumbnail.field import ImageWithThumbnailField
 
-if 'IMAGE_DIR' in settings.get_all_members():
-    upload_dir = "./" + settings.IMAGE_DIR
-else:
-    upload_dir = "./images"
+def upload_dir():
+    image = config_value('PRODUCT', 'IMAGE_DIR')
+    if not image.startswith('./'):
+        image = url_join('.', image)
+    if image.endswith("/"):
+        image = image[:-1]
+    return image
 
 class Category(models.Model):
     """
@@ -48,7 +54,7 @@ class Category(models.Model):
     def get_absolute_url(self):
         p_list = self._recurse_for_parents_slug(self)
         p_list.append(self.slug)
-        return u'%s/category/%s/' % (settings.SHOP_BASE, u'/'.join(p_list))
+        return url_join(settings.SHOP_BASE, 'category', p_list)
 
     def _recurse_for_parents_name(self, cat_obj):
         #This is used for the visual display & save validation
@@ -353,11 +359,11 @@ class Product(models.Model):
 
     def get_subtypes(self):
         types = []
-        for type in settings.PRODUCT_TYPES:
-            type = type[1]
+        for key in config_value('PRODUCT', 'PRODUCT_TYPES'):
+            app, subtype = key.split("::")
             try:
-                if getattr(self, type.lower()):
-                    types += [type]
+                if getattr(self, subtype.lower()):
+                    types += [subtype]
             except models.ObjectDoesNotExist:
                 pass
         return tuple(types)

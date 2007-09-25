@@ -10,13 +10,11 @@ from django.utils.translation import ugettext_lazy as _
 from satchmo.contact.models import Contact
 from satchmo.contact.models import Order
 from satchmo.payment.common.forms import CreditPayShipForm, SimplePayShipForm
-from satchmo.payment.models import CreditCardDetail
 from satchmo.payment.common.pay_ship import pay_ship_save
+from satchmo.payment.config import payment_live
+from satchmo.payment.models import CreditCardDetail
+from satchmo.payment.urls import lookup_url, lookup_template
 from satchmo.shop.models import Cart
-
-#Import all of the shipping modules
-for module in settings.SHIPPING_MODULES:
-    __import__(module)
 
 selection = _("Please Select")
 
@@ -24,14 +22,14 @@ def credit_pay_ship_info(request, payment_module):
     #First verify that the customer exists
     contact = Contact.from_request(request, create=False)
     if contact is None:
-        url = payment_module.lookup_url('satchmo_checkout-step1')
+        url = lookup_url(payment_module, 'satchmo_checkout-step1')
         return http.HttpResponseRedirect(url)
 
     #Verify we still have items in the cart
     if request.session.get('cart', False):
         tempCart = Cart.objects.get(id=request.session['cart'])
         if tempCart.numItems == 0:
-            template = payment_module.lookup_template('checkout/empty_cart.html')
+            template = lookup_template(payment_module, 'checkout/empty_cart.html')
             return render_to_response(template, RequestContext(request))
     else:
         return render_to_response('checkout/empty_cart.html', RequestContext(request))
@@ -56,15 +54,15 @@ def credit_pay_ship_info(request, payment_module):
             cc.storeCC(data['credit_number'])
             cc.save()
 
-            url = payment_module.lookup_url('satchmo_checkout-step3')
+            url = lookup_url(payment_module, 'satchmo_checkout-step3')
             return http.HttpResponseRedirect(url)
     else:
         form = CreditPayShipForm(request, payment_module)
 
-    template = payment_module.lookup_template('checkout/pay_ship.html')
+    template = lookup_template(payment_module, 'checkout/pay_ship.html')
     ctx = {
         'form' : form,
-        'PAYMENT_LIVE' : payment_module.PAYMENT_LIVE
+        'PAYMENT_LIVE' : payment_live(payment_module)
     }
     return render_to_response(template, ctx, RequestContext(request))
 
@@ -73,16 +71,16 @@ def simple_pay_ship_info(request, payment_module, template):
     #First verify that the customer exists
     contact = Contact.from_request(request, create=False)
     if contact is None:
-        url = payment_module.lookup_url('satchmo_checkout-step1')
+        url = lookup_url(payment_module, 'satchmo_checkout-step1')
         return http.HttpResponseRedirect(url)
     #Verify we still have items in the cart
     if request.session.get('cart', False):
         tempCart = Cart.objects.get(id=request.session['cart'])
         if tempCart.numItems == 0:
-            template = payment_module.lookup_template('checkout/empty_cart.html')
+            template = lookup_template(payment_module, 'checkout/empty_cart.html')
             return render_to_response(template, RequestContext(request))
     else:
-        template = payment_module.lookup_template('checkout/empty_cart.html')
+        template = lookup_template(payment_module, 'checkout/empty_cart.html')
         return render_to_response(template, RequestContext(request))
 
     #Verify order info is here
@@ -98,14 +96,14 @@ def simple_pay_ship_info(request, payment_module, template):
                 shipping=data['shipping'], discount=data['discount'])
             request.session['orderID'] = newOrder.id
 
-            url = payment_module.lookup_url('satchmo_checkout-step3')
+            url = lookup_url(payment_module, 'satchmo_checkout-step3')
             return http.HttpResponseRedirect(url)
     else:
         form = SimplePayShipForm(request, payment_module)
 
-    template = payment_module.lookup_template(template)
+    template = lookup_template(payment_module, template)
     ctx = {
         'form' : form,
-        'PAYMENT_LIVE' : payment_module.PAYMENT_LIVE
+        'PAYMENT_LIVE' : payment_live(payment_module)
     }
     return render_to_response(template, ctx, RequestContext(request))

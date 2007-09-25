@@ -6,10 +6,11 @@ from django.contrib.auth.models import User
 from django.utils.encoding import smart_str
 from satchmo.contact.models import Contact
 from satchmo.shop.templatetags import get_filter_args
+from satchmo.configuration import config_value
 
 url = urlresolvers.reverse
+currency = config_value('SHOP', 'CURRENCY')
 
-currency = settings.CURRENCY
 prefix = settings.SHOP_BASE
 if prefix == '/':
     prefix = ''
@@ -71,7 +72,7 @@ class ShopTest(TestCase):
         Validate account creation process
         """
         from satchmo.shop.models import Config
-        shop_config = Config.objects.get(site=settings.SITE_ID)
+        shop_config = Config.get_shop_config()
         subject = u"Welcome to %s" % shop_config.store_name
         response = self.client.get('/accounts/register/')
         self.assertContains(response, "Please Enter Your Account Information",
@@ -174,8 +175,8 @@ class ShopTest(TestCase):
                                     'shipping': 'FlatRate'})
         self.assertRedirects(response, redirectprefix+'/checkout/dummy/confirm/', status_code=302, target_status_code=200)
         response = self.client.get(prefix+'/checkout/dummy/confirm/')
-        self.assertContains(response, smart_str("Total = %s54.50" % currency), count=1, status_code=200)
-        self.assertContains(response, smart_str("Shipping + %s5.00" % currency), count=1, status_code=200)
+        self.assertContains(response, smart_str("Total = %s53.50" % currency), count=1, status_code=200)
+        self.assertContains(response, smart_str("Shipping + %s4.00" % currency), count=1, status_code=200)
         self.assertContains(response, smart_str("Tax + %s3.50" % currency), count=1, status_code=200)
         response = self.client.post(prefix+"/checkout/dummy/confirm/", {'process' : 'True'})
         self.assertRedirects(response, redirectprefix+'/checkout/dummy/success/', status_code=302, target_status_code=200)

@@ -1,4 +1,3 @@
-from django.conf import settings
 from satchmo.l10n.models import Country
 from satchmo.shop.models import Config
 from django.utils.translation import ugettext_lazy as _
@@ -8,7 +7,7 @@ selection = _("Please Select")
 def get_area_country_options(request):
     """Return form data for area and country selection in address forms
     """
-    shop_config = Config.objects.get(site=settings.SITE_ID)
+    shop_config = Config.get_shop_config()
     local_only = shop_config.in_country_only
     default_iso2 = shop_config.sales_country
     if (default_iso2):

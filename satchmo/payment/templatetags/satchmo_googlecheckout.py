@@ -1,6 +1,7 @@
 from django import template
 from django.utils import translation
-from satchmo.payment.paymentsettings import PaymentSettings
+from satchmo.configuration import config_get_group
+from satchmo.payment.modules.google import CHECKOUT_BUTTON_SIZES
 from urllib import urlencode
 
 register = template.Library()
@@ -12,8 +13,8 @@ def _truefalse(val, t="1", f="0"):
         return f
 
 def checkout_image_url(merchid, imgsize, locale, transparent=False, disabled=False):
-    payment_module = PaymentSettings().GOOGLE
-    dimensions = payment_module.CHECKOUT_BUTTON_SIZES[imgsize]
+    payment_module = config_get_group('PAYMENT_GOOGLE')
+    dimensions = CHECKOUT_BUTTON_SIZES[imgsize]
     return ("%s?%s" % (
         payment_module.CHECKOUT_BUTTON_URL,
         urlencode((('merchant_id', merchid),
@@ -49,9 +50,9 @@ def google_checkout_image_url(parser, token):
 
     """
     args = token.split_contents()
-    payment_module = PaymentSettings().GOOGLE
+    payment_module = config_get_group('PAYMENT_GOOGLE')
     merchid = payment_module.MERCHANT_ID
-    sizes = payment_module.CHECKOUT_BUTTON_SIZES.keys()
+    sizes = CHECKOUT_BUTTON_SIZES.keys()
 
     imgsize = "MEDIUM"
     transparent = False

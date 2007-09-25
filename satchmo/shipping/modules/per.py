@@ -2,12 +2,13 @@
 Each shipping option uses the data in an Order object to calculate the shipping cost and return the value
 """
 from decimal import Decimal
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext, ugettext_lazy
+from satchmo.configuration import config_value
+_ = ugettext_lazy
 
 class Calc(object):
 
     id = "PerItem"
-    perItemFee = Decimal("4.00")
 
     def __init__(self, cart, contact):
         self.cart = cart
@@ -30,22 +31,23 @@ class Calc(object):
         Complex calculations can be done here as long as the return value is a dollar figure
         """
         fee = Decimal("0.00")
+        rate = config_value('SHIPPING', 'PER_RATE')
         for cartitem in self.cart.cartitem_set.all():
             if cartitem.product.is_shippable:
-                fee += self.perItemFee * cartitem.quantity
+                fee += rate * cartitem.quantity
         return fee
 
     def method(self):
         """
         Describes the actual delivery service (Mail, FedEx, DHL, UPS, etc)
         """
-        return _("US Mail")
+        return ugettext(config_value('SHIPPING', 'PER_SERVICE'))
 
     def expectedDelivery(self):
         """
         Can be a plain string or complex calcuation returning an actual date
         """
-        return _("3 - 4 business days")
+        return ugettext(config_value('SHIPPING', 'PER_DAYS'))
 
     def valid(self, order=None):
         """

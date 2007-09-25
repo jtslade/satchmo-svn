@@ -6,14 +6,20 @@ class PaymentProcessor(object):
     #You must have an account with authorize.net in order to use this module
     def __init__(self, settings):
         self.settings = settings
-        self.connection = settings.CONNECTION
         self.contents = ''
+        if settings.LIVE.value:
+            testflag = 'FALSE'
+            self.connection = settings.CONNECTION.value
+        else:
+            testflag = 'TRUE'
+            self.connection = settings.CONNECTION_TEST.value
+            
         self.configuration = {
             'x_login' : settings.LOGIN,
             'x_tran_key' : settings.TRANKEY,
             'x_version' : '3.1',
             'x_relay_response' : 'FALSE',
-            'x_test_request' : settings.TEST,
+            'x_test_request' : testflag,
             'x_delim_data' : 'TRUE',
             'x_delim_char' : '|',
             'x_type': 'AUTH_CAPTURE',
@@ -67,7 +73,7 @@ if __name__ == "__main__":
     #####
 
     import os
-    from satchmo.payment.paymentsettings import PaymentSettings
+    from satchmo.configuration import config_get_group
 
     # Set up some dummy classes to mimic classes being passed through Satchmo
     class testContact(object):
@@ -102,7 +108,11 @@ if __name__ == "__main__":
     sampleOrder.credit_card.expirationDate = "10/09"
     sampleOrder.credit_card.ccv = "144"
 
-    processor = PaymentProcessor(PaymentSettings().AUTHORIZENET)
+    authorize_settings = config_get_group('PAYMENT_AUTHORIZENET')
+    if authorize_settings.LIVE.value:
+        print "Warning.  You are submitting a live order.  AUTHORIZE.NET system is set LIVE."
+        
+    processor = PaymentProcessor(authorize_settings)
     processor.prepareData(sampleOrder)
     results, reason_code, msg = processor.process()
     print results,"::", msg

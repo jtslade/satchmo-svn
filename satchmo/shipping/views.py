@@ -27,7 +27,7 @@ def displayDoc(request, id, doc):
         return HttpResponseRedirect('/admin')
     response = HttpResponse(mimetype='application/pdf')
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
-    shopDetails = Config.objects.get(site=settings.SITE_ID)
+    shopDetails = Config.get_shop_config()
     t = loader.get_template('pdf/%s' % template)
     templatedir = os.path.normpath(settings.TEMPLATE_DIRS[0])
     c = Context({

@@ -1,11 +1,11 @@
 from django.core import urlresolvers
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.simplejson.encoder import JSONEncoder
 from django.utils.translation import ugettext as _
 from satchmo.product.models import Product
-from satchmo.product.views import optionset_from_post
+from satchmo.product.views import find_product_template, optionset_from_post
 from satchmo.shop.models import Cart, CartItem
 from satchmo.shop.views.utils import bad_or_missing
 
@@ -77,20 +77,24 @@ def add(request, id=0):
             cp = product.configurableproduct
             chosenOptions = optionset_from_post(cp, request.POST)
             product = cp.get_product_from_options(chosenOptions)
+        template = find_product_template(product)
     except Product.DoesNotExist:
         return bad_or_missing(request, _('The product you have requested does not exist.'))
+        
     try:
         quantity = int(request.POST['quantity'])
     except ValueError:
         context = RequestContext(request, {
             'product': product,
             'error_message': _("Please enter a whole number.")})
-        return render_to_response('base_product.html', context)
+        
+        return HttpResponse(template.render(context))
+        
     if quantity < 1:
         context = RequestContext(request, {
             'product': product,
             'error_message': _("Please enter a positive number.")})
-        return render_to_response('base_product.html', context)
+        return HttpResponse(template.render(context))
 
     if request.session.get('cart'):
         cart = Cart.objects.get(id=request.session['cart'])

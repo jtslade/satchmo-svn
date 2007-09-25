@@ -3,14 +3,27 @@ from django import http
 from django.contrib.auth.decorators import user_passes_test
 from django.core import urlresolvers
 from django.db.models import Q
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
+from django.template.loader import select_template
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from satchmo.product.forms import InventoryForm
 from satchmo.product.models import Category, Product, ConfigurableProduct
 from satchmo.shop.templatetags.satchmo_currency import moneyfmt
 from satchmo.shop.views.utils import bad_or_missing
+import logging
+
+log = logging.getLogger('product.views')
+
+def find_product_template(product, producttypes=None):
+    if producttypes is None:
+        producttypes = product.get_subtypes()
+    
+    templates = ["product/detail_%s.html" % x.lower() for x in producttypes]
+    templates.append('base_product.html')
+    return select_template(templates)
 
 def serialize_options(config_product, selected_options=Set()):
     """
@@ -71,7 +84,9 @@ def get_product(request, product_slug, selected_options=Set()):
     if 'ConfigurableProduct' in p_types:
         options = serialize_options(product.configurableproduct, selected_options)
 
-    return render_to_response('base_product.html', {'product': product, 'options': options}, RequestContext(request))
+    template = find_product_template(product, producttypes=p_types)
+    ctx = RequestContext(request, {'product': product, 'options': options})
+    return HttpResponse(template.render(ctx))
 
 def optionset_from_post(configurableproduct, POST):
     chosenOptions = Set()

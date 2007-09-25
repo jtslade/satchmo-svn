@@ -2,6 +2,7 @@ from decimal import Decimal
 from django import template
 from django.conf import settings
 from django.utils.encoding import force_unicode
+from satchmo.configuration import config_value
 from satchmo.shop.templatetags import get_filter_args
 
 #The moneyfmt script was taken from the Python decimal recipes.
@@ -40,7 +41,7 @@ def currency(value, args=""):
         
     return moneyfmt(value, **kwargs)
 
-def moneyfmt(value, places=2, curr=settings.CURRENCY, sep=',', dp='.',
+def moneyfmt(value, places=2, curr=None, sep=',', dp='.',
              pos='', neg='-', trailneg='', wrapcents=''):
     """Convert Decimal to a money formatted string.
 
@@ -67,6 +68,8 @@ def moneyfmt(value, places=2, curr=settings.CURRENCY, sep=',', dp='.',
     '<.02>'
 
     """
+    if curr is None:
+        curr = config_value('SHOP', 'CURRENCY')
 
     q = Decimal((0, (1,), -places))    # 2 places --> '0.01'
     sign, digits, exp = value.quantize(q).as_tuple()
