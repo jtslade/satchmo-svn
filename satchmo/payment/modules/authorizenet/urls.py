@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-from satchmo.configuration import config_value
+from satchmo.configuration import config_value, config_get_group
 
 config = config_get_group('PAYMENT_AUTHORIZENET')
 
