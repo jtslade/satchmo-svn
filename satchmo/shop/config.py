@@ -37,7 +37,7 @@ GOOGLE_ANALYTICS_CODE = config_register(
 GOOGLE_ADWORDS = config_register(
     BooleanValue(GOOGLE_GROUP, 
         'ADWORDS', 
-        description= _("Enable Adwords"), 
+        description= _("Enable Conversion Tracking"), 
         default=False,
         ordering=10))
         
