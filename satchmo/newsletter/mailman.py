@@ -110,7 +110,7 @@ def mailman_remove(contact, listname=None, userack=None, admin_notify=None):
 def _get_maillist(listname):
     try:
         if not listname:
-            listname = config_value('NEWSLETTER', 'NAME')
+            listname = config_value('NEWSLETTER', 'NEWSLETTER_NAME')
 
         if listname == "":
             log.warn("NEWSLETTER_NAME not set in store settings")
