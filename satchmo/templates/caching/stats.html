@@ -1,13 +1,12 @@
-{% extends "base_admin.html" %}
-{% load messaging_tags %}
+{% extends "admin/base_site.html" %}
+{% load messaging_tags i18n %}
 
-{% block pagetitle %}Cache Stats{% endblock %}
-
-{% block bodyclass %}onecol{% endblock %}
-
-{% block navbar %}
-<a href="{{shop_base}}">Home</a> &rsaquo; Cache Stats
-{% endblock %}
+{% block breadcrumbs %}{% if not is_popup %}
+<div class="breadcrumbs">
+     <a href="/admin/">{% trans "Home" %}</a> &rsaquo;
+     {% trans "Cache Stats" %}
+</div>
+{% endif %}{% endblock %}
 
 {% block content %}
 {% show_messages %}
