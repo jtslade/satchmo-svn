@@ -54,7 +54,10 @@ class ConfigurationSettings(object):
             return key
                         
         def get_config(self, group, key):
-            return self[group][key]
+            try:
+                return self[group][key]
+            except KeyError:
+                raise SettingNotSet('%s.%s' % group, key)
 
         def groups(self):
             """Return ordered list"""
