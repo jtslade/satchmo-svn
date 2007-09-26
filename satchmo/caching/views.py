@@ -2,11 +2,11 @@ from django import newforms as forms
 from django.conf import settings
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.decorators import user_passes_test
+from django.core import urlresolvers
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
-from satchmo import caching
 from satchmo.caching.models import *
 import logging
 
@@ -83,7 +83,8 @@ def delete_page(request):
         if form.is_valid():
             log.debug('delete form valid')
             results = form.delete_cache()
-            return HttpResponseRedirect("/cache/stats/")
+            url = urlresolvers.reverse('caching_stats')
+            return HttpResponseRedirect(url)
         else:
             log.debug("Errors in form: %s", form.errors)
     else:
