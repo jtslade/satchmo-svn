@@ -192,7 +192,7 @@ class TestMultipleValues(TestCase):
         
         choices = config_choice_values('m1', 'c1')
         self.assertEqual(choices, [(1, 'one'),(2, 'two')])
-        
+            
 class TestMultipleValuesWithDefault(TestCase):
 
     def setUp(self):

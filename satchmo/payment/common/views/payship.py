@@ -8,7 +8,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
 from satchmo.contact.models import Contact
-from satchmo.contact.models import Order
+from satchmo.contact.models import Order, OrderPayment
 from satchmo.payment.common.forms import CreditPayShipForm, SimplePayShipForm
 from satchmo.payment.common.pay_ship import pay_ship_save
 from satchmo.payment.config import payment_live
@@ -41,13 +41,16 @@ def credit_pay_ship_info(request, payment_module):
             data = form.cleaned_data
 
             # Create a new order
-            newOrder = Order(contact=contact, payment=payment_module.KEY)
+            newOrder = Order(contact=contact)
             pay_ship_save(newOrder, tempCart, contact,
                 shipping=data['shipping'], discount=data['discount'])
             request.session['orderID'] = newOrder.id
 
+            #TODO: allow partial-pay here, which will mean that not all payments are on new orders.
+            orderpayment = OrderPayment(order=newOrder, amount=newOrder.balance, payment=payment_module.KEY)
+            orderpayment.save()
             # Save the credit card information
-            cc = CreditCardDetail(order=newOrder, ccv=data['ccv'],
+            cc = CreditCardDetail(orderpayment=orderpayment, ccv=data['ccv'],
                 expireMonth=data['month_expires'],
                 expireYear=data['year_expires'],
                 creditType=data['credit_type'])
@@ -91,10 +94,14 @@ def simple_pay_ship_info(request, payment_module, template):
             data = form.cleaned_data
 
             # Create a new order
-            newOrder = Order(contact=contact, payment=payment_module.KEY)
+            newOrder = Order(contact=contact)
             pay_ship_save(newOrder, tempCart, contact,
                 shipping=data['shipping'], discount=data['discount'])
             request.session['orderID'] = newOrder.id
+
+            #TODO: allow partial-pay here, which will mean that not all payments are on new orders.
+            orderpayment = OrderPayment(order=newOrder, amount=newOrder.balance, payment=payment_module.KEY)
+            orderpayment.save()
 
             url = lookup_url(payment_module, 'satchmo_checkout-step3')
             return http.HttpResponseRedirect(url)

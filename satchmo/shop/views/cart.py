@@ -8,6 +8,9 @@ from satchmo.product.models import Product
 from satchmo.product.views import find_product_template, optionset_from_post
 from satchmo.shop.models import Cart, CartItem
 from satchmo.shop.views.utils import bad_or_missing
+import logging
+
+log = logging.getLogger('shop.views.cart')
 
 class NullCartItem(object):
     def __init__(self, itemid):
@@ -72,11 +75,19 @@ def add(request, id=0):
 
     try:
         product = Product.objects.get(slug=request.POST['productname'])
-        if 'ConfigurableProduct' in product.get_subtypes():
+        p_types = product.get_subtypes()
+        details = []
+        
+        if 'ConfigurableProduct' in p_types:
             # This happens when productname cannot be updated by javascript.
             cp = product.configurableproduct
             chosenOptions = optionset_from_post(cp, request.POST)
             product = cp.get_product_from_options(chosenOptions)
+                
+        if 'CustomProduct' in p_types:
+            for customfield in product.customproduct.custom_text_fields.all():
+                details.append((customfield, request.POST["custom_%s" % customfield.slug]))
+            
         template = find_product_template(product)
     except Product.DoesNotExist:
         return bad_or_missing(request, _('The product you have requested does not exist.'))
@@ -101,7 +112,8 @@ def add(request, id=0):
     else:
         cart = Cart()
         cart.save() # Give the cart an id
-    cart.add_item(product, number_added=quantity)
+    
+    cart.add_item(product, number_added=quantity, details=details)
     request.session['cart'] = cart.id
 
     url = urlresolvers.reverse('satchmo_cart')

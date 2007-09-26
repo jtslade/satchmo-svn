@@ -13,7 +13,7 @@ from django.utils.translation import ugettext_lazy as _
 from satchmo.configuration import ConfigurationSettings, config_value
 from satchmo.contact.models import Contact
 from satchmo.l10n.models import Country
-from satchmo.product.models import ConfigurableProduct, Product
+from satchmo.product.models import ConfigurableProduct, Product, CustomTextField
 import datetime
 
 from logging import getLogger
@@ -163,13 +163,16 @@ class Cart(models.Model):
     def __unicode__(self):
         return u"Shopping Cart (%s)" % self.date_time_created
 
-    def add_item(self, chosen_item, number_added):
+    def add_item(self, chosen_item, number_added, details={}):
         try:
             itemToModify =  self.cartitem_set.filter(product__id = chosen_item.id)[0]
         except IndexError: #It doesn't exist so create a new one
             itemToModify = CartItem(cart=self, product=chosen_item, quantity=0)
-        itemToModify.quantity += number_added
+        itemToModify.quantity += number_added            
         itemToModify.save()
+        for field, val in details:
+            itemToModify.add_detail(field, val)
+        
 
     def remove_item(self, chosen_item_id, number_removed):
         itemToModify =  self.cartitem_set.get(id = chosen_item_id)
@@ -225,6 +228,11 @@ class CartItem(models.Model):
         return self.product.name
     description = property(_get_description)
 
+    def add_detail(self, customfield, val):
+        detl = CartItemDetails(cartitem=self, customfield=customfield, detail=val)
+        detl.save()
+        #self.details.add(detl)
+
     def __unicode__(self):
         currency = config_value('SHOP', 'CURRENCY')
         return u'%s - %s %s%s' % (self.quantity, self.product.name,
@@ -233,3 +241,10 @@ class CartItem(models.Model):
     class Admin:
         pass
 
+class CartItemDetails(models.Model):
+    """
+    An arbitrary detail about a cart item.
+    """
+    customfield = models.ForeignKey(CustomTextField, core=True)
+    cartitem = models.ForeignKey(CartItem, related_name='details', edit_inline=True, core=True)
+    detail = models.TextField(_('detail'))

@@ -76,3 +76,23 @@ def list_variations(configurableproduct):
     output += "</table>"
     t = Template(output)
     return t.render(Context())
+
+@register.inclusion_tag('admin/_customproduct_management.html')
+def customproduct_management(order):
+    custom = []
+    for orderitem in order.orderitem_set.all():
+        if 'CustomProduct' in orderitem.product.get_subtypes():
+            custom.append(orderitem)
+            
+    return {
+        'SHOP_BASE' : settings.SHOP_BASE,
+        'customitems' : custom
+    }
+
+@register.inclusion_tag('admin/_orderpayment_list.html')
+def orderpayment_list(order):
+    return {
+        'SHOP_BASE' : settings.SHOP_BASE, 
+        'order' : order,
+        'payments' : order.payments.all()
+        }

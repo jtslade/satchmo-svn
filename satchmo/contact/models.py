@@ -2,18 +2,26 @@
 Stores customer, organization, and order information.
 """
 
-import config
-import datetime
-import sys
+from decimal import Decimal
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from satchmo.configuration import config_choice_values
+from satchmo.configuration import config_choice_values, config_value, SettingNotSet
+from satchmo.discount.models import Discount
+from satchmo.payment.config import payment_choices
 from satchmo.product.models import Product
-from satchmo.newsletter import SubscriptionManager
 from satchmo.shop.templatetags.satchmo_currency import moneyfmt
+from satchmo.shop.utils import load_module
+from satchmo.tax.modules import simpleTax
+import config
+import datetime
+import logging
+import operator
 import satchmo.shipping.config
+import sys
+
+log = logging.getLogger('contact.views')
 
 CONTACT_CHOICES = (
     ('Customer', _('Customer')),
@@ -148,7 +156,12 @@ class Contact(models.Model):
         if not self.id:
             self.create_date = datetime.date.today()
         super(Contact, self).save()
-        SubscriptionManager().update_contact(self)
+        try:
+            if config_value('NEWSLETTER', 'MODULE'):
+                from satchmo.newsletter import SubscriptionManager
+                SubscriptionManager().update_contact(self)
+        except SettingNotSet:
+            pass
 
     class Admin:
         list_display = ('last_name', 'first_name', 'organization', 'role')
@@ -287,13 +300,8 @@ ORDER_STATUS = (
     ('Temp', _('Temp')),
     ('Pending', _('Pending')),
     ('In Process', _('In Process')),
+    ('Billed', _('Billed')),
     ('Shipped', _('Shipped')),
-)
-
-PAYMENT_CHOICES = (
-    ('Cash', _('Cash')),
-    ('Credit Card', _('Credit Card')),
-    ('Check', _('Check')),
 )
 
 class Order(models.Model):
@@ -319,11 +327,11 @@ class Order(models.Model):
         max_digits=6, decimal_places=2, blank=True, null=True)
     total = models.DecimalField(_("Total"),
         max_digits=6, decimal_places=2, blank=True, null=True)
-    discount = models.DecimalField(_("Discount"),
+    discount_code = models.CharField(_("Discount Code"), max_length=20, blank=True, null=True,
+        help_text=_("Coupon Code"))
+    discount = models.DecimalField(_("Discount amount"),
         max_digits=6, decimal_places=2, blank=True, null=True)
-    payment= models.CharField(_("Payment"),
-        choices=PAYMENT_CHOICES, max_length=25, blank=True)
-    method = models.CharField(_("Payment method"),
+    method = models.CharField(_("Order method"),
         choices=ORDER_CHOICES, max_length=50, blank=True)
     shipping_description = models.CharField(_("Shipping Description"),
         max_length=50, blank=True, null=True)
@@ -340,7 +348,22 @@ class Order(models.Model):
         core=True, blank=True, help_text=_("This is set automatically."))
 
     def __unicode__(self):
-        return self.contact.full_name
+        return "Order #%i: %s" % (self.id, self.contact.full_name)
+
+    def add_status(self, status=None, notes=None):
+        orderstatus = OrderStatus()
+        if not status:
+            if self.orderstatus_set.count() > 0:                
+                curr_status = self.orderstatus_set.all().order_by('-timestamp')[0]
+                status = curr_status.status
+            else:
+                status = 'Pending'
+        
+        orderstatus.status = status
+        orderstatus.notes = notes
+        orderstatus.timestamp = datetime.datetime.now()
+        orderstatus.order = self
+        orderstatus.save()
 
     def copy_addresses(self):
         """
@@ -367,13 +390,19 @@ class Order(models.Model):
             item.delete()
         self.save()
 
-    def _credit_card(self):
-        """Return the credit card associated with this order."""
-        try:
-            return self.creditcarddetail_set.get()
-        except self.creditcarddetail_set.model.DoesNotExist:
-            return None
-    credit_card = property(_credit_card)
+    def _balance(self):
+        payments = [p.amount for p in self.payments.all()]
+        if payments:
+            paid = reduce(operator.add, payments)
+            return self.total - paid
+        return self.total
+        
+    balance = property(fget=_balance)
+    
+    def balance_forward(self):
+        return moneyfmt(self.balance)
+
+    balance_forward = property(fget=balance_forward)
 
     def _full_bill_street(self, delim="<br/>"):
         """Return both billing street entries separated by delim."""
@@ -409,6 +438,41 @@ class Order(models.Model):
     def packingslip(self):
         return('<a href="/admin/print/packingslip/%s/">View</a>' % self.id)
     packingslip.allow_tags = True
+    
+    def recalculate_total(self, save=True):
+        """Calculates subtotal, taxes and total."""
+        #Can't really do a full shipping recalc - shipping is bound to the cart. 
+        
+        discount_amount = Decimal("0.00")
+        if self.discount_code:
+            try:
+                discount = Discount.objects.filter(code=self.discount_code)[0]
+                if discount:
+                    if discount.freeShipping:
+                        self.shipping_cost = Decimal("0.00")
+                    discount_amount = discount.calc(self)
+                    
+            except Discount.DoesNotExist:
+                pass
+
+        self.discount = discount_amount
+        
+        taxProcessor = simpleTax(self)
+        self.tax = taxProcessor.process()
+
+        itemprices = [ item.line_item_price for item in self.orderitem_set.all() ]
+        if itemprices:
+            subtotal = reduce(operator.add, itemprices)
+        else:
+            subtotal = Decimal('0.00')
+            
+        self.sub_total = subtotal
+        log.debug("recalc: subtotal=%s, shipping=%s, discount=%s, tax=%s", 
+                subtotal, self.shipping_cost, self.discount, self.tax)
+        self.total = subtotal + self.shipping_cost - self.discount + self.tax
+        
+        if save:
+            self.save()
 
     def shippinglabel(self):
         return('<a href="/admin/print/shippinglabel/%s/">View</a>' % self.id)
@@ -422,11 +486,14 @@ class Order(models.Model):
     def order_success(self):
         """Run each item's order_success method."""
         for orderitem in self.orderitem_set.all():
-            for subtype_name in orderitem.product.get_subtypes():
-                subtype = getattr(orderitem.product, subtype_name.lower())
-                success_method = getattr(subtype, 'order_success', None)
-                if success_method:
-                    success_method(self, orderitem)
+            subtype = orderitem.product.get_subtype_with_attr('order_success')
+            if subtype:
+                subtype.order_success(self, orderitem)
+                
+    def _paid_in_full(self):
+        """True if total has been paid"""
+        return self.balance <= 0
+    paid_in_full = property(fget=_paid_in_full)
 
     def validate(self, request):
         """
@@ -455,8 +522,8 @@ class Order(models.Model):
                 'bill_postal_code', 'bill_country')}),
             (_('Totals'), {'fields':
                 ('sub_total', 'shipping_cost', 'tax', 'discount', 'total',
-                'timestamp', 'payment')}))
-        list_display = ('contact', 'timestamp', 'order_total', 'status',
+                'timestamp')}))
+        list_display = ('contact', 'timestamp', 'order_total', 'balance_forward', 'status',
             'invoice', 'packingslip', 'shippinglabel')
         list_filter = ['timestamp', 'contact']
         date_hierarchy = 'timestamp'
@@ -510,4 +577,40 @@ class OrderStatus(models.Model):
         verbose_name = _("Order Status")
         verbose_name_plural = _("Order Statuses")
 
+class OrderPayment(models.Model):
+    order = models.ForeignKey(Order, related_name="payments")
+    payment = models.CharField(_("Payment Method"),
+        choices=payment_choices(), max_length=25, blank=True)
+    amount = models.DecimalField(_("amount"), core=True,
+        max_digits=6, decimal_places=2, blank=True, null=True)
+    timestamp = models.DateTimeField(_("timestamp"), blank=True, null=True)
+    
+    def _credit_card(self):
+        """Return the credit card associated with this payment."""
+        try:
+            return self.creditcards.get()
+        except self.creditcards.model.DoesNotExist:
+            return None
+    credit_card = property(_credit_card)
+    
+    
+    def _amount_total(self):
+        return moneyfmt(self.amount)
+        
+    amount_total = property(fget=_amount_total)
+    
+    def __unicode__(self):
+        return u"Order payment #%i" % self.id
+    
+    def save(self):
+        if not self.id:
+            self.timestamp = datetime.datetime.now()
 
+        super(OrderPayment, self).save()
+    
+    class Admin:
+        list_filter = ['order', 'payment']
+        list_display = ['id', 'order', 'payment', 'amount_total', 'timestamp']
+        fields = (
+            (None, {'fields': ('order', 'payment', 'amount', 'timestamp')}),
+            )

@@ -58,12 +58,9 @@ Reason=%s""", payment_module.key, orderToProcess.id, results, reason_code, msg)
         if results:
             tempCart.empty()
             #Update status
-            status = OrderStatus()
-            status.status = _("Pending")
-            status.notes = _("Order successfully submitted")
-            status.timestamp = datetime.datetime.now()
-            status.order = orderToProcess #For some reason auto_now_add wasn't working right in admin
-            status.save()
+            
+            orderToProcess.add_status(status='Pending', notes = "Order successfully submitted")
+
             #Now, send a confirmation email
             shop_config = Config.get_shop_config()
             shop_email = shop_config.store_email

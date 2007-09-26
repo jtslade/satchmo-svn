@@ -7,7 +7,7 @@ from Crypto.Cipher import Blowfish
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from satchmo.contact.models import Order
+from satchmo.contact.models import OrderPayment
 from satchmo.payment.config import payment_choices, credit_choices
 import base64
 import config
@@ -41,8 +41,8 @@ class CreditCardDetail(models.Model):
     Stores an encrypted CC number, its information, and its
     displayable number.
     """
-    order = models.ForeignKey(Order, unique=True, edit_inline=True,
-        num_in_admin=1, max_num_in_admin=1)
+    orderpayment = models.ForeignKey(OrderPayment, unique=True, edit_inline=True,
+        num_in_admin=1, max_num_in_admin=1, related_name="creditcards")
     creditType = models.CharField(_("Credit Card Type"), max_length=16,
         choices=credit_choices())
     displayCC = models.CharField(_("CC Number (Last 4 digits)"),

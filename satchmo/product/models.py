@@ -270,19 +270,17 @@ class Product(models.Model):
         """
         returns price as a Decimal
         """
-        #First try to get a price from price_set
-        qty_price = self._get_qty_price(1)
-        if qty_price is not None:
-            return qty_price
+                
+        subtype = self.get_subtype_with_attr('unit_price')
+        price = None
 
-        #if that didn't work, and this is a "ProductVariation" then calculate the price from the options
-        try:
-            return self.productvariation.unit_price
-        except models.ObjectDoesNotExist:
-            pass
+        if subtype:
+            price = subtype.unit_price
+        
+        else:
+            price = self._get_qty_price(1)
 
-        #No Price found
-        return None
+        return price
 
     unit_price = property(_get_fullPrice)
 
@@ -291,10 +289,9 @@ class Product(models.Model):
         If this Product has any subtypes associated with it that are not
         shippable, then consider the product not shippable.
         """
-        for type in self.get_subtypes():
-            subtype = getattr(self, type.lower())
-            if hasattr(subtype, 'is_shippable') and not subtype.is_shippable:
-                return False
+        subtype = self.get_subtype_with_attr('is_shippable')
+        if subtype and not subtype.is_shippable:
+            return False
         return True
     is_shippable = property(_get_shippable)
 
@@ -304,11 +301,16 @@ class Product(models.Model):
         the specified qty.  Otherwise, return the unit_price
         returns price as a Decimal
         """
-        qty_price = self._get_qty_price(qty)
-        if qty_price:
-            return qty_price
+        subtype = self.get_subtype_with_attr('get_qty_price')
+        if subtype:
+            price = subtype.get_qty_price(qty)
+        
         else:
-            return self._get_fullPrice()
+            price = self._get_qty_price(qty)
+            if not price:
+                price = self._get_fullPrice()
+        
+        return price
 
     def _get_qty_price(self, qty):
         """
@@ -322,6 +324,10 @@ class Product(models.Model):
             return None
 
     def in_stock(self):
+        subtype = self.get_subtype_with_attr('in_stock')
+        if subtype:
+            return subtype.in_stock
+            
         if self.items_in_stock > 0:
             return True
         else:
@@ -368,24 +374,95 @@ class Product(models.Model):
                 pass
         return tuple(types)
     get_subtypes.short_description = "Product SubTypes"
+    
+    def get_subtype_with_attr(self, attr):
+        for type in self.get_subtypes():
+            subtype = getattr(self, type.lower())
+            if hasattr(subtype, attr):
+                return subtype
+        return None
 
     def _has_variants(self):
-        try:
-            if self.productvariation:
-                return(True)
-        except:
-            return(False)
+        subtype = self.get_subtype_with_attr('has_variants')
+        if subtype:
+            return subtype.has_variants
+        
+        return False
     has_variants = property(_has_variants)
 
     def _get_category(self):
         """
         Return the primary category associated with this product
         """
-        if self.has_variants:
-            return self.productvariation.parent.product.category.all()[0].name
-        else:
-            return self.category.all()[0].name
+        subtype = self.get_subtype_with_attr('get_category')
+        if subtype:
+            return subtype.get_category
+        
+        return self.category.all()[0].name
     get_category = property(_get_category)
+    
+
+class CustomProduct(models.Model):
+    """
+    Product which must be custom-made or ordered.
+    """
+    product = models.OneToOneField(Product)
+    downpayment = models.IntegerField(_("Percent Downpayment"), default=20)
+    deferred_shipping = models.BooleanField(_('Deferred Shipping'), 
+        help_text=_('Do not charge shipping at checkout for this item.'), 
+        default=False)
+        
+    def _is_shippable(self):
+        return not self.deferred_shipping
+    is_shippable = property(fget=_is_shippable)
+    
+    def _get_fullPrice(self):
+        """
+        returns price as a Decimal
+        """
+        return self.get_qty_price(1)
+        
+    unit_price = property(_get_fullPrice)
+        
+    def get_qty_price(self, qty):
+        """
+        If QTY_DISCOUNT prices are specified, then return the appropriate discount price for
+        the specified qty.  Otherwise, return the unit_price
+        returns price as a Decimal
+        """
+        price = self.product._get_qty_price(qty)
+        if not price:
+            price = self.product._get_fullPrice()
+
+        return price * self.downpayment / 100
+        
+    def get_full_price(self, qty=1):
+        """
+        Return the full price, ignoring the deposit.
+        """
+        price = self.product._get_qty_price(qty)
+        if not price:
+            price = self.product._get_fullPrice()
+            
+        return price
+    
+    full_price = property(fget=get_full_price)
+    
+    def __unicode__(self):
+        return u"CustomProduct: %s" % self.product.name
+    
+    class Admin:
+        pass
+
+class CustomTextField(models.Model):
+    """
+    A text field to be filled in by a customer.
+    """
+
+    name = models.CharField(_('Custom field name'), max_length=40, core=True)
+    slug = models.SlugField()
+    products = models.ForeignKey(CustomProduct, verbose_name=_('Custom Fields'),
+        edit_inline=models.TABULAR, num_in_admin=3, related_name='custom_text_fields')
 
 class ConfigurableProduct(models.Model):
     """
@@ -604,6 +681,17 @@ class ProductVariation(models.Model):
             output.add(option.unique_id)
         return(output)
     option_values = property(_get_optionValues)
+
+    def _has_variants(self):
+        return True        
+    has_variants = property(_has_variants)
+    
+    def _get_category(self):
+        """
+        Return the primary category associated with this product
+        """
+        return self.parent.product.category.all()[0].name
+    get_category = property(_get_category)
 
     def _check_optionParents(self):
         groupList = []
