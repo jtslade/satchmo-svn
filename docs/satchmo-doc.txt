@@ -196,8 +196,9 @@ number of places you might want to configure.
         + TEMPLATE_DIRS
         
 2. The local_settings.py file also includes information for configuring `Authorize.net`_.  Make changes
-   here if you are planning to use this service.
-
+   here if you are planning to use this service.  *Note:* After [758], you manage the authorize.net and
+   all other payment modules from your ShopOptions page, not in your local_settings file.
+   
 3. The load_data.py script is helpful during testing. Make sure the following values are set in your
 local_settings.py file:
 
