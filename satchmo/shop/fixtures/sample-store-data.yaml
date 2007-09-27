@@ -3,19 +3,19 @@
   model: !!python/unicode 'contact.organization'
   pk: !!python/unicode '1'
 - fields: {create_date: 2007-05-19, dob: null, email: !!python/unicode 'chris@aol.com',
-    first_name: !!python/unicode 'Chris', last_name: !!python/unicode 'Smith', newsletter: false,
+    first_name: !!python/unicode 'Chris', last_name: !!python/unicode 'Smith',
     notes: !!python/unicode 'Really cool stuff', organization: null, role: !!python/unicode 'Customer',
     user: null}
   model: !!python/unicode 'contact.contact'
   pk: !!python/unicode '1'
 - fields: {create_date: 2007-05-19, dob: null, email: !!python/unicode 'abc@comcast.com',
-    first_name: !!python/unicode 'John', last_name: !!python/unicode 'Smith', newsletter: false,
+    first_name: !!python/unicode 'John', last_name: !!python/unicode 'Smith', 
     notes: !!python/unicode 'Second user', organization: null, role: !!python/unicode 'Customer',
     user: null}
   model: !!python/unicode 'contact.contact'
   pk: !!python/unicode '2'
 - fields: {create_date: 2007-05-19, dob: null, email: !!python/unicode 'fj@rr.com',
-    first_name: !!python/unicode 'Fred', last_name: !!python/unicode 'Jones', newsletter: false,
+    first_name: !!python/unicode 'Fred', last_name: !!python/unicode 'Jones', 
     notes: !!python/unicode '', organization: !!python/long '1', role: !!python/unicode 'Supplier',
     user: null}
   model: !!python/unicode 'contact.contact'

@@ -2,26 +2,33 @@
 
 from satchmo.newsletter.models import Subscription
 from django.utils.translation import ugettext as _
+import logging
 
-def update_contact(contact):
-    sub, created = Subscription.objects.get_or_create(email=contact.email)
-    if contact.newsletter != None:
-        changed = sub.update_subscription(contact.newsletter)
+log = logging.getLogger('simple newsletter')
 
-        result = ""
+def is_subscribed(contact):
+    return Subscription.email_is_subscribed(contact.email)
 
-        if created or changed:
-            sub.save()
-            if sub.subscribed:
-                result = _("Subscribed: %(email)s") % {'email': contact.email}
-            else:
-                result = _("Unsubscribed: %(email)s") % {'email': contact.email}
-
+def update_contact(contact, subscribe):
+    email = contact.email
+    current = Subscription.email_is_subscribed(email)
+    
+    if current == subscribe:
+        if subscribe:
+            result = _("Already subscribed %(email)s.")
         else:
-            if sub.subscribed:
-                result = _("Already subscribed.")
-            else:
-                result = _("Already removed.")
+            result = _("Already removed %(email)s.")
+        
+    else:
+        sub, created = Subscription.objects.get_or_create(email=email)
+        sub.subscribed = subscribe
+        sub.save()
+        log.debug("Subscription now: %s" % sub)
 
-        return result
+        if subscribe:
+            result = _("Subscribed: %(email)s")
+        else:
+            result = _("Unsubscribed: %(email)s")
 
+    return result % { 'email' : email }
+    

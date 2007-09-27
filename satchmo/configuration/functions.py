@@ -47,7 +47,6 @@ class ConfigurationSettings(object):
                 key = raw.key
                 
             else:
-                log.debug('not string or ConfigGroup: %s', raw)
                 group = self.groups()[raw]
                 key = group.key
 

@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from satchmo.contact.models import Contact
 import config
 import datetime
 
@@ -9,13 +10,21 @@ class NullContact(object):
     Note, this is *not* a Django object, and is not saved to the DB, only to the subscription lists.
     """
 
-    def __init__(self, full_name, email, status):
+    def __init__(self, full_name, email):
         if not full_name:
             full_name = email.split('@')[0]
 
         self.full_name = full_name
         self.email = email
-        self.newsletter = status
+
+def get_contact_or_fake(full_name, email):
+    try:
+        contact = Contact.objects.get(email=email)
+
+    except Contact.DoesNotExist:
+        contact = NullContact(full_name, email)
+
+    return contact
 
 class Subscription(models.Model):
     """A newsletter subscription."""
@@ -25,9 +34,13 @@ class Subscription(models.Model):
     create_date = models.DateField(_("Creation Date"))
     update_date = models.DateField(_("Update Date"))
 
-    def __init__(self, *args, **kwargs):
-        super(Subscription, self).__init__(*args, **kwargs)
-        self._newstate = self.subscribed
+    @classmethod
+    def email_is_subscribed(cls, email):
+        try:
+            sub = cls.objects.get(email=email)
+            return sub.subscribed
+        except cls.DoesNotExist:
+            return False
 
     def __unicode__(self):
         if self.subscribed:
@@ -39,11 +52,6 @@ class Subscription(models.Model):
     def __repr__(self):
         return "<Subscription: %s>" % str(self)
 
-    def update_subscription(self, newstate):
-        changed = newstate != self.subscribed
-        self.subscribed = newstate
-        return changed
-
     def save(self):
         if not self.id:
             self.create_date = datetime.date.today()
@@ -51,4 +59,8 @@ class Subscription(models.Model):
         self.update_date = datetime.date.today()
 
         super(Subscription, self).save()
+        
+    class Admin:
+        list_display = ['email', 'subscribed', 'create_date', 'update_date']
+        list_filter = ['subscribed']
 

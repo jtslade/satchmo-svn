@@ -6,38 +6,38 @@ in the admin settings page.
 
 from django.utils.translation import ugettext as _
 from Mailman import MailList, Errors
-from satchmo.newsletter.models import Subscription
+from models import Subscription
 from satchmo.configuration import config_value
 import sys
 
 class UserDesc: pass
 
-def update_contact(contact):
-    """Automatically called by Contact.save(), which keeps it in sync with the Contact newsletter setting."""
-    sub = None
-    changed = False
+def is_subscribed(contact):
+    return Subscription.email_is_subscribed(contact.email)
 
-    sub, created = Subscription.objects.get_or_create(email=contact.email)
-    changed = sub.update_subscription(contact.newsletter)
-
-    result = ""
-
-    if created or changed:
-        sub.save()
-    else:
-        if sub.subscribed:
-            result = _("Already subscribed.")
+def update_contact(contact, subscribe):
+    email = contact.email
+    current = Subscription.email_is_subscribed(email)
+    
+    if current == subscribe:
+        if subscribe:
+            result = _("Already subscribed %(email)s.")
         else:
-            result = _("Already removed.")
-
-    if sub.subscribed:
-        mailman_add(contact)
-        result = _("Subscribed: %(email)s") % { 'email' : contact.email }
+            result = _("Already removed %(email)s.")
+                
     else:
-        mailman_remove(contact)
-        result = _("Unsubscribed: %(email)s") % { 'email' : contact.email }
+        sub, created = Subscription.objects.get_or_create(email=email)
+        sub.subscribed = subscribe
+        sub.save()
 
-    return result
+        if subscribe:
+            mailman_add(contact)
+            result = _("Subscribed: %(email)s")
+        else:
+            mailman_remove(contact)
+            result = _("Unsubscribed: %(email)s")
+
+    return result % { 'email' : email }
 
 def mailman_add(contact, listname=None, send_welcome_msg=None, admin_notify=None):
     """Add a Satchmo contact to a mailman mailing list.

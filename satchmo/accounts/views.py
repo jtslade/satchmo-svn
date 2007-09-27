@@ -14,7 +14,7 @@ from satchmo.contact.models import Contact
 from satchmo.shop.models import Config
 from satchmo.shop.utils.unique_id import generate_id
 from socket import error as SocketError
-from satchmo.configuration import config_value
+from satchmo.configuration import config_value, SettingNotSet
 
 log = logging.getLogger('satchmo.accounts.views')
 
@@ -91,7 +91,6 @@ def register_handle_form(request, redirect=None):
             email = data['email']
             first_name = data['first_name']
             last_name = data['last_name']
-            newsletter = data['newsletter']
             username = generate_id(first_name, last_name)
 
             verify = (config_value('SHOP', 'ACCOUNT_VERIFICATION') == 'EMAIL')
@@ -115,10 +114,21 @@ def register_handle_form(request, redirect=None):
             contact.user = user
             contact.first_name = first_name
             contact.last_name = last_name
-            contact.email = email
-            contact.newsletter = newsletter
+            contact.email = email                
             contact.role = 'Customer'
             contact.save()
+            
+            try:
+                if config_value('NEWSLETTER','MODULE'):
+                    from satchmo.newsletter import update_subscription
+                    if 'newsletter' not in data:
+                        subscribed = False
+                    else:
+                        subscribed = data['newsletter']
+
+                    update_subscription(contact, subscribed)
+            except SettingNotSet:
+                pass
 
             if not verify:
                 user = authenticate(username=username, password=password)

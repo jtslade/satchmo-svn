@@ -1,9 +1,10 @@
-import datetime
 from django import newforms as forms
 from django.utils.translation import ugettext as _
+from satchmo.configuration import config_value, SettingNotSet
 from satchmo.contact.models import Contact, AddressBook, PhoneNumber
 from satchmo.l10n.models import Country
 from satchmo.shop.models import Config
+import datetime
 
 selection = ''
 
@@ -104,7 +105,7 @@ class ContactInfoForm(forms.Form):
     def clean_ship_postal_code(self):
         return self.ship_charfield_clean('postal_code')
 
-    def save(self, contact=None):
+    def save(self, contact=None, update_newsletter=True):
         """Save the contact info into the database.
         Checks to see if contact exists. If not, creates a contact
         and copies in the address and phone number."""
@@ -122,8 +123,17 @@ class ContactInfoForm(forms.Form):
             except KeyError:
                 pass
 
-        if 'newsletter' not in data:
-            customer.newsletter = False
+        try:
+            if update_newsletter and config_value('NEWSLETTER','MODULE'):
+                from satchmo.newsletter import update_subscription
+                if 'newsletter' not in data:
+                    subscribed = False
+                else:
+                    subscribed = data['newsletter']
+                
+                update_subscription(contact, subscribed)
+        except SettingNotSet:
+            pass
 
         if not customer.role:
             customer.role = "Customer"

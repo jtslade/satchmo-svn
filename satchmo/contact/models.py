@@ -87,7 +87,6 @@ class Contact(models.Model):
     email = models.EmailField(_("Email"), blank=True)
     notes = models.TextField(_("Notes"), max_length=500, blank=True)
     create_date = models.DateField(_("Creation date"))
-    newsletter = models.BooleanField(_("Newsletter"), null=True, default=False);
 
     @classmethod
     def from_request(cls, request, create=False):
@@ -156,12 +155,6 @@ class Contact(models.Model):
         if not self.id:
             self.create_date = datetime.date.today()
         super(Contact, self).save()
-        try:
-            if config_value('NEWSLETTER', 'MODULE'):
-                from satchmo.newsletter import SubscriptionManager
-                SubscriptionManager().update_contact(self)
-        except SettingNotSet:
-            pass
 
     class Admin:
         list_display = ('last_name', 'first_name', 'organization', 'role')
