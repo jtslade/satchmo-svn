@@ -38,7 +38,7 @@ def contact_info(request):
         if form.is_valid():
             if contact is None and request.user:
                 contact = Contact(user=request.user)
-            custID = form.save(contact=contact)
+            custID = form.save(contact=contact, update_newsletter=False)
             request.session['custID'] = custID
             #TODO - Create an order here and associate it with a session
             modulename = 'PAYMENT_' + new_data['paymentmethod']
