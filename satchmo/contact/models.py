@@ -396,6 +396,18 @@ class Order(models.Model):
         return moneyfmt(self.balance)
 
     balance_forward = property(fget=balance_forward)
+    
+    def _credit_card(self):
+        """Return the credit card associated with this payment."""
+        for payment in self.payments.order_by('-timestamp'):
+            try:
+                if payment.creditcards.count() > 0:
+                    return payment.creditcards.get()
+            except payments.creditcards.model.DoesNotExist:
+                pass
+        return None
+    credit_card = property(_credit_card)
+    
 
     def _full_bill_street(self, delim="<br/>"):
         """Return both billing street entries separated by delim."""
