@@ -55,7 +55,15 @@ class ConfigurationSettings(object):
                         
         def get_config(self, group, key):
             try:
-                return self[group][key]
+                if isinstance(group, values.ConfigurationGroup):
+                    group = group.key
+
+                cg = self.settings.get(group, None)
+                if not cg:
+                    raise SettingNotSet('%s config group does not exist' % group)
+                
+                else:
+                    return cg[key]
             except KeyError:
                 raise SettingNotSet('%s.%s' % (group, key))
 
