@@ -5,6 +5,7 @@ from django.core import urlresolvers
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
+from satchmo.configuration import config_value, SettingNotSet
 from satchmo.contact.common import get_area_country_options
 from satchmo.contact.forms import ExtendedContactInfoForm
 from satchmo.contact.models import Contact, Order
@@ -20,7 +21,23 @@ def view(request):
     except Contact.DoesNotExist:
         user_data = None
 
-    context = RequestContext(request, {'user_data': user_data})
+    try:
+        if config_value('NEWSLETTER', 'MODULE'):
+            from satchmo.newsletter import is_subscribed
+            if user_data:
+                newsletter = is_subscribed(user_data)
+            else:
+                newsletter = False
+            show_newsletter = True
+    except SettingNotSet:
+        newsletter = False
+        show_newsletter = False
+
+    context = RequestContext(request, {
+        'user_data': user_data, 
+        'show_newsletter' : show_newsletter, 
+        'newsletter' : newsletter })
+    
     return render_to_response('contact/view_profile.html', context)
 
 @login_required
@@ -57,11 +74,22 @@ def update(request):
                     init_data[item] = getattr(contact.billing_address,item)
             if contact.primary_phone:
                 init_data['phone'] = contact.primary_phone.phone
+            
+            try:
+                if config_value('NEWSLETTER', 'MODULE'):
+                    from satchmo.newsletter import is_subscribed
+                    init_data['newsletter'] = is_subscribed(contact)
+                    show_newsletter = True
+            except SettingNotSet:
+                init_data['newsletter'] = False
+                show_newsletter = False
+            
         form = ExtendedContactInfoForm(countries, areas, initial=init_data)
 
     context = RequestContext(request, {
         'form': form,
-        'country': only_country})
+        'country': only_country,
+        'show_newsletter': show_newsletter})
     return render_to_response('contact/update_form.html', context)
 
 @login_required

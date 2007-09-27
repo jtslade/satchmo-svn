@@ -139,19 +139,41 @@ class ContactInfoForm(forms.Form):
             customer.role = "Customer"
 
         customer.save()
-        address = AddressBook()
-        address_keys = address.__dict__.keys()
+        
+        # we need to make sure we don't blindly add new addresses
+        # this isn't ideal, but until we have a way to manage addresses
+        # this will force just the two addresses, shipping and billing
+        # TODO: add address management like Amazon.
+        
+        bill_address = customer.billing_address
+        if not bill_address:
+            bill_address = AddressBook(contact=customer)
+                
+        address_keys = bill_address.__dict__.keys()
         for field in address_keys:
             try:
-                setattr(address, field, data[field])
+                setattr(bill_address, field, data[field])
             except KeyError:
                 pass
-        address.contact = customer
-        address.is_default_billing = True
-        address.is_default_shipping = data['copy_address']
-        address.save()
-        if not data['copy_address']:
-            ship_address = AddressBook()
+
+        bill_address.is_default_billing = True
+        
+        copy_address = data['copy_address']
+
+        ship_address = customer.shipping_address
+        
+        if copy_address:
+            # make sure we don't have any other default shipping address
+            if ship_address and ship_address.id != bill_address.id:
+                ship_address.delete()
+            bill_address.is_default_shipping = True
+
+        bill_address.save()
+        
+        if not copy_address:
+            if not ship_address or ship_address.id == bill_address.id:
+                ship_address = AddressBook()
+            
             for field in address_keys:
                 try:
                     setattr(ship_address, field, data['ship_' + field])
@@ -160,8 +182,9 @@ class ContactInfoForm(forms.Form):
             ship_address.is_default_shipping = True
             ship_address.is_default_billing = False
             ship_address.contact = customer
-            ship_address.country = address.country
+            ship_address.country = bill_address.country
             ship_address.save()
+            
         if not customer.primary_phone:
             phone = PhoneNumber()
             phone.primary = True
@@ -170,6 +193,7 @@ class ContactInfoForm(forms.Form):
         phone.phone = data['phone']
         phone.contact = customer
         phone.save()
+        
         return customer.id
 
 class DateTextInput(forms.TextInput):
