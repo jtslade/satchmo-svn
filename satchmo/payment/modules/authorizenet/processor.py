@@ -74,6 +74,7 @@ if __name__ == "__main__":
 
     import os
     from satchmo.configuration import config_get_group
+    import config
 
     # Set up some dummy classes to mimic classes being passed through Satchmo
     class testContact(object):
