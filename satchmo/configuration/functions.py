@@ -201,7 +201,7 @@ def config_choice_values(group, key, skip_missing=True):
         cfg = config_get(group, key)
         return cfg.choice_values
         
-    except KeyError:
+    except SettingNotSet:
         if skip_missing:
             return []
         else:
