@@ -1,5 +1,6 @@
+from django.conf import settings
 from models import SettingNotSet
-from satchmo.shop.utils import flatten_list, is_list_or_tuple, is_string_like
+from satchmo.shop.utils import flatten_list, is_list_or_tuple, is_string_like, load_module
 import logging
 import values
 
@@ -69,6 +70,14 @@ class ConfigurationSettings(object):
             cfg = self.settings.get(group, None)
             return cfg and key in cfg
             
+        def load_app_configurations(self):
+            for modulename in settings.INSTALLED_APPS:
+                try:
+                    load_module(modulename + '.config')
+                    log.debug('Loaded configuration for %s', modulename)
+                except ImportError:
+                    pass
+            
         def preregister_choice(self, group, key, choice):
             """Setup a choice for a group/key which hasn't been instantiated yet."""
             k = (group, key)
@@ -102,6 +111,7 @@ class ConfigurationSettings(object):
     def __init__(self):
         if ConfigurationSettings.__instance is None:
             ConfigurationSettings.__instance = ConfigurationSettings.__impl()
+            ConfigurationSettings.__instance.load_app_configurations()
         
         self.__dict__['_ConfigurationSettings__instance'] = ConfigurationSettings.__instance
 
