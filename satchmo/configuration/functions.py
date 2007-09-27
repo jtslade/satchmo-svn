@@ -56,7 +56,7 @@ class ConfigurationSettings(object):
             try:
                 return self[group][key]
             except KeyError:
-                raise SettingNotSet('%s.%s' % group, key)
+                raise SettingNotSet('%s.%s' % (group, key))
 
         def groups(self):
             """Return ordered list"""
