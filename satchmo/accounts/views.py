@@ -14,7 +14,7 @@ from satchmo.contact.models import Contact
 from satchmo.shop.models import Config
 from satchmo.shop.utils.unique_id import generate_id
 from socket import error as SocketError
-from satchmo.configuration import config_value, SettingNotSet
+from satchmo.configuration import config_get_group, config_value, SettingNotSet
 
 log = logging.getLogger('satchmo.accounts.views')
 
@@ -118,17 +118,14 @@ def register_handle_form(request, redirect=None):
             contact.role = 'Customer'
             contact.save()
             
-            try:
-                if config_value('NEWSLETTER','MODULE'):
-                    from satchmo.newsletter import update_subscription
-                    if 'newsletter' not in data:
-                        subscribed = False
-                    else:
-                        subscribed = data['newsletter']
+            if config_get_group('NEWSLETTER'):
+                from satchmo.newsletter import update_subscription
+                if 'newsletter' not in data:
+                    subscribed = False
+                else:
+                    subscribed = data['newsletter']
 
-                    update_subscription(contact, subscribed)
-            except SettingNotSet:
-                pass
+                update_subscription(contact, subscribed)
 
             if not verify:
                 user = authenticate(username=username, password=password)
@@ -148,6 +145,14 @@ def register_handle_form(request, redirect=None):
                 'first_name': contact.first_name,
                 'last_name': contact.last_name}
 
+        if contact and config_get_group('NEWSLETTER'):
+            from satchmo.newsletter import is_subscribed
+            current_subscriber = is_subscribed(contact)
+        else:
+            current_subscriber = False
+
+        initial_data['newsletter'] = current_subscriber
+
         form = RegistrationForm(initial=initial_data)
 
     return (False, form)
@@ -161,7 +166,16 @@ def register(request, redirect=None, template='registration/registration_form.ht
     if success:
         return todo
     else:
-        context = RequestContext(request, {'form': todo, 'title' : _('Registration Form')})
+        if config_get_group('NEWSLETTER'):
+            show_newsletter = True
+        else:
+            show_newsletter = False
+                
+        context = RequestContext(request, {
+            'form': todo, 
+            'title' : _('Registration Form'),
+            'show_newsletter' : show_newsletter
+            })
         return render_to_response(template, context)
 
 def activate(request, activation_key):

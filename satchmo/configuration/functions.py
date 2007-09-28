@@ -76,7 +76,10 @@ class ConfigurationSettings(object):
                 group = group.key
             
             cfg = self.settings.get(group, None)
-            return cfg and key in cfg
+            if cfg and key in cfg:
+                return True
+            else:
+                return False
             
         def load_app_configurations(self):
             for modulename in settings.INSTALLED_APPS:

@@ -27,8 +27,12 @@
     <tr><td>{{ form.password2.label_tag }}:</td><td>{{ form.password2 }}</td></tr>
     <tr><td></td><td>{% if form.password2.errors %}*** {{ form.password2.errors|join:", " }}{% endif %}</td></tr>
 
+    {% if show_newsletter %}
     <tr><td>{{ form.newsletter.label_tag }}:</td><td>{{ form.newsletter }}</td></tr>
     <tr><td></td><td>{% if form.newsletter.errors %}*** {{ form.newsletter.errors|join:", " }}{% endif %}</td></tr>
+    {% else %}
+    <input type='hidden' name='newsletter' value="False" />
+    {% endif %}
 
 <tr><td></td><td><input type="submit" value="{% trans "Create Account" %}"/></td></tr>
 </form>

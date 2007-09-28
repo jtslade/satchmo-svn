@@ -1,6 +1,6 @@
 from django import newforms as forms
 from django.utils.translation import ugettext as _
-from satchmo.configuration import config_value, SettingNotSet
+from satchmo.configuration import config_value, config_get_group, SettingNotSet
 from satchmo.contact.models import Contact, AddressBook, PhoneNumber
 from satchmo.l10n.models import Country
 from satchmo.shop.models import Config
@@ -123,17 +123,14 @@ class ContactInfoForm(forms.Form):
             except KeyError:
                 pass
 
-        try:
-            if update_newsletter and config_value('NEWSLETTER','MODULE'):
-                from satchmo.newsletter import update_subscription
-                if 'newsletter' not in data:
-                    subscribed = False
-                else:
-                    subscribed = data['newsletter']
-                
-                update_subscription(contact, subscribed)
-        except SettingNotSet:
-            pass
+        if update_newsletter and config_get_group('NEWSLETTER'):
+            from satchmo.newsletter import update_subscription
+            if 'newsletter' not in data:
+                subscribed = False
+            else:
+                subscribed = data['newsletter']
+            
+            update_subscription(contact, subscribed)
 
         if not customer.role:
             customer.role = "Customer"

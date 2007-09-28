@@ -5,7 +5,7 @@ from django.core import urlresolvers
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
-from satchmo.configuration import config_value, SettingNotSet
+from satchmo.configuration import config_value, config_get_group, SettingNotSet
 from satchmo.contact.common import get_area_country_options
 from satchmo.contact.forms import ExtendedContactInfoForm
 from satchmo.contact.models import Contact, Order
@@ -21,18 +21,15 @@ def view(request):
     except Contact.DoesNotExist:
         user_data = None
 
-    try:
-        if config_value('NEWSLETTER', 'MODULE'):
-            from satchmo.newsletter import is_subscribed
-            if user_data:
-                newsletter = is_subscribed(user_data)
-            else:
-                newsletter = False
-            show_newsletter = True
-    except SettingNotSet:
-        newsletter = False
-        show_newsletter = False
+    show_newsletter = False
+    newsletter = False
 
+    if config_get_group('NEWSLETTER'):
+        show_newsletter = True
+        from satchmo.newsletter import is_subscribed
+        if user_data:
+            newsletter = is_subscribed(user_data)
+        
     context = RequestContext(request, {
         'user_data': user_data, 
         'show_newsletter' : show_newsletter, 
@@ -61,6 +58,12 @@ def update(request):
             request.session['custID'] = custID
             url = urlresolvers.reverse('satchmo_account_info')
             return http.HttpResponseRedirect(url)
+        else:
+            if config_get_group('NEWSLETTER'):
+                show_newsletter = True
+            else:
+                show_newsletter = False
+
     else:
         if contact:
             #If a person has their contact info, make sure we populate it in the form
@@ -75,14 +78,15 @@ def update(request):
             if contact.primary_phone:
                 init_data['phone'] = contact.primary_phone.phone
             
-            try:
-                if config_value('NEWSLETTER', 'MODULE'):
-                    from satchmo.newsletter import is_subscribed
-                    init_data['newsletter'] = is_subscribed(contact)
-                    show_newsletter = True
-            except SettingNotSet:
-                init_data['newsletter'] = False
-                show_newsletter = False
+        show_newsletter = False
+        current_subscriber = False
+        if config_get_group('NEWSLETTER'):
+            show_newsletter = True
+            if contact:
+                from satchmo.newsletter import is_subscribed
+                current_subscriber = is_subscribed(contact)
+
+        init_data['newsletter'] = current_subscriber
             
         form = ExtendedContactInfoForm(countries, areas, initial=init_data)
 
