@@ -54,6 +54,7 @@ tr.ConfigurableProduct {
 {% endif %}{% endblock %}
 {% block content %}
 <div id="content-main">
+<h1>WARNING: THIS FUNCTION IS NOT FULLY TESTED, ESPECIALLY WITH A POSTGRES DB.  IT IS NOT SAFE FOR PRODUCTION USE.</h1>
 <h1>{% trans 'Import' %}</h1>
 {% if importform.errors %}
     <p class="errornote">
