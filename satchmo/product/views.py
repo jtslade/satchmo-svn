@@ -1,18 +1,14 @@
-from sets import Set
 from django import http
-from django.contrib.auth.decorators import user_passes_test
-from django.core import urlresolvers
 from django.db.models import Q
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
 from django.template.loader import select_template
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
-from satchmo.product.forms import InventoryForm, ProductExportForm
 from satchmo.product.models import Category, Product, ConfigurableProduct
 from satchmo.shop.templatetags.satchmo_currency import moneyfmt
 from satchmo.shop.views.utils import bad_or_missing
+from sets import Set
 import logging
 
 log = logging.getLogger('product.views')
@@ -86,7 +82,7 @@ def get_product(request, product_slug, selected_options=Set()):
 
     template = find_product_template(product, producttypes=p_types)
     ctx = RequestContext(request, {'product': product, 'options': options})
-    return HttpResponse(template.render(ctx))
+    return http.HttpResponse(template.render(ctx))
 
 def optionset_from_post(configurableproduct, POST):
     chosenOptions = Set()
@@ -161,42 +157,3 @@ def getConfigurableProductOptions(request, id):
     if not options:
         return '<option>No valid options found in "%s"</option>' % cp.product.slug
     return http.HttpResponse(options, mimetype="text/html")
-
-@user_passes_test(lambda u: u.is_authenticated() and u.is_staff, login_url='/accounts/login/')
-def edit_inventory(request):
-    """A quick inventory price, qty update form"""
-    if request.POST:
-        new_data = request.POST.copy()
-        form = InventoryForm(new_data)
-        if form.is_valid():
-            form.save(request)
-            url = urlresolvers.reverse('satchmo_admin_edit_inventory')
-            return http.HttpResponseRedirect(url)
-    else:
-        form = InventoryForm()
-
-    ctx = RequestContext(request, {
-        'title' : _('Inventory Editor'),
-        'form' : form
-        })
-
-    return render_to_response('admin/inventory_form.html', ctx)
-
-@user_passes_test(lambda u: u.is_authenticated() and u.is_staff, login_url='/accounts/login/')
-def export_products(request):
-    """A product export tool"""
-    if request.POST:
-        new_data = request.POST.copy()
-        form = ProductExportForm(new_data)
-        if form.is_valid():
-            return form.export(request)
-    else:
-        form = ProductExportForm()
-
-    ctx = RequestContext(request, {
-        'title' : _('Product Exporter'),
-        'form' : form
-        })
-
-    return render_to_response('admin/product_export_form.html', ctx)
-

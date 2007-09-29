@@ -1,25 +1,30 @@
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
 from django import newforms as forms
+from django.core import serializers
 from django.core.management.base import CommandError
 from django.http import HttpResponse
 from models import Product, Price
 import logging
+import os
 import time
 
 log = logging.getLogger('product.forms')
 
-export_choices = (
-    ('json', 'JSON'),
-    ('yaml', 'YAML'),
-    ('xml', 'XML')
-    )
+def export_choices():
+    fmts = serializers.get_serializer_formats()
+    return zip(fmts,fmts)
 
 class ProductExportForm(forms.Form):    
-    format = forms.ChoiceField(label=_('export format'), widget=forms.Select(), choices=export_choices, required=True)
     
     def __init__(self, *args, **kwargs):
         products = kwargs.pop('products', None)
         
         super(ProductExportForm, self).__init__(*args, **kwargs)
+        
+        self.fields['format'] = forms.ChoiceField(label=_('export format'), choices=export_choices(), required=True)
         
         if not products:
             products = Product.objects.all().order_by('slug')
@@ -57,8 +62,6 @@ class ProductExportForm(forms.Form):
             if opt=='export':
                 if value:
                     selected.append(key)
-                        
-        from django.core import serializers
 
         try:
             serializers.get_serializer(format)
@@ -71,6 +74,8 @@ class ProductExportForm(forms.Form):
             objects.append(product)
             for subtype in product.get_subtypes():
                 objects.append(getattr(product,subtype.lower()))
+            objects.extend(list(product.price_set.all()))
+            objects.extend(list(product.productimage_set.all()))
 
         try:
             raw = serializers.serialize(format, objects, indent=False)
@@ -80,6 +85,65 @@ class ProductExportForm(forms.Form):
         response = HttpResponse(mimetype="text/" + format, content=raw)
         response['Content-Disposition'] = 'attachment; filename="products-%s.%s"' % ((time.strftime('%Y%m%d-%H%M'), format))
         return response
+
+
+class ProductImportForm(forms.Form):  
+    
+    def __init__(self, *args, **kwargs):        
+        super(ProductImportForm, self).__init__(*args, **kwargs)
+    
+        self.fields['upload'] = forms.Field(label=_("File to import"), widget=forms.FileInput, required=False)
+
+    def import_from(self, infile, maxsize=10000000):
+        errors = []
+        results = []
+        
+        filetype = infile['content-type']   
+        filename = infile['filename']  
+        raw = infile['content']
+        
+        # filelen = len(raw)
+        # if filelen > maxsize:
+        #     errors.append(_('Import too large, must be smaller than %i bytes.' % maxsize ))
+        
+        format = os.path.splitext(filename)[1]
+        if format and format.startswith('.'):
+            format = format[1:]
+        if not format:
+            errors.append(_('Could not parse format from filename: %s') % filename)
+        
+        elif not format in serializers.get_serializer_formats():
+            errors.append(_('Unknown file format: %s') % format)
+            
+        if not errors:
+            serializer = serializers.get_serializer(format)
+            
+            from django.db import connection, transaction
+            
+            transaction.commit_unless_managed()
+            transaction.enter_transaction_management()
+            transaction.managed(True)
+        
+            try:
+                raw = StringIO(str(raw))
+                objects = serializers.deserialize(format, raw)
+                ct = 0
+                for obj in objects:
+                    # not sure what to do about the sequence_reset stuff.
+                    #models.add(obj.object.__class__)
+                    obj.save()
+                    ct += 1
+                results.append(_('Added %i objects from %s') % (ct, filename));
+                #label_found = True
+            except Exception, e:
+                #fixture.close()
+                errors.append(_("Problem installing fixture '%s': %s\n") % (filename, str(e)))
+                errors.append("Raw: %s" % raw)
+                transaction.rollback()
+                transaction.leave_transaction_management()
+            
+        return results, errors
+
 
 class InventoryForm(forms.Form):
     

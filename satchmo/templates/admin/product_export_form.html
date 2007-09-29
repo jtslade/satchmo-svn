@@ -54,6 +54,18 @@ tr.ConfigurableProduct {
 {% endif %}{% endblock %}
 {% block content %}
 <div id="content-main">
+<h1>{% trans 'Import' %}</h1>
+{% if importform.errors %}
+    <p class="errornote">
+    {% blocktrans count importform.errors|length as counter %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+{% endif %}
+{% if importform.fields %}
+<form method="post" id="importform" action="{% url satchmo_admin_product_import %}" enctype="multipart/form-data">
+    <p>{% trans 'Import from fixture file:' %}{{ importform.upload }}</p>
+    <input type="submit" value="Import" class="Import" />
+</form>
+{% endif %}
+<h1>{% trans 'Export' %}</h1>
 {% if form.errors %}
     <p class="errornote">
     {% blocktrans count form.errors|length as counter %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
@@ -91,7 +103,7 @@ tr.ConfigurableProduct {
         		</tr>
     </table>
     <p>{{ form.format }}</p>
-<input type="submit" value="Save" class="default" />
+<input type="submit" value="Export" class="default" />
 <input type="reset" value="Reset" class="default" />
 <h2>{% trans 'Helpers' %}</h2>
 <p><a href="#" id="mark_all">{% trans 'Check all' %}</p>
