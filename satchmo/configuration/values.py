@@ -151,6 +151,9 @@ class Value(object):
     def __iter__(self):
         return iter(self.value)
         
+    def __unicode__(self):
+        return unicode(self.value)
+        
     def __str__(self):
         return str(self.value)
         
@@ -198,7 +201,7 @@ class Value(object):
                 note = gettext('Default value: ') + ", ".join(work)
         
             else:
-                note = _("Default value: %s") % str(self.default)
+                note = _("Default value: %s") % unicode(self.default)
         
         return note
         
@@ -297,13 +300,13 @@ class Value(object):
         "Returns a value suitable for storage into a CharField"
         if value == NOTSET:
             value = ""
-        return str(value)
+        return unicode(value)
 
     def to_editor(self, value):
         "Returns a value suitable for display in a form widget"
         if value == NOTSET:
             return NOTSET
-        return str(value)
+        return unicode(value)
 
 ###############
 # VALUE TYPES #
@@ -346,7 +349,7 @@ class DecimalValue(Value):
         if value == NOTSET:
             return "0"
         else:
-            return str(value)
+            return unicode(value)
 
 # DurationValue has a lot of duplication and ugliness because of issue #2443
 # Until DurationField is sorted out, this has to do some extra work
@@ -377,7 +380,7 @@ class DurationValue(Value):
         if value == NOTSET:
             return NOTSET
         else:
-            return str(value.days * 24 * 3600 + value.seconds + float(value.microseconds) / 1000000)
+            return unicode(value.days * 24 * 3600 + value.seconds + float(value.microseconds) / 1000000)
 
 class FloatValue(Value):
     
@@ -396,7 +399,7 @@ class FloatValue(Value):
         if value == NOTSET:
             return "0"
         else:
-            return str(value)
+            return unicode(value)
             
 class IntegerValue(Value):
     class field(forms.IntegerField):
@@ -414,7 +417,7 @@ class IntegerValue(Value):
         if value == NOTSET:
             return "0"
         else:
-            return str(value)
+            return unicode(value)
 
 
 class PercentValue(Value):
@@ -441,7 +444,7 @@ class PercentValue(Value):
         if value == NOTSET:
             return "0"
         else:
-            return str(value)
+            return unicode(value)
 
 class PositiveIntegerValue(IntegerValue):
 
@@ -462,7 +465,7 @@ class StringValue(Value):
     def to_python(self, value):
         if value == NOTSET:
             value = ""
-        return str(value)
+        return unicode(value)
             
     to_editor = to_python
 
