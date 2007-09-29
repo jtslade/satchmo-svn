@@ -1,0 +1,104 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_modify %}
+
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/forms.css{% endblock %}
+{% block extrastyle %}
+<style type="text/css">
+form#inventoryform input.text {
+    width: 6em;
+}
+
+tr.ConfigurableProduct {
+    font-style: italic;
+}
+</style>
+{% endblock %}
+{% block extrahead %}{{ block.super }}
+    <script src="{{media_url}}js/jquery.js" type="text/javascript"></script>
+    <script src="{{media_url}}js/jquery.cookie.js" type="text/javascript"></script>
+    <script type="text/javascript">
+    var satchmo = satchmo || {};
+    satchmo.toggle = function(cls, state) {
+        $(cls).each(function() { this.checked = state });
+       return false;
+    };
+
+    $(function() {
+        var c = $.cookie("satchmoadmin_exportformat");
+        if (c) {
+            $('#id_format')[0].value=c;
+        }
+  
+        $('#id_format').change(function() {
+            var fmt = $('#id_format')[0].value
+            $.cookie("satchmoadmin_exportformat", fmt, {expires: 7});
+        });
+        $('#mark_all').click(function() {
+            satchmo.toggle('input.export', true);
+        });
+        $('#unmark_all').click(function() {
+            satchmo.toggle('input.export', false);
+        });
+    });
+    </script>
+{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+{% block bodyclass %}dashboard{% endblock %}
+{% block userlinks %}<a href="/admin/doc/">{% trans 'Documentation' %}</a> / <a href="/admin/password_change/">{% trans 'Change password' %}</a> / <a href="/admin/logout/">{% trans 'Log out' %}</a>{% endblock %}
+{% block breadcrumbs %}{% if not is_popup %}
+<div class="breadcrumbs">
+     <a href="/admin/">{% trans "Home" %}</a> &rsaquo;
+     {% trans "Inventory Management" %}
+</div>
+{% endif %}{% endblock %}
+{% block content %}
+<div id="content-main">
+{% if form.errors %}
+    <p class="errornote">
+    {% blocktrans count form.errors|length as counter %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+    </p>
+{% endif %}
+{% if form.fields %}
+<form method="post" id="productform">
+    <table>
+        <tr>
+            <th>Export?</th>
+            <th>Slug</th>
+            <th>Name</th>
+        </tr>
+    {% for field in form %}
+        {% ifnotequal field.name 'format' %} 
+            {% if field.is_hidden %}
+                {{ field }}
+            {% else %}
+                {% ifchanged field.field.slug %}
+                    {% if not forloop.first %}
+            		</tr>
+            		{% endif %}
+                    <tr class="{{ field.field.subtypes }}">
+                        <td>{{ field }}</td>
+                        <td><a href="/admin/product/product/{{ field.field.product_id }}/">{{ field.label_tag }}</a>
+                            {% if field.errors %}
+                    		<span class="error">{{ field.errors }}</span><br/>
+            		        {% endif %}    
+                        </td>
+                        <td>{{ field.help_text}}</td>
+                {% endifchanged %}
+        	{% endif %}
+    	{% endifnotequal %}
+    {% endfor %}
+        		</tr>
+    </table>
+    <p>{{ form.format }}</p>
+<input type="submit" value="Save" class="default" />
+<input type="reset" value="Reset" class="default" />
+<h2>{% trans 'Helpers' %}</h2>
+<p><a href="#" id="mark_all">{% trans 'Check all' %}</p>
+<p><a href="#" id="unmark_all">{% trans 'Uncheck all' %}</p>
+</form>
+{% else %}
+    <p>{% trans "No products." %}</p>
+{% endif %}
+</div>
+{% endblock %}

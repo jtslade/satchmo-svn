@@ -9,7 +9,7 @@ from django.template import RequestContext
 from django.template.loader import select_template
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
-from satchmo.product.forms import InventoryForm
+from satchmo.product.forms import InventoryForm, ProductExportForm
 from satchmo.product.models import Category, Product, ConfigurableProduct
 from satchmo.shop.templatetags.satchmo_currency import moneyfmt
 from satchmo.shop.views.utils import bad_or_missing
@@ -181,4 +181,22 @@ def edit_inventory(request):
         })
 
     return render_to_response('admin/inventory_form.html', ctx)
+
+@user_passes_test(lambda u: u.is_authenticated() and u.is_staff, login_url='/accounts/login/')
+def export_products(request):
+    """A product export tool"""
+    if request.POST:
+        new_data = request.POST.copy()
+        form = ProductExportForm(new_data)
+        if form.is_valid():
+            return form.export(request)
+    else:
+        form = ProductExportForm()
+
+    ctx = RequestContext(request, {
+        'title' : _('Product Exporter'),
+        'form' : form
+        })
+
+    return render_to_response('admin/product_export_form.html', ctx)
 
