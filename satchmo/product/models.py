@@ -787,7 +787,7 @@ class ProductImage(models.Model):
     """
     product = models.ForeignKey(Product, null=True, blank=True,
         edit_inline=models.TABULAR, num_in_admin=3)
-    picture = ImageWithThumbnailField(upload_to=upload_dir,
+    picture = ImageWithThumbnailField(upload_to=upload_dir(),
         name_field="_filename") #Media root is automatically prepended
     caption = models.CharField(_("Optional caption"), max_length=100,
         null=True, blank=True)
