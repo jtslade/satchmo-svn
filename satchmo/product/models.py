@@ -645,12 +645,20 @@ class ProductVariation(models.Model):
         """ Get price based on parent ConfigurableProduct """
         if not self.parent.product.unit_price:
             return None
-
-        price_delta = Decimal("0.00")
-        for option in self.options.all():
-            if option.price_change:
-                price_delta += option.price_change
-        return self.parent.product.unit_price + price_delta
+            
+        # allow explicit setting of prices.
+        try:
+            qty_discounts = self.price_set.exclude(expires__isnull=False, expires__lt=datetime.date.today()).filter(quantity__lte=1)
+            if qty_discounts.count() > 0:
+                # Get the price with the quantity closest to the one specified without going over
+                return qty_discounts.order_by('-quantity')[0].price            
+        except AttributeError:
+            # otherwise calculate from options
+            price_delta = Decimal("0.00")
+            for option in self.options.all():
+                if option.price_change:
+                    price_delta += option.price_change
+            return self.parent.product.unit_price + price_delta
     unit_price = property(_get_fullPrice)
 
     def _get_optionName(self):
