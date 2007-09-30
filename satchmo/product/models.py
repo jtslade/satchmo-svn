@@ -54,7 +54,7 @@ class Category(models.Model):
     def get_absolute_url(self):
         p_list = self._recurse_for_parents_slug(self)
         p_list.append(self.slug)
-        return url_join(settings.SHOP_BASE, 'category', p_list)
+        return u'%s/category/%s/' % (settings.SHOP_BASE, u'/'.join(p_list))
 
     def _recurse_for_parents_name(self, cat_obj):
         #This is used for the visual display & save validation
