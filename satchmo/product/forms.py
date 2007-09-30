@@ -5,6 +5,7 @@ except ImportError:
 from django import newforms as forms
 from django.core import serializers
 from django.core.management.base import CommandError
+from django.core.management.color import no_style
 from django.http import HttpResponse
 from models import Product, Price
 import logging
@@ -128,11 +129,19 @@ class ProductImportForm(forms.Form):
                 raw = StringIO(str(raw))
                 objects = serializers.deserialize(format, raw)
                 ct = 0
+                models = set()
                 for obj in objects:
-                    # not sure what to do about the sequence_reset stuff.
-                    #models.add(obj.object.__class__)
                     obj.save()
+                    models.add(obj.object.__class__)
                     ct += 1
+                if ct>0:
+                    style=no_style()
+                    sequence_sql = connection.ops.sequence_reset_sql(style, models)
+                    if sequence_sql:
+                        cursor = connection.cursor()
+                        for line in sequence_sql:
+                            cursor.execute(line)
+                    
                 results.append(_('Added %i objects from %s') % (ct, filename));
                 #label_found = True
             except Exception, e:
