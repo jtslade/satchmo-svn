@@ -18,6 +18,7 @@ from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.db import models
+from satchmo.configuration import config_get_group
 
 # Satchmo apps, sorted by their model dependencies.
 satchmo_apps = [

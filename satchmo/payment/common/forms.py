@@ -73,7 +73,7 @@ class CreditPayShipForm(forms.Form):
         self.fields['credit_type'].choices = creditchoices
 
         year_now = datetime.date.today().year
-        self.fields['year_expires'].choices = [(year, year) for year in range(year_now, year_now+5)]
+        self.fields['year_expires'].choices = [(year, year) for year in range(year_now, year_now+6)]
 
         self.tempCart = Cart.objects.get(id=request.session['cart'])
         self.tempContact = Contact.from_request(request)

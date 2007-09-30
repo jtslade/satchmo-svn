@@ -17,12 +17,14 @@
     <li class="active">{% trans "Confirmation" %}</li>
 </ul>
 </div>
+{% block error_processing %}
 {% if errors %}
     <h3>{% block errorheader %}{% trans "The following error was returned while trying to process your payment. Please correct and resubmit." %}{% endblock %}</h3>
     {{ errors }}
 {% else %}
     <h3>{% trans "Please validate the following information, then submit your order." %}</h3>
 {% endif %}
+{% endblock %}
 
 <h4>{% trans "Items Ordered" %}</h4>
 {% order_details order %}
