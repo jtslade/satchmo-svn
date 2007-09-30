@@ -14,6 +14,7 @@ Changes in Trunk
  * Allow manual product ordering in a category
  * Remove most custom settings from local_settings.py, instead using the satchmo.configuration app
  * Added a cache manager
+ * Added TrustCommerce as a processing module
 
 Version 0.5, August 22, 2007
 ----------------------------
