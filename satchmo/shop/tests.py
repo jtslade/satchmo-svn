@@ -266,14 +266,14 @@ class ShopTest(TestCase):
         Do some basic searches to make sure it all works as expected
         """
         response = self.client.get(prefix+'/search/', {'keywords':'python'})
-        self.assertContains(response, "Product: Python Rocks shirt", count=1)
+        self.assertContains(response, "Python Rocks shirt", count=1)
         response = self.client.get(prefix+'/search/', {'keywords':'django+book'})
         self.assertContains(response, "Nothing found")
         response = self.client.get(prefix+'/search/', {'keywords':'shirt'})
-        self.assertContains(response, "Category: Shirts", count=1)
-        self.assertContains(response, "Category: Short Sleeve", count=1)
-        self.assertContains(response, "Product: Django Rocks shirt", count=1)
-        self.assertContains(response, "Product: Python Rocks shirt", count=1)
+        self.assertContains(response, "Shirts", count=2)
+        self.assertContains(response, "Short Sleeve", count=2)
+        self.assertContains(response, "Django Rocks shirt", count=1)
+        self.assertContains(response, "Python Rocks shirt", count=1)
 
 class AdminTest(TestCase):
     fixtures = ['sample-store-data.yaml', 'products.yaml']
