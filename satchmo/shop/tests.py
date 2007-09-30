@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.utils.encoding import smart_str
 from satchmo.contact.models import Contact
 from satchmo.shop.templatetags import get_filter_args
-from satchmo.configuration import config_value
+from satchmo.configuration import config_value, config_get
 
 url = urlresolvers.reverse
 currency = config_value('SHOP', 'CURRENCY')
@@ -34,7 +34,7 @@ checkout_step1_post_data = {
     'paymentmethod': 'DUMMY'}
 
 class ShopTest(TestCase):
-    fixtures = ['l10n-data.yaml', 'sample-store-data.yaml', 'products.yaml']
+    fixtures = ['l10n-data.yaml', 'sample-store-data.yaml', 'products.yaml', 'test-config.yaml']
 
     def setUp(self):
         # Every test needs a client
@@ -163,7 +163,7 @@ class ShopTest(TestCase):
     def test_checkout(self):
         """
         Run through a full checkout process
-        """
+        """        
         self.test_cart_adding()
         response = self.client.post(prefix+"/checkout/", checkout_step1_post_data)
         self.assertRedirects(response, redirectprefix+'/checkout/dummy/', status_code=302, target_status_code=200)
