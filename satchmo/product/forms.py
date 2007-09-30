@@ -3,14 +3,17 @@ try:
 except ImportError:
     from StringIO import StringIO
 from django import newforms as forms
+from django.conf import settings
 from django.core import serializers
 from django.core.management.base import CommandError
 from django.core.management.color import no_style
 from django.http import HttpResponse
 from models import Product, Price
+from satchmo.configuration import config_value
 import logging
 import os
 import time
+import zipfile
 
 log = logging.getLogger('product.forms')
 
@@ -26,6 +29,7 @@ class ProductExportForm(forms.Form):
         super(ProductExportForm, self).__init__(*args, **kwargs)
         
         self.fields['format'] = forms.ChoiceField(label=_('export format'), choices=export_choices(), required=True)
+        self.fields['include_images'] = forms.BooleanField(label=_('Include Images'), initial=True, required=False)
         
         if not products:
             products = Product.objects.all().order_by('slug')
@@ -52,10 +56,15 @@ class ProductExportForm(forms.Form):
         self.full_clean()
         format = 'yaml'
         selected = []
+        include_images = False
         
         for name, value in self.cleaned_data.items():
             if name == 'format':
                 format == value
+                continue
+                
+            if name == 'include_images':
+                include_images = value
                 continue
                 
             opt, key = name.split('__')
@@ -70,6 +79,7 @@ class ProductExportForm(forms.Form):
             raise CommandError("Unknown serialization format: %s" % format)
 
         objects = []
+        images = []
         for slug in selected:
             product = Product.objects.get(slug=slug)
             objects.append(product)
@@ -77,14 +87,43 @@ class ProductExportForm(forms.Form):
                 objects.append(getattr(product,subtype.lower()))
             objects.extend(list(product.price_set.all()))
             objects.extend(list(product.productimage_set.all()))
+            if include_images:
+                for image in product.productimage_set.all():
+                    images.append(image.picture)
 
         try:
             raw = serializers.serialize(format, objects, indent=False)
         except Exception, e:
             raise CommandError("Unable to serialize database: %s" % e)
             
+        if include_images:
+            filedir = settings.MEDIA_ROOT
+            buf = StringIO()
+            zf = zipfile.ZipFile(buf, 'a', zipfile.ZIP_STORED)
+            
+            export_file = 'products.%s' % format
+            zf.writestr(export_file, raw)
+            
+            image_dir = config_value('PRODUCT', 'IMAGE_DIR')
+            config = "PRODUCT.IMAGE_DIR=%s\nEXPORT_FILE=%s" % (image_dir, export_file)
+            zf.writestr('VARS', config)
+            
+            for image in images:
+                f = os.path.join(filedir, image)
+                if os.path.exists(f):
+                    zf.write(f, str(image))
+            
+            zf.close()
+            
+            raw = buf.getvalue()
+            mimetype = "application/zip"
+            format = "zip"
+        else:
+            mimetype = "text/" + format
+
         response = HttpResponse(mimetype="text/" + format, content=raw)
-        response['Content-Disposition'] = 'attachment; filename="products-%s.%s"' % ((time.strftime('%Y%m%d-%H%M'), format))
+        response['Content-Disposition'] = 'attachment; filename="products-%s.%s"' % (time.strftime('%Y%m%d-%H%M'), format)
+            
         return response
 
 
@@ -113,7 +152,58 @@ class ProductImportForm(forms.Form):
         if not format:
             errors.append(_('Could not parse format from filename: %s') % filename)
         
-        elif not format in serializers.get_serializer_formats():
+        if format == 'zip':
+            zf = zipfile.ZipFile(StringIO(raw), 'r')
+            files = zf.namelist()
+            image_dir = config_value('PRODUCT', 'IMAGE_DIR')
+            other_image_dir = None
+            export_file = None
+            if 'VARS' in files:
+                config = zf.read('VARS')
+                lines = [line.split('=') for line in config.split('\n')]
+                for key, val in lines:
+                    if key == 'PRODUCT.IMAGE_DIR':
+                        other_image_dir = val
+                    elif key == 'EXPORT_FILE':
+                        export_file = val
+                
+                if other_image_dir is None or export_file is None:
+                    errors.append(_('Bad VARS file in import zipfile.'))
+                    
+                else:
+                    # save out all the files which start with other_image_dr
+                    rename = image_dir == other_image_dir
+                    for f in files:
+                        if f.startswith(other_image_dir):
+                            buf = zf.read(f)
+                            if rename:
+                                f = f[len(other_image_dir):]
+                                if f[0] in ('/', '\\'):
+                                    f = f[1:]
+                                f = os.path.join(settings.MEDIA_ROOT, image_dir, f)
+                            outf = open(f, 'w')
+                            outf.write(buf)
+                            outf.close()
+                            results.append('Imported image: %s' % f)
+                            
+                    infile = zf.read(export_file)
+                    zf.close()
+                    
+                    format = os.path.splitext(export_file)[1]
+                    if format and format.startswith('.'):
+                        format = format[1:]
+                    if not format:
+                        errors.append(_('Could not parse format from filename: %s') % filename)
+                    else:
+                        raw = infile
+            
+            else:
+                errors.append(_('Missing VARS in import zipfile.'))
+        
+        else:
+            raw = StringIO(str(raw))
+            
+        if not format in serializers.get_serializer_formats():
             errors.append(_('Unknown file format: %s') % format)
             
         if not errors:
@@ -126,7 +216,6 @@ class ProductImportForm(forms.Form):
             transaction.managed(True)
         
             try:
-                raw = StringIO(str(raw))
                 objects = serializers.deserialize(format, raw)
                 ct = 0
                 models = set()

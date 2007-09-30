@@ -57,7 +57,7 @@ def charge_remaining_post(request):
         orderitem.unit_price = price
         orderitem.line_item_price = line_price
         orderitem.save()
-        print "Orderitem price now: %s" % orderitem.line_item_price
+        #print "Orderitem price now: %s" % orderitem.line_item_price
         
         order = orderitem.order
     

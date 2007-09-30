@@ -103,7 +103,8 @@ tr.ConfigurableProduct {
     {% endfor %}
         		</tr>
     </table>
-    <p>{{ form.format }}</p>
+    <p>{% trans 'Include images?' %} {{ form.include_images }}</p>
+    <p>{% trans 'Format?' %}{{ form.format }}</p>
 <input type="submit" value="Export" class="default" />
 <input type="reset" value="Reset" class="default" />
 <h2>{% trans 'Helpers' %}</h2>
