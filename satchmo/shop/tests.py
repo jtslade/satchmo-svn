@@ -190,11 +190,11 @@ class ShopTest(TestCase):
         self.client.login(username='fredsu', password='passwd')
 
         # Test pdf generation
-        response = self.client.post(prefix + '/admin/print/invoice/1/')
+        response = self.client.post('/admin/print/invoice/1/')
         self.assertContains(response, 'reportlab', status_code=200)
-        response = self.client.post(prefix + '/admin/print/packingslip/1/')
+        response = self.client.post('/admin/print/packingslip/1/')
         self.assertContains(response, 'reportlab', status_code=200)
-        response = self.client.post(prefix + '/admin/print/shippinglabel/1/')
+        response = self.client.post('/admin/print/shippinglabel/1/')
         self.assertContains(response, 'reportlab', status_code=200)
 
     def test_contact_login(self):
