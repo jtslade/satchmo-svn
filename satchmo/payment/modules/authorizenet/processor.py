@@ -15,8 +15,8 @@ class PaymentProcessor(object):
             self.connection = settings.CONNECTION_TEST.value
             
         self.configuration = {
-            'x_login' : settings.LOGIN,
-            'x_tran_key' : settings.TRANKEY,
+            'x_login' : settings.LOGIN.value,
+            'x_tran_key' : settings.TRANKEY.value,
             'x_version' : '3.1',
             'x_relay_response' : 'FALSE',
             'x_test_request' : testflag,

@@ -43,12 +43,12 @@ def confirm_info(request):
 
     template = lookup_template(payment_module, 'checkout/paypal/confirm.html')
     if payment_module.LIVE.value:
-        log.debug("live order on %s", payment_module.KEY)
-        url = payment_module.POST_URL
-        account = payment_module.BUSINESS
+        log.debug("live order on %s", payment_module.KEY.value)
+        url = payment_module.POST_URL.value
+        account = payment_module.BUSINESS.value
     else:
-        url = payment_module.POST_TEST_URL
-        account = payment_module.BUSINESS_TEST
+        url = payment_module.POST_TEST_URL.value
+        account = payment_module.BUSINESS_TEST.value
         
     try:
         address = lookup_url(payment_module, payment_module.RETURN_ADDRESS.value, include_server=True)

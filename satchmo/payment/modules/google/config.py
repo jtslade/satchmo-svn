@@ -50,7 +50,7 @@ config_register([
         'POST_TEST_URL',
         description=_('Post URL'),
         help_text=_('The Google URL for test transaction posting.'),
-        default="https://sandbox.google.com/cws/v2/Merchant/%(MERCHANT_ID)s/checkout"),
+        default="https://sandbox.google.com/checkout/cws/v2/Merchant/%(MERCHANT_ID)s/checkout"),
 
     StringValue(PAYMENT_GROUP,
         'MERCHANT_ID',
