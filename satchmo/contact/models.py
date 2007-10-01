@@ -13,7 +13,7 @@ from satchmo.payment.config import payment_choices
 from satchmo.product.models import Product
 from satchmo.shop.templatetags.satchmo_currency import moneyfmt
 from satchmo.shop.utils import load_module
-from satchmo.tax.modules import simpleTax
+from satchmo import tax
 import config
 import datetime
 import logging
@@ -462,9 +462,6 @@ class Order(models.Model):
 
         self.discount = discount_amount
         
-        taxProcessor = simpleTax(self)
-        self.tax = taxProcessor.process()
-
         itemprices = [ item.line_item_price for item in self.orderitem_set.all() ]
         if itemprices:
             subtotal = reduce(operator.add, itemprices)
@@ -472,6 +469,10 @@ class Order(models.Model):
             subtotal = Decimal('0.00')
             
         self.sub_total = subtotal
+        
+        taxProcessor = tax.get_processor(self)
+        self.tax = taxProcessor.process()
+        
         log.debug("recalc: subtotal=%s, shipping=%s, discount=%s, tax=%s", 
                 subtotal, self.shipping_cost, self.discount, self.tax)
         self.total = subtotal + self.shipping_cost - self.discount + self.tax

@@ -14,3 +14,11 @@
     value: !!python/unicode '["satchmo.shipping.modules.flat", "satchmo.shipping.modules.per"]'}
   model: !!python/unicode 'configuration.setting'
   pk: !!python/long '4'
+- fields: {group: !!python/unicode 'TAX', key: !!python/unicode 'MODULE', site: !!python/long '1',
+    value: !!python/unicode 'satchmo.tax.modules.percent'}
+  model: !!python/unicode 'configuration.setting'
+  pk: !!python/long '2'
+- fields: {group: !!python/unicode 'TAX', key: !!python/unicode 'PERCENT', site: !!python/long '1',
+    value: !!python/unicode '10'}
+  model: !!python/unicode 'configuration.setting'
+  pk: !!python/long '3'

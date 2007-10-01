@@ -339,6 +339,9 @@ class DecimalValue(Value):
                forms.DecimalField.__init__(self, *args, **kwargs)
 
     def to_python(self, value):
+        if value==NOTSET:
+            return Decimal("0")
+            
         try:
             return Decimal(value)
         except TypeError, te:
