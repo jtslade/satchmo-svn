@@ -30,6 +30,7 @@ class PaymentProcessor(object):
         self.tclink_version = tclink.getVersion()
 
     def prepareData(self, data):
+        self.order = data
         # See tclink developer's guide for additional fields and info
         # convert amount to cents, no decimal point
         amount = str(data.total).replace ('.', '')
@@ -70,6 +71,7 @@ class PaymentProcessor(object):
         result = tclink.send (self.transactionData)
         status = result ['status']
         if status == 'approved':
+            self.order.order_success()
             return (True, status, result)
         if status == 'decline':
             msg = _(u'Transaction was declined.  Reason: %s' % result['declinetype'])
