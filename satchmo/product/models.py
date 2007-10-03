@@ -5,7 +5,6 @@ options.
 """
 
 import datetime
-import config
 from sets import Set
 from decimal import Decimal
 from django.conf import settings

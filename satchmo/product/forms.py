@@ -8,8 +8,9 @@ from django.core import serializers
 from django.core.management.base import CommandError
 from django.core.management.color import no_style
 from django.http import HttpResponse
-from models import Product, Price
+from django.utils.translation import ugettext as _
 from satchmo.configuration import config_value
+from satchmo.product.models import Product, Price
 import logging
 import os
 import time
