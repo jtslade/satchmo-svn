@@ -26,7 +26,13 @@ StringValue(PRODUCT_GROUP,
     help_text=_("""Directory name for storing uploaded images.  
 This value will be appended to MEDIA_ROOT.  Do not worry about slashes.  
 We can handle it any which way."""),
-    default="images")
+    default="images"),
+    
+BooleanValue(PRODUCT_GROUP,
+    'RENAME_IMAGES',
+    description=_("Rename product images?"),
+    help_text=_("Automatically rename product images on upload?"),
+    default=True)
     
 ])
     

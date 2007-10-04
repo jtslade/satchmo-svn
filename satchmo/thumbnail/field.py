@@ -2,6 +2,7 @@ from django.db.models.fields import ImageField
 from utils import make_thumbnail, _remove_thumbnails, remove_model_thumbnails, rename_by_field
 from django.dispatch import dispatcher
 from django.db.models import signals
+from satchmo.configuration import config_value
 
 def _delete(instance=None):
     if instance:
@@ -15,10 +16,12 @@ class ImageWithThumbnailField(ImageField):
         on pre_save.
     """
 
-    # TODO: post DB Settings branch merge - make auto_rename a configurable option
     def __init__(self, verbose_name=None, name=None,
                  width_field=None, height_field=None,
-                 auto_rename=True, name_field=None, **kwargs):
+                 auto_rename="UNSET", name_field=None, **kwargs):
+        if auto_rename == 'UNSET':
+            auto_rename = config_value('PRODUCT','RENAME_IMAGES')
+            
         self.width_field, self.height_field = width_field, height_field
         super(ImageWithThumbnailField, self).__init__(verbose_name, name,
                                                       width_field, height_field,
