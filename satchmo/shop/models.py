@@ -124,7 +124,7 @@ class Cart(models.Model):
     date_time_created = models.DateTimeField(_("Creation Date"))
     customer = models.ForeignKey(Contact, blank=True, null=True)
 
-    def _get_session_cart(cls, request):
+    def _get_session_cart(cls, request, create=False):
         """Convenience method to get the current cart from the session"""
         if request.session.get('cart'):
             try:
@@ -134,7 +134,11 @@ class Cart(models.Model):
                 del request.session['cart']
                 cart = NullCart()
         else:
-            cart = NullCart()
+            if create:
+                cart = cls()
+                cart.save()
+            else:
+                cart = NullCart()
         
         return cart
         
