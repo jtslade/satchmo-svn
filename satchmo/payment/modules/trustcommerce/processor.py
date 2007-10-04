@@ -80,7 +80,7 @@ class PaymentProcessor(object):
             msg = _(u'Improperly formatted data. Offending fields: %s' % result['offenders'])
             return (False, status, msg)
         else:
-            msg = _(u'An error occurre: %s' % result['errortype'])
+            msg = _(u'An error occurred: %s' % result['errortype'])
             return (False, status, msg)
   
         
