@@ -40,7 +40,7 @@ def find_by_key(cls, groupkey, key):
     except caching.NotCachedError, e:
         try: 
             ob = cls.objects.get(key__exact=key)
-            caching.cache_set(e.key, value=grp)
+            caching.cache_set(e.key, value=ob)
 
         except cls.DoesNotExist:
             log.debug("No such %s: %s", groupkey, key)
@@ -55,7 +55,7 @@ def find_by_slug(cls, groupkey, slug):
     except caching.NotCachedError, e:
         try: 
             ob = cls.objects.get(slug__exact=slug)
-            caching.cache_set(e.key, value=grp)
+            caching.cache_set(e.key, value=ob)
 
         except cls.DoesNotExist:
             log.debug("No such %s: %s", groupkey, slug)
