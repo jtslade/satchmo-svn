@@ -73,7 +73,7 @@ class Category(models.Model):
     def _parents_repr(self):
         p_list = self._recurse_for_parents_name(self)
         return self.get_separator().join(p_list)
-    _parents_repr.short_description = "Category parents"
+    _parents_repr.short_description = _("Category parents")
 
     def _recurse_for_parents_name_url(self, cat_obj):
         #Get all the absolute urls and names (for use in site navigation)
@@ -135,10 +135,10 @@ class Category(models.Model):
 
     class Admin:
         list_display = ('name', '_parents_repr')
-        ordering = ['name']
+        ordering = ['parent', 'name']
 
     class Meta:
-        ordering = ['name']
+        ordering = ['parent', 'name']
         verbose_name = _("Category")
         verbose_name_plural = _("Categories")
 
