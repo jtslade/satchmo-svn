@@ -121,14 +121,25 @@ def add(request, id=0):
 
 def add_ajax(request, id=0, template="json.html"):
     data = {'errors': []}
+    product = None
+    productname = request.POST['productname'];
+    log.debug('CART_AJAX: slug=%s', productname)
     try:
         product = Product.objects.get(slug=request.POST['productname'])
         if 'ConfigurableProduct' in product.get_subtypes():
+            log.debug('Got a configurable product, trying by option')
             # This happens when productname cannot be updated by javascript.
             cp = product.configurableproduct
             chosenOptions = optionset_from_post(cp, request.POST)
             product = cp.get_product_from_options(chosenOptions)
-
+    except Product.DoesNotExist:
+        log.warn("Could not find product: %s", productname)
+        product = None
+        
+    if not product:
+        data['errors'].append(('product', _('The product you have requested does not exist.')))
+    
+    else:
         data['id'] = product.id
         data['name'] = product.name
 
@@ -140,15 +151,8 @@ def add_ajax(request, id=0, template="json.html"):
         except ValueError:
             data['errors'].append(('quantity', _('Choose a whole number.')))
 
-    except Product.DoesNotExist:
-        data['errors'].append(('product', _('The product you have requested does not exist.')))
-
-    if request.session.get('cart'):
-        tempCart = Cart.objects.get(id=request.session['cart'])
-    else:
-        tempCart = Cart()
-        tempCart.save() # Give the cart an id
-
+    tempCart = Cart.get_session_cart(request, create=True)
+    
     if not data['errors']:
         tempCart.add_item(product, number_added=quantity)
         request.session['cart'] = tempCart.id
@@ -157,8 +161,11 @@ def add_ajax(request, id=0, template="json.html"):
         data['results'] = _('Error')
 
     data['cart_count'] = tempCart.numItems
+    
+    encoded = JSONEncoder().encode(data)
+    log.debug('CART AJAX: %s', data)
 
-    return render_to_response(template, {'json' : JSONEncoder().encode(data)})
+    return render_to_response(template, {'json' : encoded})
 
 def remove(request):
     """Remove an item from the cart."""
