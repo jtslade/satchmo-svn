@@ -232,11 +232,11 @@ class ProductImportForm(forms.Form):
                         for line in sequence_sql:
                             cursor.execute(line)
                     
-                results.append(_('Added %i objects from %s') % (ct, filename));
+                results.append(_('Added %(count)i objects from %(filename)s') % {'count': ct, 'filename': filename})
                 #label_found = True
             except Exception, e:
                 #fixture.close()
-                errors.append(_("Problem installing fixture '%s': %s\n") % (filename, str(e)))
+                errors.append(_("Problem installing fixture '%(filename)s': %(error_msg)s\n") % {'filename': filename, 'error_msg': str(e)})
                 errors.append("Raw: %s" % raw)
                 transaction.rollback()
                 transaction.leave_transaction_management()
