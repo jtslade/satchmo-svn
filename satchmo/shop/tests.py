@@ -34,7 +34,7 @@ checkout_step1_post_data = {
     'paymentmethod': 'DUMMY'}
 
 class ShopTest(TestCase):
-    fixtures = ['l10n-data.yaml', 'sample-store-data.yaml', 'products.yaml', 'test-config.yaml']
+    fixtures = ['l10n_data.xml', 'sample-store-data.yaml', 'products.yaml', 'test-config.yaml']
 
     def setUp(self):
         # Every test needs a client
@@ -276,7 +276,7 @@ class ShopTest(TestCase):
         self.assertContains(response, "Python Rocks shirt", count=1)
 
 class AdminTest(TestCase):
-    fixtures = ['sample-store-data.yaml', 'products.yaml']
+    fixtures = ['l10n_data.xml', 'sample-store-data.yaml', 'products.yaml']
 
     def setUp(self):
         self.client = Client()
