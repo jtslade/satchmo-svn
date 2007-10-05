@@ -165,7 +165,7 @@ def config_collect_values(group, groupkey, key, unique=True, skip_missing=True):
     
     Stage 1: ['PAYMENT_GOOGLE', 'PAYMENT_AUTHORIZENET']
     Stage 2: config_value('PAYMENT_GOOGLE', 'CREDITCHOICES')
-           + config_value('PAYMENT_GOOGLE', 'CREDITCHOICES')
+           + config_value('PAYMENT_AUTHORIZENET', 'CREDITCHOICES')
     Stage 3: (if unique is true) remove dupes
     """
     groups = config_value(group, groupkey)
