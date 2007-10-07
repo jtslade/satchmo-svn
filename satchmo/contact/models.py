@@ -653,7 +653,7 @@ class OrderPayment(models.Model):
     amount = models.DecimalField(_("amount"), core=True,
         max_digits=6, decimal_places=2, blank=True, null=True)
     timestamp = models.DateTimeField(_("timestamp"), blank=True, null=True)
-    
+
     def _credit_card(self):
         """Return the credit card associated with this payment."""
         try:
@@ -661,22 +661,24 @@ class OrderPayment(models.Model):
         except self.creditcards.model.DoesNotExist:
             return None
     credit_card = property(_credit_card)
-    
-    
+
     def _amount_total(self):
         return moneyfmt(self.amount)
-        
+
     amount_total = property(fget=_amount_total)
-    
+
     def __unicode__(self):
-        return u"Order payment #%i" % self.id
-    
+        if self.id is not None:
+            return u"Order payment #%i" % self.id
+        else:
+            return u"Order payment (unsaved)"
+
     def save(self):
         if not self.id:
             self.timestamp = datetime.datetime.now()
 
         super(OrderPayment, self).save()
-    
+
     class Admin:
         list_filter = ['order', 'payment']
         list_display = ['id', 'order', 'payment', 'amount_total', 'timestamp']
