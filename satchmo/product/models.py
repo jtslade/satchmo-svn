@@ -642,7 +642,6 @@ class DownloadableProduct(models.Model):
     
     def order_success(self, order, order_item):
         from satchmo.contact.models import DownloadLink
-        print "Processing %s" % self.product.slug
         new_link = DownloadLink(downloadable_product=self, order=order, key=self.create_key(), num_attempts=0)
         new_link.save()
         
