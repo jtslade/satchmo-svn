@@ -223,10 +223,8 @@ class Product(models.Model):
     description = models.TextField(_("Description of product"), help_text=_("This field can contain HTML and should be a few paragraphs explaining the background of the product, and anything that would help the potential customer make their purchase."), default='', blank=True)
     category = models.ManyToManyField(Category, filter_interface=True, blank=True)
     items_in_stock = models.IntegerField(_("Number in stock"), default=0)
-    #TODO: Add this, useful for things like DownloadableProducts that wont have stock
-    #require_stock = models.BooleanField(default=True)
     meta = models.TextField(_("Meta Description"), max_length=200, blank=True, null=True, help_text=_("Meta description for this product"))
-    date_added = models.DateField(null=True, blank=True)
+    date_added = models.DateField(_("Date added"), null=True, blank=True)
     active = models.BooleanField(_("Is product active?"), default=True, help_text=_("This will determine whether or not this product will appear on the site"))
     featured = models.BooleanField(_("Featured Item"), default=False, help_text=_("Featured items will show on the front page"))
     ordering = models.IntegerField(_("Ordering"), default=0, help_text=_("Override alphabetical order in category display"))
