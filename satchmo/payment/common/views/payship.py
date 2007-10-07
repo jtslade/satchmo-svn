@@ -47,7 +47,8 @@ def credit_pay_ship_info(request, payment_module):
             request.session['orderID'] = newOrder.id
 
             #TODO: allow partial-pay here, which will mean that not all payments are on new orders.
-            orderpayment = OrderPayment(order=newOrder, amount=newOrder.balance, payment=payment_module.KEY)
+            orderpayment = OrderPayment(order=newOrder, amount=newOrder.balance,
+                payment=unicode(payment_module.KEY))
             orderpayment.save()
             # Save the credit card information
             cc = CreditCardDetail(orderpayment=orderpayment, ccv=data['ccv'],
