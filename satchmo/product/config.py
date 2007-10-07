@@ -17,7 +17,8 @@ MultipleStringValue(PRODUCT_GROUP,
     default=['product::ConfigurableProduct', 'product::ProductVariation'],
     choices=[('product::ConfigurableProduct', _('Configurable Product')),
              ('product::ProductVariation', _('Product Variation')),
-             ('product::CustomProduct', _('Custom Order'))]
+             ('product::CustomProduct', _('Custom Order')),
+             ('product::DownloadableProduct', _('Downloable Product'))]
     ),
  
 StringValue(PRODUCT_GROUP,

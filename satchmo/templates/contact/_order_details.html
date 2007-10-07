@@ -16,17 +16,21 @@
 {{ order.bill_postal_code }}<br/>
 {{ order.bill_country }}<br/>
 
+{% if order.is_shippable %}
 <h4>{% trans "Shipping Address" %}</h4>
 {{ order.full_ship_street }}<br/>
 {{ order.ship_city }}<br/>
 {{ order.ship_state }}<br/>
 {{ order.ship_postal_code }}<br/>
 {{ order.ship_country }}<br/>
+{% endif %}
 
+{% if order.shipping_method %}
 <h4>{% trans "Shipping Method" %}</h4>
 {{ order.shipping_description }}<br/>
 {{ order.shipping_method }}<br/>
 {{ order.shipping_cost|currency }}<br/>
+{% endif %}
 
 <h4>{% trans "Total" %}</h4>
 {% if order.discount %}

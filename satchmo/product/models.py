@@ -15,6 +15,7 @@ from satchmo.configuration import config_value
 from satchmo.shop.utils import url_join
 from satchmo.tax.models import TaxClass
 from satchmo.thumbnail.field import ImageWithThumbnailField
+import re, sha, random
 
 def upload_dir():
     image = config_value('PRODUCT', 'IMAGE_DIR')
@@ -283,17 +284,6 @@ class Product(models.Model):
 
     unit_price = property(_get_fullPrice)
 
-    def _get_shippable(self):
-        """
-        If this Product has any subtypes associated with it that are not
-        shippable, then consider the product not shippable.
-        """
-        subtype = self.get_subtype_with_attr('is_shippable')
-        if subtype and not subtype.is_shippable:
-            return False
-        return True
-    is_shippable = property(_get_shippable)
-
     def get_qty_price(self, qty):
         """
         If QTY_DISCOUNT prices are specified, then return the appropriate discount price for
@@ -400,6 +390,31 @@ class Product(models.Model):
         return self.category.all()[0].name
     get_category = property(_get_category)
     
+    def _get_downloadable(self):
+        """
+        If this Product has any subtypes associated with it that are downloadable, then
+        consider it downloadable
+        """
+        for prod_type in self.get_subtypes():
+            subtype = getattr(self, prod_type.lower())
+            if hasattr(subtype, 'is_downloadable'):
+                return True
+        return False
+    is_downloadable = property(_get_downloadable)
+
+    def _get_shippable(self):
+        """
+        If this Product has any subtypes associated with it that are not
+        shippable, then consider the product not shippable.
+        If it is downloadable, then we don't ship it either.
+        """
+        if self.is_downloadable:
+            return False
+        subtype = self.get_subtype_with_attr('is_shippable')
+        if subtype and not subtype.is_shippable:
+            return False
+        return True
+    is_shippable = property(_get_shippable)
 
 class CustomProduct(models.Model):
     """
@@ -605,20 +620,35 @@ class ConfigurableProduct(models.Model):
     def __unicode__(self):
         return self.product.slug
 
-# The following 2 classes are examples of how to implement the models for these requested features.
-#
-#class DownloadableProduct(models.Model):
-#    """
-#    This type of Product is a file to be downloaded
-#    NOTE: This doesn't do anything yet - it's just an example
-#    """
-#    product = models.OneToOneField(Product)
-#    is_shippable = False
-#    file = None # TODO
-#
-#    class Admin:
-#        pass
-#
+class DownloadableProduct(models.Model):
+    """
+    This type of Product is a file to be downloaded
+    """
+    product = models.OneToOneField(Product)
+    file = models.FileField(upload_to="protected")
+    num_allowed_downloads = models.IntegerField(help_text=_("Number of times link can be accessed."))
+    expire_minutes = models.IntegerField(help_text=_("Number of minutes the link should remain active."))
+    active = models.BooleanField(help_text=_("Is this download currently active?"), default=True)
+    is_shippable = False
+    is_downloadable = True
+
+    def __unicode__(self):
+        return self.product.slug
+    
+    def create_key(self):
+        salt = sha.new(str(random.random())).hexdigest()[:5]
+        download_key = sha.new(salt+self.product.name).hexdigest()
+        return download_key
+    
+    def order_success(self, order, order_item):
+        from satchmo.contact.models import DownloadLink
+        print "Processing %s" % self.product.slug
+        new_link = DownloadLink(downloadable_product=self, order=order, key=self.create_key(), num_attempts=0)
+        new_link.save()
+        
+    class Admin:
+        pass
+        
 #class BundledProduct(models.Model):
 #    """
 #    This type of Product is a group of products that are sold as a set

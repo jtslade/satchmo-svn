@@ -10,7 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from satchmo.configuration import config_choice_values, config_value, SettingNotSet
 from satchmo.discount.models import Discount
 from satchmo.payment.config import payment_choices
-from satchmo.product.models import Product
+from satchmo.product.models import Product, DownloadableProduct
 from satchmo.shop.templatetags.satchmo_currency import moneyfmt
 from satchmo.shop.utils import load_module
 from satchmo import tax
@@ -20,6 +20,9 @@ import logging
 import operator
 import satchmo.shipping.config
 import sys
+from django.db.models import permalink
+from django.core import urlresolvers
+from django.contrib.sites.models import Site
 
 log = logging.getLogger('contact.views')
 
@@ -500,6 +503,21 @@ class Order(models.Model):
         """True if total has been paid"""
         return self.balance <= 0
     paid_in_full = property(fget=_paid_in_full)
+    
+    def _has_downloads(self):
+        """Determine if there are any downloadable products on this order"""
+        if self.downloadlink_set.count() > 0:
+            return True
+        return False
+    has_downloads = property(_has_downloads)
+
+    def _is_shippable(self):
+        """Determine if we will be shipping any items on this order """
+        for orderitem in self.orderitem_set.all():
+            if orderitem.product.is_shippable:
+                return True
+        return False
+    is_shippable = property(_is_shippable)
 
     def validate(self, request):
         """
@@ -560,6 +578,51 @@ class OrderItem(models.Model):
     class Meta:
         verbose_name = _("Order Line Item")
         verbose_name_plural = _("Order Line Items")
+
+class DownloadLink(models.Model):
+    downloadable_product = models.OneToOneField(DownloadableProduct)
+    order = models.ForeignKey(Order)
+    key = models.CharField(max_length=40)
+    num_attempts = models.IntegerField()
+    time_stamp = models.DateTimeField()
+    active = models.BooleanField(default=True)
+
+    def is_valid(self):
+        # Check num attempts and expire_minutes
+        if not self.downloadable_product.active:
+            return (False, _("This download is no longer active"))
+        if self.num_attempts > self.downloadable_product.num_allowed_downloads:
+            return (False, _("You have exceeded the number of allowed downloads."))
+        expire_time = datetime.timedelta(minutes=self.downloadable_product.expire_minutes) + self.time_stamp
+        if datetime.datetime.now() > expire_time:
+            return (False, _("This download link has expired."))
+        return (True, "")
+        
+    def get_absolute_url(self):
+        return('satchmo.shop.views.download.process', (), { 'download_key': self.key})
+    get_absolute_url = permalink(get_absolute_url)
+    
+    def get_full_url(self):
+        url = urlresolvers.reverse('satchmo_download_process', kwargs= {'download_key': self.key})
+        return('http://%s%s' % (Site.objects.get_current(), url))
+
+    def save(self):
+        """
+       Set the initial time stamp
+        """
+        if self.time_stamp is None:
+            self.time_stamp = datetime.datetime.now()
+        super(DownloadLink, self).save()
+    
+    def __unicode__(self):
+        return u"%s - %s" % (self.downloadable_product.product.slug, self.time_stamp)
+    
+    def _product_name(self):
+        return u"%s" % (self.downloadable_product.product.name)
+    product_name=property(_product_name)        
+    
+    class Admin:
+        pass
 
 class OrderStatus(models.Model):
     """

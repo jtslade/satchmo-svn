@@ -22,6 +22,9 @@ urlpatterns += patterns('satchmo.shop.views',
     (r'^comments/post/$', 'comments.post_rating', { 'maxcomments' : 1 }, 'satchmo_rating_post'), 
     (r'^comments/', include('django.contrib.comments.urls.comments')),
     (r'^product/', include('satchmo.product.urls')),
+    # The following url is used for downloadable products
+    (r'^download/process/(?P<download_key>\w+)/$', 'download.process', {}, 'satchmo_download_process'),
+    (r'^download/send/(?P<download_key>\w+)/$', 'download.send_file', {}, 'satchmo_download_send'),
 )
 #Note with the last category url - this allows category depth to be as deep as we want but the downside
 #is that we ignore all but the child and parent category.  In practice this should be ok

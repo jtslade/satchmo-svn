@@ -24,6 +24,7 @@
 {{ order.bill_postal_code }}
 {{ order.bill_country }}
 
+{% if order.is_shippable %}
 {% trans "Shipping Address" %}
 ----------------
 {{ order.full_ship_street }}
@@ -31,19 +32,22 @@
 {{ order.ship_state }}
 {{ order.ship_postal_code }}
 {{ order.ship_country }}
+{% endif %}
 
+{% if shipping_method %}
 {% trans "Shipping Method" %}
 ---------------
 {{ order.shipping_description }}
 {{ order.shipping_method }} 
 {{ order.shipping_cost|currency }} 
+{% endif %}
 
 {% trans "Total" %}
 -----
 {% if order.discount %}
 {% trans "Discount" %} - {{order.discount|currency}}
 {% endif %}
-{% trans "Shipping" %} + {{order.shipping_cost|currency}}
+{% if order.is_shippable %} {% trans "Shipping" %} + {{order.shipping_cost|currency}} {% endif %}
 {% if order.tax %}
 {% trans "Tax" %} + {{order.tax|currency}}
 {% endif %}
@@ -58,6 +62,14 @@
 {% endwith %}
 {% endwith %}
 {% endwith %}
+
+{% if order.has_downloads %}
+{% trans "Your order contains products that can be downloaded" %}
+{% trans "Please click the link to being the download" %}
+{% for download in order.downloadlink_set.all %}
+{{ download.product_name }} - {{download.get_full_url}}
+{% endfor %}
+{% endif %}
 
 {% trans "Regards" %},
 
