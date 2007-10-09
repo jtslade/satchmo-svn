@@ -262,7 +262,7 @@ class InventoryForm(forms.Form):
             kw = { 
             'label' : product.slug,
             'help_text' : product.name,
-            'initial' : False,
+            'initial' : product.items_in_stock,
             'widget' : forms.TextInput(attrs={'class': qtyclasses}) }
 
             qty = forms.IntegerField(**kw)
