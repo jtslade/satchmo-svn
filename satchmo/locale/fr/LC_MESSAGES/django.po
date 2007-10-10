@@ -616,7 +616,7 @@ msgstr "Travail"
 
 #: contact/models.py:106
 msgid "Home"
-msgstr "Domicile"
+msgstr "Page d'acceuil"
 
 #: contact/models.py:107
 msgid "Fax"
