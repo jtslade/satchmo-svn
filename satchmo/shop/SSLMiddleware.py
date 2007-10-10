@@ -52,6 +52,7 @@ __author__ = "Stephen Zabel"
 
 from django.conf import settings
 from django.http import HttpResponseRedirect, get_host
+from satchmo.shop.utils import request_is_secure
 
 SSL = 'SSL'
 
@@ -63,18 +64,8 @@ class SSLRedirect:
         else:
             secure = False
 
-        if not secure == self._is_secure(request):
+        if not secure == request_is_secure(request):
             return self._redirect(request, secure)
-
-    def _is_secure(self, request):
-        if request.is_secure():
-            return True
-
-        # Handle forwarded SSL (used at Webfaction)
-        if 'HTTP_X_FORWARDED_SSL' in request.META:
-            return request.META['HTTP_X_FORWARDED_SSL'] == 'on'
-            
-        return False
 
     def _redirect(self, request, secure):
         protocol = secure and "https" or "http"

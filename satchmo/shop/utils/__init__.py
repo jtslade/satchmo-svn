@@ -60,7 +60,17 @@ def load_module(module):
         __import__(module)
         module = sys.modules[module]
     return module
-    
+
+def request_is_secure(request):
+    if request.is_secure():
+        return True
+
+    # Handle forwarded SSL (used at Webfaction)
+    if 'HTTP_X_FORWARDED_SSL' in request.META:
+        return request.META['HTTP_X_FORWARDED_SSL'] == 'on'
+
+    return False
+
 def url_join(*args):
     """Join any arbitrary strings into a forward-slash delimited string.
     Do not strip leading / from first element, nor trailing / from last element.
