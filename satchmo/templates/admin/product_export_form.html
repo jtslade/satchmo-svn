@@ -54,7 +54,7 @@ tr.ConfigurableProduct {
 {% endif %}{% endblock %}
 {% block content %}
 <div id="content-main">
-<h1>WARNING: THIS FUNCTION IS STILL EXPERIMENTAL.  DO NOT USE IN PRODUCTION.</h1>
+<h1>{% trans 'WARNING: THIS FUNCTION IS STILL EXPERIMENTAL.  DO NOT USE IN PRODUCTION.' %}</h1>
 <h1>{% trans 'Import' %}</h1>
 {% if importform.errors %}
     <p class="errornote">
@@ -63,7 +63,7 @@ tr.ConfigurableProduct {
 {% if importform.fields %}
 <form method="post" id="importform" action="{% url satchmo_admin_product_import %}" enctype="multipart/form-data">
     <p>{% trans 'Import from fixture file:' %}{{ importform.upload }}</p>
-    <input type="submit" value="Import" class="Import" />
+    <input type="submit" value="{%trans 'Import' %}" class="Import" />
 </form>
 {% endif %}
 <h1>{% trans 'Export' %}</h1>
@@ -76,9 +76,9 @@ tr.ConfigurableProduct {
 <form method="post" id="productform">
     <table>
         <tr>
-            <th>Export?</th>
-            <th>Slug</th>
-            <th>Name</th>
+            <th>{% trans 'Export?' %}</th>
+            <th>{% trans 'Slug' %}</th>
+            <th>{% trans 'Name' %}</th>
         </tr>
     {% for field in form %}
         {% ifnotequal field.name 'format' %} 
@@ -105,8 +105,8 @@ tr.ConfigurableProduct {
     </table>
     <p>{% trans 'Include images?' %} {{ form.include_images }}</p>
     <p>{% trans 'Format?' %}{{ form.format }}</p>
-<input type="submit" value="Export" class="default" />
-<input type="reset" value="Reset" class="default" />
+<input type="submit" value="{% trans 'Export' %}" class="default" />
+<input type="reset" value="{% trans 'Reset' %}" class="default" />
 <h2>{% trans 'Helpers' %}</h2>
 <p><a href="#" id="mark_all">{% trans 'Check all' %}</p>
 <p><a href="#" id="unmark_all">{% trans 'Uncheck all' %}</p>

@@ -1,6 +1,6 @@
 {% load i18n satchmo_currency %}
 <fieldset class="module">
-    <h2>Order Payments</h2>
+    <h2>{% trans 'Order Payments' %}</h2>
     <div class="form-row">
     {% if payments %}
     <table>
@@ -13,7 +13,7 @@
     {% for payment in order.payments.all %}
         <tr>
             <td>
-                <a href="{{SHOP_BASE}}/admin/contact/orderpayment/{{ payment.id}}">{{ payment.id }}</a>
+                <a href="/admin/contact/orderpayment/{{ payment.id}}">{{ payment.id }}</a>
             </td>
             <td>
                 {{ payment.amount|currency }}
@@ -35,7 +35,7 @@
     {% if order.paid_in_full %}
     <i>{% trans 'Paid in full' %}</i>
     {% else %}
-    <b>Balance on order: </b>{{ order.balance|currency }}
+    <b>{% trans 'Balance on order:' %} </b>{{ order.balance|currency }}
     {% endif %}
     </div>
 </fieldset>

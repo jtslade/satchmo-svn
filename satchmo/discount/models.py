@@ -40,7 +40,7 @@ class Discount(models.Model):
         help_text=_("Should this discount remove all shipping costs?"))
     includeShipping = models.BooleanField(_("Include shipping"), blank=True, null=True,
         help_text=_("Should shipping be included in the discount calculation?"))
-    validProducts = models.ManyToManyField(Product, filter_interface=True, blank=True, null=True)
+    validProducts = models.ManyToManyField(Product, verbose_name=_("Valid Products"), filter_interface=True, blank=True, null=True)
 
     def __unicode__(self):
         return self.description

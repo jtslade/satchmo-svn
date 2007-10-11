@@ -221,7 +221,7 @@ class Product(models.Model):
     slug = models.SlugField(_("Slug Name"), unique=True, prepopulate_from=('name',), core=True, blank=False)
     short_description = models.TextField(_("Short description of product"), help_text=_("This should be a 1 or 2 line description for use in product listing screens"), max_length=200, default='', blank=True)
     description = models.TextField(_("Description of product"), help_text=_("This field can contain HTML and should be a few paragraphs explaining the background of the product, and anything that would help the potential customer make their purchase."), default='', blank=True)
-    category = models.ManyToManyField(Category, filter_interface=True, blank=True)
+    category = models.ManyToManyField(Category, filter_interface=True, blank=True, verbose_name=_("Category"))
     items_in_stock = models.IntegerField(_("Number in stock"), default=0)
     meta = models.TextField(_("Meta Description"), max_length=200, blank=True, null=True, help_text=_("Meta description for this product"))
     date_added = models.DateField(_("Date added"), null=True, blank=True)
@@ -232,10 +232,10 @@ class Product(models.Model):
     length = models.DecimalField(_("Length"), max_digits=6, decimal_places=2, null=True, blank=True)
     width = models.DecimalField(_("Width"), max_digits=6, decimal_places=2, null=True, blank=True)
     height = models.DecimalField(_("Height"), max_digits=6, decimal_places=2, null=True, blank=True)
-    related_items = models.ManyToManyField('self', blank=True, null=True, related_name='related')
-    also_purchased = models.ManyToManyField('self', blank=True, null=True, related_name='previouslyPurchased')
-    taxable = models.BooleanField(default=False)
-    taxClass = models.ForeignKey(TaxClass, blank=True, null=True, help_text=_("If it is taxable, what kind of tax?"))
+    related_items = models.ManyToManyField('self', blank=True, null=True, verbose_name=_('Related Items'))
+    also_purchased = models.ManyToManyField('self', blank=True, null=True, verbose_name=_('Previously Purchased'))
+    taxable = models.BooleanField(_("Taxable"), default=False)
+    taxClass = models.ForeignKey(TaxClass, verbose_name=_('Tax Class'), blank=True, null=True, help_text=_("If it is taxable, what kind of tax?"))
 
     objects = ProductManager()
 
@@ -332,10 +332,10 @@ class Product(models.Model):
         list_filter = ('category',)
         fields = (
         (None, {'fields': ('category', 'name', 'slug', 'description', 'short_description', 'date_added', 'active', 'featured', 'items_in_stock','ordering')}),
-        ('Meta Data', {'fields': ('meta',), 'classes': 'collapse'}),
-        ('Item Dimensions', {'fields': (('length', 'width','height',),'weight'), 'classes': 'collapse'}),
-        ('Tax', {'fields':('taxable', 'taxClass'), 'classes': 'collapse'}),
-        ('Related Products', {'fields':('related_items','also_purchased'),'classes':'collapse'}),
+        (_('Meta Data'), {'fields': ('meta',), 'classes': 'collapse'}),
+        (_('Item Dimensions'), {'fields': (('length', 'width','height',),'weight'), 'classes': 'collapse'}),
+        (_('Tax'), {'fields':('taxable', 'taxClass'), 'classes': 'collapse'}),
+        (_('Related Products'), {'fields':('related_items','also_purchased'),'classes':'collapse'}),
         )
         search_fields = ['slug', 'name']
 
@@ -777,6 +777,10 @@ class ProductAttribute(models.Model):
     name = models.SlugField(_("Attribute Name"), max_length=100, core=True)
     value = models.CharField(_("Value"), max_length=255)
 
+    class Meta:
+        verbose_name = _("Product Attribute")
+        verbose_name_plural = _("Product Attributes")
+        
 class Price(models.Model):
     """
     A Price!
@@ -821,7 +825,7 @@ class ProductImage(models.Model):
     """
     product = models.ForeignKey(Product, null=True, blank=True,
         edit_inline=models.TABULAR, num_in_admin=3)
-    picture = ImageWithThumbnailField(upload_to=upload_dir(),
+    picture = ImageWithThumbnailField(verbose_name=_('Picture'), upload_to=upload_dir(),
         name_field="_filename") #Media root is automatically prepended
     caption = models.CharField(_("Optional caption"), max_length=100,
         null=True, blank=True)

@@ -20,11 +20,11 @@ email_choices = (
 )
 
 class ContactForm(forms.Form):
-    name = forms.CharField(max_length=100)
+    name = forms.CharField(label=_("Name"), max_length=100)
     sender = forms.EmailField(label=_("Email address"))
-    subject = forms.CharField()
-    inquiry = forms.ChoiceField(choices=email_choices)
-    contents = forms.CharField(widget=widgets.Textarea(attrs = {'cols': 40, 'rows': 5}))
+    subject = forms.CharField(label=_("Subject"))
+    inquiry = forms.ChoiceField(label=_("Inquiry"), choices=email_choices)
+    contents = forms.CharField(label=_("Contents"), widget=widgets.Textarea(attrs = {'cols': 40, 'rows': 5}))
 
 def form(request):
     if request.method == "POST":

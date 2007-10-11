@@ -85,7 +85,7 @@ class Contact(models.Model):
         max_num_in_admin=1, num_extra_on_change=0)
     role = models.CharField(_("Role"), max_length=20, blank=True, null=True,
         choices=CONTACT_CHOICES)
-    organization = models.ForeignKey(Organization, blank=True, null=True)
+    organization = models.ForeignKey(Organization, verbose_name=_("Organization"), blank=True, null=True)
     dob = models.DateField(_("Date of birth"), blank=True, null=True)
     email = models.EmailField(_("Email"), blank=True)
     notes = models.TextField(_("Notes"), max_length=500, blank=True)
@@ -186,7 +186,7 @@ class Interaction(models.Model):
     A type of activity with the customer.  Useful to track emails, phone calls,
     or in-person interactions.
     """
-    contact = models.ForeignKey(Contact)
+    contact = models.ForeignKey(Contact, verbose_name=_("Contact"))
     type = models.CharField(_("Type"), max_length=30,choices=INTERACTION_CHOICES)
     date_time = models.DateTimeField(_("Date and Time"), core=True)
     description = models.TextField(_("Description"), max_length=200)
@@ -560,8 +560,8 @@ class OrderItem(models.Model):
     """
     A line item on an order.
     """
-    order = models.ForeignKey(Order, edit_inline=models.TABULAR, num_in_admin=3)
-    product = models.ForeignKey(Product)
+    order = models.ForeignKey(Order, verbose_name=_("Order"), edit_inline=models.TABULAR, num_in_admin=3)
+    product = models.ForeignKey(Product, verbose_name=_("Product"))
     quantity = models.IntegerField(_("Quantity"), core=True)
     unit_price = models.DecimalField(_("Unit price"),
         max_digits=6, decimal_places=2)
@@ -628,7 +628,7 @@ class OrderStatus(models.Model):
     """
     An order will have multiple statuses as it moves its way through processing.
     """
-    order = models.ForeignKey(Order, edit_inline=models.STACKED, num_in_admin=1)
+    order = models.ForeignKey(Order, verbose_name=_("Order"), edit_inline=models.STACKED, num_in_admin=1)
     status = models.CharField(_("Status"),
         max_length=20, choices=ORDER_STATUS, core=True, blank=True)
     notes = models.CharField(_("Notes"), max_length=100, blank=True)
@@ -685,3 +685,7 @@ class OrderPayment(models.Model):
         fields = (
             (None, {'fields': ('order', 'payment', 'amount', 'timestamp')}),
             )
+            
+    class Meta:
+        verbose_name = _("Order Payment")
+        verbose_name_plural = _("Order Payments")
