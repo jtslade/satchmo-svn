@@ -6,7 +6,7 @@ Changes in Trunk
 ----------------
  * Removed dependency on Webda and added new l10n models
  * Added capability to rate and review products
- * Improved capabilities for user's to manage their account information
+ * Improved capabilities for users to manage their account information
  * Creation of a simple inventory management interface
  * Multiple bug fixes and code cleanups
  * New configuration option to allow user to set image upload directory name
@@ -15,6 +15,7 @@ Changes in Trunk
  * Remove most custom settings from local_settings.py, instead using the satchmo.configuration app
  * Added a cache manager
  * Added TrustCommerce as a processing module
+ * Added downloadable product type
 
 Version 0.5, August 22, 2007
 ----------------------------
