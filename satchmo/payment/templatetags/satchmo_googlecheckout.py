@@ -20,7 +20,7 @@ def checkout_image_url(merchid, imgsize, locale, transparent=False, disabled=Fal
         urlencode((('merchant_id', merchid),
                   ('w', dimensions[0]),
                   ('h', dimensions[1]),
-                  ('style', _truefalse(transparent, t="clear", f="white")),
+                  ('style', _truefalse(transparent, t="trans", f="white")),
                   ('variant', _truefalse(disabled, t="disabled", f="text")),
                   ('loc', locale)))))
 
