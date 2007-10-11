@@ -344,7 +344,7 @@ class Order(models.Model):
         core=True, blank=True, help_text=_("This is set automatically."))
 
     def __unicode__(self):
-        return "Order #%i: %s" % (self.id, self.contact.full_name)
+        return "Order #%s: %s" % (self.id, self.contact.full_name)
 
     def add_status(self, status=None, notes=None):
         orderstatus = OrderStatus()
