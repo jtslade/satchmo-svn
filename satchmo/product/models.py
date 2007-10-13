@@ -277,7 +277,8 @@ class Product(models.Model):
         
         else:
             price = self._get_qty_price(1)
-
+        if not price:
+            price = Decimal("0.00")
         return price
 
     unit_price = property(_get_fullPrice)
