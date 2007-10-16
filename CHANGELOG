@@ -15,7 +15,9 @@ Changes in Trunk
  * Remove most custom settings from local_settings.py, instead using the satchmo.configuration app
  * Added a cache manager
  * Added TrustCommerce as a processing module
- * Added downloadable product type
+ * New downloadable product type
+ * New custom product type
+ * Added Swedish translation
 
 Version 0.5, August 22, 2007
 ----------------------------
