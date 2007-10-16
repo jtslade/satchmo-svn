@@ -17,8 +17,12 @@
 - fields: {group: !!python/unicode 'TAX', key: !!python/unicode 'MODULE', site: !!python/long '1',
     value: !!python/unicode 'satchmo.tax.modules.percent'}
   model: !!python/unicode 'configuration.setting'
-  pk: !!python/long '2'
+  pk: !!python/long '5'
 - fields: {group: !!python/unicode 'TAX', key: !!python/unicode 'PERCENT', site: !!python/long '1',
     value: !!python/unicode '10'}
   model: !!python/unicode 'configuration.setting'
-  pk: !!python/long '3'
+  pk: !!python/long '6'
+- fields: {group: !!python/unicode 'SHOP', key: !!python/unicode 'CURRENCY', site: !!python/long '1',
+    value: !!python/unicode 'USD'}
+  model: !!python/unicode 'configuration.setting'
+  pk: !!python/long '7'
