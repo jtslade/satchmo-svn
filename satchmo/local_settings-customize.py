@@ -88,6 +88,10 @@ CUSTOM_PRODUCT_MODULES = []
 CACHE_BACKEND = "file:///var/tmp/django_cache"
 CACHE_TIMEOUT = 60*5
 
+# Locale path settings.  Needs to be set for Translation compilation.
+# It can be blank
+# LOCALE_PATHS = ""
+
 #Configure logging
 LOGDIR = DIRNAME
 LOGFILE = "satchmo.log"
