@@ -35,7 +35,7 @@ class ConfigurationSettings(object):
 
         def __contains__(self, key):
             try:
-                key = _resolve_key(key)
+                key = self._resolve_key(key)
                 return self.settings.has_key(key)
             except:
                 return False

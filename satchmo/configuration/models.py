@@ -2,7 +2,6 @@ from django.conf import settings
 from django.contrib.sites.models import Site
 from django.db import models
 from django.db.models import loading
-from django.utils.translation import ugettext_lazy as _
 from satchmo.caching import cache_key, cache_get, NotCachedError
 from satchmo.caching.models import CachedObjectMixin
 import logging

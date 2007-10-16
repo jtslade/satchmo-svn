@@ -5,6 +5,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from satchmo.product import forms
+from satchmo.product.models import Product
 import logging
 
 log = logging.getLogger('product.adminviews')
@@ -50,6 +51,7 @@ def export_products(request, template='admin/product_export_form.html'):
 
     return render_to_response(template, ctx)
 
+@user_passes_test(lambda u: u.is_authenticated() and u.is_staff, login_url='/accounts/login/')
 def import_products(request, maxsize=10000000):  
     """ 
     Imports product from an uploaded file.
@@ -75,3 +77,13 @@ def import_products(request, maxsize=10000000):
     else:  
         url = urlresolvers.reverse('satchmo_admin_product_export')
         return HttpResponseRedirect(url)
+        
+@user_passes_test(lambda u: u.is_authenticated() and u.is_staff, login_url='/accounts/login/')
+def product_active_report(request):
+    
+    products = Product.objects.filter(active=True)
+    products = [p for p in products.all() if 'productvariation' not in p.get_subtypes]
+    ctx = RequestContext(Request, {title: 'Active Product Report', 'products' : products })
+    return render_to_response('admin/product/active_product_report.html', ctx)
+    
+    

@@ -1,9 +1,4 @@
-import re
-
-from django.db.models import get_model
 from django import newforms as forms
-from django.utils.datastructures import SortedDict
-from django.utils.text import capfirst
 from satchmo.configuration import *
 import logging
 
