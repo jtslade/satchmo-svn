@@ -33,7 +33,15 @@ BooleanValue(PRODUCT_GROUP,
     'RENAME_IMAGES',
     description=_("Rename product images?"),
     help_text=_("Automatically rename product images on upload?"),
-    default=True)
+    default=True),
+    
+StringValue(PRODUCT_GROUP,
+    'PROTECTED_DIR',
+    description=_("Protected dir"),
+    help_text=_("""This is only used if you use Downloadable Products.  
+This value will be appended to MEDIA_ROOT.  Do not worry about slashes.  
+We can handle it any which way."""),
+    default="protected"),
     
 ])
     

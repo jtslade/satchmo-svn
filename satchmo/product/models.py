@@ -17,13 +17,19 @@ from satchmo.tax.models import TaxClass
 from satchmo.thumbnail.field import ImageWithThumbnailField
 import re, sha, random
 
+def normalize_dir(dir_name):
+    if not dir_name.startswith('./'):
+        dir_name = url_join('.',dir_name)
+    if dir_name.endswith("/"):
+        dir_name = dir_name[:-1]
+    return dir_name
+
 def upload_dir():
-    image = config_value('PRODUCT', 'IMAGE_DIR')
-    if not image.startswith('./'):
-        image = url_join('.', image)
-    if image.endswith("/"):
-        image = image[:-1]
-    return image
+    return normalize_dir(config_value('PRODUCT', 'IMAGE_DIR'))
+
+def protected_dir():
+    return normalize_dir(config_value('PRODUCT','PROTECTED_DIR'))
+    
 
 class Category(models.Model):
     """
@@ -624,7 +630,7 @@ class DownloadableProduct(models.Model):
     This type of Product is a file to be downloaded
     """
     product = models.OneToOneField(Product)
-    file = models.FileField(upload_to="protected")
+    file = models.FileField(upload_to=protected_dir())
     num_allowed_downloads = models.IntegerField(help_text=_("Number of times link can be accessed."))
     expire_minutes = models.IntegerField(help_text=_("Number of minutes the link should remain active."))
     active = models.BooleanField(help_text=_("Is this download currently active?"), default=True)
