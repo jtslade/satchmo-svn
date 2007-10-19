@@ -9,8 +9,6 @@ from satchmo.contact.models import Contact
 from satchmo.shop.templatetags import get_filter_args
 from satchmo.configuration import config_value, config_get
 
-currency = config_value('SHOP', 'CURRENCY')
-
 domain = 'http://testserver'
 prefix = settings.SHOP_BASE
 if prefix == '/':
@@ -109,7 +107,7 @@ class ShopTest(TestCase):
         # that variation already selected
         response = self.client.get(prefix+'/product/neat-book_soft/')
         self.assertContains(response, 'option value="soft" selected="selected"')
-        self.assertContains(response, smart_str("%s5.00" % currency))
+        self.assertContains(response, smart_str("%s5.00" % config_value('SHOP', 'CURRENCY')))
 
     def test_get_price(self):
         """
@@ -123,15 +121,13 @@ class ShopTest(TestCase):
         response = self.client.post(prefix+'/product/DJ-Rocks/prices/', {"1" : "S",
                                                       "2" : "B",
                                                       "quantity" : 1})
-        self.assertContains(response, "DJ-Rocks_S_B", count=1, status_code=200)
-        self.assertContains(response, "20.00", count=1, status_code=200)
+        self.assertEquals(response.content, '["DJ-Rocks_S_B", "%s20.00"]' % config_value('SHOP', 'CURRENCY'))
 
         # This tests the option price_change feature, and again the productname
         response = self.client.post(prefix+'/product/DJ-Rocks/prices/', {"1" : "L",
                                                       "2" : "BL",
                                                       "quantity" : 2})
-        self.assertContains(response, "DJ-Rocks_L_BL", count=1, status_code=200)
-        self.assertContains(response, "23.00", count=1, status_code=200)
+        self.assertEquals(response.content, '["DJ-Rocks_L_BL", "%s23.00"]' % config_value('SHOP', 'CURRENCY'))
 
 #        response = self.client.get(prefix+'/product/neat-software/')
 #        self.assertContains(response, "Neat Software", count=1, status_code=200)
@@ -176,9 +172,9 @@ class ShopTest(TestCase):
         response = self.client.post(url('DUMMY_satchmo_checkout-step2'), data)
         self.assertRedirects(response, domain + url('DUMMY_satchmo_checkout-step3'), status_code=302, target_status_code=200)
         response = self.client.get(url('DUMMY_satchmo_checkout-step3'))
-        self.assertContains(response, smart_str("Total = %s54.60" % currency), count=1, status_code=200)
-        self.assertContains(response, smart_str("Shipping + %s4.00" % currency), count=1, status_code=200)
-        self.assertContains(response, smart_str("Tax + %s4.60" % currency), count=1, status_code=200)
+        self.assertContains(response, smart_str("Shipping + %s4.00" % config_value('SHOP', 'CURRENCY')), count=1, status_code=200)
+        self.assertContains(response, smart_str("Tax + %s4.60" % config_value('SHOP', 'CURRENCY')), count=1, status_code=200)
+        self.assertContains(response, smart_str("Total = %s54.60" % config_value('SHOP', 'CURRENCY')), count=1, status_code=200)
         response = self.client.post(url('DUMMY_satchmo_checkout-step3'), {'process' : 'True'})
         self.assertRedirects(response, domain + url('DUMMY_satchmo_checkout-success'), status_code=302, target_status_code=200)
         self.assertEqual(len(mail.outbox), 1)
