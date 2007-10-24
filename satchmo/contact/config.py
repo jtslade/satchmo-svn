@@ -1,5 +1,7 @@
 from satchmo.configuration import config_register, StringValue, IntegerValue, SHOP_GROUP
 
+from django.utils.translation import ugettext as _
+
 # I am doing it this way instead of a boolean for email verification because I
 # intend to add a "manual approval" style of account verification. -Bruce
 ACCOUNT_VERIFICATION = config_register(StringValue(SHOP_GROUP,
