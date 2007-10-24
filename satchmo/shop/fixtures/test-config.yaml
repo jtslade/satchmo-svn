@@ -23,6 +23,6 @@
   model: !!python/unicode 'configuration.setting'
   pk: !!python/long '6'
 - fields: {group: !!python/unicode 'SHOP', key: !!python/unicode 'CURRENCY', site: !!python/long '1',
-    value: !!python/unicode 'USD'}
+    value: !!python/unicode '€'}
   model: !!python/unicode 'configuration.setting'
   pk: !!python/long '7'
