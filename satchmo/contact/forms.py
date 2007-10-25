@@ -47,7 +47,6 @@ class ContactInfoForm(forms.Form):
             country_iso2 = self._default_country
         else:
             country_iso2 = self.data['country']
-        print "Cleaning"
         data = self.cleaned_data['state']
         country = Country.objects.get(iso2_code=country_iso2)
         if country.adminarea_set.count() > 0:
