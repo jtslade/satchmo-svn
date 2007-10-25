@@ -29,7 +29,7 @@ def get_area_country_options(request):
     if area_choices:
         areas = [('', selection)]
         for area in area_choices:
-            value_to_choose = (area.abbrev, area.name)
+            value_to_choose = (area.abbrev or area.name, area.name)
             areas.append(value_to_choose)
 
     if not local_only:
