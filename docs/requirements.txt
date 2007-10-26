@@ -7,7 +7,7 @@ through the process.
 
 As of now, it is recommended that you use a Django version from the current trunk.
 Some of the most recent features in Satchmo require a recent (0.97 pre) checkout 
-from svn.
+from svn.  A known good version of Django can be found in the `snapshot`_ directory.
 
 Satchmo requires Python 2.4 or later and a database supported by Django.
 
@@ -22,7 +22,7 @@ features in Satchmo.
 
 For product comment functionality, you will need:
 
-- `django-comment-utils`_ which must be renamed "commentutils" and put on your PYTHONPATH
+- `django-comment-utils`_ which must on your PYTHONPATH
 
 For more complex email verification process, you will need:
 
@@ -45,3 +45,4 @@ The following packages are optional but encouraged:
 .. _download link: http://tinyforge.org/frs/download.php/1/trml2pdf.tar.gz
 .. _Django Registration: http://code.google.com/p/django-registration/
 .. _django-comment-utils: http://code.google.com/p/django-comment-utils/
+.. _snapshot: http://www.satchmoproject.com/snapshots/

@@ -55,7 +55,7 @@ of very sophisticated features.  Some highlights include:
 -   Products also have the capability to have multiple images associated with 
     them.  Each image is automatically scaled to a thumbnail size of your choosing 
     and is automatically cached for maximum performance.
--   Support for Authorize.net credit card processing.
+-   Support for Authorize.net and Trust Commerce credit card processing.
 -   Support for accepting paypal.
 -   Google analytics, google addwords and sitemaps support.
 -   Support for invoice, packing slip and shipping label creation and printing.
@@ -65,14 +65,17 @@ of very sophisticated features.  Some highlights include:
 -   Flexible pricing and discounting model.
 -   Mailman integration for newsletter management.
 -   Flexible email notifications for purchases and account signup.
--   Account management features (logout, password reset and change password functionality).
+-   Full Account management features (logout, password reset and change password functionality).
 -   User configurable shipping modules.
+-   Ability to rate and/or comment on store products
 -   Regression test suite to catch bugs early.
+-   Simple inventory management screens.
+-   Downloadable product types
 
 Features for future releases
 ----------------------------
 
--   Support for virtual products
 -   Additional payment modules
+-   Additional translations
 -   Multiple price tiers
 
