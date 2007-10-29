@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.simplejson.encoder import JSONEncoder
 from django.utils.translation import ugettext as _
+from django.utils.datastructures import MultiValueDictKeyError
 from satchmo.product.models import Product
 from satchmo.product.views import find_product_template, optionset_from_post
 from satchmo.shop.models import Cart, CartItem
@@ -89,7 +90,7 @@ def add(request, id=0):
                 details.append((customfield, request.POST["custom_%s" % customfield.slug]))
             
         template = find_product_template(product)
-    except Product.DoesNotExist:
+    except (Product.DoesNotExist, MultiValueDictKeyError):
         return bad_or_missing(request, _('The product you have requested does not exist.'))
         
     try:
