@@ -28,6 +28,8 @@ For more complex email verification process, you will need:
 
 - `Django Registration`_
 
+A valid Django cache backend (file, memcached or DB) is required for the config settings.
+
 The following packages are optional but encouraged:
 
 - `PyYaml`_ (For unit tests)
