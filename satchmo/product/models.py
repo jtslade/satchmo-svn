@@ -5,6 +5,8 @@ options.
 """
 
 import datetime
+import random
+import sha
 from sets import Set
 from decimal import Decimal
 from django.conf import settings
@@ -15,11 +17,10 @@ from satchmo.configuration import config_value
 from satchmo.shop.utils import url_join
 from satchmo.tax.models import TaxClass
 from satchmo.thumbnail.field import ImageWithThumbnailField
-import re, sha, random
 
 def normalize_dir(dir_name):
     if not dir_name.startswith('./'):
-        dir_name = url_join('.',dir_name)
+        dir_name = url_join('.', dir_name)
     if dir_name.endswith("/"):
         dir_name = dir_name[:-1]
     return dir_name
@@ -28,8 +29,7 @@ def upload_dir():
     return normalize_dir(config_value('PRODUCT', 'IMAGE_DIR'))
 
 def protected_dir():
-    return normalize_dir(config_value('PRODUCT','PROTECTED_DIR'))
-    
+    return normalize_dir(config_value('PRODUCT', 'PROTECTED_DIR'))
 
 class Category(models.Model):
     """
@@ -45,74 +45,51 @@ class Category(models.Model):
     description = models.TextField(_("Description"), blank=True,
         help_text="Optional")
 
-    def _recurse_for_parents_slug(self, cat_obj):
-        #This is used for the urls
+    def _recurse_for_parents(self, cat_obj):
         p_list = []
         if cat_obj.parent_id:
             p = cat_obj.parent
-            p_list.append(p.slug)
-            more = self._recurse_for_parents_slug(p)
-            p_list.extend(more)
+            p_list.append(p)
+            if p != self:
+                more = self._recurse_for_parents(p)
+                p_list.extend(more)
         if cat_obj == self and p_list:
             p_list.reverse()
         return p_list
 
     def get_absolute_url(self):
-        p_list = self._recurse_for_parents_slug(self)
-        p_list.append(self.slug)
-        return u'%s/category/%s/' % (settings.SHOP_BASE, u'/'.join(p_list))
-
-    def _recurse_for_parents_name(self, cat_obj):
-        #This is used for the visual display & save validation
-        p_list = []
-        if cat_obj.parent_id:
-            p = cat_obj.parent
-            p_list.append(p.name)
-            more = self._recurse_for_parents_name(p)
-            p_list.extend(more)
-        if cat_obj == self and p_list:
-            p_list.reverse()
-        return p_list
+        parents = self._recurse_for_parents(self)
+        slug_list = [cat.slug for cat in parents]
+        slug_list.append(self.slug)
+        return u'%s/category/%s/' % (settings.SHOP_BASE, u'/'.join(slug_list))
 
     def get_separator(self):
         return ' :: '
 
     def _parents_repr(self):
-        p_list = self._recurse_for_parents_name(self)
-        return self.get_separator().join(p_list)
-    _parents_repr.short_description = _("Category parents")
-
-    def _recurse_for_parents_name_url(self, cat_obj):
-        #Get all the absolute urls and names (for use in site navigation)
-        p_list = []
-        url_list = []
-        if cat_obj.parent_id:
-            p = cat_obj.parent
-            p_list.append(p.name)
-            url_list.append(p.get_absolute_url())
-            more, url = self._recurse_for_parents_name_url(p)
-            p_list.extend(more)
-            url_list.extend(url)
-        if cat_obj == self and p_list:
-            p_list.reverse()
-            url_list.reverse()
-        return p_list, url_list
+        name_list = [cat.name for cat in self._recurse_for_parents(self)]
+        return self.get_separator().join(name_list)
+    _parents_repr.short_description = "Category parents"
 
     def get_url_name(self):
-        #Get a list of the url to display and the actual urls
-        p_list, url_list = self._recurse_for_parents_name_url(self)
-        p_list.append(self.name)
+        # Get all the absolute URLs and names for use in the site navigation.
+        name_list = []
+        url_list = []
+        for cat in self._recurse_for_parents(self):
+            name_list.append(cat.name)
+            url_list.append(cat.get_absolute_url())
+        name_list.append(self.name)
         url_list.append(self.get_absolute_url())
-        return zip(p_list, url_list)
+        return zip(name_list, url_list)
 
     def __unicode__(self):
-        p_list = self._recurse_for_parents_name(self)
-        p_list.append(self.name)
-        return self.get_separator().join(p_list)
+        name_list = [cat.name for cat in self._recurse_for_parents(self)]
+        name_list.append(self.name)
+        return self.get_separator().join(name_list)
 
     def save(self):
-        p_list = self._recurse_for_parents_name(self)
-        if self.name in p_list:
+        parents = self._recurse_for_parents(self)
+        if self in parents:
             raise validators.ValidationError(_("You must not save a category in itself!"))
         super(Category, self).save()
 
@@ -128,9 +105,10 @@ class Category(models.Model):
         children = []
         children.append(node)
         for child in node.child.all():
-            children_list = self._recurse_for_children(child)
-            children.append(children_list)
-        return(children)
+            if child != self:
+                children_list = self._recurse_for_children(child)
+                children.append(children_list)
+        return children
 
     def get_all_children(self):
         """
@@ -138,7 +116,7 @@ class Category(models.Model):
         """
         children_list = self._recurse_for_children(self)
         flat_list = self._flatten(children_list[1:])
-        return(flat_list)
+        return flat_list
 
     class Admin:
         list_display = ('name', '_parents_repr')

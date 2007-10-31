@@ -1,6 +1,7 @@
 r"""
 >>> from decimal import Decimal
 >>> from django import db
+>>> from django.db.models import Model
 >>> from satchmo.product.models import *
 
 # Create option groups and their options
@@ -55,6 +56,30 @@ True
 >>> django_config.save()
 >>> ProductVariation.objects.filter(parent=django_config).count()
 4
+
+# Create two Categories that are each other's parents. First make sure that
+# attempting to save them throws an error, then force a save anyway.
+>>> pet_jewelry = Category.objects.create(slug="pet-jewelry", name="Pet Jewelry")
+>>> womens_jewelry = Category.objects.create(slug="womens-jewelry", name="Women's Jewelry")
+>>> pet_jewelry.parent = womens_jewelry
+>>> pet_jewelry.save()
+>>> womens_jewelry.parent = pet_jewelry
+>>> womens_jewelry.save()
+Traceback (most recent call last):
+    ...
+ValidationError: [u'You must not save a category in itself!']
+>>> Model.save(womens_jewelry)
+
+# Check that Category methods still work on a Category whose parents list
+# contains an infite loop.
+>>> pet_jewelry = Category.objects.get(slug="pet-jewelry")
+>>> womens_jewelry = Category.objects.get(slug="womens-jewelry")
+>>> womens_jewelry.get_absolute_url()
+u'/category/womens-jewelry/pet-jewelry/womens-jewelry/'
+>>> womens_jewelry.get_all_children()
+[<Category: Pet Jewelry :: Women's Jewelry :: Pet Jewelry>]
+>>> Category.objects.all().order_by('name')
+[<Category: Pet Jewelry :: Women's Jewelry :: Pet Jewelry>, <Category: Women's Jewelry :: Pet Jewelry :: Women's Jewelry>]
 """
 
 if __name__ == "__main__":
