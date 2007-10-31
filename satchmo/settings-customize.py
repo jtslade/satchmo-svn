@@ -31,8 +31,7 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 TIME_ZONE = 'America/Chicago'
 
 # Language code for this installation. All choices can be found here:
-# http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
-# http://blogs.law.harvard.edu/tech/stories/storyReader$15
+# http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
 
 SITE_ID = 1
@@ -43,7 +42,7 @@ SITE_ID = 1
 MEDIA_ROOT = os.path.join(DIRNAME, 'static/')
 # URL that handles the media served from MEDIA_ROOT. Use a trailing slash.
 # Example: "http://media.lawrence.com/"
-MEDIA_URL='/static/'
+MEDIA_URL = '/static/'
 # URL that handles the media served from SSL.  You only need to set this
 # if you are using a non-relative url.
 # Example: "https://media.lawrence.com"
@@ -88,8 +87,8 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.comments',  
-    'comment_utils',             # get this from http://code.google.com/p/django-comment-utils
+    'django.contrib.comments',
+    'comment_utils', # get this from http://code.google.com/p/django-comment-utils
     'django.contrib.sessions',
     'django.contrib.sitemaps',
     'django.contrib.sites',
