@@ -2,7 +2,7 @@
 Satchmo Change Log
 ==================
 
-Changes in Trunk
+Version 0.6, October 30, 2007
 ----------------
  * Removed dependency on Webda and added new l10n models
  * Added capability to rate and review products

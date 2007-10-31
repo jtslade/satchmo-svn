@@ -7,9 +7,9 @@ dependencies mentioned in the requirements section.
 
 1. Get the latest Satchmo production source release::
 
-        svn co svn://satchmoproject.com/satchmo/tags/0.5
+        svn co svn://satchmoproject.com/satchmo/tags/0.6
              or download from
-        http://www.satchmoproject.com/snapshots/satchmo-0.5.tar.gz
+        http://www.satchmoproject.com/snapshots/satchmo-0.6.tar.gz
 
 
 .. Note::

@@ -18,8 +18,9 @@ under the BSD license.
 
 Current Development Status
 --------------------------
-With the release of version 0.5, Satchmo entered beta status.  All the basic 
-functionalities required to run the store are present.  Many advanced functions are also available.
+With the release of version 0.5, Satchmo entered beta status.  The most recent release is 0.6 and
+includes many improvements and fixes over 0.5  All users are encouraged to use this latest version.
+All the basic functionalities required to run the store are present.  Many advanced functions are also available.
 While we have tried to squash all of the bugs, there still may be a few out there.  We are
 also striving to maintain a stable api going forward.  All future releases will contain
 instructions on how to migrate the changes.  Please refer to this document for the 
